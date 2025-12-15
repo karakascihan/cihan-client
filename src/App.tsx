@@ -42,7 +42,7 @@ function PrivateRoute({ element }: { element: JSX.Element }) {
   const isAuth = useSelector((state: any) => state.login.isLoggedIn);
   return isAuth ? <Layout>{element}</Layout> : <SignIn />;
 }
-
+// esma burada değişlilik yaptı.
 /* ----------------- Route Structure ----------------- */
 function AppRoutes() {
   const location = useLocation();
