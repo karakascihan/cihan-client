@@ -2230,7 +2230,7 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
         <tbody style="vertical-align: top;">
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">TEKLİF NO</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">151-245454039P-09.01</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">~teklifBelgeNo~</td>
             </tr>
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">PROJE ADI</td>
@@ -2238,7 +2238,7 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
             </tr>
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">MÜŞTERİ ADI</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">DFFDFD MAK.MÜH.DAN.SAVUNMA SAN. TİC. LTD.ŞTİ.</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">~firmaAdi~</td>
             </tr>
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">TEKLİF SUNULAN</td>
@@ -2258,15 +2258,15 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
             </tr>
              <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">İLGİLİ</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">SUZAN ERDAL EKİNCİ</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">teklifOnay</td>
             </tr>
              <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">TEL</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">7330415259</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">~telefon~</td>
             </tr>
              <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">E-MAIL</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">7330415259</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">~ePosta~</td>
             </tr>
             
         </tbody>
@@ -2275,7 +2275,7 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
     <div style="clear: both;"></div>
     <div style="text-align: LEFT; margin-bottom:10px; border-bottom: 3px solid #2c3e50; padding-bottom: 10px;">
         <h1 style="color: #2c3e50; font-size: 15px; margin: 2px 0;">Tarih: ~teklifTarihi~ </h1>
-        <h2 style="color: #34495e; font-size: 15px; margin: 2px 0;">Teklif No: 150-25-038P-08.01</h2>
+        <h2 style="color: #34495e; font-size: 15px; margin: 2px 0;">Teklif No: ~teklifBelgeNo~</h2>
     </div>
 
     <div style="background: #ecf0f1; padding: 5px; margin: 5px 0; ">
@@ -3345,7 +3345,7 @@ ilavesi ile fatura edilecektir.</p>
 
         <h2 style="color: #2563eb; font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 12px;">TEKLİF GEÇERLİLİĞİ</h2>
         <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 20px 0; padding: 15px 20px; font-style: italic; color: #555;">
-            <strong>30 gün</strong>
+            <strong>~teklifGecerlilikSuresi~</strong>
         </blockquote>
 
         <h2 style="color: #2563eb; font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 12px;">İLAVE ÜRÜN/HİZMET / MODÜL</h2>
