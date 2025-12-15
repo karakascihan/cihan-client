@@ -204,3 +204,18 @@ export const convertFileToBase64 = async  (file:File)=> {
         reader.readAsDataURL(file);
     });
 }
+export function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      // data:application/pdf;base64,AAAA...
+      const base64 = reader.result.split(",")[1]; // SADECE BASE64
+      resolve(base64);
+    };
+
+    reader.onerror = (error) => reject(error);
+
+    reader.readAsDataURL(file);
+  });
+}

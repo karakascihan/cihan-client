@@ -29,6 +29,7 @@ import { data, useNavigate, useParams } from "react-router-dom";
 
 // Satır toplamlarını hesapla
 export const calcLineTotal = (line: PriceOfferLineDto) => {
+  if (!line || !line.birimFiyat) return 0;
   const miktar = line.miktar || 0;
   const fiyat = line.birimFiyat || 0;
   const indirim = line.indirimOraniYuzde || 0;
@@ -36,6 +37,8 @@ export const calcLineTotal = (line: PriceOfferLineDto) => {
   return indirimliTutar;
 };
 export const calcLineTotalKdv = (line: PriceOfferLineDto) => {
+  if (!line || !line.birimFiyat) return 0;
+
   const miktar = line.miktar || 0;
   const fiyat = line.birimFiyat || 0;
   const indirim = line.indirimOraniYuzde || 0;
@@ -186,6 +189,8 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
                     filterable: true,
                     accessor: "olcuBirimi",
                   },
+                { header: "Birim Fiyatı", accessor:"b", body:(row)=> row.birimFiyat?.toLocaleString() },
+
                 ]}
                 onSelectedRowChange={(item) => {
                   if (item && !selectedProducts.find((p) => p.id == item.id)) {
@@ -577,7 +582,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
             <tr>
               <td colSpan={8} className="p-2 text-right font-semibold border">
                 <div className="flex flex-row justify-end items-center">
-                  <span> Belgeye İndirim </span>
+                  <span> Toplam İndirim </span>
                   <input
                     type="number"
                     min={0}

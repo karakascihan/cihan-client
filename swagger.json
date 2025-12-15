@@ -216,120 +216,118 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  },
-                  "File": {
+                  "TCKNO": {
+                    "maxLength": 11,
+                    "minLength": 0,
                     "type": "string"
                   },
-                  "FirstName": {
+                  "Name": {
+                    "maxLength": 50,
+                    "minLength": 0,
                     "type": "string"
                   },
-                  "LastName": {
-                    "type": "string"
-                  },
-                  "UserName": {
+                  "Surname": {
+                    "maxLength": 50,
+                    "minLength": 0,
                     "type": "string"
                   },
                   "Email": {
+                    "maxLength": 50,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Phone1": {
+                    "maxLength": 20,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "Phone2": {
+                    "maxLength": 20,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "UserName": {
+                    "maxLength": 50,
+                    "minLength": 0,
                     "type": "string"
                   },
                   "Password": {
+                    "maxLength": 50,
+                    "minLength": 0,
                     "type": "string"
                   },
-                  "TCKNO": {
+                  "Department": {
+                    "maxLength": 50,
+                    "minLength": 0,
                     "type": "string"
                   },
-                  "Field": {
-                    "type": "string"
-                  },
-                  "PhoneNumber": {
-                    "type": "string"
-                  },
-                  "PhoneNumber2": {
-                    "type": "string"
-                  },
-                  "Address": {
-                    "type": "string"
-                  },
-                  "DepartmentID": {
+                  "DepartmentId": {
                     "type": "integer",
                     "format": "int32"
                   },
                   "Title": {
+                    "maxLength": 50,
+                    "minLength": 0,
                     "type": "string"
-                  },
-                  "Birthday": {
-                    "type": "string",
-                    "format": "date-time"
                   },
                   "StartDate": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "DepartureDate": {
-                    "type": "string",
-                    "format": "date-time"
-                  },
-                  "Gender": {
+                    "maxLength": 50,
+                    "minLength": 0,
                     "type": "string"
                   },
-                  "IsActive": {
-                    "type": "boolean"
+                  "DepartureDate": {
+                    "maxLength": 50,
+                    "minLength": 0,
+                    "type": "string"
                   },
-                  "Roles": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
+                  "RolName": {
+                    "maxLength": 50,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "RolId": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "Cinsiyet": {
+                    "maxLength": 20,
+                    "minLength": 0,
+                    "type": "string"
                   }
                 }
               },
               "encoding": {
-                "file": {
+                "TCKNO": {
                   "style": "form"
                 },
-                "File": {
+                "Name": {
                   "style": "form"
                 },
-                "FirstName": {
-                  "style": "form"
-                },
-                "LastName": {
-                  "style": "form"
-                },
-                "UserName": {
+                "Surname": {
                   "style": "form"
                 },
                 "Email": {
                   "style": "form"
                 },
+                "Phone1": {
+                  "style": "form"
+                },
+                "Phone2": {
+                  "style": "form"
+                },
+                "UserName": {
+                  "style": "form"
+                },
                 "Password": {
                   "style": "form"
                 },
-                "TCKNO": {
+                "Department": {
                   "style": "form"
                 },
-                "Field": {
-                  "style": "form"
-                },
-                "PhoneNumber": {
-                  "style": "form"
-                },
-                "PhoneNumber2": {
-                  "style": "form"
-                },
-                "Address": {
-                  "style": "form"
-                },
-                "DepartmentID": {
+                "DepartmentId": {
                   "style": "form"
                 },
                 "Title": {
-                  "style": "form"
-                },
-                "Birthday": {
                   "style": "form"
                 },
                 "StartDate": {
@@ -338,13 +336,13 @@
                 "DepartureDate": {
                   "style": "form"
                 },
-                "Gender": {
+                "RolName": {
                   "style": "form"
                 },
-                "IsActive": {
+                "RolId": {
                   "style": "form"
                 },
-                "Roles": {
+                "Cinsiyet": {
                   "style": "form"
                 }
               }
@@ -387,6 +385,18 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Authentication/GetModuleName": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -1009,7 +1019,7 @@
         }
       }
     },
-    "/api/FileRecord": {
+    "/api/fileRecord/create": {
       "post": {
         "tags": [
           "FileRecord"
@@ -1045,7 +1055,7 @@
         }
       }
     },
-    "/api/FileRecord/{id}": {
+    "/api/fileRecord/delete/{id}": {
       "delete": {
         "tags": [
           "FileRecord"
@@ -1068,14 +1078,14 @@
         }
       }
     },
-    "/api/FileRecord/getall": {
+    "/api/fileRecord/getall": {
       "get": {
         "tags": [
           "FileRecord"
         ],
         "parameters": [
           {
-            "name": "entityId",
+            "name": "relatedEntityId",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -1083,7 +1093,7 @@
             }
           },
           {
-            "name": "entityName",
+            "name": "relatedEntityName",
             "in": "query",
             "schema": {
               "type": "string"
@@ -1092,7 +1102,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileRecordDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileRecordDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileRecordDtoIEnumerableApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1802,6 +1829,42 @@
         }
       }
     },
+    "/api/Personel/create": {
+      "post": {
+        "tags": [
+          "Personels"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForInsertion"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForInsertion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForInsertion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/PriceOffer/GetAll": {
       "get": {
         "tags": [
@@ -1858,6 +1921,15 @@
       "post": {
         "tags": [
           "PriceOffer"
+        ],
+        "parameters": [
+          {
+            "name": "isRevision",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
         ],
         "requestBody": {
           "content": {
@@ -2019,6 +2091,35 @@
         }
       }
     },
+    "/api/products/getall": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/products/create": {
       "post": {
         "tags": [
@@ -2048,18 +2149,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/products/getall": {
-      "get": {
-        "tags": [
-          "Products"
-        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -2376,6 +2465,503 @@
       "delete": {
         "tags": [
           "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/GetAll": {
+      "get": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewMetadataDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewMetadataDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewMetadataDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/{id}": {
+      "get": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/Create": {
+      "post": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForInsertion"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForInsertion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForInsertion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/Update/{id}": {
+      "put": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewMetadataDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/Patch/{id}": {
+      "patch": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/Delete/{id}": {
+      "delete": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/{masterId}/ReviewList1": {
+      "get": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "masterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/{masterId}/ReviewList1/Create": {
+      "post": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "masterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/ReviewList1/Update/{id}": {
+      "put": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList1Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/ReviewList1/Delete/{id}": {
+      "delete": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/{masterId}/ReviewList2": {
+      "get": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "masterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/{masterId}/ReviewList2/Create": {
+      "post": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "masterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/ReviewList2/Update/{id}": {
+      "put": {
+        "tags": [
+          "ReviewReport"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewList2Dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/ReviewReport/ReviewList2/Delete/{id}": {
+      "delete": {
+        "tags": [
+          "ReviewReport"
         ],
         "parameters": [
           {
@@ -2777,6 +3363,29 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Survey/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Surveys"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -3715,6 +4324,12 @@
             "format": "int32",
             "nullable": true
           },
+          "ulkeAdi": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "opportunity": {
             "type": "array",
             "items": {
@@ -3982,6 +4597,12 @@
           "sirketTuru": {
             "$ref": "#/components/schemas/CustomerType"
           },
+          "ulkeAdi": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "format": "int32"
@@ -4071,6 +4692,12 @@
           "sirketTuru": {
             "$ref": "#/components/schemas/CustomerType"
           },
+          "ulkeAdi": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "contacts": {
             "type": "array",
             "items": {
@@ -4151,6 +4778,12 @@
           },
           "sirketTuru": {
             "$ref": "#/components/schemas/CustomerType"
+          },
+          "ulkeAdi": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -4811,6 +5444,30 @@
         },
         "additionalProperties": false
       },
+      "FileRecordDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileRecordDto"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "KysDocument": {
         "type": "object",
         "properties": {
@@ -4982,6 +5639,13 @@
           },
           "smtpPassword": {
             "type": "string",
+            "nullable": true
+          },
+          "attachmentPaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           }
         },
@@ -5854,6 +6518,180 @@
         },
         "additionalProperties": false
       },
+      "PersonelDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "personelKodu": {
+            "maxLength": 30,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelAdi": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelSoyadi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelTCKN": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelDepartman": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelGorevi": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "cinsiyet": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "dogumYeri": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "dogumTarihi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "kanGrubu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "ePosta": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "telefonNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "mezuniyetBolumu": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "egitimDurumu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "iseGirisTarihi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "istenAyrılısTarihi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "anneAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "babaAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sgkSicilNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeTuru": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "acilAramaTel": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "ekleyen": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "eklemeZaman": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "degistiren": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "degistirmeZaman": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "durumu": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "pK3": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "netUcreti": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "PersonelDtoForName": {
         "type": "object",
         "properties": {
@@ -6182,8 +7020,6 @@
             "nullable": true
           },
           "teklifAciklama": {
-            "maxLength": 500,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -6260,6 +7096,15 @@
             "format": "int32",
             "nullable": true
           },
+          "referansNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
           "opportunity": {
             "$ref": "#/components/schemas/Opportunity"
           },
@@ -6270,10 +7115,14 @@
             },
             "nullable": true
           },
-          "referansNo": {
-            "maxLength": 50,
-            "minLength": 0,
-            "type": "string",
+          "belgeIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "garantiSuresiGun": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -6299,8 +7148,6 @@
             "nullable": true
           },
           "teklifAciklama": {
-            "maxLength": 500,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -6344,6 +7191,19 @@
           },
           "referansNo": {
             "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "belgeIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "garantiSuresiGun": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "id": {
@@ -6380,8 +7240,6 @@
             "nullable": true
           },
           "teklifAciklama": {
-            "maxLength": 500,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -6421,6 +7279,19 @@
           },
           "referansNo": {
             "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "belgeIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "garantiSuresiGun": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "ekleyen": {
@@ -6457,8 +7328,6 @@
             "nullable": true
           },
           "teklifAciklama": {
-            "maxLength": 500,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -6498,6 +7367,19 @@
           },
           "referansNo": {
             "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "belgeIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "garantiSuresiGun": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "ekleyen": {
@@ -6636,6 +7518,10 @@
           },
           "priceOffer": {
             "$ref": "#/components/schemas/PriceOffer"
+          },
+          "opsiyonMu": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6689,6 +7575,10 @@
           "kdvOraniYuzde": {
             "type": "number",
             "format": "double",
+            "nullable": true
+          },
+          "opsiyonMu": {
+            "type": "boolean",
             "nullable": true
           }
         },
@@ -6744,6 +7634,10 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "opsiyonMu": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6798,6 +7692,10 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "opsiyonMu": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -6830,7 +7728,7 @@
           "Beklemede"
         ]
       },
-      "ProductsDtoForInsertion": {
+      "Products": {
         "type": "object",
         "properties": {
           "id": {
@@ -6895,6 +7793,11 @@
             "maxLength": 10,
             "minLength": 0,
             "type": "string",
+            "nullable": true
+          },
+          "pictures": {
+            "type": "string",
+            "format": "byte",
             "nullable": true
           },
           "projeNo": {
@@ -6984,6 +7887,204 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductsDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "productCode": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "productName": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "parcaTipi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "olcuBirimi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "malzemeTuru": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "muadilMalzeme": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "tedarikTipi": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "firmaAdi": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "barkod": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "pictures": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "projeNo": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "eklemeZaman": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "degistirmeZaman": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "depo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "seriLotNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "saklamaKosulu": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sonKullanmaTarihi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "revizyonNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "revizyonTarih": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "varyantSecenegi": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "urunKonfiguratoru": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "nsnKodu": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "seriNumarasi": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "stokYeri": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "stokMiktar": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProductsIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Products"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -7424,6 +8525,213 @@
           "Text",
           "MultipleChoice"
         ]
+      },
+      "ReviewList1Dto": {
+        "type": "object",
+        "properties": {
+          "soru": {
+            "type": "string",
+            "nullable": true
+          },
+          "evet": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "hayir": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "bolum": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "aciklama": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewList2Dto": {
+        "type": "object",
+        "properties": {
+          "soru": {
+            "type": "string",
+            "nullable": true
+          },
+          "evet": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "hayir": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "imza": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewMetadataDto": {
+        "type": "object",
+        "properties": {
+          "musteriAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "projeAdi": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "siparisNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "tarih": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reviewList1": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewList1Dto"
+            },
+            "nullable": true
+          },
+          "reviewList2": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewList2Dto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewMetadataDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "musteriAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "projeAdi": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "siparisNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "tarih": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "reviewList1": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewList1Dto"
+            },
+            "nullable": true
+          },
+          "reviewList2": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewList2Dto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewMetadataDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "musteriAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "projeAdi": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "siparisNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "tarih": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "reviewList1": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewList1Dto"
+            },
+            "nullable": true
+          },
+          "reviewList2": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewList2Dto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReviewMetadataDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReviewMetadataDto"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
       },
       "Services": {
         "type": "object",

@@ -10,6 +10,7 @@ import type { FieldDefinition, FieldType } from "@/components/GenericForm";
 import React, { useEffect } from 'react'
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
+import { fileToBase64 } from '@/utils/commonUtils';
 
 const Product = () => {
 
@@ -219,6 +220,13 @@ const fields: FieldDefinition[] = [
            required: false,
            group:"Detay Bilgiler"
        },
+        {
+           name: 'pictures',
+           label: 'Resim',
+           type: 'file',
+           required: false,
+           group:"Genel Bilgiler"
+       },
        {
            name: 'id',
            label: '',
@@ -272,11 +280,16 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
         }));
     
         openModal({
-            title: "Ürün Düzenleme",
+            title: "Ürün Fiyat Düzenleme",
             content: (close) => (
                 <GenericForm
                     fields={updateFields}
-                    onSubmit={(updatedDto) => {
+                    onSubmit={async (updatedDto) => {
+                         const file = updatedDto.pictures[0];
+                         if(file)
+                         updatedDto.pictures=await  fileToBase64(file) as any;
+                        else
+                            updatedDto.pictures=null;
                         dispatch(productsSlice.actions.createItem(updatedDto) as any);
                         close(null);
                     }}
@@ -326,6 +339,15 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
         { header: "Ürün Adı", accessor: "productName" },
         { header: "Birimi", accessor: "olcuBirimi" },
         { header: "Birim Fiyatı", accessor: "birimFiyat", body:(row)=> row.birimFiyat?.toLocaleString() },
+        { header: "Ürün Resmi", accessor: "pictures", body:(row)=><img onClick={()=> openModal({
+            title: '',
+            maximized:true,
+            content: function (close: (result: any) => void): React.ReactNode {
+                return (
+             <img  src={"data:image/jpeg;base64,"+row.pictures} />
+                )
+            }
+        })} src={"data:image/jpeg;base64,"+row.pictures} style={{width:"50px",height:"50px"}} /> },
         {header:"İşlemler",accessor:"id" ,body:(row:any)=>actionBodyTemplate(row) }
     ]
   let title="Ürünler";

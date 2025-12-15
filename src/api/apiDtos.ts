@@ -972,6 +972,7 @@ export interface ProductsDtoForInsertion {
     tedarikTipi: string | undefined;
     firmaAdi: string | undefined;
     barkod: string | undefined;
+    pictures: string | undefined;
     projeNo: string | undefined;
     isActive: boolean | undefined;
     eklemeZaman: Date | undefined;
@@ -989,7 +990,6 @@ export interface ProductsDtoForInsertion {
     stokYeri: string | undefined;
     stokMiktar: string | undefined;
     birimFiyat: number | undefined;
-
 }
 
 export interface ProductsIEnumerableApiResponse {

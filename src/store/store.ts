@@ -7,7 +7,7 @@ import selectedRowsReducer from './slices/selectedRowsSlice'
 import staffLeaveReducer from './slices/staffLeaveSlice'
 import overtimeReducer from './slices/overtimeSlice'
 import { createGenericSlice } from './genericSliceFactory';
-import { Products, ProjectReport, Projects } from '@/types/commonType';
+import {  ProjectReport, Projects } from '@/types/commonType';
 import opportunitySliceReducer from './slices/opportunitySlice';
 import  customerReducer from  './slices/customerSlice';
 import  activityReducer from  './slices/activitySlice';
@@ -15,7 +15,7 @@ import  userReducer from  './slices/userSlice';
 import  priceOfferReducer from  './slices/priceOfferSlice';
 import personelReducer from './slices/personalSlice';
 import systemLogReducer from './slices/systemLogSlice'
-import { PersonelWithEducationDto } from '@/api/apiDtos';
+import { PersonelWithEducationDto, Products } from '@/api/apiDtos';
 import enterpriseReducer from './slices/enterpriseSlice';
 import fileRecordReducer from './slices/fileRecordSlice';
 export const projectsSlice = createGenericSlice<Projects>('project', '/projects');

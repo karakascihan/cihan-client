@@ -273,7 +273,7 @@ export const GenericForm: React.FC<GenericFormProps> = ({
     ],
     toolbar:
       "undo redo | blocks fontfamily fontsize | bold italic underline | forecolor backcolor | " +
-      "link image media | alignleft aligncenter alignright fullscreen| bullist numlist | table |  preview code",
+      "link image media | alignleft aligncenter alignright | bullist numlist | table |  preview code | fullscreen",
           content_style:
             "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
         }}
