@@ -18,7 +18,7 @@ import {
 } from "@/store/slices/priceOfferSlice";
 import store, { RootState } from "@/store/store";
 import { formatDateForInput } from "@/utils/commonUtils";
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { FaAdversal, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { PriceOfferAddPage } from "./PriceOfferAddPage";
@@ -437,6 +437,7 @@ export const PriceOfferPage = ({
       maximized: true,
 
       content: (close) => {
+
         let firma = customerState.data.find(x => x.id === priceoffer.firma_Id);
         let onayPersonel = personels.items.find(x => x.id == priceoffer.teklifOnay);
         let teklifMetni = dijitalerp_price_offer_template3.replaceAll("~teklifBelgeNo~", priceoffer.teklifBelgeNo);
@@ -446,19 +447,26 @@ export const PriceOfferPage = ({
         teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikTarihi~", TarihFormatiDonustur(priceoffer.teklifGecerlilikTarihi.toString()));
         teklifMetni = teklifMetni.replaceAll("~teklifOnay~", onayPersonel.personelAdi + " " + onayPersonel.personelSoyadi);
         teklifMetni = teklifMetni.replaceAll("~teklifOnayGorev~", onayPersonel.personelGorevi);
+        teklifMetni = teklifMetni.replaceAll("~telefon~", onayPersonel.telefonNo);
+        teklifMetni = teklifMetni.replaceAll("~ePosta~", onayPersonel.ePosta);
+
+        const teklifTarihi=new Date(priceoffer.teklifTarihi);
+
         const teklifGecerlilikTarihi = new Date(priceoffer.teklifGecerlilikTarihi);
-        const gunFarkiTeklif = Math.ceil((teklifGecerlilikTarihi.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+        const gunFarkiTeklif = Math.ceil((teklifGecerlilikTarihi.getTime() - teklifTarihi.getTime()) / (1000 * 60 * 60 * 24));
 
 
-
-        if (gunFarkiTeklif > 0) {
-          teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", gunFarkiTeklif.toString() + " gün");
+         if (gunFarkiTeklif > 0) {
+        teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", gunFarkiTeklif + " gün");
         }
-
+         else {
+           teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", "5 gün");
+ 
+         }
         teklifMetni = teklifMetni.replaceAll("~BASE_URL~", URL.replace("api", ""));
 
         const gunFarkiTeslim = Math.ceil(
-          (new Date(priceoffer.teslimTarihi.toString().replace(/-/g, "/")).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+          (new Date(priceoffer.teslimTarihi.toString().replace(/-/g, "/")).getTime() - teklifTarihi.getTime()) / (1000 * 60 * 60 * 24)
         );
 
 
@@ -494,19 +502,26 @@ export const PriceOfferPage = ({
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""}</td>`;
+
           opsiyonSatirlarHtml += `<tr>${opsiyonSatir}</tr>`;
 
         });
         teklifMetni = teklifMetni.replaceAll("~opsiyonSatirlar~", opsiyonSatirlarHtml);
-        return <GenericForm fields={[{
-          colspan: 12,
-          name: "",
-          label: "Teklif Düzenle",
-          type: "editor",
-          defaultValue: teklifMetni
-        }]} onSubmit={function (data: any): void {
 
-        }} />
+
+        return <GenericForm
+          key={priceoffer.id + "-" + Date.now()}
+
+          fields={[{
+            colspan: 12,
+            name: "",
+            label: "Teklif Düzenle",
+            type: "editor",
+            defaultValue: teklifMetni,
+
+          }]} onSubmit={function (data: any): void {
+
+          }} />
 
       }
     })
