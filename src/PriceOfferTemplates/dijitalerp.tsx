@@ -1045,7 +1045,7 @@ export const dijitalerp_price_offer_template = `
 
         <h2 style="color: #2563eb; font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 12px;">TEKLİF GEÇERLİLİĞİ</h2>
         <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 20px 0; padding: 15px 20px; font-style: italic; color: #555;">
-            <strong>30 gün</strong>
+            <strong>~teklifGecerlilikSuresi~</strong>
         </blockquote>
 
         <h2 style="color: #2563eb; font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 12px;">İLAVE ÜRÜN/HİZMET / MODÜL</h2>
@@ -2292,43 +2292,51 @@ yönelik çözümümüzü sağlayan ürünler ve hizmetler bazında fiyat
 teklifimizi ekte bilgi görüşlerinize sunmaktan memnuniyet duyuyoruz.</p>
         <p style="margin-top: 12px; margin-bottom: 1px; text-align: justify;"><strong>DİJİTAL ERP YAZILIM TEKNOLOJİLERİ SAN. VE TİC. A.Ş. adına,</strong></p>
     </div>
-    <img src="/teklif_veren_imza.png" style="width: 200px;">
-        <p style="margin: 0px 0; font-weight: 300;">Saygılarımızla<br>teklifOnayGorev<br>Genel Müdür</p>
+    <img src="~BASE_URL~/teklif_veren_imza.png" style="width: 200px;">
+        <p style="margin: 0px 0; font-weight: 300;">Saygılarımızla<br>~teklifOnayGorev~</p>
 
 
-    <div style="background: #f8f9fa; padding: 20px; margin: 25px 0; border: 2px solid #3498db; page-break-inside: avoid;">
-        <h2 style="color: #2c3e50; margin-top: 0;">İÇİNDEKİLER</h2>
-        <ol style="line-height: 2; margin: 50px 0; padding-top:30px; padding-left: 30px;">
-            <li style="margin: 50px 0; margin-top: 50; padding-top: 50;">ÖZET
-                <ul style="margin: 15px 0; padding-left: 30px;">
-                    <li style="margin: 8px 0;">TEKLİFİN TEMELİ</li>
-                </ul>
-            </li>
-            <li style="margin: 8px 0;">TEKLİF KAPSAMI VE PROJE ÇALIŞMA PROGRAMI</li>
-            <li style="margin: 8px 0;">TEKNİK ÇÖZÜMÜN AÇIKLAMASI
-                <ul style="margin: 15px 0; padding-left: 30px;">
-                    <li style="margin: 8px 0;">Yazılım Lisansı</li>
-                    <li style="margin: 8px 0;">Uyarlama ve Geliştirme Hizmeti</li>
-                    <li style="margin: 8px 0;">Bakım Hizmeti</li>
-                    <li style="margin: 8px 0;">Eğitim</li>
-                </ul>
-            </li>
-            <li style="margin: 8px 0;">TİCARİ ŞARTLAR VE KOŞULLAR
-                <ul style="margin: 15px 0; padding-left: 30px;">
-                    <li style="margin: 8px 0;">Ödeme</li>
-                    <li style="margin: 8px 0;">Teslim Süresi</li>
-                    <li style="margin: 8px 0;">Vergiler</li>
-                    <li style="margin: 8px 0;">Teklif Geçerliliği</li>
-                    <li style="margin: 8px 0;">İlave Ürün/Hizmet</li>
-                    <li style="margin: 8px 0;">İlave Yazılımlar</li>
-                    <li style="margin: 8px 0;">İlave Eğitim ve Servis</li>
-                    <li style="margin: 8px 0;">Genişleme İhtiyacı</li>
-                    <li style="margin: 8px 0;">Diğer Koşullar</li>
-                    <li style="margin: 8px 0;">Sipariş Verilmesi</li>
-                </ul>
-            </li>
-        </ol>
-    </div>
+<div style="background:#f8f9fa; padding:20px; margin:20px 0; border:2px solid #3498db;page-break-after: always;">
+  <h2 style="color:#2c3e50; margin:0 0 10px 0;">İÇİNDEKİLER</h2>
+
+  <ol style="margin:10px 0; padding-left:25px; line-height:1.4;">
+    <li style="margin:6px 0;">
+      ÖZET
+      <ul style="margin:5px 0; padding-left:20px;">
+        <li style="margin:4px 0;">TEKLİFİN TEMELİ</li>
+      </ul>
+    </li>
+
+    <li style="margin:6px 0;">TEKLİF KAPSAMI VE PROJE ÇALIŞMA PROGRAMI</li>
+
+    <li style="margin:6px 0;">
+      TEKNİK ÇÖZÜMÜN AÇIKLAMASI
+      <ul style="margin:5px 0; padding-left:20px;">
+        <li style="margin:4px 0;">Yazılım Lisansı</li>
+        <li style="margin:4px 0;">Uyarlama ve Geliştirme Hizmeti</li>
+        <li style="margin:4px 0;">Bakım Hizmeti</li>
+        <li style="margin:4px 0;">Eğitim</li>
+      </ul>
+    </li>
+
+    <li style="margin:6px 0;">
+      TİCARİ ŞARTLAR VE KOŞULLAR
+      <ul style="margin:5px 0; padding-left:20px;">
+        <li style="margin:4px 0;">Ödeme</li>
+        <li style="margin:4px 0;">Teslim Süresi</li>
+        <li style="margin:4px 0;">Vergiler</li>
+        <li style="margin:4px 0;">Teklif Geçerliliği</li>
+        <li style="margin:4px 0;">İlave Ürün/Hizmet</li>
+        <li style="margin:4px 0;">İlave Yazılımlar</li>
+        <li style="margin:4px 0;">İlave Eğitim ve Servis</li>
+        <li style="margin:4px 0;">Genişleme İhtiyacı</li>
+        <li style="margin:4px 0;">Diğer Koşullar</li>
+        <li style="margin:4px 0;">Sipariş Verilmesi</li>
+      </ul>
+    </li>
+  </ol>
+</div>
+
 
     <div style="height: 1px;"></div> <h1 style="color: white; font-size: 22px; margin: 30px 0 15px 0; padding: 20px; background: #3498db; border-radius: 4px; margin-top: 15px;">1. ÖZET</h1>
     
@@ -3327,7 +3335,7 @@ ilavesi ile fatura edilecektir.</p>
 
         <h2 style="color: #2563eb; font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 12px;">TESLİM SÜRESİ</h2>
         <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 20px 0; padding: 15px 20px; font-style: italic; color: #555;">
-            Teklifimizde belirlenen kapsamlar dahilinde <strong>180 gün</strong> içerisinde canlı teslimi yapılması planlanmıştır. Uyarlama süreçleri 1 yıl süreyle devam edecektir.
+            Teklifimizde belirlenen kapsamlar dahilinde <strong>~teslimSuresi~</strong> içerisinde canlı teslimi yapılması planlanmıştır. Uyarlama süreçleri 1 yıl süreyle devam edecektir.
         </blockquote>
 
         <h2 style="color: #2563eb; font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 12px;">VERGİLER</h2>
