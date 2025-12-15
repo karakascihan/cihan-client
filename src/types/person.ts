@@ -1,0 +1,35 @@
+export interface Personel {
+    id: number;
+    personelKodu: string | null;
+    personelAdi: string | null;
+    personelSoyadi: string | null;
+    personelTCKN: string | null;
+    personelDepartman: string | null;
+    personelGorevi: string | null;
+    cinsiyet: string | null;
+    dogumYeri: string | null;
+    dogumTarihi: string | null;
+    kanGrubu: string | null;
+    ePosta: string | null;
+    telefonNo: string | null;
+    mezuniyetBolumu: string | null;
+    egitimDurumu: string | null;
+    iseGirisTarihi: string | null;
+    istenAyrılısTarihi: string | null;
+    anneAdi: string | null;
+    babaAdi: string | null;
+    sGKSicilNo: string | null;
+    sozlesmeTuru: string | null;
+    acilAramaTel: string | null;
+    personelQRKodu: string | null;
+    personelResmi: string | null;
+    isActive: boolean | null;
+    ekleyen: string | null;
+    eklemeZaman: string | null;
+    degistiren: string | null;
+    degistirmeZaman: string | null;
+    resim: string | null;
+    durumu: string | null;
+    pK3: string | null;
+    netUcreti: number;
+}

@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@media print {
+  .p-dialog-header {
+    display: none !important;
+  }
+  body > :not(.p-dialog-mask) {
+    display: none !important;
+  }
+}
+
