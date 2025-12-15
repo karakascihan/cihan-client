@@ -38,6 +38,7 @@ import { selectPriceOffersWithCustomerWithOpportunity } from "@/store/selectors/
 import OfferPdfPureCss2 from "@/components/CRM/OfferPdfPureCss2";
 import OfferPdf2 from "@/components/CRM/OfferPdf2";
 import { dijitalerp_price_offer_template, dijitalerp_price_offer_template2, dijitalerp_price_offer_template3, TarihFormatiDonustur } from "@/PriceOfferTemplates/dijitalerp";
+import { URL } from "@/api";
 export const PriceOfferPage = ({
   opportunityId,
 }: {
@@ -445,33 +446,58 @@ export const PriceOfferPage = ({
         teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikTarihi~", TarihFormatiDonustur(priceoffer.teklifGecerlilikTarihi.toString()));
         teklifMetni = teklifMetni.replaceAll("~teklifOnay~", onayPersonel.personelAdi + " " + onayPersonel.personelSoyadi);
         teklifMetni = teklifMetni.replaceAll("~teklifOnayGorev~", onayPersonel.personelGorevi);
+        const teklifGecerlilikTarihi = new Date(priceoffer.teklifGecerlilikTarihi);
+        const gunFarkiTeklif = Math.ceil((teklifGecerlilikTarihi.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
+
+
+        if (gunFarkiTeklif > 0) {
+          teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", gunFarkiTeklif.toString() + " gün");
+        }
+
+        teklifMetni = teklifMetni.replaceAll("~BASE_URL~", URL.replace("api", ""));
+
+        const gunFarkiTeslim = Math.ceil(
+          (new Date(priceoffer.teslimTarihi.toString().replace(/-/g, "/")).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+        );
+
+
+        if (gunFarkiTeslim > 0) {
+          teklifMetni = teklifMetni.replaceAll("~teslimSuresi~", gunFarkiTeslim.toString() + " gün");
+        }
+        else {
+          teklifMetni = teklifMetni.replaceAll("~teslimSuresi~", "belirlenen süre");
+        }
+
+        console.log("VAR MI:", teklifMetni.includes("~teslimSuresi~"));
+        console.log("thiss", priceoffer.teslimTarihi);
+        console.log("this fark", gunFarkiTeslim);
+        console.log("this teklşf trrih", gunFarkiTeklif);
         let fiyatSatirlarHtml = ``;
         priceoffer.priceOfferLine?.forEach((line, index) => {
           let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat??""}</td>`;
-                       fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""}</td>`;
+          fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
 
         });
         teklifMetni = teklifMetni.replaceAll("~fiyatSatirlar~", fiyatSatirlarHtml);
-        
-        let opsiyonSatirlarHtml=``;
+
+        let opsiyonSatirlarHtml = ``;
         priceoffer.priceOfferLine?.forEach((line, index) => {
           let opsiyonSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat??""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat??""}</td>`;
-                       opsiyonSatirlarHtml += `<tr>${opsiyonSatir}</tr>`;
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""}</td>`;
+          opsiyonSatirlarHtml += `<tr>${opsiyonSatir}</tr>`;
 
         });
         teklifMetni = teklifMetni.replaceAll("~opsiyonSatirlar~", opsiyonSatirlarHtml);
-
         return <GenericForm fields={[{
           colspan: 12,
           name: "",
@@ -485,6 +511,7 @@ export const PriceOfferPage = ({
       }
     })
   };
+
 
   const navigate = useNavigate();
   return (
