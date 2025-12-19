@@ -1130,6 +1130,113 @@ export interface ProjectsDtoForInsertion {
     isActive: boolean | undefined;
 }
 
+export interface PurchaseOrderDto {
+    id: number;
+    projeNo: string | undefined;
+    firma_Id: number | undefined;
+    faturaNo: string | undefined;
+    opportunityId: number;
+    firmaAdi: string | undefined;
+    yetkiliKisi: string | undefined;
+    siparisTarihi: DateOnly;
+    teslimTarihi: DateOnly;
+    aciklama: string | undefined;
+    durumu: string | undefined;
+    onayAcikla: string | undefined;
+    siparisKosullari: string | undefined;
+    kaliteKosullari: string | undefined;
+    siparisTipi: string | undefined;
+    turu: string | undefined;
+    purchaseOrderLine: PurchaseOrderLineDto[] | undefined;
+}
+
+export interface PurchaseOrderDtoForInsertion {
+    firmaAdi: string | undefined;
+    yetkiliKisi: string | undefined;
+    siparisTarihi: DateOnly;
+    teslimTarihi: DateOnly;
+    aciklama: string | undefined;
+    durumu: string | undefined;
+    onayAcikla: string | undefined;
+    siparisKosullari: string | undefined;
+    kaliteKosullari: string | undefined;
+    siparisTipi: string | undefined;
+    turu: string | undefined;
+    purchaseOrderLine: PurchaseOrderLineDtoForInsertion[] | undefined;
+}
+
+export interface PurchaseOrderDtoForUpdate {
+    firmaAdi: string | undefined;
+    yetkiliKisi: string | undefined;
+    siparisTarihi: DateOnly;
+    teslimTarihi: DateOnly;
+    aciklama: string | undefined;
+    durumu: string | undefined;
+    onayAcikla: string | undefined;
+    siparisKosullari: string | undefined;
+    kaliteKosullari: string | undefined;
+    siparisTipi: string | undefined;
+    turu: string | undefined;
+    purchaseOrderLine: PurchaseOrderLineDtoForUpdate[] | undefined;
+    id: number;
+}
+
+export interface PurchaseOrderDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: PurchaseOrderDto[] | undefined;
+    isSuccess: boolean;
+}
+
+export interface PurchaseOrderLineDto {
+    id: number;
+    projeKodu: string | undefined;
+    toplamFiyat: number | undefined;
+    faturaNo: string | undefined;
+    order_Id: number | undefined;
+    isActive: boolean | undefined;
+    malzemeKodu: string | undefined;
+    malzemeAdi: string | undefined;
+    miktar: number | undefined;
+    birimi: string | undefined;
+    birimFiyat: number | undefined;
+    paraBirimi: string | undefined;
+    teslimTarih: DateOnly;
+    aciklama: string | undefined;
+    tamamTarihi: DateOnly;
+    durumu: string | undefined;
+    stogaAktarildimi: boolean | undefined;
+}
+
+export interface PurchaseOrderLineDtoForInsertion {
+    malzemeKodu: string | undefined;
+    malzemeAdi: string | undefined;
+    miktar: number | undefined;
+    birimi: string | undefined;
+    birimFiyat: number | undefined;
+    paraBirimi: string | undefined;
+    teslimTarih: DateOnly;
+    aciklama: string | undefined;
+    tamamTarihi: DateOnly;
+    durumu: string | undefined;
+    stogaAktarildimi: boolean | undefined;
+}
+
+export interface PurchaseOrderLineDtoForUpdate {
+    malzemeKodu: string | undefined;
+    malzemeAdi: string | undefined;
+    miktar: number | undefined;
+    birimi: string | undefined;
+    birimFiyat: number | undefined;
+    paraBirimi: string | undefined;
+    teslimTarih: DateOnly;
+    aciklama: string | undefined;
+    tamamTarihi: DateOnly;
+    durumu: string | undefined;
+    stogaAktarildimi: boolean | undefined;
+    id: number;
+}
+
 export interface PurchaseOrders {
     id: number;
     projeNo: string | undefined;

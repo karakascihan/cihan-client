@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { FieldOption, GenericForm } from '../GenericForm'
-import { MailSendDto } from '@/api/apiDtos'
+import { ActivityState, ActivityType, MailSendDto } from '@/api/apiDtos'
 import { apiRequest } from '@/services/apiRequestService'
 import { ApiResponse, ApiResponseClient } from '@/types/apiResponse'
 import { URL } from '@/api'
@@ -12,7 +12,8 @@ import { FaSearch } from 'react-icons/fa'
 import { FaUpload } from 'react-icons/fa6'
 import { FileRecordPage } from '@/pages/crm/FileRecordPage'
 import { useModal } from '@/context/ModalContext'
-export const EmailSender = ({ mailDto,priceOfferId}:{mailDto?:MailSendDto,priceOfferId?:number} ) => {
+import { addActivity } from '@/store/slices/activitySlice'
+export const EmailSender = ({ mailDto,priceOfferId,opportunityId}:{mailDto?:MailSendDto,priceOfferId?:number,opportunityId?:number} ) => {
     const dispatch =useDispatch<AppDispatch>();
     // const fileRecordState = useSelector( (state: RootState) => state.fileRecord);
     const token=useSelector((state:any)=>state.login.accessToken);
@@ -115,10 +116,14 @@ export const EmailSender = ({ mailDto,priceOfferId}:{mailDto?:MailSendDto,priceO
           { Authorization: "Bearer " + token },
           data
         );
+        if (result.statusCode === 200) {
+           dispatch(addActivity({ activityState: ActivityState.Completed, relatedEntityId:opportunityId, relatedEntityName:"Opportunity", scheduledAt:new Date(), activityType:ActivityType.Email ,subject:"Fiyat Teklifi Mail Gönderildi", notes:"Ek dosya yolu: "+data.attachmentPaths }));
+          // close modal if any 
+        }
         dispatch(
           setNotification({
             title:
-              result.statusCode === 0 ? "Mail Gönderildi" : "Mail Gönderilemedi",
+              result.statusCode === 200 ? "Mail Gönderildi" : "Mail Gönderilemedi",
             message: result.message ?? "",
             type: result.statusCode === 0 ? "success" : "error",
           })

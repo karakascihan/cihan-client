@@ -516,6 +516,29 @@
         }
       }
     },
+    "/api/contracts/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Contracts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Customer/GetAll": {
       "get": {
         "tags": [
@@ -2624,6 +2647,223 @@
       "delete": {
         "tags": [
           "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/PurchaseOrder/GetAll": {
+      "get": {
+        "tags": [
+          "PurchaseOrder"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseOrderDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseOrderDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseOrderDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PurchaseOrder/{id}": {
+      "get": {
+        "tags": [
+          "PurchaseOrder"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/PurchaseOrder/Create": {
+      "post": {
+        "tags": [
+          "PurchaseOrder"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForInsertion"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForInsertion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForInsertion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/PurchaseOrder/Update/{id}": {
+      "put": {
+        "tags": [
+          "PurchaseOrder"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseOrderDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/PurchaseOrder/Patch/{id}": {
+      "patch": {
+        "tags": [
+          "PurchaseOrder"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/PurchaseOrder/Delete/{id}": {
+      "delete": {
+        "tags": [
+          "PurchaseOrder"
         ],
         "parameters": [
           {
@@ -8876,6 +9116,400 @@
           "isActive": {
             "type": "boolean",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "projeNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "firma_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "faturaNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "opportunityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firmaAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "yetkiliKisi": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "aciklama": {
+            "type": "string",
+            "nullable": true
+          },
+          "durumu": {
+            "type": "string",
+            "nullable": true
+          },
+          "onayAcikla": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisKosullari": {
+            "type": "string",
+            "nullable": true
+          },
+          "kaliteKosullari": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisTipi": {
+            "type": "string",
+            "nullable": true
+          },
+          "turu": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseOrderLine": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderLineDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "firmaAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "yetkiliKisi": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "aciklama": {
+            "type": "string",
+            "nullable": true
+          },
+          "durumu": {
+            "type": "string",
+            "nullable": true
+          },
+          "onayAcikla": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisKosullari": {
+            "type": "string",
+            "nullable": true
+          },
+          "kaliteKosullari": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisTipi": {
+            "type": "string",
+            "nullable": true
+          },
+          "turu": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseOrderLine": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderLineDtoForInsertion"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "firmaAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "yetkiliKisi": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "aciklama": {
+            "type": "string",
+            "nullable": true
+          },
+          "durumu": {
+            "type": "string",
+            "nullable": true
+          },
+          "onayAcikla": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisKosullari": {
+            "type": "string",
+            "nullable": true
+          },
+          "kaliteKosullari": {
+            "type": "string",
+            "nullable": true
+          },
+          "siparisTipi": {
+            "type": "string",
+            "nullable": true
+          },
+          "turu": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseOrderLine": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderLineDtoForUpdate"
+            },
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrderDto"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderLineDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "projeKodu": {
+            "type": "string",
+            "nullable": true
+          },
+          "toplamFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "faturaNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "order_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "malzemeKodu": {
+            "type": "string",
+            "nullable": true
+          },
+          "malzemeAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "miktar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "birimi": {
+            "type": "string",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "paraBirimi": {
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarih": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "aciklama": {
+            "type": "string",
+            "nullable": true
+          },
+          "tamamTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "durumu": {
+            "type": "string",
+            "nullable": true
+          },
+          "stogaAktarildimi": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderLineDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "malzemeKodu": {
+            "type": "string",
+            "nullable": true
+          },
+          "malzemeAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "miktar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "birimi": {
+            "type": "string",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "paraBirimi": {
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarih": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "aciklama": {
+            "type": "string",
+            "nullable": true
+          },
+          "tamamTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "durumu": {
+            "type": "string",
+            "nullable": true
+          },
+          "stogaAktarildimi": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseOrderLineDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "malzemeKodu": {
+            "type": "string",
+            "nullable": true
+          },
+          "malzemeAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "miktar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "birimi": {
+            "type": "string",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "paraBirimi": {
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarih": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "aciklama": {
+            "type": "string",
+            "nullable": true
+          },
+          "tamamTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "durumu": {
+            "type": "string",
+            "nullable": true
+          },
+          "stogaAktarildimi": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

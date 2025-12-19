@@ -413,9 +413,9 @@ export const PriceOfferPage = ({
       maximizable: true,
       maximized: true,
       content: (close) => (
-        <EmailSender priceOfferId={priceoffer.id}  mailDto={{
+        <EmailSender priceOfferId={priceoffer.id} opportunityId={priceoffer.opportunityId}  mailDto={{
           toEmail: customerState.data.find((x) => x.id == priceoffer.firma_Id)?.email, subject: opportunities.data.find((x) => x.id == priceoffer.opportunityId)?.title,
-          body: "Teklil metnimiz ektedir.İyi Çalışmalar."
+          body: "Teklif metnimiz ektedir.İyi Çalışmalar."
           /*
           body:ReactDOMServer.renderToString(
          <Provider store={store} >
@@ -469,7 +469,7 @@ export const PriceOfferPage = ({
         teklifMetni = teklifMetni.replaceAll("~BASE_URL~", URL.replace("api", ""));
 
         const gunFarkiTeslim = Math.ceil(
-          (new Date(priceoffer.teslimTarihi.toString().replace(/-/g, "/")).getTime() - teklifTarihi.getTime()) / (1000 * 60 * 60 * 24)
+          (new Date(priceoffer.teslimTarihi?.toString().replace(/-/g, "/")).getTime() - teklifTarihi.getTime()) / (1000 * 60 * 60 * 24)
         );
 
 

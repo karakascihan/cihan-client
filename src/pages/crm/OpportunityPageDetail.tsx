@@ -17,7 +17,7 @@ import { convertFileToBase64, formatDateForInput } from "@/utils/commonUtils";
 import { ActivityPage } from "./ActivityPage";
 import { useParams } from "react-router-dom";
 import { GenericForm } from "@/components/GenericForm";
-import { addsystemLog } from "@/store/slices/systemLogSlice";
+import { addsystemLog, fetchsystemLogs } from "@/store/slices/systemLogSlice";
 import { fetchOpportunities } from "@/store/slices/opportunitySlice";
 import { PriceOfferAddPage } from "./PriceOfferAddPage";
 import { PriceOfferPage } from "./PriceOfferPage";
@@ -31,6 +31,7 @@ import { clearSelectedRows, setAktiviteSelectedRows } from "@/store/slices/selec
 import { clear } from "console";
 import { addFileRecord, fetchFileRecords } from "@/store/slices/fileRecordSlice";
 import { FileRecordPage } from "./FileRecordPage";
+import { fetchpersonels } from "@/store/slices/personalSlice";
 
 export const OpportunityPageDetail: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -82,7 +83,9 @@ const {openModal} = useModal();
                 ? "border-blue-600 text-blue-600"
                 : "border-transparent text-gray-500 hover:text-blue-600"
             }`}
-            onClick={() => setActiveTab(tab as any)}
+            onClick={() => { if (tab=="notes") {
+              dispatch(fetchsystemLogs( {relatedEntityId: opportunity.id, relatedEntityName: "Opportunity"})); }              
+             setActiveTab(tab as any); }}
           >
             {tab === "details"
               ? "Detaylar"
@@ -257,7 +260,8 @@ const {openModal} = useModal();
         <div className="space-y-3">
           {systemLogState.items.filter(x=>x.relatedEntityId==opportunity.id&&x.relatedEntityName=="Opportunity")?.map((note, idx) => (
             <div key={idx} className="p-4 bg-yellow-50 rounded-xl shadow-sm">
-              <p className="text-gray-800">{note.note}</p>
+              <p className="text-gray-500">{note.note}</p>
+              <p className="text-gray-700 font-bold">{userState.data?.find(u => u.id === note.createdByUserId)?.userName}</p>
               <p className="text-gray-800">{new Date(note.createdAt)?.toLocaleString()}</p>
             </div>
           ))}

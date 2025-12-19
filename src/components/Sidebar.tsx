@@ -73,12 +73,12 @@ const menus: MenuItem[] = [
 
   },
   {
-    title: "Stok Yönetimi",
+    title: "Ürün Yönetimi",
     icon: <FaWarehouse />,
     roles: [-1],
     items: [
       {
-        title: "Ürünler",
+        title: "Ürün Fiyat Listesi",
         icon: <FaBoxes />,
         roles: [-1],
         path: "/urunler",

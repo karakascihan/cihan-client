@@ -154,7 +154,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
         );
     } else
       await dispacth(addPriceOffer({ newLeave: data, isRevision: isRevision }));
-    if (opportunityId) navigate("/firsatdetay/" + opportunityId);
+    if (opportunityId && opportunityId !== "undefined") navigate("/firsatdetay/" + opportunityId);
     else navigate("/teklifler");
   };
   const _OpenModal = async (index: number, isOption: boolean = false) => {
