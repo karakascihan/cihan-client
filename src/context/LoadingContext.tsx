@@ -18,9 +18,9 @@ export function LoadingProvider({ children }: React.PropsWithChildren) {
   return (
     <LoadingContext.Provider value={{ loading, setLoading }}>
       {children}
-      {loading && (collapsed ? <div className="fixed ml-16 mt-16 inset-0 flex items-center justify-center bg-gray-100 z-50">
+      {loading && (collapsed ? <div className="fixed ml-16 mt-16 inset-0 flex items-center justify-center bg-gray-100 z-50000">
       <ProgressSpinner />
-    </div>: <div className="fixed ml-64 inset-0 mt-16 flex items-center justify-center bg-gray-100 z-50">
+    </div>: <div className="fixed ml-64 inset-0 mt-16 flex items-center justify-center bg-gray-100 z-50000">
       <ProgressSpinner />
     </div>)}
     </LoadingContext.Provider>

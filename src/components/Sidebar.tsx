@@ -15,7 +15,7 @@ import {
 import { useUI } from "../context/UIContext";
 import { useSelector } from "react-redux";
 import icon from "../images/logo/favicon.ico";
-import { FaFileCirclePlus, FaWarehouse } from "react-icons/fa6";
+import { FaFileCirclePlus, FaFileContract, FaWarehouse } from "react-icons/fa6";
 import {
   FaBoxes,
   FaCoins,
@@ -67,6 +67,7 @@ const menus: MenuItem[] = [
       ,{ title: "Müşteriler", icon: <Building2 className="w-4 h-4 text-blue-500"  />, path: "/musteriler" }
       ,{ title: "Aktiviteler", icon: <CalendarDays className="w-4 h-4 text-green-500"   />, path: "/aktiviteler" }
       ,{ title: "Teklifler", icon: <FaFileInvoiceDollar className="w-4 h-4 text-purple-500"/>, path: "/teklifler" }
+      ,{ title: "Sözleşmeler", icon: <FaFileContract className="w-4 h-4 text-purple-500"/>, path: "/sozlesmeler" }
       ,{ title: "Yeni Teklif", icon: <FaFileCirclePlus className="w-4 h-4 text-blue-600"/>, path: "/yeniteklif" }
       ,{ title: "Takvim", icon: <Calendar className="w-4 h-4 text-gray-600"/>, path: "/takvim" }]
 

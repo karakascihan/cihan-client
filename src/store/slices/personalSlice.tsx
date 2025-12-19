@@ -11,7 +11,7 @@ import { apiRequest } from "@/services/apiRequestService";
 import { RootState } from "../store";
 import { toJsonPatch } from "@/utils/commonUtils";
 import { GenericState } from "../genericSliceFactory";
-import { PersonelDto } from "@/api/apiDtos";
+import { PersonelDto, PersonelDtoForUpdate } from "@/api/apiDtos";
 
 
 
@@ -98,18 +98,18 @@ export const createPersonel = createAsyncThunk<
 // PERSONEL UPDATE
 // -----------------------
 export const updatePersonel = createAsyncThunk<
-  PersonelDto,
-  { id: number; data: PersonelDto },
+  PersonelDtoForUpdate,
+  { id: number; data: PersonelDtoForUpdate },
   { rejectValue: string }
 >("personel/update", async ({ id, data }, { dispatch, getState, rejectWithValue }) => {
 
   try {
     const state = getState() as RootState;
-    const patchData = toJsonPatch(data); // JSON PATCH kullanıyorsan
+    const patchData = data; // JSON PATCH kullanıyorsan
 
     const response = await apiRequest<ApiResponseClient<PersonelDto>>(
-      "PATCH",
-      URL + `/personel/${id}`,
+      "PUT",
+      URL + `/personel/update/${id}`,
       { Authorization: "Bearer " + state.login.accessToken },
       patchData
     );

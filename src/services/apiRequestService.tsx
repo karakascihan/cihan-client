@@ -17,6 +17,7 @@ export async function apiRequest<T>(
     ...config,
     headers:headers
   };
+  axios.defaults.headers.common["Accept-Language"] = "TR";
   const response = await axios.request<T>(mergedConfig);
   return response.data;
 }

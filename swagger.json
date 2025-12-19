@@ -404,6 +404,118 @@
         }
       }
     },
+    "/api/contracts/getall": {
+      "get": {
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractsDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractsDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContractsDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/contracts/create": {
+      "post": {
+        "tags": [
+          "Contracts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForInsertion"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForInsertion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForInsertion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/contracts/update/{id}": {
+      "put": {
+        "tags": [
+          "Contracts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractsDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Customer/GetAll": {
       "get": {
         "tags": [
@@ -1854,6 +1966,53 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/PersonelDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Personel/update/{id}": {
+      "put": {
+        "tags": [
+          "Personels"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PersonelDtoForUpdate"
               }
             }
           }
@@ -4404,6 +4563,281 @@
         },
         "additionalProperties": false
       },
+      "ContractsDto": {
+        "type": "object",
+        "properties": {
+          "kurum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sirket": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "nsnKodu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "urunAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "adet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "tutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "teslimGunu": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "durum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "aciklama": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContractsDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "kurum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sirket": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "nsnKodu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "urunAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "adet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "tutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "teslimGunu": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "durum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "aciklama": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContractsDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "kurum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sirket": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "nsnKodu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "urunAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "adet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "tutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "teslimGunu": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "durum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "aciklama": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ContractsDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContractsDto"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateOptionDto": {
         "type": "object",
         "properties": {
@@ -6717,6 +7151,132 @@
         },
         "additionalProperties": false
       },
+      "PersonelDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "personelAdi": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelSoyadi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelTCKN": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelDepartman": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "personelGorevi": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "cinsiyet": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "dogumYeri": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "dogumTarihi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "kanGrubu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "ePosta": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "telefonNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "mezuniyetBolumu": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "egitimDurumu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "iseGirisTarihi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "istenAyrılısTarihi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "anneAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "babaAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sgkSicilNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeTuru": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "acilAramaTel": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PersonelEducationAssignDto": {
         "type": "object",
         "properties": {
@@ -7892,6 +8452,12 @@
             "type": "number",
             "format": "double",
             "nullable": true
+          },
+          "paraBirimi": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8060,6 +8626,12 @@
           "birimFiyat": {
             "type": "number",
             "format": "double",
+            "nullable": true
+          },
+          "paraBirimi": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
             "nullable": true
           }
         },

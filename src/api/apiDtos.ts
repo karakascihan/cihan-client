@@ -137,6 +137,66 @@ export interface CompanyPerson {
     opportunity: Opportunity[] | undefined;
 }
 
+export interface ContractsDto {
+    kurum: string | undefined;
+    sirket: string | undefined;
+    sozlesmeTarihi: DateOnly;
+    sozlesmeNo: string | undefined;
+    sozlesmeAdi: string | undefined;
+    nsnKodu: string | undefined;
+    urunAdi: string | undefined;
+    adet: number | undefined;
+    birimFiyat: number | undefined;
+    tutar: number | undefined;
+    teslimGunu: string | undefined;
+    teslimTarihi: DateOnly;
+    durum: string | undefined;
+    aciklama: string | undefined;
+    id: number;
+}
+
+export interface ContractsDtoForInsertion {
+    kurum: string | undefined;
+    sirket: string | undefined;
+    sozlesmeTarihi: DateOnly;
+    sozlesmeNo: string | undefined;
+    sozlesmeAdi: string | undefined;
+    nsnKodu: string | undefined;
+    urunAdi: string | undefined;
+    adet: number | undefined;
+    birimFiyat: number | undefined;
+    tutar: number | undefined;
+    teslimGunu: string | undefined;
+    teslimTarihi: DateOnly;
+    durum: string | undefined;
+    aciklama: string | undefined;
+    isActive: boolean | undefined;
+}
+
+export interface ContractsDtoForUpdate {
+    kurum: string | undefined;
+    sirket: string | undefined;
+    sozlesmeTarihi: DateOnly;
+    sozlesmeNo: string | undefined;
+    sozlesmeAdi: string | undefined;
+    nsnKodu: string | undefined;
+    urunAdi: string | undefined;
+    adet: number | undefined;
+    birimFiyat: number | undefined;
+    tutar: number | undefined;
+    teslimGunu: string | undefined;
+    teslimTarihi: DateOnly;
+    durum: string | undefined;
+    aciklama: string | undefined;
+}
+
+export interface ContractsDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: ContractsDto[] | undefined;
+    isSuccess: boolean;
+}
+
 export interface CreateOptionDto {
     text: string | undefined;
     puan: number | undefined;
@@ -675,6 +735,29 @@ export interface PersonelDtoForName {
     isActive: boolean;
 }
 
+export interface PersonelDtoForUpdate {
+    personelAdi: string | undefined;
+    personelSoyadi: string | undefined;
+    personelTCKN: string | undefined;
+    personelDepartman: string | undefined;
+    personelGorevi: string | undefined;
+    cinsiyet: string | undefined;
+    dogumYeri: string | undefined;
+    dogumTarihi: string | undefined;
+    kanGrubu: string | undefined;
+    ePosta: string | undefined;
+    telefonNo: string | undefined;
+    mezuniyetBolumu: string | undefined;
+    egitimDurumu: string | undefined;
+    iseGirisTarihi: string | undefined;
+    "istenAyrılısTarihi": string | undefined;
+    anneAdi: string | undefined;
+    babaAdi: string | undefined;
+    sgkSicilNo: string | undefined;
+    sozlesmeTuru: string | undefined;
+    acilAramaTel: string | undefined;
+}
+
 export interface PersonelEducationAssignDto {
     state: number;
     isActive: boolean | undefined;
@@ -958,6 +1041,7 @@ export interface Products {
     stokYeri: string | undefined;
     stokMiktar: string | undefined;
     birimFiyat: number | undefined;
+    paraBirimi: string | undefined;
 }
 
 export interface ProductsDtoForInsertion {
@@ -990,6 +1074,7 @@ export interface ProductsDtoForInsertion {
     stokYeri: string | undefined;
     stokMiktar: string | undefined;
     birimFiyat: number | undefined;
+    paraBirimi: string | undefined;
 }
 
 export interface ProductsIEnumerableApiResponse {

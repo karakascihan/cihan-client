@@ -26,6 +26,7 @@ import { OpportunityPageDetail } from "./pages/crm/OpportunityPageDetail";
 import { CalendarPage } from "./pages/crm/CalendarPage";
 import Product from "./pages/ProductPage/Product";
 import CrmDashboard from "./pages/crm/CrmDashboardPage";
+import { ContractPage } from "./pages/crm/ContractPage";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -74,6 +75,7 @@ function AppRoutes() {
         <Route path="/firsatdetay/:id" element={<PrivateRoute element={<OpportunityPageDetail />} />} />
         <Route path="/musteriler" element={<PrivateRoute element={<CustomerPage />} />} />
         <Route path="/teklifler" element={<PrivateRoute element={<PriceOfferPage />} />} />
+        <Route path="/sozlesmeler" element={<PrivateRoute element={<ContractPage />} />} />
         <Route
           path="/yeniteklif/:opportunityId?"
           element={

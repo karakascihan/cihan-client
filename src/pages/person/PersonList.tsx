@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { ReactNode, useEffect, useLayoutEffect, useState } from "react";
 import type { Personel } from "../../types/person";
 import { departmanlar } from "./OvertimeList";
 import { apiRequest } from "@/services/apiRequestService";
@@ -6,10 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { PERSONEL_GETALLNAMES } from "@/api";
 import { SmartTable } from "@/components/SmartTable";
-import { createPersonel, fetchpersonels } from "@/store/slices/personalSlice";
+import { createPersonel, deletePersonel, fetchpersonels, updatePersonel } from "@/store/slices/personalSlice";
 import { useModal } from "@/context/ModalContext";
 import { GenericForm } from "@/components/GenericForm";
 import { PersonelDto, PersonelDtoForInsertion } from "@/api/apiDtos";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { useConfirm } from "@/context/ConfirmContext";
 
 export default function PersonList({
   isModal = false,
@@ -23,7 +25,7 @@ export default function PersonList({
   const personelState= useSelector<RootState>((x) => x.personel);
   const dispatch = useDispatch<AppDispatch>();
   const { openModal } = useModal();
-
+const confirm=useConfirm();
   // useEffect(() => {
   //   apiRequest(
   //     "GET",
@@ -106,6 +108,45 @@ export default function PersonList({
         filterable: true,
         sortable: true,
       },
+        {
+            header: "İşlemler",
+            accessor: "id",
+            body: (row: PersonelDto) => (
+              <div className="flex flex-row">
+                 <button
+                            onClick={() => {
+                              PersonelDuzenle(row);
+                            }}
+                            className="
+                                    inline-flex items-center 
+                                    px-4 py-2 
+                                    bg-yellow-500 hover:bg-yellow-600 
+                                    text-white 
+                                    rounded 
+                                    mr-2
+                                  "
+                          >
+                            <FaPencilAlt title="Düzenle" />
+                          </button>
+                <button
+                  onClick={async () => {
+                    const isConfirmed = await confirm({
+                      title: "Silme işlemi",
+                      message: "Dosyayı silmek istediğinize emin misiniz?",
+                      confirmText: "Evet",
+                      cancelText: "Vazgeç",
+                    });
+                    if (isConfirmed) {
+                      dispatch(deletePersonel(row.id!));
+                    }
+                  }}
+                  className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded mr-2"
+                >
+                  <FaTrash title="Sil" />
+                </button>
+              </div>
+            ),
+          },
     ];
     if (isModal) {
       sendData.unshift({ accessor: "__select", header: "" });
@@ -123,45 +164,59 @@ export default function PersonList({
               name: "personelAdi",
               label: "Personel Adı",
               type: "text",
-              required:true
+              required:true,
+              defaultValue: row.personelAdi
             },
             {
               name: "personelSoyadi",
               label: "Personel Soyadı",
               type: "text",
-              required:true
+              required:true,
+              defaultValue: row.personelSoyadi
             },
             {
               name: "personelDepartman",
               label: "Departman",
               type: "select",
               options: departmanlar,
-              required:true
+              required:true,
+              defaultValue: row.personelDepartman
 
             },
             {
               name: "personelGorevi",
               label: "Görevi",
               type: "text",
-              required:true
+              required:true,
+              defaultValue: row.personelGorevi
             },
             {
               name: "telefonNo",
               label: "Telefon",
               type: "text",
+              defaultValue: row.telefonNo
             },
             {
               name: "ePosta",
               label: "E-Posta",
               type: "text",
+              defaultValue: row.ePosta
             },
             {
               name: "iseGirisTarihi",
               label: "İşe Giriş Tarihi",
               type: "date",
+              defaultValue: row.iseGirisTarihi
             }
           ]}
           onSubmit={function (data: PersonelDto): void {
+            if(row)
+            {
+             dispatch(
+              updatePersonel({id:row.id!,data})
+            );
+            }
+            else
             dispatch(
               createPersonel(data)
             );

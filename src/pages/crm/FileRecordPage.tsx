@@ -42,10 +42,12 @@ export const FileRecordPage = ({
   relatedEntityId,
   relatedEntityName = "Opportunity",
   title,
+  onDoubleClick
 }: {
   relatedEntityId?: number;
   relatedEntityName?: string;
   title?: string;
+  onDoubleClick?: (record: FileRecordDto) => void;
 }) => {
 const {openModal}=useModal();
   const dispatch = useDispatch<AppDispatch>();
@@ -53,10 +55,7 @@ const {openModal}=useModal();
   const sidebar = useSidebar();
 const fileRecordState= useSelector<RootState>(state=>state.fileRecord)
 useEffect(() => {
- if(fileRecordState.items.length==0)
- {
-     dispatch(fetchFileRecords({relatedEntityName:relatedEntityName,relatedEntityId:relatedEntityId}))
- }
+ dispatch(fetchFileRecords({relatedEntityName:relatedEntityName,relatedEntityId:relatedEntityId}))
 }, [])
   const columns: Column<FileRecordDto>[] = [
     { header: "#", accessor: "__index" },
@@ -66,12 +65,12 @@ useEffect(() => {
       filterable: true,
       sortable: true,
     },
-      {
-      header: "Dosya Tipi",
-      accessor: "contentType",
-      filterable: true,
-      sortable: true,
-    },
+    //   {
+    //   header: "Dosya Tipi",
+    //   accessor: "contentType",
+    //   filterable: true,
+    //   sortable: true,
+    // },
     {
       header: "Dosya Yolu",
       accessor: "filePath",
@@ -171,10 +170,12 @@ const newRecordVoid = () => {
       <SmartTable
         data={fileRecordState.items ?? []}
         columns={columns}
+        frozenColumns={[ { name:"id",right:true}]}
         rowIdAccessor={"id"}
         newRecordVoid={newRecordVoid}
         scrollHeight="calc(100vh - 200px)"
         enablePagination={false}
+        onDoubleClick={onDoubleClick}
       />
     </div>
   );

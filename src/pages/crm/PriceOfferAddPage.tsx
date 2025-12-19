@@ -17,7 +17,7 @@ import {
 import { clearSelectedRows } from "@/store/slices/selectedRowsSlice";
 import { fetchUsers, UserState } from "@/store/slices/userSlice";
 import { AppDispatch, productsSlice, RootState } from "@/store/store";
-import { Product } from "@/types/product";
+
 import { User } from "@/types/user";
 import { formatDateForInput } from "@/utils/commonUtils";
 import { Search } from "lucide-react";
@@ -189,7 +189,8 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
                     filterable: true,
                     accessor: "olcuBirimi",
                   },
-                { header: "Birim Fiyatı", accessor:"b", body:(row)=> row.birimFiyat?.toLocaleString() },
+                { header: "Birim Fiyatı", accessor:"birimFiyat", body:(row)=> row.birimFiyat?.toLocaleString() },
+                { header: "Para Bİrimi", accessor:"paraBirimi"},
 
                 ]}
                 onSelectedRowChange={(item) => {
@@ -253,6 +254,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
           kdvOraniYuzde:0,
           birimFiyat: product.birimFiyat || 0,
           indirimOraniYuzde: 0,
+          paraBirimi: product.paraBirimi || "TRY",
           
         });
       });

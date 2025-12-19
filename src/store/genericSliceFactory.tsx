@@ -11,14 +11,11 @@ import { setNotification } from "./slices/notificationSlice";
 import { apiRequest } from "@/services/apiRequestService";
 import { ApiResponseClient } from "@/types/apiResponse";
 import { URL } from "@/api";
-import { ErrorOption } from "react-hook-form";
-import { get } from "http";
 
 export interface GenericState<T> {
   items: T[];
   loading: boolean;
   error: string | null;
-
 }
 
 export function createGenericSlice<T extends { id: number | string }>(
@@ -32,7 +29,6 @@ export function createGenericSlice<T extends { id: number | string }>(
     createItem: any;
     updateItem: any;
     deleteItem: any;
-  
   };
 } {
   const fetchAll = createAsyncThunk<
@@ -46,16 +42,16 @@ export function createGenericSlice<T extends { id: number | string }>(
   >(`${name}/fetchAll`, async (_, { dispatch, rejectWithValue, getState }) => {
     try {
       const state = getState();
-      let endpoint="/getall";
-      if (name==="personel") {
-        endpoint="/GetAllWithEducations";
+      let endpoint = "/getall";
+      if (name === "personel") {
+        endpoint = "/GetAllWithEducations";
       }
       const response = await apiRequest<ApiResponseClient<T[]>>(
         "GET",
-        URL + baseUrl+endpoint,
+        URL + baseUrl + endpoint,
         { Authorization: `Bearer ${state.login.accessToken}` }
       );
-      
+
       // dispatch(setLoading(false));
       dispatch(
         setNotification({
@@ -121,7 +117,7 @@ export function createGenericSlice<T extends { id: number | string }>(
           })
         );
         return response.result;
-      } catch (error:any) {
+      } catch (error: any) {
         dispatch(
           setNotification({
             message: error.message,
@@ -183,7 +179,7 @@ export function createGenericSlice<T extends { id: number | string }>(
           })
         );
         return id;
-      } catch (error:any) {
+      } catch (error: any) {
         dispatch(
           setNotification({
             message: error.message,
@@ -234,8 +230,8 @@ export function createGenericSlice<T extends { id: number | string }>(
             );
             if (index !== -1) state.items[index] = action.payload as Draft<T>;
             else {
-            state.items.unshift(action.payload as Draft<T>);
-          }
+              state.items.unshift(action.payload as Draft<T>);
+            }
           } else {
             state.items.unshift(action.payload as Draft<T>);
           }

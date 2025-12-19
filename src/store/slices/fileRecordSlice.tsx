@@ -197,6 +197,7 @@ const fileRecordSlice = createSlice({
     builder
       .addCase(fetchFileRecords.pending, (state) => {
         state.loading = true;
+        
         state.error = null;
       })
       .addCase(

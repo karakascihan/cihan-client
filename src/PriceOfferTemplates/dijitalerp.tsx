@@ -2213,20 +2213,47 @@ export const dijitalerp_price_offer_template2 = `<!DOCTYPE html>
 
 </body>
 </html>`
-export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
-<html lang="tr"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BİRLEŞTİRİLMİŞ DİJİTAL ERP TEKLİF VE SİSTEM ANALİZİ (INLINE STYLE)</title>
-</head>
-<body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; padding: 20px; background: #fff;">
- <div style="text-align: center;">
-        <h1 style="font-size: 28px; color: #2c3e50; margin-bottom: 20px; border-bottom: 4px solid #3498db; padding-bottom: 10px; margin-top: 0;">TEKLİF MEKTUBU</h1>
-        <p style="font-size: 18px; font-weight: bold; color: #34495e; margin-bottom: 30px;">DİJİTAL ERP YAZILIM TEKNOLOJİLERİ A.Ş.</p>
+export const dijitalerp_price_offer_template3 = `
+ <div style="width:100%;height:1100px;background:#ffffff;position:relative;overflow:hidden;font-family:Arial, sans-serif;">
+        <div style=" position:absolute;left:0; top:0; width:18px; height:100%; background:#1f4e79;"></div>
+        <div style="position:absolute;top:40px;left:18px;height:56px;background:#4f81bd;color:#ffffff;font-size:22px;font-weight:bold;line-height:56px;
+    padding-left:30px;
+    padding-right:50px;
+    ">
+            TEKLİF MEKTUBU
+            <div style="position:absolute; right:-30px; top:0;width:0; height:0;
+        border-top:28px solid transparent;
+        border-bottom:28px solid transparent;
+        border-left:30px solid #4f81bd;
+        "></div>
+        </div>
+        <div style="
+    position:absolute;
+    top:30px;
+    right:30px;
+    text-align:right;
+    ">
+            <img src="~BASE_URL~logo.png" alt="Firma Logo" style="
+            max-width:140px;
+            max-height:70px;
+            display:block;
+            ">
+        </div>
+
+        <div style="
+    position:absolute;
+    top:240px;
+    left:60px;
+    right:60px;
+    font-size:14px;
+    line-height:1.6;
+    color:#000000;
+    ">
+     <div style="text-align: center;">
+        <p style="font-size: 25px; font-weight: bold; color: #34495e; margin-bottom: 30px;">DİJİTAL ERP YAZILIM TEKNOLOJİLERİ A.Ş.</p>
     </div>
 
-    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px;">
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 20px;">
         <tbody style="vertical-align: top;">
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">TEKLİF NO</td>
@@ -2234,7 +2261,7 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
             </tr>
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">PROJE ADI</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">DFDFFD ERP</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">DİJİTAL ERP</td>
             </tr>
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">MÜŞTERİ ADI</td>
@@ -2242,7 +2269,7 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
             </tr>
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">TEKLİF SUNULAN</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">~firmaYetkili~</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">Sn. ~firmaYetkili~</td>
             </tr>
             <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">TEKLİF HAZIRLAYAN</td>
@@ -2258,7 +2285,7 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
             </tr>
              <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">İLGİLİ</td>
-                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">teklifOnay</td>
+                <td style="width: 70%; padding: 3px 0; border-bottom: 1px dotted #ccc;font-weight: bold;">~teklifOnay~</td>
             </tr>
              <tr>
                 <td style="width: 30%; padding: 3px 0; font-weight: bold; color: #2c3e50;">TEL</td>
@@ -2271,7 +2298,8 @@ export const dijitalerp_price_offer_template3 = `<!DOCTYPE html>
             
         </tbody>
     </table>
-
+    </div>
+</div>
     <div style="clear: both;"></div>
     <div style="text-align: LEFT; margin-bottom:10px; border-bottom: 3px solid #2c3e50; padding-bottom: 10px;">
         <h1 style="color: #2c3e50; font-size: 15px; margin: 2px 0;">Tarih: ~teklifTarihi~ </h1>
@@ -2292,7 +2320,7 @@ yönelik çözümümüzü sağlayan ürünler ve hizmetler bazında fiyat
 teklifimizi ekte bilgi görüşlerinize sunmaktan memnuniyet duyuyoruz.</p>
         <p style="margin-top: 12px; margin-bottom: 1px; text-align: justify;"><strong>DİJİTAL ERP YAZILIM TEKNOLOJİLERİ SAN. VE TİC. A.Ş. adına,</strong></p>
     </div>
-    <img src="~BASE_URL~/teklif_veren_imza.png" style="width: 200px;">
+    <img src="~BASE_URL~teklif_veren_imza.png" style="width: 200px;">
         <p style="margin: 0px 0; font-weight: 300;">Saygılarımızla<br>~teklifOnayGorev~</p>
 
 
@@ -2606,33 +2634,6 @@ eğitilebilir.</p>
     
     <h3 style="color: #2c3e50; margin-top: 20px;">Sistem Testi:</h3>
     <p style="margin: 12px 0; text-align: justify;">Yeni kurulan sistem test edilerek kullanıma hazır hale getirilir.</p>
-
-    <h2 style="color: #34495e; font-size: 18px; margin: 20px 0 10px 0; padding: 8px; background: #ecf0f1; border-left: 4px solid #3498db;">Teknik Mimari (Parça 3'te Tekrar Ediyor)</h2>
-    
-    <p style="margin: 12px 0; text-align: justify;">DİJİTAL ERP uygulama
- ortamı içinde kendi uygulama geliştirme ve yorumlama ortamlarını içeren
- üç katmanlı (islemci, sunucu, veritabanı) ve platform ve veritabanı 
-bağımsız bir uygulama ortamıdır. Geliştirme ve yorumlama ortamları 
-tamamen pl/sql -xml kullanılarak geliştirilmiştir. Bu sebeple pek çok 
-donanım ve işletim sistemi ile sorunsuz olarak çalışabilmektedirler.</p>
-    
-    <p style="margin: 12px 0; text-align: justify;">Veri tabanı olarak SQL kullanılmıştır. İşletim sistemleri üzerinde sorunsuz çalışır.</p>
-    
-    <p style="margin: 12px 0; text-align: justify;">DİJİTAL ERP yazılımı, sisteme aynı anda bağlanacak kullanıcı sayısı baz alınarak lisanslandırılmaktadır.</p>
-    
-    <p style="margin: 12px 0; text-align: justify;">DİJİTAL ERP uygulama
- sunucusu uygulaması Windows (Windows 7 / 8 /10 Server) ve Linux işletim
- sistemleri üzerinde çalışmaktadır. Eğer uygulama sunucusu ve veritabanı
- sunucusu olarak aynı sunucu donanımı kullanılacaksa, sunucu işletim 
-sistemi veritabanı sunucusu uygulamasına bağlı olarak seçilmelidir.</p>
-    
-    <p style="margin: 12px 0; text-align: justify;">DİJİTAL ERP 
-Kullanıcı makinasında, internet explorer 7 ve üzeri kurulumu olmalıdır. 
-Pdf raporlama yapıldığı için Acrobat Reader kurulmalıdır. Veritabanı 
-sunucusu istemci erişim araçlarının kurulmasına gerek yoktur. Browser ve
- Acrobat reader dışında ( her ikisi de lisans gerektirmeyen 
-uygulamalardır) İstemci tarafında disk alanına ihtiyaç duyulmamaktadır.</p>
-
     <div style="height: 1px;"></div> <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; margin-top: 30px; font-size: 24px;">Teknik Mimari</h1>
 
     <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 20px 0; padding: 15px 20px; font-style: italic; color: #555;">
@@ -3089,9 +3090,9 @@ tarafından hayata geçirilir.
 
     <div style="height: 2px; background: #667eea; margin: 30px 0;"></div>
 
-    <h1 style="color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; margin-top: 30px; font-size: 24px;">TEKNİK ÇÖZÜMÜN AÇIKLAMASI</h1>
+     <h1 style="color: white; font-size: 22px; margin: 30px 0 15px 0; padding: 10px; background: #3498db; border-radius: 4px;">3. TEKNİK ÇÖZÜMÜN AÇIKLAMASI</h1>
 
-    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">3.1. YAZILIM LİSANSI</h2>
+    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">YAZILIM LİSANSI</h2>
 
     <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 20px 0; padding: 15px 20px; font-style: italic; color: #555;">
     Aşağıda verilen rakamların kapsamı yukarıda belirlenen modüller ve <span style="background-color: #fff3cd; padding: 2px 6px; border-radius: 3px;">50 kullanıcı</span>
@@ -3103,13 +3104,13 @@ karşılık gelen adam/gün proje grubu eğitimleri, ve seçilen ürünün
 yukarıda belirtildiği gibi kullanıcı lisansı.
     </blockquote>
 
-    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">3.2. UYARLAMA VE GELİŞTİRME HİZMETİ</h2>
+    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">UYARLAMA VE GELİŞTİRME HİZMETİ</h2>
 
     <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 20px 0; padding: 15px 20px; font-style: italic; color: #555;">
     Proje uyarlama süremiz intranet sistemli çalışacak modüller için; <span style="background-color: #fff3cd; padding: 2px 6px; border-radius: 3px;">6 ay</span> olup, bu süre ilaveler ve uyarlama istekleri olması durumunda değişiklik gösterebilir.
     </blockquote>
 
-    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">3.3. BAKIM</h2>
+    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">BAKIM</h2>
 
     <ul style="margin: 15px 0; padding-left: 30px;">
         <li style="margin: 8px 0;">Uygulama, firmanızın sunucusuna 
@@ -3137,7 +3138,7 @@ alınarak arttırılacaktır.</li>
         <li style="margin: 8px 0;">Bakım Lisans bedelinin %15 olarak her yıl sözleşme tarihinde satın alım tarihinde peşin ödeme olarak talep edilecektir.</li>
     </ul>
 
-    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">3.4. EĞİTİM</h2>
+    <h2 style="color: #34495e; margin-top: 25px; font-size: 20px; border-left: 4px solid #3498db; padding-left: 10px;">EĞİTİM</h2>
 
     <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 10px 0; padding: 15px 15px; font-style: italic; color: #555;">
     Proje süresi boyunca müşteri ile birlikte veya bağımsız çalışmaları, eğitimleri ekran karşısında pratiğe dönüştüreceklerdir.Bu proje kapsamında eğitim, 50 kişi / 10 gün verilecektir. Proje tesliminden sonra ilave eğitim taleplerinde adam/gün bazında ayrıca ücretlendirilecektir.
@@ -3282,7 +3283,7 @@ alınarak arttırılacaktır.</li>
 
         <div style="margin: 40px 0; border-top: 2px solid #e2e8f0;"></div>
 
-        <h1 style="color: #1e3a8a; font-size: 20px; font-weight: bold; margin-top: 30px; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 3px solid #3b82f6;">TİCARİ ŞARTLAR VE KOŞULLAR</h1>
+         <h1 style="color: white; font-size: 22px; margin: 30px 0 15px 0; padding: 10px; background: #3498db; border-radius: 4px;">4.TİCARİ ŞARTLAR VE KOŞULLAR</h1>
 
         <h2 style="color: #2563eb; font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 12px;">ÖDEME</h2>
         <blockquote style="background: #f8f9fa; border-left: 4px solid #3498db; margin: 20px 0; padding: 15px 20px; font-style: italic; color: #555;">
@@ -3396,6 +3397,4 @@ garanti süresi sonrasında, yüz yüze veya uzaktan çağrı sistemi ile <stron
             <p style="margin: 8px 0; color: #065f46; font-weight: 500; text-align: justify;">Email: suzan.erdal@dijitalerpyazilim.com</p>
         </div>
     </div>
-
-
-</body></html>`
+`

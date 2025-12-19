@@ -8,17 +8,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '@/store/store'
 import { setNotification } from '@/store/slices/notificationSlice'
 import { fetchFileRecords } from '@/store/slices/fileRecordSlice'
-export const EmailSender = ({ mailDto}:{mailDto?:MailSendDto} ) => {
+import { FaSearch } from 'react-icons/fa'
+import { FaUpload } from 'react-icons/fa6'
+import { FileRecordPage } from '@/pages/crm/FileRecordPage'
+import { useModal } from '@/context/ModalContext'
+export const EmailSender = ({ mailDto,priceOfferId}:{mailDto?:MailSendDto,priceOfferId?:number} ) => {
     const dispatch =useDispatch<AppDispatch>();
-    const fileRecordState = useSelector( (state: RootState) => state.fileRecord);
+    // const fileRecordState = useSelector( (state: RootState) => state.fileRecord);
     const token=useSelector((state:any)=>state.login.accessToken);
-     useEffect(() => {
-        if (fileRecordState.items.length===0 ) {
-          dispatch(fetchFileRecords( { relatedEntityName:"Opportunity"}));
-        }
-      }, []);
+    //  useEffect(() => {
+    //     if (fileRecordState.items.length===0 ) {
+    //       dispatch(fetchFileRecords( { relatedEntityName:"PriceOffer", relatedEntityId:priceOfferId}) as any);
+    //     }
+    //   }, []);
+      const {openModal} = useModal();
   return (
-    <GenericForm
+    <GenericForm   buttonNode={<button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Gönder</button>}
       fields={[
         {
           name: "toEmail",
@@ -80,18 +85,28 @@ export const EmailSender = ({ mailDto}:{mailDto?:MailSendDto} ) => {
         {
           name: "attachmentPaths.0",
           label: "Ekler",
-          type: "select",
-          colspan: 12,
-          options: fileRecordState.items.map<FieldOption>( (x) => 
-             (
-            {
-           label:x.fileName,
-           value:x.filePath
-           }
-          )
-        ),
+          type: "text",
+          readOnly:true,
+          colspan: 6,
           group: "Ekler",
-        },
+           clickIcon: [
+                              // <FaUpload color="green" title="Dosya Yükle" />,
+                              <FaSearch title="Dosya Seç" />,
+                            ],
+          onThreeDotsClick: [
+            async  (setValue) =>  {
+             const result = await openModal({
+                title: "Dosya Seç",
+                content: function (close: (result: any) => void): React.ReactNode {
+                  return <FileRecordPage onDoubleClick={(row)=>{ setValue("attachmentPaths.0", row.filePath);close(null);}} relatedEntityId={priceOfferId} relatedEntityName='PriceOffer' />
+                }})
+                // if(result)
+                // {
+                //    dispatch(fetchFileRecords( { relatedEntityName:"PriceOffer", relatedEntityId:priceOfferId}) as any);
+                // }
+            }]
+                          }
+
       ]}
       onSubmit={async (data: MailSendDto): Promise<void> => {
         const result = await apiRequest<ApiResponseClient<string>>(

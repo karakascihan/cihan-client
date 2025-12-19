@@ -530,7 +530,7 @@ if (col.filterType === "date_range") {
     className="absolute z-50 bg-white shadow-md border rounded p-3"
     style={{
       top: "120px",
-      left: "200px"
+      left: "500px"
     }}
     onClick={(e) => e.stopPropagation()} // kapanmayı engelle
   >
@@ -552,12 +552,6 @@ if (col.filterType === "date_range") {
         onClick={() => setActiveDatePicker(null)}
       >
         Kapat
-      </button>
-      <button
-        className="px-3 py-1 bg-blue-600 text-white rounded"
-        onClick={() => setActiveDatePicker(null)}
-      >
-        Uygula
       </button>
     </div>
   </div>

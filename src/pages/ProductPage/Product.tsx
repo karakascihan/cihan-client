@@ -221,6 +221,24 @@ const fields: FieldDefinition[] = [
            group:"Detay Bilgiler"
        },
         {
+           name: 'paraBirimi',
+           label: 'Para Birimi',
+           type: 'select',
+           options:[ {
+               value: "TRY",
+               label: 'TRY'
+           },{
+
+                value: "USD",    
+                label: 'USD'
+           },{
+                value: "EUR",    
+                label: 'EUR'       
+           }],  
+           required: false,
+           group:"Genel Bilgiler"
+       },
+        {
            name: 'pictures',
            label: 'Resim',
            type: 'file',
@@ -268,6 +286,9 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
         stokYeri: p.stokYeri,
         stokMiktar: p.stokMiktar,
         birimFiyat: p.birimFiyat
+        ,paraBirimi:p.paraBirimi,
+        pictures: p.pictures 
+        
     };
 }
 
@@ -287,7 +308,14 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
                     onSubmit={async (updatedDto) => {
                          const file = updatedDto.pictures[0];
                          if(file)
-                         updatedDto.pictures=await  fileToBase64(file) as any;
+                         {
+                             if (typeof file === 'string' ) {
+                                // Eğer dosya zaten base64 formatındaysa, doğrudan kullan
+                                updatedDto.pictures = updatedDto.pictures;
+                            }    
+                            else
+                             updatedDto.pictures=await  fileToBase64(file) as any;
+                         }
                         else
                             updatedDto.pictures=null;
                         dispatch(productsSlice.actions.createItem(updatedDto) as any);
@@ -332,14 +360,16 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
         </div>
     );
   }; 
-    const activitiesWithCustomerWithOpportunity = useSelector(selectActivitiesWithCustomerWithOpportunity);
+   
     const columns: Column<Products>[] = [
         { header: "#", accessor: "__index" },
         { header: "Ürün Kodu", accessor: "productCode",filterable:true ,sortable:true  },
         { header: "Ürün Adı", accessor: "productName" },
         { header: "Birimi", accessor: "olcuBirimi" },
         { header: "Birim Fiyatı", accessor: "birimFiyat", body:(row)=> row.birimFiyat?.toLocaleString() },
-        { header: "Ürün Resmi", accessor: "pictures", body:(row)=><img onClick={()=> openModal({
+        { header: "Para Birimi", accessor: "paraBirimi" },
+
+        { header: "Ürün Resmi", accessor: "pictures", body:(row)=> row.pictures ?<img onClick={()=> openModal({
             title: '',
             maximized:true,
             content: function (close: (result: any) => void): React.ReactNode {
@@ -347,7 +377,7 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
              <img  src={"data:image/jpeg;base64,"+row.pictures} />
                 )
             }
-        })} src={"data:image/jpeg;base64,"+row.pictures} style={{width:"50px",height:"50px"}} /> },
+        })} src={"data:image/jpeg;base64,"+row.pictures} style={{width:"50px",height:"50px"}} />:null },
         {header:"İşlemler",accessor:"id" ,body:(row:any)=>actionBodyTemplate(row) }
     ]
   let title="Ürünler";

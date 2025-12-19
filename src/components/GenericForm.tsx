@@ -78,11 +78,14 @@ export interface FieldDefinition {
 type GenericFormProps = {
   fields: FieldDefinition[];
   onSubmit: (data: any) => void;
+
+  buttonNode?: JSX.Element;
 };
 
 export const GenericForm: React.FC<GenericFormProps> = ({
   fields,
   onSubmit,
+   buttonNode
 }) => {
   const [fields_, setFields_] = useState<FieldDefinition[]>(fields);
   const defaultValues = fields_.reduce((acc, field) => {
@@ -253,34 +256,36 @@ export const GenericForm: React.FC<GenericFormProps> = ({
         />
       );
     } 
-    else if (type === "editor") {
-      inputElement = (
-        <Editor
-        tinymceScriptSrc="/tinymce/tinymce.min.js"
-         onInit={(_evt:any, editor:any) => (editorRef.current = editor)}
-         initialValue={defaultValues[name] || ""}
-         licenseKey="gpl"
-        init={{
-       
-          language: "tr",
-           menubar: "file edit view insert format tools table help",
-    plugins: [
-      "advlist", "anchor", "autolink", "autosave", "code", "codesample",
-      "directionality", "emoticons", "fullscreen", "help", "image",
-      "importcss", "insertdatetime", "link", "lists", "media", "nonbreaking",
-      "pagebreak", "preview", "quickbars", "save", "searchreplace",
-      "table", "template", "visualblocks", "visualchars", "wordcount",
-    ],
-    toolbar:
-      "undo redo | blocks fontfamily fontsize | bold italic underline | forecolor backcolor | " +
-      "link image media | alignleft aligncenter alignright | bullist numlist | table |  preview code | fullscreen",
-          content_style:
-            "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-        }}
-      />
+   else if (type === "editor") {
+  inputElement = (
+    <Editor
+      tinymceScriptSrc="/tinymce/tinymce.min.js"
+      licenseKey="gpl"
+      initialValue={defaultValues[name] || ""}
+      onInit={(_evt, editor) => (editorRef.current = editor)}
+      onEditorChange={(content) => {
+        setValue(name, content, { shouldValidate: true });
+      }}
+      init={{
+        language: "tr",
+        menubar: "file edit view insert format tools table help",
+        plugins: [
+          "advlist", "anchor", "autolink", "autosave", "code", "codesample",
+          "directionality", "emoticons", "fullscreen", "help", "image",
+          "importcss", "insertdatetime", "link", "lists", "media",
+          "preview", "quickbars", "searchreplace",
+          "table", "visualblocks", "wordcount",
+        ],
+        toolbar:
+          "undo redo | blocks | bold italic underline | forecolor backcolor | " +
+          "link image media | alignleft aligncenter alignright | bullist numlist | table | preview code | fullscreen",
+        content_style:
+          "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+      }}
+    />
+  );
+}
 
-      );
-    } 
     else if (type === "line") {
   inputElement = (<hr className="border-t-2 border-gray-300 my-4" />);
     }
@@ -359,12 +364,14 @@ export const GenericForm: React.FC<GenericFormProps> = ({
       </div>
 
       <div className="mt-4 flex justify-between">
+        {buttonNode??
         <button
           type="submit"
           className="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          Kaydet
+      Kaydet
         </button>
+}       
         {groupedFields[activeTab] &&
           groupedFields[activeTab].length > 0 &&
           groupedFields[activeTab]

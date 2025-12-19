@@ -15,13 +15,16 @@ import  userReducer from  './slices/userSlice';
 import  priceOfferReducer from  './slices/priceOfferSlice';
 import personelReducer from './slices/personalSlice';
 import systemLogReducer from './slices/systemLogSlice'
-import { PersonelWithEducationDto, Products } from '@/api/apiDtos';
+import { ContractsDto, ContractsDtoForInsertion, ContractsDtoForUpdate, PersonelWithEducationDto, Products } from '@/api/apiDtos';
 import enterpriseReducer from './slices/enterpriseSlice';
 import fileRecordReducer from './slices/fileRecordSlice';
+import { sliceBuilder } from './sliceBuilder';
+import { URL } from '@/api';
 export const projectsSlice = createGenericSlice<Projects>('project', '/projects');
 export const productsSlice = createGenericSlice<Products>('product', '/products');
 export const projectReportSlice = createGenericSlice<ProjectReport>('projectReport', '/projectreport');
 export const personelWithEducationSlice = createGenericSlice<PersonelWithEducationDto>('personel', '/personel');
+export const contractSlice = sliceBuilder<ContractsDtoForInsertion,ContractsDtoForUpdate,ContractsDto>({ name:"contract", url:URL+"/contracts"});
 
 const rootReducer = combineReducers({
   notification:notificationReducer,
@@ -33,6 +36,7 @@ const rootReducer = combineReducers({
   products:productsSlice.reducer,
   projectReport:projectReportSlice.reducer,
   personelWithEducation:personelWithEducationSlice.reducer,
+  contract:contractSlice.reducer,
   opportunity: opportunitySliceReducer,
   customer: customerReducer,
   activity: activityReducer,

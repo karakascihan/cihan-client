@@ -39,6 +39,8 @@ import OfferPdfPureCss2 from "@/components/CRM/OfferPdfPureCss2";
 import OfferPdf2 from "@/components/CRM/OfferPdf2";
 import { dijitalerp_price_offer_template, dijitalerp_price_offer_template2, dijitalerp_price_offer_template3, TarihFormatiDonustur } from "@/PriceOfferTemplates/dijitalerp";
 import { URL } from "@/api";
+import { addFileRecord } from "@/store/slices/fileRecordSlice";
+import { useLoading } from "@/context/LoadingContext";
 export const PriceOfferPage = ({
   opportunityId,
 }: {
@@ -78,7 +80,7 @@ export const PriceOfferPage = ({
   const personels = useSelector((state: RootState) => state.personel);
   useEffect(() => {
     if (personels.items.length === 0) {
-      dispatch(fetchpersonels({ onlyNames: true, isActive: true }));
+      dispatch(fetchpersonels({ onlyNames: false, isActive: true }));
     }
   }, []);
 
@@ -411,7 +413,7 @@ export const PriceOfferPage = ({
       maximizable: true,
       maximized: true,
       content: (close) => (
-        <EmailSender mailDto={{
+        <EmailSender priceOfferId={priceoffer.id}  mailDto={{
           toEmail: customerState.data.find((x) => x.id == priceoffer.firma_Id)?.email, subject: opportunities.data.find((x) => x.id == priceoffer.opportunityId)?.title,
           body: "Teklil metnimiz ektedir.İyi Çalışmalar."
           /*
@@ -430,6 +432,7 @@ export const PriceOfferPage = ({
       ),
     });
   };
+  const {setLoading}=useLoading();
   const showTemplate1 = (priceoffer: PriceOfferDto) => {
     openModal({
       title: "Teklif Şablonu",
@@ -445,10 +448,10 @@ export const PriceOfferPage = ({
         teklifMetni = teklifMetni.replaceAll("~firmaAdi~", firma.firma);
         teklifMetni = teklifMetni.replaceAll("~firmaYetkili~", firma.yetkili);
         teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikTarihi~", TarihFormatiDonustur(priceoffer.teklifGecerlilikTarihi.toString()));
-        teklifMetni = teklifMetni.replaceAll("~teklifOnay~", onayPersonel.personelAdi + " " + onayPersonel.personelSoyadi);
-        teklifMetni = teklifMetni.replaceAll("~teklifOnayGorev~", onayPersonel.personelGorevi);
-        teklifMetni = teklifMetni.replaceAll("~telefon~", onayPersonel.telefonNo);
-        teklifMetni = teklifMetni.replaceAll("~ePosta~", onayPersonel.ePosta);
+        teklifMetni = teklifMetni.replaceAll("~teklifOnay~", (onayPersonel.personelAdi?? "") + " " + (onayPersonel.personelSoyadi ?? ""));
+        teklifMetni = teklifMetni.replaceAll("~teklifOnayGorev~", onayPersonel.personelGorevi??"");
+        teklifMetni = teklifMetni.replaceAll("~telefon~", onayPersonel.telefonNo??"");
+        teklifMetni = teklifMetni.replaceAll("~ePosta~", onayPersonel.ePosta??"");
 
         const teklifTarihi=new Date(priceoffer.teklifTarihi);
 
@@ -511,16 +514,28 @@ export const PriceOfferPage = ({
 
         return <GenericForm
           key={priceoffer.id + "-" + Date.now()}
-
+         buttonNode={<button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Pdf Olarak Kaydet</button>}
           fields={[{
             colspan: 12,
-            name: "",
+            name: "icerik",
             label: "Teklif Düzenle",
             type: "editor",
             defaultValue: teklifMetni,
 
           }]} onSubmit={function (data: any): void {
-
+            setLoading(true);
+               dispatch( addFileRecord({
+                 fileName: "fiyat_teklifi_"+new Date().toLocaleString().replaceAll(" ", "-")+".pdf",
+                 contentType: "application/pdf",
+                 sizeKb: 0,
+                 content: data.icerik,
+                 uploadedBy: 0,
+                 relatedEntityName: "PriceOffer",
+                 relatedEntityId: priceoffer.id!,
+                 type: 5
+               })).unwrap().then(() => {
+                 setLoading(false);
+                 close(null);})
           }} />
 
       }
