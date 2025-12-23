@@ -36,7 +36,7 @@ const rootReducer = combineReducers({
   products:productsSlice.reducer,
   projectReport:projectReportSlice.reducer,
   personelWithEducation:personelWithEducationSlice.reducer,
-  contract:contractSlice.reducer,
+  // contract:contractSlice.reducer,
   opportunity: opportunitySliceReducer,
   customer: customerReducer,
   activity: activityReducer,

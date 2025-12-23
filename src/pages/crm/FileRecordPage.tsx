@@ -100,23 +100,24 @@ useEffect(() => {
           </button>
                   <button
                     onClick={() => {
-                                              openModal({
-                              title: row.fileName,
-                              maximized: true,
-                              content: function (
-                                close: (result: any) => void
-                              ): ReactNode {
-                                return (
-                                  <iframe
-                                    src={URL+"/"+row.filePath}
-                                    width="100%"
-                                    height="100%"
-                                    style={{ border: "none" }}
-                                    title="PDF Viewer"
-                                  />
-                                );
-                              },
-                            });
+                            //                   openModal({
+                            //   title: row.fileName,
+                            //   maximized: true,
+                            //   content: function (
+                            //     close: (result: any) => void
+                            //   ): ReactNode {
+                            //     return (
+                            //       <iframe
+                            //         src={URL+"/"+row.filePath}
+                            //         width="100%"
+                            //         height="100%"
+                            //         style={{ border: "none" }}
+                            //         title="PDF Viewer"
+                            //       />
+                            //     );
+                            //   },
+                            // });
+                            window.open(URL+"/"+row.filePath, '_blank');
                           }}
                     className="
                       inline-flex items-center 

@@ -50,6 +50,7 @@ export const CustomerPage = () => {
       sortable: true,
     },
     { header: "Email", accessor: "email", filterable: true, sortable: true },
+    { header: "Vergi No", accessor: "vergiNumarasi", filterable: true, sortable: true },
     {
       header: "Telefon",
       accessor: "telefon",
@@ -172,6 +173,14 @@ export const CustomerPage = () => {
         required: true,
         defaultValue: customerDtoForInsertion?.telefon || "",
         pattern: /^[0-9]{10}$/,
+      },
+      {
+        name: "vergiNumarasi",
+        label: "Vergi Numarası",
+        type: "text",
+        colspan: 12,
+        group: "Genel",
+        defaultValue: customerDtoForInsertion?.vergiNumarasi || ""
       },
       {
         name: "email",

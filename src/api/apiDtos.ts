@@ -122,7 +122,8 @@ export interface Company {
     sirketTuru: number | undefined;
     ulkeAdi: string | undefined;
     opportunity: Opportunity[] | undefined;
-    purchaseOrders: PurchaseOrders[] | undefined;
+    purchaseOrders: PurchaseOrders[] | undefined;  vergiNumrasi : string | undefined;
+       vergiNumarasi : string | undefined;
 }
 
 export interface CompanyPerson {
@@ -153,6 +154,10 @@ export interface ContractsDto {
     durum: string | undefined;
     aciklama: string | undefined;
     id: number;
+    priceOfferId: number | undefined;
+    sozlesmeBaslangicTarihi : DateOnly ;
+    sozlesmeBitisTarihi  : DateOnly ;
+ 
 }
 
 export interface ContractsDtoForInsertion {
@@ -171,6 +176,10 @@ export interface ContractsDtoForInsertion {
     durum: string | undefined;
     aciklama: string | undefined;
     isActive: boolean | undefined;
+        priceOfferId: number | undefined;
+            sozlesmeBaslangicTarihi : DateOnly ;
+    sozlesmeBitisTarihi  : DateOnly ;
+      
 }
 
 export interface ContractsDtoForUpdate {
@@ -188,6 +197,9 @@ export interface ContractsDtoForUpdate {
     teslimTarihi: DateOnly;
     durum: string | undefined;
     aciklama: string | undefined;
+        priceOfferId: number | undefined;
+            sozlesmeBaslangicTarihi : DateOnly ;
+    sozlesmeBitisTarihi  : DateOnly ;
 }
 
 export interface ContractsDtoIEnumerableApiResponse {
@@ -250,6 +262,7 @@ export interface CustomerDto {
     id: number;
     contacts: CustomerContactDto[] | undefined;
     onayDurumu: string | undefined;
+       vergiNumarasi : string | undefined;
 }
 
 export interface CustomerDtoForInsertion {
@@ -268,6 +281,7 @@ export interface CustomerDtoForInsertion {
     sirketTuru: CustomerType;
     ulkeAdi: string | undefined;
     contacts: CustomerContactDto[] | undefined;
+       vergiNumarasi : string | undefined;
 }
 
 export interface CustomerDtoForUpdate {
@@ -287,6 +301,7 @@ export interface CustomerDtoForUpdate {
     ulkeAdi: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
+       vergiNumarasi : string | undefined;
 }
 
 export interface CustomerDtoIEnumerableApiResponse {
