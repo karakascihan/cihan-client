@@ -27,6 +27,10 @@ import { CalendarPage } from "./pages/crm/CalendarPage";
 import Product from "./pages/ProductPage/Product";
 import CrmDashboard from "./pages/crm/CrmDashboardPage";
 import { ContractPage } from "./pages/crm/ContractPage";
+import { PurchaseOrderForm } from "./components/CRM/PurchaseOrderForm";
+import { AddPurchaseOrderPage2 } from "./pages/crm/AddPurchaseOrderPage2";
+import { PurchaseOrderPage } from "./pages/crm/PurchaseOrderPage";
+import { UpdatePurchaseOrderPage } from "./pages/crm/UpdatePurchaseOrderPage";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -76,6 +80,14 @@ function AppRoutes() {
         <Route path="/musteriler" element={<PrivateRoute element={<CustomerPage />} />} />
         <Route path="/teklifler" element={<PrivateRoute element={<PriceOfferPage />} />} />
         <Route path="/sozlesmeler" element={<PrivateRoute element={<ContractPage />} />} />
+        <Route path="/siparisler" element={<PrivateRoute element={<PurchaseOrderPage />} />} />
+        <Route path="/yenisiparis" element={<PrivateRoute element={<AddPurchaseOrderPage2/>} />} />
+        <Route path="/siparisiguncelle/:id" element={<PrivateRoute element={<UpdatePurchaseOrderPage />} />} />
+
+        
+        
+
+
         <Route
           path="/yeniteklif/:opportunityId?"
           element={
