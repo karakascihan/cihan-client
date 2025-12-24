@@ -68,6 +68,8 @@ const menus: MenuItem[] = [
       ,{ title: "Aktiviteler", icon: <CalendarDays className="w-4 h-4 text-green-500"   />, path: "/aktiviteler" }
       ,{ title: "Teklifler", icon: <FaFileInvoiceDollar className="w-4 h-4 text-purple-500"/>, path: "/teklifler" }
       ,{ title: "Sözleşmeler", icon: <FaFileContract className="w-4 h-4 text-purple-500"/>, path: "/sozlesmeler" }
+      ,{ title: "Siparişler", icon: <FaFileContract className="w-4 h-4 text-purple-500"/>, path: "/siparisler" }
+      ,{ title: "Yeni Sipariş", icon: <FaFileCirclePlus className="w-4 h-4 text-blue-600"/>, path: "/yenisiparis" }
       ,{ title: "Yeni Teklif", icon: <FaFileCirclePlus className="w-4 h-4 text-blue-600"/>, path: "/yeniteklif" }
       ,{ title: "Takvim", icon: <Calendar className="w-4 h-4 text-gray-600"/>, path: "/takvim" }]
 
