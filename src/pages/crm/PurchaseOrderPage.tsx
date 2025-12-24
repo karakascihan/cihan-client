@@ -212,9 +212,23 @@ export const PurchaseOrderPage = () => {
             filterable: true,
             sortable: true,
         },
+        {
+            header: "Actions",
+            accessor: "id",  
+            body: (row) => (
+              <button
+                onClick={() => {
+                  navigate(`/siparisiguncelle/${row.id}`); 
+                }}
+                className="px-2 py-1 bg-yellow-500 text-white rounded"
+              >
+                Güncelle
+              </button>
+            ),
+          },
+        ];
 
-
-    ];
+    
 
 
     useEffect(() => {
