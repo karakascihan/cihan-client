@@ -40,6 +40,8 @@ export const UpdatePurchaseOrderPage = () => {
                   
                   const dto = res.result;
                   console.log("YÜKLENEN DTO:", dto);
+                  console.log("DTO.purchaseOrderLine:", dto?.purchaseOrderLine);
+console.log("DTO keys:", Object.keys(dto || {}));
                   setForm({
                     ...emptyForm,
                     ...dto,
@@ -47,6 +49,7 @@ export const UpdatePurchaseOrderPage = () => {
                     teslimTarihi: dto.teslimTarihi ?? null,
                     purchaseOrderLine: dto.purchaseOrderLine ?? [],
                   });
+                  console.log("sonraki DTO:", dto);
                   
             } catch (err) {
                 console.error(err);
