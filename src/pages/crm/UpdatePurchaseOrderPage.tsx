@@ -4,6 +4,7 @@ import { apiRequest } from "@/services";
 import { URL } from "@/api";
 import { PurchaseOrderForm } from "@/components/CRM/PurchaseOrderForm";
 import { PurchaseOrderDtoForUpdate } from "@/api/apiDtos";
+import { ApiResponseClient } from "@/types/apiResponse";
 
 const emptyForm: PurchaseOrderDtoForUpdate = {
     id: 0,     
@@ -32,14 +33,21 @@ export const UpdatePurchaseOrderPage = () => {
             if (!id) return;
             setLoading(true);
             try {
-                const data = await apiRequest<PurchaseOrderDtoForUpdate>(
-                    "GET",
+                const res = await apiRequest<ApiResponseClient<PurchaseOrderDtoForUpdate>>(
+                   "GET",
                     URL + `/PurchaseOrder/${id}`
-                );
-                console.log("API DATA:", data);
-                setForm({
-                    ...data,
-                });
+                  );
+                  
+                  const dto = res.result;
+                  console.log("YÜKLENEN DTO:", dto);
+                  setForm({
+                    ...emptyForm,
+                    ...dto,
+                    siparisTarihi: dto.siparisTarihi ?? null,
+                    teslimTarihi: dto.teslimTarihi ?? null,
+                    purchaseOrderLine: dto.purchaseOrderLine ?? [],
+                  });
+                  
             } catch (err) {
                 console.error(err);
                 alert("Sipariş yüklenirken hata oluştu!");

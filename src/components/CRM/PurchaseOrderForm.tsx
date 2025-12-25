@@ -21,7 +21,7 @@ const handleChange = <K extends keyof T>(field: K, value: any) => {
 };
 console.log("FORM PROPS:", form);
 
-console.log("FORM PROPS:", form?.siparisTarihi);
+console.log("FORM PROPS tekil:", form?.siparisTarihi);
 
 return (
     <form onSubmit={(e) => {
