@@ -5,7 +5,8 @@ import { OpportunityDto, PriceOffer, PriceOfferDto, PurchaseOrderDto, PurchaseOr
 import { apiRequest } from "@/services";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { URL } from "@/api";
-import { FaSearch } from "react-icons/fa";
+import { FaPencilAlt, FaSearch, FaTrashAlt } from "react-icons/fa";
+import { useDeleteResource } from "@/hooks/useDeleteResource";
 
 export const PurchaseOrderPage = () => {
     const navigate = useNavigate();
@@ -118,7 +119,18 @@ export const PurchaseOrderPage = () => {
     };
 
 
-
+    const { remove: deleteOrder, deletingId } = useDeleteResource(
+        (id) => URL + `/PurchaseOrder/Delete/${id}`,
+        {
+            confirmText: "Bu siparişi silmek istediğine emin misin?",
+            onSuccess: async () => {
+                await refetchOrders();
+            },
+            onError: () => {
+                alert("Silme sırasında hata oluştu!");
+            },
+        }
+    );
     const columns: Column<Partial<PurchaseOrders>>[] = [
         {
             header: "Sipariş Numarası",
@@ -214,21 +226,78 @@ export const PurchaseOrderPage = () => {
         },
         {
             header: "Actions",
-            accessor: "id",  
+            accessor: "id",
             body: (row) => (
-              <button
-                onClick={() => {
-                  navigate(`/siparisiguncelle/${row.id}`); 
-                }}
-                className="px-2 py-1 bg-yellow-500 text-white rounded"
-              >
-                Güncelle
-              </button>
-            ),
-          },
-        ];
+                <div className="w-[96px] flex items-center justify-center gap-2  pl-2 border-l border-gray-200">
+                    <button
+                        onClick={() => {
+                            navigate(`/siparisiguncelle/${row.id}`);
+                        }}
+                        className="
+                    inline-flex items-center justify-center
+                    h-8 w-8
+                    rounded-md
+                    bg-amber-100
+                    border border-amber-300
+                    text-amber-700
+                  
+                    transition-all duration-200 ease-out
+                    transform
+                  
+                    hover:-translate-y-0.5
+                    hover:bg-amber-100
+                    hover:border-amber-400
+                    hover:text-amber-800
+                    hover:shadow-lg
+                  
+                    shadow-md
+                    focus:outline-none
+                    focus:ring-2 focus:ring-amber-300
+                    active:translate-y-0
+                    active:shadow-sm
+                  "
 
-    
+                        title="Düzenle"
+                    >
+                        <FaPencilAlt className="text-[13px]" />
+                    </button>
+                    <button
+                        onClick={() => row.id && deleteOrder(row.id)}
+                        disabled={deletingId === row.id}
+                        className="
+                  inline-flex items-center justify-center
+                  h-8 w-8
+                  rounded-md
+              
+                  bg-red-50
+                  border border-red-300
+                  text-red-700
+              
+                  transition-all duration-200 ease-out
+                  transform
+              
+                  hover:-translate-y-0.5
+                  hover:bg-red-100
+                  hover:border-red-400
+                  hover:text-red-800
+                  hover:shadow-lg
+              
+                  shadow-md
+                  focus:outline-none
+                  focus:ring-2 focus:ring-red-300
+                  active:translate-y-0
+                  active:shadow-sm
+                "
+                        title="Sil"
+                    >
+                        {deletingId === row.id ? "…" : <FaTrashAlt className="text-[13px]" />}
+                    </button>
+                </div>
+            ),
+        },
+    ];
+
+
 
 
     useEffect(() => {
