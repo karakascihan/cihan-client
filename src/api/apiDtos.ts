@@ -121,9 +121,9 @@ export interface Company {
     isActive: boolean | undefined;
     sirketTuru: number | undefined;
     ulkeAdi: string | undefined;
+    vergiNumarasi: string | undefined;
     opportunity: Opportunity[] | undefined;
-    purchaseOrders: PurchaseOrders[] | undefined;  vergiNumrasi : string | undefined;
-       vergiNumarasi : string | undefined;
+    purchaseOrders: PurchaseOrders[] | undefined;
 }
 
 export interface CompanyPerson {
@@ -136,6 +136,29 @@ export interface CompanyPerson {
     isActive: boolean | undefined;
     activity: Activity[] | undefined;
     opportunity: Opportunity[] | undefined;
+}
+
+export interface Contracts {
+    id: number;
+    kurum: string | undefined;
+    sirket: string | undefined;
+    sozlesmeTarihi: DateOnly;
+    sozlesmeNo: string | undefined;
+    sozlesmeAdi: string | undefined;
+    nsnKodu: string | undefined;
+    urunAdi: string | undefined;
+    adet: number | undefined;
+    birimFiyat: number | undefined;
+    tutar: number | undefined;
+    teslimGunu: string | undefined;
+    teslimTarihi: DateOnly;
+    durum: string | undefined;
+    aciklama: string | undefined;
+    isActive: boolean | undefined;
+    priceOfferId: number | undefined;
+    sozlesmeBaslangicTarihi: DateOnly;
+    sozlesmeBitisTarihi: DateOnly;
+    priceOffer: PriceOffer;
 }
 
 export interface ContractsDto {
@@ -153,11 +176,10 @@ export interface ContractsDto {
     teslimTarihi: DateOnly;
     durum: string | undefined;
     aciklama: string | undefined;
-    id: number;
     priceOfferId: number | undefined;
-    sozlesmeBaslangicTarihi : DateOnly ;
-    sozlesmeBitisTarihi  : DateOnly ;
- 
+    sozlesmeBaslangicTarihi: DateOnly;
+    sozlesmeBitisTarihi: DateOnly;
+    id: number;
 }
 
 export interface ContractsDtoForInsertion {
@@ -175,11 +197,10 @@ export interface ContractsDtoForInsertion {
     teslimTarihi: DateOnly;
     durum: string | undefined;
     aciklama: string | undefined;
+    priceOfferId: number | undefined;
+    sozlesmeBaslangicTarihi: DateOnly;
+    sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
-        priceOfferId: number | undefined;
-            sozlesmeBaslangicTarihi : DateOnly ;
-    sozlesmeBitisTarihi  : DateOnly ;
-      
 }
 
 export interface ContractsDtoForUpdate {
@@ -197,9 +218,9 @@ export interface ContractsDtoForUpdate {
     teslimTarihi: DateOnly;
     durum: string | undefined;
     aciklama: string | undefined;
-        priceOfferId: number | undefined;
-            sozlesmeBaslangicTarihi : DateOnly ;
-    sozlesmeBitisTarihi  : DateOnly ;
+    priceOfferId: number | undefined;
+    sozlesmeBaslangicTarihi: DateOnly;
+    sozlesmeBitisTarihi: DateOnly;
 }
 
 export interface ContractsDtoIEnumerableApiResponse {
@@ -259,10 +280,10 @@ export interface CustomerDto {
     referans: string | undefined;
     sirketTuru: CustomerType;
     ulkeAdi: string | undefined;
+    vergiNumarasi: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
     onayDurumu: string | undefined;
-       vergiNumarasi : string | undefined;
 }
 
 export interface CustomerDtoForInsertion {
@@ -280,8 +301,8 @@ export interface CustomerDtoForInsertion {
     referans: string | undefined;
     sirketTuru: CustomerType;
     ulkeAdi: string | undefined;
+    vergiNumarasi: string | undefined;
     contacts: CustomerContactDto[] | undefined;
-       vergiNumarasi : string | undefined;
 }
 
 export interface CustomerDtoForUpdate {
@@ -299,9 +320,9 @@ export interface CustomerDtoForUpdate {
     referans: string | undefined;
     sirketTuru: CustomerType;
     ulkeAdi: string | undefined;
+    vergiNumarasi: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
-       vergiNumarasi : string | undefined;
 }
 
 export interface CustomerDtoIEnumerableApiResponse {
@@ -875,10 +896,13 @@ export interface PriceOffer {
     opportunityId: number | undefined;
     referansNo: string | undefined;
     teslimTarihi: DateOnly;
-    opportunity: Opportunity;
-    priceOfferLine: PriceOfferLine[] | undefined;
     belgeIndirimOraniYuzde: number | undefined;
     garantiSuresiGun: number | undefined;
+    toplamTutar: number | undefined;
+    contracts: Contracts[] | undefined;
+    opportunity: Opportunity;
+    priceOfferLine: PriceOfferLine[] | undefined;
+    purchaseOrders: PurchaseOrders[] | undefined;
 }
 
 export interface PriceOfferDto {
@@ -898,6 +922,7 @@ export interface PriceOfferDto {
     teslimTarihi: DateOnly;
     belgeIndirimOraniYuzde: number | undefined;
     garantiSuresiGun: number | undefined;
+    toplamTutar: number | undefined;
     id: number;
     priceOfferLine: PriceOfferLineDto[] | undefined;
 }
@@ -918,6 +943,7 @@ export interface PriceOfferDtoForInsertion {
     teslimTarihi: DateOnly;
     belgeIndirimOraniYuzde: number | undefined;
     garantiSuresiGun: number | undefined;
+    toplamTutar: number | undefined;
     ekleyen: string | undefined;
     priceOfferLine: PriceOfferLineDtoForInsertion[] | undefined;
 }
@@ -938,6 +964,7 @@ export interface PriceOfferDtoForUpdate {
     teslimTarihi: DateOnly;
     belgeIndirimOraniYuzde: number | undefined;
     garantiSuresiGun: number | undefined;
+    toplamTutar: number | undefined;
     ekleyen: string | undefined;
     priceOfferLine: PriceOfferLineDtoForUpdate[] | undefined;
 }
@@ -968,8 +995,9 @@ export interface PriceOfferLine {
     paraBirimi: string | undefined;
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
-    priceOffer: PriceOffer;
     opsiyonMu: boolean | undefined;
+    toplamSatirTutari: number | undefined;
+    priceOffer: PriceOffer;
 }
 
 export interface PriceOfferLineDto {
@@ -985,6 +1013,7 @@ export interface PriceOfferLineDto {
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
     opsiyonMu: boolean | undefined;
+    toplamSatirTutari: number | undefined;
 }
 
 export interface PriceOfferLineDtoForInsertion {
@@ -1000,6 +1029,7 @@ export interface PriceOfferLineDtoForInsertion {
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
     opsiyonMu: boolean | undefined;
+    toplamSatirTutari: number | undefined;
 }
 
 export interface PriceOfferLineDtoForUpdate {
@@ -1015,6 +1045,7 @@ export interface PriceOfferLineDtoForUpdate {
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
     opsiyonMu: boolean | undefined;
+    toplamSatirTutari: number | undefined;
 }
 
 export enum PriceOfferState {
@@ -1271,7 +1302,11 @@ export interface PurchaseOrders {
     kaliteKosullari: string | undefined;
     siparisTipi: string | undefined;
     turu: string | undefined;
+    toplamIndirimOraniYuzde: number | undefined;
+    priceOfferId: number | undefined;
+    toplamTutar: number | undefined;
     firma: Company;
+    priceOffer: PriceOffer;
     purchaseOrdersLine: PurchaseOrdersLine[] | undefined;
 }
 
@@ -1293,6 +1328,8 @@ export interface PurchaseOrdersLine {
     order_Id: number | undefined;
     stogaAktarildimi: boolean | undefined;
     isActive: boolean | undefined;
+    indirimOraniYuzde: number | undefined;
+    kdvOraniYuzde: number | undefined;
     order: PurchaseOrders;
 }
 

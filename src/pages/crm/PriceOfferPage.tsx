@@ -1,4 +1,4 @@
-import { MailSendDto, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState } from "@/api/apiDtos";
+import { ContractsDto, ContractsDtoForInsertion, MailSendDto, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState } from "@/api/apiDtos";
 import OfferPdf from "@/components/CRM/OfferPdf";
 import { PriceOfferComponent } from "@/components/CRM/PriceOfferComponent";
 import {
@@ -16,15 +16,15 @@ import {
   fetchPriceOffers,
   updatePriceOffer,
 } from "@/store/slices/priceOfferSlice";
-import store, { RootState } from "@/store/store";
+import store, { AppDispatch, RootState } from "@/store/store";
 import { formatDateForInput } from "@/utils/commonUtils";
-import { use, useEffect, useState } from "react";
+import { ReactNode, use, useEffect, useState } from "react";
 import { FaAdversal, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { PriceOfferAddPage } from "./PriceOfferAddPage";
 import ProfessionalOffer from "@/components/CRM/PriceOfferComponent2";
 import { CustomerState, fetchCustomers } from "@/store/slices/customerSlice";
-import { FaEye } from "react-icons/fa6";
+import { FaEye, FaFileContract, FaFirstOrder } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { fetchUsers, UserState } from "@/store/slices/userSlice";
 import { fetchpersonels } from "@/store/slices/personalSlice";
@@ -41,6 +41,9 @@ import { dijitalerp_price_offer_template, dijitalerp_price_offer_template2, diji
 import { URL } from "@/api";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
 import { useLoading } from "@/context/LoadingContext";
+import { useApiRequest } from "@/hooks/useApiRequest";
+import { fetchEnterprises } from "@/store/slices/enterpriseSlice";
+import { setNotification } from "@/store/slices/notificationSlice";
 export const PriceOfferPage = ({
   opportunityId,
 }: {
@@ -51,7 +54,7 @@ export const PriceOfferPage = ({
   );
   const confirm = useConfirm();
   const sidebar = useSidebar();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { openModal } = useModal();
   const customerState = useSelector(
     (state: RootState) => state.customer as CustomerState
@@ -87,11 +90,119 @@ export const PriceOfferPage = ({
   const userState = useSelector((state: RootState) => state.user);
   useEffect(() => {
     if (userState.data.length === 0) {
-      dispatch(fetchUsers());
+      dispatch(fetchUsers() as any);
     }
+    dispatch(fetchEnterprises()as any);
   }, []);
+   const { refetch } = useApiRequest<ContractsDto[]>(  URL + "/contracts/getall",{method: "GET", skip: true,deps: [],}
+  );
+  const enterpriseState = useSelector((state: RootState) => state.enterprise);
+   const formElementsforContract: FieldDefinition[] = (
+    contractDtoForInsertion: ContractsDtoForInsertion
+  ) => {
+    let fields: FieldDefinition[] = [
+      {
+        name: "kurum",
+        label: "Kurum",
+        type: "select",
+        options:
+          enterpriseState.items?.map((enterprise) => ({
+            label: enterprise.enterpriseName,
+            value: enterprise.enterpriseName,
+          })) || [],
+        colspan: 12,
+        group: "Genel",
+        required: true,
+        defaultValue: contractDtoForInsertion?.kurum || "",
+      },
+      {
+        name: "sirket",
+        label: "Şirket",
+        type: "select",
+        disabled: true,
+        options:
+          customerState.data?.map((company) => ({
+            label: company.firma,
+            value: company.firma,
+          })) || [],
+        colspan: 12,
+        group: "Genel",
+        required: true,
+        defaultValue: contractDtoForInsertion?.sirket || "",
+      },
+      {
+        name: "sozlesmeTarihi",
+        label: "Sözleşme Tarihi",
+        type: "date",
+        colspan: 12,
+        group: "Genel",
 
+        defaultValue: contractDtoForInsertion?.sozlesmeTarihi || "",
+      },
+      {
+        name: "sozlesmeNo",
+        label: "Sözleşme No",
+        type: "text",
+        colspan: 12,
+        group: "Genel",
+        required: true,
+        defaultValue: contractDtoForInsertion?.sozlesmeNo || "",
+      },
+      {
+        name: "sozlesmeAdi",
+        label: "Sözleşme Adı",
+        type: "text",
+        colspan: 12,
+        group: "Genel",
+        required: true,
+        defaultValue: contractDtoForInsertion?.sozlesmeAdi || "",
+      },
+      {
+        name: "sozlesmeBaslangicTarihi",
+        label: "Sözleşme Başlangıç Tarihi",
+        type: "date",
+        colspan: 12,
+        group: "Genel",
 
+        defaultValue: contractDtoForInsertion?.sozlesmeBaslangicTarihi || "",
+      },
+      {
+        name: "sozlesmeBitisTarihi",
+        label: "Sözleşme Bitiş Tarihi",
+        type: "date",
+        colspan: 12,
+        group: "Genel",
+        defaultValue: contractDtoForInsertion?.sozlesmeBitisTarihi || "",
+      },
+      {
+        name: "aciklama",
+        label: "Açıklama",
+        type: "textarea",
+        colspan: 12,
+        group: "Genel",
+        defaultValue: contractDtoForInsertion?.aciklama || "",
+      },
+    ];
+    return fields;
+  };
+  const ConvertToContract = async (contract: ContractsDto) => {
+   openModal({
+     title: "Sözleşme Oluştur",
+     content: async function (close: (result: any) => void): Promise<ReactNode> {
+      return (<GenericForm
+        fields={formElementsforContract(contract)}
+        onSubmit={function (data: ContractsDtoForInsertion): void {
+          data.priceOfferId= contract.priceOfferId;
+           let result= refetch(URL + "/contracts/create", { method: "post", body: data });
+           if (result) {
+            dispatch(setNotification({ message: "Sözleşme başarıyla oluşturuldu.", type: "success" , title: "Başarılı"}));
+              close(result);
+           }
+        }}
+      />)
+     }
+   });
+  };
   const PriceOfferWith = useSelector(selectPriceOffersWithCustomerWithOpportunity);
   const columns: Column<PriceOfferDto>[] = [
     { header: "#", accessor: "__index" },
@@ -236,7 +347,7 @@ export const PriceOfferPage = ({
             onClick={async () => {
               const isConfirmed = await confirm({
                 title: "Silme işlemi",
-                message: "Müşteriyi silmek istediğinize emin misiniz?",
+                message: "Teklifi silmek istediğinize emin misiniz?",
                 confirmText: "Evet",
                 cancelText: "Vazgeç",
               });
@@ -269,6 +380,41 @@ export const PriceOfferPage = ({
                   "
           >
             <FaEye title="Göster" />
+          </button>
+                  <button
+            onClick={() => {
+              let contract: ContractsDto = {
+                kurum: "",
+                sirket: customerState.data?.find(c => c.id === row.firma_Id)?.firma ?? "",
+                sozlesmeTarihi: undefined,
+                sozlesmeNo: "",
+                sozlesmeAdi: "",
+                nsnKodu: "",
+                urunAdi: "",
+                adet: 0,
+                birimFiyat: 0,
+                tutar: 0,
+                teslimGunu: "",
+                teslimTarihi: undefined,
+                durum: "",
+                aciklama: "",
+                id: 0,
+                priceOfferId: row.id!,
+                sozlesmeBaslangicTarihi: undefined,
+                sozlesmeBitisTarihi: undefined
+              };
+              ConvertToContract(contract);
+            }}
+            className="
+                    inline-flex items-center 
+                    px-4 py-2 
+                    bg-sky-500 hover:bg-sky-600 
+                    text-white 
+                    rounded 
+                    mr-2
+                  "
+          >
+            <FaFileContract title="Sözleşme Oluştur" />
           </button>
           {/* <button
             onClick={() => {
@@ -305,6 +451,7 @@ export const PriceOfferPage = ({
       accessor: "id",
     },
   ];
+
   const formElements: FieldDefinition[] = (
     priceofferDtoForInsertion: PriceOfferDtoForInsertion
   ) => {

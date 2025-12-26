@@ -202,14 +202,13 @@ export const deletePriceOffer = createAsyncThunk<number, number>(
         URL + "/priceoffer/delete" + "/" + id,
         { Authorization: "Bearer " + state.login.accessToken }
       );
+      if(!response.isSuccess) throw new Error(response.result as unknown as string);
       dispatch(
         setNotification({
           title: response?.message ?? "",
-          message: " ",
+          message:  " ",
           type:
-            response.statusCode === 500
-              ? "error"
-              : response.isSuccess
+              response.isSuccess
               ? "success"
               : "warning",
         })

@@ -62,7 +62,7 @@ export const ContractPage = () => {
       dispatch(fetchPriceOffers() as any);
     }
   }, []);
-  
+
   const showTemplate1 = async (contract: ContractsDto) => {
     let filledTemplate = contractTemplate1;
     filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
@@ -70,9 +70,10 @@ export const ContractPage = () => {
       "~sirket~",
       contract.sirket || ""
     );
-     filledTemplate = filledTemplate.replaceAll(
-      "~_shortname~",
-      enterpriseState.items.find((en) => en.enterpriseName === contract.kurum).shortName || "" +" "
+    filledTemplate = filledTemplate.replaceAll(
+      "~kurum_shortname~",
+      enterpriseState.items.find((en) => en.enterpriseName === contract.kurum)
+        .shortName || "" + " "
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sozlesme_adi~",
@@ -109,7 +110,7 @@ export const ContractPage = () => {
       customersState.data.find((en) => en.firma === contract.sirket)
         ?.vergiNumarasi || ""
     );
-      let toplamFiyat = 0;
+    let toplamFiyat = 0;
 
     if (contract.priceOfferId) {
       let fiyatSatirlarHtml = ``;
@@ -118,7 +119,7 @@ export const ContractPage = () => {
         (po) => po.id === contract.priceOfferId
       );
       priceoffer.priceOfferLine?.forEach((line, index) => {
-         toplamFiyat += Number(line.toplamFiyat ?? 0);
+        toplamFiyat += Number(line.toplamFiyat ?? 0);
         let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
           line.malzemeAdi
         }</td>
@@ -139,19 +140,12 @@ export const ContractPage = () => {
                        }</td>`;
         fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
       });
-           filledTemplate = filledTemplate.replaceAll(
+      filledTemplate = filledTemplate.replaceAll(
         "~kapsam_satirlari~",
         fiyatSatirlarHtml
       );
-     
-
-    }
-      else
-     filledTemplate = filledTemplate.replaceAll(
-        "~kapsam_satirlari~",
-        ""
-      );
-     filledTemplate = filledTemplate.replaceAll(
+    } else filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", "");
+    filledTemplate = filledTemplate.replaceAll(
       "~toplam_fiyat~",
       toplamFiyat.toLocaleString() || ""
     );
@@ -397,9 +391,10 @@ export const ContractPage = () => {
           priceOffersState.data?.map((priceOffer) => ({
             label: priceOffer.teklifBelgeNo,
             value: priceOffer.id,
-          })) || [],  
+          })) || [],
         colspan: 12,
         group: "Genel",
+        disabled: contractDtoForInsertion?.id ? true : false,
         defaultValue: contractDtoForInsertion?.priceOfferId || "",
       },
       {
@@ -564,9 +559,10 @@ export const ContractPage = () => {
               editor.ui.registry.addButton("saveEditorPdf", {
                 tooltip: "PDF Olarak Kaydet",
                 icon: "save", // TinyMCE icon setinde hazır icon
-                onAction:async () => {
+                onAction: async () => {
                   setLoading(true);
-                 const result =  await dispatch(addFileRecord({
+                  const result = await dispatch(
+                    addFileRecord({
                       fileName:
                         "sozlesme_" +
                         new Date().toLocaleString().replaceAll(" ", "-") +
@@ -578,10 +574,9 @@ export const ContractPage = () => {
                       relatedEntityName: "Contract",
                       relatedEntityId: showPreview,
                       type: 5,
-                    } )
-                  )
-                    .unwrap();
-                   setLoading(false);
+                    })
+                  ).unwrap();
+                  setLoading(false);
                   setShowPreview(0);
                 },
               });

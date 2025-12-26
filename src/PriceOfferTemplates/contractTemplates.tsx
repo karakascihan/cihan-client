@@ -51,7 +51,7 @@ export const contractTemplate1 = `<div
             konulara telefonla danışmanlık, internet üzerinden destek ve gerekli hallerde doküman gönderilmesi
             hizmetlerini,</p>
 
-        <p style="margin: 10px 0;"><strong>"~kurum_shortname~",</strong>~kurum~ unvanı ile
+        <p style="margin: 10px 0;"><strong>"~kurum_shortname~",</strong> ~kurum~ unvanı ile
             faaliyet gösteren, Yazılımın üreticisi ve fikri haklarının sahibi olan şirketi,</p>
 
         <p style="margin: 10px 0;"><strong>"Türk Lirası"</strong> veya <strong>"TL",</strong> 5083 sayılı Türkiye
