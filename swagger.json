@@ -4729,6 +4729,12 @@
             "type": "string",
             "nullable": true
           },
+          "vergiNumarasi": {
+            "maxLength": 15,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "opportunity": {
             "type": "array",
             "items": {
@@ -4799,6 +4805,109 @@
               "$ref": "#/components/schemas/Opportunity"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Contracts": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kurum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sirket": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sozlesmeAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "nsnKodu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "urunAdi": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "adet": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "birimFiyat": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "tutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "teslimGunu": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "teslimTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "durum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "aciklama": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sozlesmeBaslangicTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeBitisTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "priceOffer": {
+            "$ref": "#/components/schemas/PriceOffer"
           }
         },
         "additionalProperties": false
@@ -4880,6 +4989,17 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sozlesmeBaslangicTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeBitisTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
           },
           "id": {
             "type": "integer",
@@ -4966,6 +5086,17 @@
             "type": "string",
             "nullable": true
           },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sozlesmeBaslangicTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeBitisTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
           "isActive": {
             "type": "boolean",
             "nullable": true
@@ -5050,6 +5181,17 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sozlesmeBaslangicTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "sozlesmeBitisTarihi": {
+            "$ref": "#/components/schemas/DateOnly"
           }
         },
         "additionalProperties": false
@@ -5277,6 +5419,12 @@
             "type": "string",
             "nullable": true
           },
+          "vergiNumarasi": {
+            "maxLength": 15,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "format": "int32"
@@ -5372,6 +5520,12 @@
             "type": "string",
             "nullable": true
           },
+          "vergiNumarasi": {
+            "maxLength": 15,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "contacts": {
             "type": "array",
             "items": {
@@ -5455,6 +5609,12 @@
           },
           "ulkeAdi": {
             "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "vergiNumarasi": {
+            "maxLength": 15,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -7820,6 +7980,8 @@
             "nullable": true
           },
           "teklifAciklama": {
+            "maxLength": 500,
+            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -7905,6 +8067,28 @@
           "teslimTarihi": {
             "$ref": "#/components/schemas/DateOnly"
           },
+          "belgeIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "garantiSuresiGun": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contracts"
+            },
+            "nullable": true
+          },
           "opportunity": {
             "$ref": "#/components/schemas/Opportunity"
           },
@@ -7915,14 +8099,11 @@
             },
             "nullable": true
           },
-          "belgeIndirimOraniYuzde": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
-          "garantiSuresiGun": {
-            "type": "integer",
-            "format": "int32",
+          "purchaseOrders": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrders"
+            },
             "nullable": true
           }
         },
@@ -8004,6 +8185,11 @@
           "garantiSuresiGun": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "id": {
@@ -8094,6 +8280,11 @@
             "format": "int32",
             "nullable": true
           },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
           "ekleyen": {
             "type": "string",
             "nullable": true
@@ -8180,6 +8371,11 @@
           "garantiSuresiGun": {
             "type": "integer",
             "format": "int32",
+            "nullable": true
+          },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "ekleyen": {
@@ -8316,12 +8512,17 @@
             "format": "double",
             "nullable": true
           },
-          "priceOffer": {
-            "$ref": "#/components/schemas/PriceOffer"
-          },
           "opsiyonMu": {
             "type": "boolean",
             "nullable": true
+          },
+          "toplamSatirTutari": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "priceOffer": {
+            "$ref": "#/components/schemas/PriceOffer"
           }
         },
         "additionalProperties": false
@@ -8379,6 +8580,11 @@
           },
           "opsiyonMu": {
             "type": "boolean",
+            "nullable": true
+          },
+          "toplamSatirTutari": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           }
         },
@@ -8438,6 +8644,11 @@
           "opsiyonMu": {
             "type": "boolean",
             "nullable": true
+          },
+          "toplamSatirTutari": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8495,6 +8706,11 @@
           },
           "opsiyonMu": {
             "type": "boolean",
+            "nullable": true
+          },
+          "toplamSatirTutari": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           }
         },
@@ -9610,8 +9826,26 @@
             "type": "string",
             "nullable": true
           },
+          "toplamIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
           "firma": {
             "$ref": "#/components/schemas/Company"
+          },
+          "priceOffer": {
+            "$ref": "#/components/schemas/PriceOffer"
           },
           "purchaseOrdersLine": {
             "type": "array",
@@ -9708,6 +9942,16 @@
           },
           "isActive": {
             "type": "boolean",
+            "nullable": true
+          },
+          "indirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "kdvOraniYuzde": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "order": {

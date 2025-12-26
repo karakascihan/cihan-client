@@ -22,7 +22,7 @@ import { User } from "@/types/user";
 import { formatDateForInput } from "@/utils/commonUtils";
 import { Search } from "lucide-react";
 import React, { useEffect } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray, Controller, set } from "react-hook-form";
 import { FaCheck } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { data, useNavigate, useParams } from "react-router-dom";
@@ -140,6 +140,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
 
   const onSubmit = async (data: PriceOfferDto, isRevision = false) => {
     data = { ...data, opportunityId: Number(opportunityId) };
+    data.priceOfferLine.forEach((line) => { line.toplamFiyat = calcLineTotal(line); });
     if (offer) {
       if (isRevision) {
         await dispacth(
@@ -254,12 +255,20 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
           kdvOraniYuzde:0,
           birimFiyat: product.birimFiyat || 0,
           indirimOraniYuzde: 0,
-          paraBirimi: product.paraBirimi || "TRY",
+          paraBirimi: product.paraBirimi || "TRY"
           
         });
       });
     }
   };
+  setValue("toplamTutar", total);
+  (() => {
+//  lines.forEach((line, idx) => {
+    
+//                setValue(`priceOfferLine.${idx}.toplamFiyat`, calcLineTotal(line))
+//                })
+  })();
+
   const { openModal } = useModal();
   return (
     <form
@@ -450,6 +459,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
             {fields.map((field, idx) => {
               if (field.opsiyonMu == true) return null;
               const line = lines[idx];
+              // field.toplamFiyat = calcLineTotal(line);
               return (
                 <tr key={field.id}>
                   <td className="border p-2">
@@ -547,7 +557,8 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
                     </select>
                   </td>
                   <td className="border p-2 text-right">
-                    {calcLineTotal(line).toLocaleString()}
+                    
+                     {calcLineTotal(line).toLocaleString()} 
                   </td>
                   {/* <td className="border p-2">
                     <input
@@ -598,7 +609,8 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
                 </div>
               </td>
               <td className="p-2 border font-semibold text-right">
-                {belgeIndirimTutari?.toLocaleString()}
+                
+                 {belgeIndirimTutari?.toLocaleString()} 
               </td>
               <td className="border"> </td>
             </tr>
@@ -616,7 +628,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
                 Genel Toplam:
               </td>
               <td className="p-2 border font-bold  text-red-700  text-right">
-                {total.toLocaleString()}{" "}
+                 {total.toLocaleString()}{" "} 
               </td>
               <td className="border"></td>
             </tr>
@@ -797,7 +809,6 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               kdvOraniYuzde: 0,
               opsiyonMu: true,
               birimi: "",
-              toplamFiyat: 0,
             })
           }
           className="px-3 py-1 bg-green-500 text-white rounded"

@@ -22,7 +22,7 @@ useEffect(() => {
     if (items.length===0) {
         dispatch( productsSlice.actions.fetchAll() as any );    
     }
-}, [items]);   
+}, []);   
 
 
 const fields: FieldDefinition[] = [
