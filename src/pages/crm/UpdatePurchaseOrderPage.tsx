@@ -6,9 +6,16 @@ import { PurchaseOrderForm } from "@/components/CRM/PurchaseOrderForm";
 import { PurchaseOrderDtoForUpdate } from "@/api/apiDtos";
 import { ApiResponseClient } from "@/types/apiResponse";
 
+
+type Props = {
+    id?: number;                 // modalda id buradan gelecek
+    onClose?: () => void;
+    onSuccess?: () => void | Promise<unknown>;
+};
+
 const emptyForm: PurchaseOrderDtoForUpdate = {
     id: 0,
-    firma_Id:0,
+    firma_Id: 0,
     firmaAdi: "",
     yetkiliKisi: "",
     siparisTipi: "",
@@ -24,11 +31,17 @@ const emptyForm: PurchaseOrderDtoForUpdate = {
 };
 
 
-export const UpdatePurchaseOrderPage = () => {
-    const { id } = useParams<{ id: string }>();
+export const UpdatePurchaseOrderPage = ({ id: propId, onClose, onSuccess }: Props) => {
+    const { id: routeId } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const id = propId ?? (routeId ? Number(routeId) : null);
     const [loading, setLoading] = useState(false);
     const [form, setForm] = useState<PurchaseOrderDtoForUpdate>(emptyForm);
+    console.log(
+        "[PurchaseOrder]",
+        "OPEN MODE:",
+        onClose ? "MODAL" : "PAGE"
+      );
     useEffect(() => {
         const fetchOrder = async () => {
             if (!id) return;
@@ -83,6 +96,12 @@ export const UpdatePurchaseOrderPage = () => {
 
             await apiRequest("PUT", URL + `/PurchaseOrder/Update/${id}`, payload);
             alert("Sipariş başarıyla güncellendi!");
+
+            // MODAL varsa: refetch + close
+            if (onSuccess) await onSuccess();
+            if (onClose) return onClose();
+
+            // Sayfa olarak kullanılıyorsa: navigate
             navigate("/siparisler");
         } catch (err) {
             console.error(err);
@@ -99,7 +118,7 @@ export const UpdatePurchaseOrderPage = () => {
             mode="update"
             form={form}
             setForm={setForm}
-            onSubmit={handleUpdate} // parametresiz
+            onSubmit={handleUpdate}
             loading={loading}
         />
     );

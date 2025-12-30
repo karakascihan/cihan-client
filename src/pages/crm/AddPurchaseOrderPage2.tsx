@@ -5,7 +5,13 @@ import { PurchaseOrderForm } from "@/components/CRM/PurchaseOrderForm";
 import { useState } from "react";
 import { DateOnly, PurchaseOrderDtoForInsertion } from "@/api/apiDtos";
 
-export const AddPurchaseOrderPage2 = () => {
+
+type Props = {
+  onClose?: () => void;
+  onSuccess?: () => void | Promise<unknown>;
+};
+
+export const AddPurchaseOrderPage2 = ({ onClose, onSuccess }: Props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -24,7 +30,11 @@ export const AddPurchaseOrderPage2 = () => {
     turu: "",
     purchaseOrderLine: [], // boş bile olsa backend artık görüyor
   });
-
+  console.log(
+    "[PurchaseOrder]",
+    "OPEN MODE:",
+    onClose ? "MODAL" : "PAGE"
+  );
   const handleCreate = async () => {
     setLoading(true);
     try {
@@ -37,11 +47,16 @@ export const AddPurchaseOrderPage2 = () => {
           ? (form.teslimTarihi as unknown as DateOnly)
           : null,
       };
-  
+
       console.log("GİDEN PAYLOAD:", payload);
-  
+
       await apiRequest("POST", URL + "/PurchaseOrder/Create", payload);
       alert("Sipariş başarıyla eklendi!");
+      // MODAL varsa: refetch + close
+      if (onSuccess) await onSuccess();
+      //if (onClose) return onClose();
+
+      // Sayfa olarak kullanılıyorsa: navigate
       navigate("/siparisler");
     } catch (err) {
       console.error(err);
@@ -50,8 +65,8 @@ export const AddPurchaseOrderPage2 = () => {
       setLoading(false);
     }
   };
-  
-  
+
+
 
   return (
     <PurchaseOrderForm
