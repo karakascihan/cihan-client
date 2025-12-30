@@ -1,4 +1,4 @@
-import { ContractsDto, ContractsDtoForInsertion, MailSendDto, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState } from "@/api/apiDtos";
+import { ContractsDto, ContractsDtoForInsertion, MailSendDto, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState, PurchaseOrderDto, PurchaseOrderDtoForInsertion } from "@/api/apiDtos";
 import OfferPdf from "@/components/CRM/OfferPdf";
 import { PriceOfferComponent } from "@/components/CRM/PriceOfferComponent";
 import {
@@ -31,12 +31,8 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
 import { PriceOfferStateDescriptions } from "@/api/extra-enums";
 import { MdSend, MdTempleHindu } from "react-icons/md";
 import { EmailSender } from "@/components/mail/EmailSender";
-import ReactDOMServer from "react-dom/server";
-import OfferPdfPureCss from "@/components/CRM/OfferPdfPureCss";
 import { OpportunityState, fetchOpportunities } from "@/store/slices/opportunitySlice";
 import { selectPriceOffersWithCustomerWithOpportunity } from "@/store/selectors/opportunitySelector";
-import OfferPdfPureCss2 from "@/components/CRM/OfferPdfPureCss2";
-import OfferPdf2 from "@/components/CRM/OfferPdf2";
 import { dijitalerp_price_offer_template, dijitalerp_price_offer_template2, dijitalerp_price_offer_template3, TarihFormatiDonustur } from "@/PriceOfferTemplates/dijitalerp";
 import { URL } from "@/api";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
@@ -44,6 +40,7 @@ import { useLoading } from "@/context/LoadingContext";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { fetchEnterprises } from "@/store/slices/enterpriseSlice";
 import { setNotification } from "@/store/slices/notificationSlice";
+import { AddPurchaseOrderPage2 } from "./AddPurchaseOrderPage2";
 export const PriceOfferPage = ({
   opportunityId,
 }: {
@@ -200,6 +197,14 @@ export const PriceOfferPage = ({
            }
         }}
       />)
+     }
+   });
+  };
+    const ConvertToOrder = async (order: PurchaseOrderDtoForInsertion) => {
+   openModal({
+     title: "Sipariş Oluştur",
+     content:  (close: (result: any) => void): ReactNode =>{
+      return (<AddPurchaseOrderPage2 />)
      }
    });
   };
@@ -415,6 +420,52 @@ export const PriceOfferPage = ({
                   "
           >
             <FaFileContract title="Sözleşme Oluştur" />
+          </button>
+                   <button
+            onClick={() => {
+              const firma=customerState.data.find(c=>c.id==row.firma_Id);
+              let order: PurchaseOrderDtoForInsertion = {
+                firmaAdi: firma.firma,
+                yetkiliKisi: firma.yetkili,
+                siparisTarihi: new Date().toString(),
+                teslimTarihi: new Date().toString(),
+                aciklama: "",
+                durumu: "",
+                onayAcikla: "",
+                siparisKosullari: "",
+                kaliteKosullari: "",
+                siparisTipi: "",
+                turu: "",
+                purchaseOrderLine: []
+              };
+              row.priceOfferLine.forEach(line=>{
+                order.purchaseOrderLine.push({
+                  malzemeKodu: line.malzemeKodu,
+                  malzemeAdi: line.malzemeAdi,
+                  miktar: line.miktar,
+                  birimi: line.birimi,
+                  birimFiyat: line.birimFiyat,
+                  paraBirimi: line.paraBirimi,
+                  teslimTarih: undefined,
+                  aciklama: "",
+                  tamamTarihi: undefined,
+                  durumu: "",
+                  stogaAktarildimi: false,
+                  order_Id: 0
+                });
+              })
+              ConvertToOrder(order);
+            }}
+            className="
+                    inline-flex items-center 
+                    px-4 py-2 
+                    bg-sky-500 hover:bg-sky-600 
+                    text-white 
+                    rounded 
+                    mr-2
+                  "
+          >
+            <FaFirstOrder title="Sipariş Oluştur" />
           </button>
           {/* <button
             onClick={() => {
