@@ -123,7 +123,12 @@ export interface Company {
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     opportunity: Opportunity[] | undefined;
+<<<<<<< HEAD
+    purchaseOrders: PurchaseOrders[] | undefined; vergiNumrasi: string | undefined;
+    vergiNumarasi: string | undefined;
+=======
     purchaseOrders: PurchaseOrders[] | undefined;
+>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CompanyPerson {
@@ -179,7 +184,11 @@ export interface ContractsDto {
     priceOfferId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
+<<<<<<< HEAD
+
+=======
     id: number;
+>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface ContractsDtoForInsertion {
@@ -201,6 +210,13 @@ export interface ContractsDtoForInsertion {
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
+<<<<<<< HEAD
+    priceOfferId: number | undefined;
+    sozlesmeBaslangicTarihi: DateOnly;
+    sozlesmeBitisTarihi: DateOnly;
+
+=======
+>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface ContractsDtoForUpdate {
@@ -284,6 +300,10 @@ export interface CustomerDto {
     id: number;
     contacts: CustomerContactDto[] | undefined;
     onayDurumu: string | undefined;
+<<<<<<< HEAD
+    vergiNumarasi: string | undefined;
+=======
+>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoForInsertion {
@@ -303,6 +323,10 @@ export interface CustomerDtoForInsertion {
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     contacts: CustomerContactDto[] | undefined;
+<<<<<<< HEAD
+    vergiNumarasi: string | undefined;
+=======
+>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoForUpdate {
@@ -323,6 +347,10 @@ export interface CustomerDtoForUpdate {
     vergiNumarasi: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
+<<<<<<< HEAD
+    vergiNumarasi: string | undefined;
+=======
+>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoIEnumerableApiResponse {
@@ -1248,6 +1276,7 @@ export interface PurchaseOrderDto {
 }
 
 export interface PurchaseOrderDtoForInsertion {
+    firma_Id: number;
     firmaAdi: string | undefined;
     yetkiliKisi: string | undefined;
     siparisTarihi: DateOnly;
@@ -1263,6 +1292,7 @@ export interface PurchaseOrderDtoForInsertion {
 }
 
 export interface PurchaseOrderDtoForUpdate {
+    firma_Id: number;
     firmaAdi: string | undefined;
     yetkiliKisi: string | undefined;
     siparisTarihi: DateOnly;
@@ -1291,6 +1321,7 @@ export interface PurchaseOrderLineDto {
     toplamFiyat: number | undefined;
     faturaNo: string | undefined;
     order_Id: number | undefined;
+    product_Id: number | undefined;
     isActive: boolean | undefined;
     malzemeKodu: string | undefined;
     malzemeAdi: string | undefined;
@@ -1306,6 +1337,7 @@ export interface PurchaseOrderLineDto {
 }
 
 export interface PurchaseOrderLineDtoForInsertion {
+    product_Id: number | undefined;
     malzemeKodu: string | undefined;
     malzemeAdi: string | undefined;
     miktar: number | undefined;
@@ -1321,6 +1353,7 @@ export interface PurchaseOrderLineDtoForInsertion {
 }
 
 export interface PurchaseOrderLineDtoForUpdate {
+    product_Id: number | undefined;
     malzemeKodu: string | undefined;
     malzemeAdi: string | undefined;
     miktar: number | undefined;
@@ -1379,6 +1412,7 @@ export interface PurchaseOrdersLine {
     durumu: string | undefined;
     faturaNo: string | undefined;
     order_Id: number | undefined;
+    product_Id: number | undefined;
     stogaAktarildimi: boolean | undefined;
     isActive: boolean | undefined;
     indirimOraniYuzde: number | undefined;

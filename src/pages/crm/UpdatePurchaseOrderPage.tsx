@@ -7,7 +7,8 @@ import { PurchaseOrderDtoForUpdate } from "@/api/apiDtos";
 import { ApiResponseClient } from "@/types/apiResponse";
 
 const emptyForm: PurchaseOrderDtoForUpdate = {
-    id: 0,     
+    id: 0,
+    firma_Id:0,
     firmaAdi: "",
     yetkiliKisi: "",
     siparisTipi: "",
@@ -20,9 +21,9 @@ const emptyForm: PurchaseOrderDtoForUpdate = {
     siparisTarihi: null,
     teslimTarihi: null,
     purchaseOrderLine: [],
-  };
+};
 
-  
+
 export const UpdatePurchaseOrderPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -34,23 +35,26 @@ export const UpdatePurchaseOrderPage = () => {
             setLoading(true);
             try {
                 const res = await apiRequest<ApiResponseClient<PurchaseOrderDtoForUpdate>>(
-                   "GET",
+                    "GET",
                     URL + `/PurchaseOrder/${id}`
-                  );
-                  
-                  const dto = res.result;
-                  console.log("YÜKLENEN DTO:", dto);
-                  console.log("DTO.purchaseOrderLine:", dto?.purchaseOrderLine);
-console.log("DTO keys:", Object.keys(dto || {}));
-                  setForm({
+                );
+
+                const dto = res.result;
+                console.log("YÜKLENEN DTO:", dto);
+                console.log("ESMAAAAAAAAAAAAAAAAAAAAAAAAAAAAA:", dto?.purchaseOrderLine);
+                console.log("LINE KEYS:", dto?.purchaseOrderLine?.[0] && Object.keys(dto.purchaseOrderLine[0] as any));
+                console.log("LINE RAW:", dto?.purchaseOrderLine?.[0]);
+
+                console.log("DTO keys:", Object.keys(dto || {}));
+                setForm({
                     ...emptyForm,
                     ...dto,
                     siparisTarihi: dto.siparisTarihi ?? null,
                     teslimTarihi: dto.teslimTarihi ?? null,
                     purchaseOrderLine: dto.purchaseOrderLine ?? [],
-                  });
-                  console.log("sonraki DTO:", dto);
-                  
+                });
+                console.log("sonraki DTO:", dto);
+
             } catch (err) {
                 console.error(err);
                 alert("Sipariş yüklenirken hata oluştu!");
@@ -58,13 +62,13 @@ console.log("DTO keys:", Object.keys(dto || {}));
                 setLoading(false);
             }
         };
-    
+
         fetchOrder();
     }, [id]);
     useEffect(() => {
         console.log("YÜKLENEN FORM:", form);
     }, [form]);
-    
+
 
     const handleUpdate = async () => {
         if (!form || !id) return;
@@ -74,6 +78,7 @@ console.log("DTO keys:", Object.keys(dto || {}));
                 ...form,
                 siparisTarihi: form.siparisTarihi ?? null,
                 teslimTarihi: form.teslimTarihi ?? null,
+                firma_Id: form.firma_Id ?? null,
             };
 
             await apiRequest("PUT", URL + `/PurchaseOrder/Update/${id}`, payload);
