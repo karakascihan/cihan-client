@@ -125,9 +125,7 @@ export interface Company {
     opportunity: Opportunity[] | undefined;
 //<<<<<<< HEAD
     purchaseOrders: PurchaseOrders[] | undefined; vergiNumrasi: string | undefined;
-    vergiNumarasi: string | undefined;
 //=======
-    purchaseOrders: PurchaseOrders[] | undefined;
 //>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
@@ -211,9 +209,7 @@ export interface ContractsDtoForInsertion {
     sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
 //<<<<<<< HEAD
-    priceOfferId: number | undefined;
-    sozlesmeBaslangicTarihi: DateOnly;
-    sozlesmeBitisTarihi: DateOnly;
+  
 
 //=======
 //>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
@@ -301,7 +297,6 @@ export interface CustomerDto {
     contacts: CustomerContactDto[] | undefined;
     onayDurumu: string | undefined;
 //<<<<<<< HEAD
-    vergiNumarasi: string | undefined;
 //=======
 //>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
@@ -324,7 +319,6 @@ export interface CustomerDtoForInsertion {
     vergiNumarasi: string | undefined;
     contacts: CustomerContactDto[] | undefined;
 //<<<<<<< HEAD
-    vergiNumarasi: string | undefined;
 //=======
 //>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
@@ -348,7 +342,6 @@ export interface CustomerDtoForUpdate {
     id: number;
     contacts: CustomerContactDto[] | undefined;
 //<<<<<<< HEAD
-    vergiNumarasi: string | undefined;
 //=======
 //>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }

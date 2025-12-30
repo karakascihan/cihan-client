@@ -1,7 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {Column, SmartTable} from "@/components/SmartTable";
 import {PurchaseOrderDto, PurchaseOrders} from "@/api/apiDtos";
-import { apiRequest } from "@/services";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { URL } from "@/api";
 import {FaPencilAlt,FaTrashAlt} from "react-icons/fa";
@@ -9,13 +8,35 @@ import {useDeleteResource} from "@/hooks/useDeleteResource";
 
 export const PurchaseOrderPage = () => {
     const navigate = useNavigate();
-    const {data: purchaseOrders, refetch: refetchOrders} = useApiRequest<PurchaseOrderDto>(
+    const {data: purchaseOrders, refetch: refetchOrders} = useApiRequest<PurchaseOrders>(
         URL + "/PurchaseOrder/GetAll", {
             method: "GET",
             skip: false,
             deps: [],
         }
     );
+    const getAllPurchaseOrders = (): Partial<PurchaseOrders>[] => {
+        if (!purchaseOrders) return [];
+        return purchaseOrders.map(order => ({
+            id: order.id!,
+            firmaAdi: order.firmaAdi ?? "",
+            aciklama: order.aciklama ?? "",
+            durumu: order.durumu ?? "",
+            onayAcikla: order.onayAcikla ?? "",
+            faturaNo: order.faturaNo ?? "",
+            siparisKosullari: order.siparisKosullari ?? "",
+            kaliteKosullari: order.kaliteKosullari ?? "",
+            siparisTipi: order.siparisTipi ?? "",
+            turu: order.turu ?? "",
+            firma_Id: order.firma_Id,
+            siparisTarihi: order.siparisTarihi,
+            teslimTarihi: order.teslimTarihi,
+            yetkiliKisi: order.yetkiliKisi,
+            projeNo: order.projeNo ?? "",
+            siparisNo: order.siparisNo ?? "",
+            
+        }));
+    };
     const { remove: deleteOrder, deletingId } = useDeleteResource(
         (id) => URL + `/PurchaseOrder/Delete/${id}`,
         {
@@ -30,7 +51,6 @@ export const PurchaseOrderPage = () => {
     );
    
     const columns: Column<Partial<PurchaseOrders>>[] = [
-        { header: "#", accessor: "__index" },
 {
             header: "Sipariş Numarası",
             accessor: "siparisNo",
