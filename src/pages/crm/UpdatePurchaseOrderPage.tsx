@@ -27,6 +27,8 @@ const emptyForm: PurchaseOrderDtoForUpdate = {
     onayAcikla: "",
     siparisTarihi: null,
     teslimTarihi: null,
+    toplamIndirimOraniYuzde: 0,
+    toplamTutar: 0,
     purchaseOrderLine: [],
 };
 

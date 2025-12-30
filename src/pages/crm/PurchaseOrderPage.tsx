@@ -155,7 +155,7 @@ export const PurchaseOrderPage = () => {
                             openModal({
                                 title: "",
                                 maximizable: true,
-                                style: { width: "60vw" },
+                                style: { width: "70vw" },
                                 content: (close) => (
                                     <UpdatePurchaseOrderPage
                                         id={row.id!}
@@ -247,7 +247,7 @@ export const PurchaseOrderPage = () => {
                     openModal({
                         title: "",
                         maximizable: true,
-                        style: { width: "60vw" },
+                        style: { width: "70vw" },
                         content: (close) => (
                             <AddPurchaseOrderPage2
                                 onSuccess={refetchOrders}

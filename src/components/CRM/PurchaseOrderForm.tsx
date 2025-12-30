@@ -35,7 +35,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
     console.log("FORM PROPS tekil:", form?.siparisTarihi);
 
     type CompanyOption = { id: number; firmaAdi: string; yetkiliKisi: string };
-    type ProductOption = { id: number; malzemeKodu: string; malzemeAdi: string };
+    type ProductOption = { id: number; malzemeKodu: string; malzemeAdi: string; birim?: string; birimFiyat?: number; paraBirimi?: string };
 
     const [companies, setCompanies] = React.useState<CompanyOption[]>([]);
     const [products, setProducts] = React.useState<ProductOption[]>([]);
@@ -59,6 +59,10 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                         id: (p as any).id,
                         malzemeKodu: (p as any).productCode,
                         malzemeAdi: (p as any).productName,
+                        birim: (p as any).olcuBirimi,
+                        miktar: (p as any).stokMiktar,
+                        birimFiyat: (p as any).birimFiyat,
+                        paraBirimi: (p as any).paraBirimi,
                     }))
                 );
 
@@ -157,6 +161,9 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
         updateLine(lineIndex, "product_Id" as any, p.id as any);
         updateLine(lineIndex, "malzemeKodu", p.malzemeKodu as any);
         updateLine(lineIndex, "malzemeAdi", p.malzemeAdi as any);
+        updateLine(lineIndex, "birimi", p.birim as any);
+        updateLine(lineIndex, "birimFiyat", p.birimFiyat as any);
+        updateLine(lineIndex, "paraBirimi", p.paraBirimi as any);
     };
 
     return (
@@ -170,14 +177,12 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
             <div className="max-w-8xl mx-auto">
 
                 {/* Header - gri ton uyumlu */}
-                <div className="flex items-center justify-between mb-4 bg-gray-100 border rounded px-4 py-2">
-                    <h1 className="text-xl font-bold text-gray-700">
+                <div className="relative flex items-center mb-4 bg-gray-100 border rounded px-4 h-14">
+                    <h1 className="absolute left-1/2 -translate-x-1/2 text-lg text-gray-700 font-bold">
                         {mode === "create" ? "Yeni Sipariş" : "Sipariş Güncelle"}
                     </h1>
 
-                    <span className="text-xs px-2 py-1 rounded bg-white text-gray-600 border">
-                        {mode === "create" ? "Create" : "Update"}
-                    </span>
+
                 </div>
 
 
@@ -236,24 +241,39 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                             />
                         </div>
 
-                        {/* Sipariş Tipi */}
-                        <div className="col-span-12 md:col-span-3">
-                            <label className="block text-xs font-semibold text-gray-600 mb-1">Sipariş Tipi</label>
+                        {/* Durumu */}
+                        <div className="col-span-12 md:col-span-2">
+                            <label className="block text-xs font-semibold text-gray-600 mb-1">Durumu</label>
+
+                            <select
+                                value={form.durumu ?? ""}
+                                onChange={(e) => handleChange("durumu", e.target.value)}
+                                className="w-full border p-2 rounded-md bg-white"
+                            >
+                                <option value="" disabled>Seçiniz...</option>
+                                <option value="planlandi">Planlandı</option>
+                                <option value="onaylandi">Onaylandı</option>
+                                <option value="stokgiris">Stok Girişi Yapıldı</option>
+                                <option value="iade">İade Sipariş</option>
+                            </select>
+                        </div>
+                        {/* Toplam İndirim Oranı Yüzdesi */}
+                        <div className="col-span-12 md:col-span-2">
+                            <label className="block text-xs font-semibold text-gray-600 mb-1">Toplam İndirim Oranı Yüzdesi</label>
                             <input
-                                type="text"
-                                value={form.siparisTipi}
-                                onChange={(e) => handleChange("siparisTipi", e.target.value)}
+                                type="number"
+                                value={form.toplamIndirimOraniYuzde}
+                                onChange={(e) => handleChange("toplamIndirimOraniYuzde", e.target.value)}
                                 className="w-full border p-2 rounded-md bg-white"
                             />
                         </div>
-
-                        {/* Durumu */}
-                        <div className="col-span-12 md:col-span-3">
-                            <label className="block text-xs font-semibold text-gray-600 mb-1">Durumu</label>
+                        {/* Toplam Tutar*/}
+                        <div className="col-span-12 md:col-span-2">
+                            <label className="block text-xs font-semibold text-gray-600 mb-1">Toplam Tutar</label>
                             <input
-                                type="text"
-                                value={form.durumu}
-                                onChange={(e) => handleChange("durumu", e.target.value)}
+                                type="number"
+                                value={form.toplamTutar}
+                                onChange={(e) => handleChange("toplamTutar", e.target.value)}
                                 className="w-full border p-2 rounded-md bg-white"
                             />
                         </div>
@@ -281,7 +301,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                         </div>
 
                         {/* Açıklama */}
-                        <div className="col-span-12 md:col-span-8">
+                        <div className="col-span-12 md:col-span-6">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Açıklama</label>
                             <textarea
                                 value={form.aciklama}
@@ -292,7 +312,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                         </div>
 
                         {/* Onay Açıklaması */}
-                        <div className="col-span-12 md:col-span-4">
+                        <div className="col-span-12 md:col-span-6">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Onay Açıklaması</label>
                             <textarea
                                 value={form.onayAcikla}
@@ -329,18 +349,36 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                     {lines.length === 0 ? (
                         <div className="text-sm text-gray-500">Henüz kalem yok.</div>
                     ) : (
-                        <div className="w-full flex justify-center">
+                        <div className="w-full overflow-x-auto">
                             <table className="w-full border-collapse border table-fixed">
+                                <colgroup>
+
+                                    <col style={{ width: "240px" }} /> 
+                                    <col style={{ width: "80px" }} /> 
+                                    <col style={{ width: "80px" }} />   
+                                    <col style={{ width: "80px" }} />  
+                                    <col style={{ width: "80px" }} />  
+                                    <col style={{ width: "80px" }} />  
+                                    <col style={{ width: "160px" }} />  
+                                    <col style={{ width: "160px" }} />  
+                                    <col style={{ width: "70px" }} />  
+                                    <col style={{ width: "70px" }} />  
+                                    <col style={{ width: "70px" }} />   
+                                    <col style={{ width: "70px" }} />  
+
+                                </colgroup>
                                 <thead className="bg-gray-100">
                                     <tr>
-                                        <th className="border p-2 w-[140px]">Malzeme Kodu</th>
                                         <th className="border p-2 w-[240px]">Malzeme Adı</th>
-                                        <th className="border p-2 w-[90px]">Miktar</th>
+                                        <th className="border p-2 w-[140px]">Malzeme Kodu</th>
                                         <th className="border p-2 w-[90px]">Birim</th>
                                         <th className="border p-2 w-[120px]">Birim Fiyat</th>
                                         <th className="border p-2 w-[90px]">Para Birimi</th>
+                                        <th className="border p-2 w-[90px]">Miktar</th>
                                         <th className="border p-2 w-[160px]">Durumu</th>
                                         <th className="border p-2 w-[220px]">Açıklama</th>
+                                        <th className="border p-2 w-[220px]">İndirim Oranı Yüzdesi</th>
+                                        <th className="border p-2 w-[220px]">KDV Oranı Yüzdesi</th>
                                         <th className="border p-2 w-[120px]">Stoğa</th>
                                         <th className="border p-2 w-[90px]">İşlem</th>
                                     </tr>
@@ -349,14 +387,6 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                 <tbody>
                                     {lines.map((line, idx) => (
                                         <tr key={getLineKey(line, idx)} className="align-top">
-                                            <td className="border p-2">
-                                                <input
-                                                    value={line.malzemeKodu ?? ""}
-                                                    onChange={(e) => updateLine(idx, "malzemeKodu", e.target.value as any)}
-                                                    className="w-full border rounded p-1"
-                                                />
-                                            </td>
-
                                             <td className="border p-2">
                                                 {/* Malzeme adı - ürün seçimi dropdown */}
                                                 <select
@@ -377,14 +407,10 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                     Seçili: {line.malzemeAdi ?? "-"}
                                                 </div>
                                             </td>
-
                                             <td className="border p-2">
                                                 <input
-                                                    type="number"
-                                                    value={line.miktar ?? ""}
-                                                    onChange={(e) =>
-                                                        updateLine(idx, "miktar", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
-                                                    }
+                                                    value={line.malzemeKodu ?? ""}
+                                                    onChange={(e) => updateLine(idx, "malzemeKodu", e.target.value as any)}
                                                     className="w-full border rounded p-1"
                                                 />
                                             </td>
@@ -415,6 +441,16 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                     className="w-full border rounded p-1"
                                                 />
                                             </td>
+                                            <td className="border p-2">
+                                                <input
+                                                    type="number"
+                                                    value={line.miktar ?? ""}
+                                                    onChange={(e) =>
+                                                        updateLine(idx, "miktar", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
+                                                    }
+                                                    className="w-full border rounded p-1"
+                                                />
+                                            </td>
 
                                             <td className="border p-2">
                                                 <input
@@ -429,6 +465,26 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                     value={line.aciklama ?? ""}
                                                     onChange={(e) => updateLine(idx, "aciklama", e.target.value as any)}
                                                     className="w-full border rounded p-1"
+                                                />
+                                            </td>
+                                            <td className="border p-1 w-[70px]">
+                                                <input
+                                                    type="number"
+                                                    value={line.indirimOraniYuzde ?? ""}
+                                                    onChange={(e) =>
+                                                        updateLine(idx, "indirimOraniYuzde", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
+                                                    }
+                                                    className="w-[55px] border rounded px-1 py-0.5 text-center text-sm"
+                                                />
+                                            </td>
+                                            <td className="border p-1 w-[40px]">
+                                                <input
+                                                    type="number"
+                                                    value={line.kdvOraniYuzde ?? ""}
+                                                    onChange={(e) =>
+                                                        updateLine(idx, "kdvOraniYuzde", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
+                                                    }
+                                                    className="w-[55px] border rounded px-1 py-0.5 text-center text-sm"
                                                 />
                                             </td>
 
@@ -458,7 +514,9 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                             </table>
                         </div>
                     )}
+
                 </div>
+
             </div>
 
             <div className="mt-4 flex justify-end">

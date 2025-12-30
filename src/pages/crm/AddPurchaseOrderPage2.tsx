@@ -28,6 +28,8 @@ export const AddPurchaseOrderPage2 = ({ onClose, onSuccess }: Props) => {
     kaliteKosullari: "",
     siparisTipi: "",
     turu: "",
+    toplamIndirimOraniYuzde: 0,
+    toplamTutar: 0,
     purchaseOrderLine: [], // boş bile olsa backend artık görüyor
   });
   console.log(

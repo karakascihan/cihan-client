@@ -1281,6 +1281,8 @@ export interface PurchaseOrderDtoForInsertion {
     kaliteKosullari: string | undefined;
     siparisTipi: string | undefined;
     turu: string | undefined;
+    toplamIndirimOraniYuzde: number | undefined;
+    toplamTutar: number | undefined;
     purchaseOrderLine: PurchaseOrderLineDtoForInsertion[] | undefined;
 }
 
@@ -1297,6 +1299,8 @@ export interface PurchaseOrderDtoForUpdate {
     kaliteKosullari: string | undefined;
     siparisTipi: string | undefined;
     turu: string | undefined;
+    toplamIndirimOraniYuzde: number | undefined;
+    toplamTutar: number | undefined;
     purchaseOrderLine: PurchaseOrderLineDtoForUpdate[] | undefined;
     id: number;
 }
@@ -1343,6 +1347,8 @@ export interface PurchaseOrderLineDtoForInsertion {
     durumu: string | undefined;
     stogaAktarildimi: boolean | undefined;
     order_Id: number | undefined;
+    indirimOraniYuzde: number | undefined;
+    kdvOraniYuzde: number | undefined;
 }
 
 export interface PurchaseOrderLineDtoForUpdate {
@@ -1359,6 +1365,8 @@ export interface PurchaseOrderLineDtoForUpdate {
     durumu: string | undefined;
     stogaAktarildimi: boolean | undefined;
     order_Id: number | undefined;
+    indirimOraniYuzde: number | undefined;
+    kdvOraniYuzde: number | undefined;
     id: number;
 }
 
