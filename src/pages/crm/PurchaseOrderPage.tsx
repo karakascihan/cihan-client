@@ -16,7 +16,7 @@ export const PurchaseOrderPage = () => {
             deps: [],
         }
     );
-    const{remove : deleteOrder,deletingId}=useDeleteResource(
+    const { remove: deleteOrder, deletingId } = useDeleteResource(
         (id) => URL + `/PurchaseOrder/Delete/${id}`,
         {
             confirmText: "Bu siparişi silmek istediğine emin misin?",
@@ -28,7 +28,8 @@ export const PurchaseOrderPage = () => {
             },
         }
     );
-    const columns: Column<PurchaseOrders>[] = [
+   
+    const columns: Column<Partial<PurchaseOrders>>[] = [
         { header: "#", accessor: "__index" },
 {
             header: "Sipariş Numarası",
@@ -116,6 +117,7 @@ export const PurchaseOrderPage = () => {
             sortable: true,
         },
         {
+            
             header: "Actions",
             accessor: "id",
             body: (row) => (
@@ -131,67 +133,77 @@ export const PurchaseOrderPage = () => {
                     bg-amber-100
                     border border-amber-300
                     text-amber-700
-                    
+                  
                     transition-all duration-200 ease-out
                     transform
+                  
                     hover:-translate-y-0.5
                     hover:bg-amber-100
                     hover:border-amber-400
                     hover:text-amber-800
-                    hover:shadow-lg 
+                    hover:shadow-lg
+                  
                     shadow-md
                     focus:outline-none
                     focus:ring-2 focus:ring-amber-300
                     active:translate-y-0
                     active:shadow-sm
                   "
+
                         title="Düzenle"
                     >
-                        <FaPencilAlt className="text-[13px]"/>
+                        <FaPencilAlt className="text-[13px]" />
                     </button>
                     <button
                         onClick={() => row.id && deleteOrder(row.id)}
                         disabled={deletingId === row.id}
                         className="
-                    inline-flex items-center justify-center
-                    h-8 w-8
-                    rounded-md
-                    bg-red-50
-                    border border-red-300
-                    text-red-700
-                    transition-all duration-200 ease-out
-                    transform
-                    hover:-translate-y-0.5
-                    hover:bg-red-100
-                    hover:border-red-400
-                    hover:text-red-800
-                    hover:shadow-lg
-                    shadow-md
-                    focus:outline-none
-                    focus:ring-2 focus:ring-red-300
-                    active:translate-y-0
-                    active:shadow-sm
-                    "
+                  inline-flex items-center justify-center
+                  h-8 w-8
+                  rounded-md
+              
+                  bg-red-50
+                  border border-red-300
+                  text-red-700
+              
+                  transition-all duration-200 ease-out
+                  transform
+              
+                  hover:-translate-y-0.5
+                  hover:bg-red-100
+                  hover:border-red-400
+                  hover:text-red-800
+                  hover:shadow-lg
+              
+                  shadow-md
+                  focus:outline-none
+                  focus:ring-2 focus:ring-red-300
+                  active:translate-y-0
+                  active:shadow-sm
+                "
                         title="Sil"
                     >
-                        {deletingId === row.id ? "…" : <FaTrashAlt className="text-[13px]"/>}
+                        {deletingId === row.id ? "…" : <FaTrashAlt className="text-[13px]" />}
                     </button>
                 </div>
             ),
         },
     ];
+
+
     return (
         <div className="card">
             <h2 className="text-xl text-center font-bold mb-2">Siparişler</h2>
-            <SmartTable<PurchaseOrders>
-                data={purchaseOrders || []}
+            <SmartTable<Partial<PurchaseOrders>>
+                data={getAllPurchaseOrders()}
                 columns={columns}
                 rowIdAccessor={"id"}
-                frozenColumns={[{name: "id", right: true}]}
+                frozenColumns={[{ name: "id", right: true }]}
                 isExport={true}
                 newRecordVoid={() => {
                     navigate("/yenisiparis");
                 }}
+
                 scrollHeight="calc(100vh - 200px)"
                 enablePagination={false}
             ></SmartTable>
