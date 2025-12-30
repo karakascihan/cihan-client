@@ -2313,12 +2313,12 @@ export const dijitalerp_price_offer_template3 = `
     </div>
 
     <div style="margin: 8px 0; line-height: 1.8; page-break-inside: avoid;">
-        <p style="margin: 8px 0; text-align: justify;"><strong>Sayın ERKAN SEÇKİN;</strong></p>
+        <p style="margin: 8px 0; text-align: justify;"><strong>Sayın ~firmaYetkili~;</strong></p>
         <p style="margin: 8px 0; text-align: justify;">Firmamıza gösterdiğiniz ilgi için teşekkür ederiz.</p>
         <p style="margin: 8px 0; text-align: justify;">Talebinize 
 yönelik çözümümüzü sağlayan ürünler ve hizmetler bazında fiyat 
 teklifimizi ekte bilgi görüşlerinize sunmaktan memnuniyet duyuyoruz.</p>
-        <p style="margin-top: 12px; margin-bottom: 1px; text-align: justify;"><strong>DİJİTAL ERP YAZILIM TEKNOLOJİLERİ SAN. VE TİC. A.Ş. adına,</strong></p>
+        <p style="margin-top: 12px; margin-bottom: 1px; text-align: justify;"><strong>~firmaAdi~ adına,</strong></p>
     </div>
     <img src="~BASE_URL~teklif_veren_imza.png" style="width: 200px;">
         <p style="margin: 0px 0; font-weight: 300;">Saygılarımızla<br>~teklifOnayGorev~</p>

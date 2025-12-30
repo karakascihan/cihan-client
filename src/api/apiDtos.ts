@@ -407,8 +407,7 @@ export interface EducationFileMappingInsertion {
     base64Data: string | undefined;
 }
 
-export interface Enterprise {
-    id: number;
+export interface EnterpriseDto {
     enterpriseName: string | undefined;
     shortName: string | undefined;
     logoUrl: string | undefined;
@@ -434,14 +433,71 @@ export interface Enterprise {
     qualityCertificates: string | undefined;
     exportStatus: boolean | undefined;
     employeeCount: number | undefined;
+    id: number;
     createdAt: Date | undefined;
     updatedAt: Date | undefined;
 }
 
-export interface EnterpriseIEnumerableApiResponse {
+export interface EnterpriseDtoForInsertion {
+    enterpriseName: string | undefined;
+    shortName: string | undefined;
+    logoUrl: string | undefined;
+    sector: string | undefined;
+    address: string | undefined;
+    city: string | undefined;
+    country: string | undefined;
+    phone: string | undefined;
+    email: string | undefined;
+    website: string | undefined;
+    contactPerson: string | undefined;
+    contactTitle: string | undefined;
+    contactPhone: string | undefined;
+    contactEmail: string | undefined;
+    taxOffice: string | undefined;
+    taxNumber: string | undefined;
+    registrationNumber: string | undefined;
+    iban: string | undefined;
+    currency: string | undefined;
+    machinePark: string | undefined;
+    productionCapacity: string | undefined;
+    materialsWorkedOn: string | undefined;
+    qualityCertificates: string | undefined;
+    exportStatus: boolean | undefined;
+    employeeCount: number | undefined;
+}
+
+export interface EnterpriseDtoForUpdate {
+    enterpriseName: string | undefined;
+    shortName: string | undefined;
+    logoUrl: string | undefined;
+    sector: string | undefined;
+    address: string | undefined;
+    city: string | undefined;
+    country: string | undefined;
+    phone: string | undefined;
+    email: string | undefined;
+    website: string | undefined;
+    contactPerson: string | undefined;
+    contactTitle: string | undefined;
+    contactPhone: string | undefined;
+    contactEmail: string | undefined;
+    taxOffice: string | undefined;
+    taxNumber: string | undefined;
+    registrationNumber: string | undefined;
+    iban: string | undefined;
+    currency: string | undefined;
+    machinePark: string | undefined;
+    productionCapacity: string | undefined;
+    materialsWorkedOn: string | undefined;
+    qualityCertificates: string | undefined;
+    exportStatus: boolean | undefined;
+    employeeCount: number | undefined;
+}
+
+export interface EnterpriseDtoIEnumerableApiResponse {
     message: string | undefined;
     statusCode: number;
-    result: Enterprise[] | undefined;
+    result: EnterpriseDto[] | undefined;
     isSuccess: boolean;
 }
 
@@ -996,7 +1052,6 @@ export interface PriceOfferLine {
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
     opsiyonMu: boolean | undefined;
-    toplamSatirTutari: number | undefined;
     priceOffer: PriceOffer;
 }
 
@@ -1013,7 +1068,6 @@ export interface PriceOfferLineDto {
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
     opsiyonMu: boolean | undefined;
-    toplamSatirTutari: number | undefined;
 }
 
 export interface PriceOfferLineDtoForInsertion {
@@ -1029,7 +1083,6 @@ export interface PriceOfferLineDtoForInsertion {
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
     opsiyonMu: boolean | undefined;
-    toplamSatirTutari: number | undefined;
 }
 
 export interface PriceOfferLineDtoForUpdate {
@@ -1045,7 +1098,6 @@ export interface PriceOfferLineDtoForUpdate {
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
     opsiyonMu: boolean | undefined;
-    toplamSatirTutari: number | undefined;
 }
 
 export enum PriceOfferState {
@@ -1181,7 +1233,6 @@ export interface PurchaseOrderDto {
     projeNo: string | undefined;
     firma_Id: number | undefined;
     faturaNo: string | undefined;
-    opportunityId: number;
     firmaAdi: string | undefined;
     yetkiliKisi: string | undefined;
     siparisTarihi: DateOnly;
@@ -1266,6 +1317,7 @@ export interface PurchaseOrderLineDtoForInsertion {
     tamamTarihi: DateOnly;
     durumu: string | undefined;
     stogaAktarildimi: boolean | undefined;
+    order_Id: number | undefined;
 }
 
 export interface PurchaseOrderLineDtoForUpdate {
@@ -1280,6 +1332,7 @@ export interface PurchaseOrderLineDtoForUpdate {
     tamamTarihi: DateOnly;
     durumu: string | undefined;
     stogaAktarildimi: boolean | undefined;
+    order_Id: number | undefined;
     id: number;
 }
 

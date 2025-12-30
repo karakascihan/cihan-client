@@ -363,7 +363,8 @@ export const GenericForm: React.FC<GenericFormProps> = ({
         {groupedFields[activeTab]?.filter((f) => f.key !== "btn")}
       </div>
 
-      <div className="mt-4 flex justify-between">
+      <div className="mt-4 flex justify-between sticky bottom-0 bg-white py-3 border-t z-10">
+
         {buttonNode??
         <button
           type="submit"

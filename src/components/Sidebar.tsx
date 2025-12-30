@@ -15,7 +15,7 @@ import {
 import { useUI } from "../context/UIContext";
 import { useSelector } from "react-redux";
 import icon from "../images/logo/favicon.ico";
-import { FaFileCirclePlus, FaFileContract, FaWarehouse } from "react-icons/fa6";
+import { FaBuilding, FaFileCirclePlus, FaFileContract, FaWarehouse } from "react-icons/fa6";
 import {
   FaBoxes,
   FaCoins,
@@ -271,7 +271,9 @@ const menus: MenuItem[] = [
       },*/
     ],
   },
-  // { title: "Ayarlar", icon: <FiSettings />, path: "/ayarlar", roles: [1,2] },
+   { title: "Ayarlar", icon: <FiSettings />,  roles: [1,2] ,items: [{
+     title: "Şirketlerim", icon:<FaBuilding/>, path:"/sirketlerim"
+   }] },
 ];
 export const Sidebar: React.FC = () => {
   const { sidebarOpen, closeSidebar, collapsed,toggleCollapsed } = useUI();

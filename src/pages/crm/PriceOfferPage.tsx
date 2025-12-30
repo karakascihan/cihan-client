@@ -320,7 +320,7 @@ export const PriceOfferPage = ({
       sortable: true,
       summaryType: "sum",
       body: (row: PriceOfferDto) => {
-        return <span>{row.toplamFiyat.toLocaleString("tr-TR",
+        return <span>{row.toplamTutar?.toLocaleString("tr-TR",
           { style: "currency", currency: (row.priceOfferLine && row.priceOfferLine[0]?.paraBirimi) ?? "TRY" }) ?? 0}</span>;
       }
     },

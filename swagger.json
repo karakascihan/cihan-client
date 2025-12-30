@@ -1136,20 +1136,126 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnterpriseIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/EnterpriseDtoIEnumerableApiResponse"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnterpriseIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/EnterpriseDtoIEnumerableApiResponse"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EnterpriseIEnumerableApiResponse"
+                  "$ref": "#/components/schemas/EnterpriseDtoIEnumerableApiResponse"
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/enterprise/create": {
+      "post": {
+        "tags": [
+          "Enterprise"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForInsertion"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForInsertion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForInsertion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/enterprise/update/{id}": {
+      "put": {
+        "tags": [
+          "Enterprise"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnterpriseDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/enterprise/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Enterprise"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -5935,13 +6041,9 @@
         },
         "additionalProperties": false
       },
-      "Enterprise": {
+      "EnterpriseDto": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "enterpriseName": {
             "maxLength": 200,
             "minLength": 0,
@@ -6087,6 +6189,10 @@
             "format": "int32",
             "nullable": true
           },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -6100,7 +6206,309 @@
         },
         "additionalProperties": false
       },
-      "EnterpriseIEnumerableApiResponse": {
+      "EnterpriseDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "enterpriseName": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "shortName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sector": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactTitle": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactPhone": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactEmail": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "taxOffice": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "taxNumber": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "registrationNumber": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "iban": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "currency": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "machinePark": {
+            "type": "string",
+            "nullable": true
+          },
+          "productionCapacity": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "materialsWorkedOn": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "qualityCertificates": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "exportStatus": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "employeeCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnterpriseDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "enterpriseName": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "shortName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "logoUrl": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "sector": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactPerson": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactTitle": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactPhone": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "contactEmail": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "taxOffice": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "taxNumber": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "registrationNumber": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "iban": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "currency": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "machinePark": {
+            "type": "string",
+            "nullable": true
+          },
+          "productionCapacity": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "materialsWorkedOn": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "qualityCertificates": {
+            "maxLength": 300,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "exportStatus": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "employeeCount": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnterpriseDtoIEnumerableApiResponse": {
         "type": "object",
         "properties": {
           "message": {
@@ -6114,7 +6522,7 @@
           "result": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Enterprise"
+              "$ref": "#/components/schemas/EnterpriseDto"
             },
             "nullable": true
           },
@@ -8516,11 +8924,6 @@
             "type": "boolean",
             "nullable": true
           },
-          "toplamSatirTutari": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
-          },
           "priceOffer": {
             "$ref": "#/components/schemas/PriceOffer"
           }
@@ -8581,11 +8984,6 @@
           "opsiyonMu": {
             "type": "boolean",
             "nullable": true
-          },
-          "toplamSatirTutari": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8644,11 +9042,6 @@
           "opsiyonMu": {
             "type": "boolean",
             "nullable": true
-          },
-          "toplamSatirTutari": {
-            "type": "number",
-            "format": "double",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8706,11 +9099,6 @@
           },
           "opsiyonMu": {
             "type": "boolean",
-            "nullable": true
-          },
-          "toplamSatirTutari": {
-            "type": "number",
-            "format": "double",
             "nullable": true
           }
         },
@@ -9356,10 +9744,6 @@
             "type": "string",
             "nullable": true
           },
-          "opportunityId": {
-            "type": "integer",
-            "format": "int32"
-          },
           "firmaAdi": {
             "type": "string",
             "nullable": true
@@ -9672,6 +10056,11 @@
           "stogaAktarildimi": {
             "type": "boolean",
             "nullable": true
+          },
+          "order_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -9721,6 +10110,11 @@
           },
           "stogaAktarildimi": {
             "type": "boolean",
+            "nullable": true
+          },
+          "order_Id": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "id": {

@@ -1,3 +1,9 @@
+import React, { useEffect, useRef } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
+import { FaCheck } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+
 import {
   PriceOfferDto,
   PriceOfferLineDto,
@@ -7,7 +13,6 @@ import {
 import { PriceOfferStateDescriptions } from "@/api/extra-enums";
 import { SmartTable } from "@/components/SmartTable";
 import { useModal } from "@/context/ModalContext";
-import { GenericState } from "@/store/genericSliceFactory";
 import { CustomerState, fetchCustomers } from "@/store/slices/customerSlice";
 import { fetchpersonels } from "@/store/slices/personalSlice";
 import {
@@ -18,84 +23,51 @@ import { clearSelectedRows } from "@/store/slices/selectedRowsSlice";
 import { fetchUsers, UserState } from "@/store/slices/userSlice";
 import { AppDispatch, productsSlice, RootState } from "@/store/store";
 
-import { User } from "@/types/user";
-import { formatDateForInput } from "@/utils/commonUtils";
-import { Search } from "lucide-react";
-import React, { useEffect } from "react";
-import { useForm, useFieldArray, Controller, set } from "react-hook-form";
-import { FaCheck } from "react-icons/fa6";
-import { useDispatch, useSelector } from "react-redux";
-import { data, useNavigate, useParams } from "react-router-dom";
-
-// Satır toplamlarını hesapla
-export const calcLineTotal = (line: PriceOfferLineDto) => {
-  if (!line || !line.birimFiyat) return 0;
-  const miktar = line.miktar || 0;
-  const fiyat = line.birimFiyat || 0;
-  const indirim = line.indirimOraniYuzde || 0;
-  const indirimliTutar = miktar * fiyat * (1 - indirim / 100);
-  return indirimliTutar;
-};
-export const calcLineTotalKdv = (line: PriceOfferLineDto) => {
-  if (!line || !line.birimFiyat) return 0;
+// Yardımcı fonksiyonlar
+export const calcLineTotal = (line: PriceOfferLineDto): number => {
+  if (!line?.birimFiyat) return 0;
 
   const miktar = line.miktar || 0;
   const fiyat = line.birimFiyat || 0;
   const indirim = line.indirimOraniYuzde || 0;
-  const indirimliTutar = miktar * fiyat * (1 - indirim / 100);
-  return indirimliTutar * ((line.kdvOraniYuzde || 0) / 100);
+
+  return miktar * fiyat * (1 - indirim / 100);
 };
+
+export const calcLineTotalKdv = (line: PriceOfferLineDto): number => {
+  if (!line?.birimFiyat) return 0;
+
+  const indirimliTutar = calcLineTotal(line);
+  const kdvOrani = line.kdvOraniYuzde || 0;
+
+  return indirimliTutar * (kdvOrani / 100);
+};
+
 export const paraBirimleri = ["TRY", "USD", "EUR"];
-export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
-  const dispacth = useDispatch<AppDispatch>();
+
+interface PriceOfferAddPageProps {
+  offer: PriceOfferDto;
+}
+
+export const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
+  offer,
+}) => {
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { opportunityId } = useParams();
+  const isFirstLoad = useRef(true);
+  const { openModal } = useModal();
+const [manualTotal, setManualTotal] = React.useState(offer?true:false);
 
+  // Redux selectors
   const products = useSelector((state: RootState) => state.products);
-
-  useEffect(() => {
-    const teklifTarihiStr = getValues("teklifTarihi");
-    const teslimTarihiStr = getValues("teslimTarihi");
-
-    if (!teklifTarihiStr || !teslimTarihiStr) return;
-
-    const t1 = new Date(teklifTarihiStr);
-    const t2 = new Date(teslimTarihiStr);
-
-    const diffDays = Math.ceil(
-      (t2.getTime() - t1.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    setValue("teslimSuresiGun", diffDays > 0 ? diffDays : 0);
-  }, []);
-  useEffect(() => {
-    if (products.items.length === 0) {
-      dispacth(productsSlice.actions.fetchAll());
-    }
-  }, []);
   const users = useSelector((state: RootState) => state.user as UserState);
-  useEffect(() => {
-    if (users.data.length === 0) {
-      dispacth(fetchUsers());
-    }
-  }, []);
-
   const personels = useSelector((state: RootState) => state.personel);
-  useEffect(() => {
-    if (personels.items?.length === 0) {
-      dispacth(fetchpersonels({ onlyNames: true, isActive: true }));
-    }
-  }, []);
-
   const customerState = useSelector(
     (state: RootState) => state.customer as CustomerState
   );
-  // Customers sadece boşsa yüklenir
-  useEffect(() => {
-    if (customerState.data?.length === 0) {
-      dispacth(fetchCustomers());
-    }
-  }, []);
 
+  // Form setup
   const {
     register,
     control,
@@ -106,17 +78,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
     formState: { errors },
   } = useForm<PriceOfferDto>({
     defaultValues: offer || {
-      priceOfferLine: [
-        // {
-        //   malzemeKodu: "",
-        //   malzemeAdi: "",
-        //   miktar: 1,
-        //   birimFiyat: 0,
-        //   indirimOraniYuzde: 0,
-        //   paraBirimi: "TRY",
-        //   kdvOraniYuzde: 20,
-        // },
-      ],
+      priceOfferLine: [],
     },
   });
 
@@ -125,123 +87,123 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
     name: "priceOfferLine",
   });
 
-  let lines = watch("priceOfferLine") || [];
-  lines = lines.filter((x) => x.opsiyonMu !== true);
-  // Ara toplam ve KDV
+  // Veri yükleme useEffect'leri
+  useEffect(() => {
+    if (products.items.length === 0) {
+      dispatch(productsSlice.actions.fetchAll());
+    }
+  }, [dispatch, products.items.length]);
+
+  useEffect(() => {
+    if (users.data.length === 0) {
+      dispatch(fetchUsers());
+    }
+  }, [dispatch, users.data.length]);
+
+  useEffect(() => {
+    if (personels.items?.length === 0) {
+      dispatch(fetchpersonels({ onlyNames: true, isActive: true }));
+    }
+  }, [dispatch, personels.items?.length]);
+
+  useEffect(() => {
+    if (customerState.data?.length === 0) {
+      dispatch(fetchCustomers());
+    }
+  }, [dispatch, customerState.data?.length]);
+
+  // Hesaplamalar
+  const allLines = watch("priceOfferLine") || [];
+  const productLines = allLines.filter((x) => x.opsiyonMu !== true);
   const belgeIndirim = watch("belgeIndirimOraniYuzde") || 0;
 
-  const subtotal = lines.reduce((acc, line) => acc + calcLineTotal(line), 0);
+  const subtotal = productLines.reduce(
+    (acc, line) => acc + calcLineTotal(line),
+    0
+  );
   const belgeIndirimTutari = subtotal * (belgeIndirim / 100);
-
-  let tax = lines.reduce((acc, line) => acc + calcLineTotalKdv(line), 0);
+  let tax = productLines.reduce((acc, line) => acc + calcLineTotalKdv(line), 0);
   tax = tax * (1 - belgeIndirim / 100);
 
-  const total = subtotal - belgeIndirimTutari + tax;
+  let total = subtotal - belgeIndirimTutari + tax;
 
-  const onSubmit = async (data: PriceOfferDto, isRevision = false) => {
-    data = { ...data, opportunityId: Number(opportunityId) };
-    data.priceOfferLine.forEach((line) => { line.toplamFiyat = calcLineTotal(line); });
-    if (offer) {
-      if (isRevision) {
-        await dispacth(
-          addPriceOffer({ newLeave: data, isRevision: isRevision })
-        );
-      } else
-        await dispacth(
-          updatePriceOffer({
-            id: offer.id,
-            changes: data,
-          })
-        );
-    } else
-      await dispacth(addPriceOffer({ newLeave: data, isRevision: isRevision }));
-    if (opportunityId && opportunityId !== "undefined") navigate("/firsatdetay/" + opportunityId);
-    else navigate("/teklifler");
-  };
-  const _OpenModal = async (index: number, isOption: boolean = false) => {
+  // useEffect(() => {
+  //   if (isFirstLoad.current) {
+  //     isFirstLoad.current = false;
+  //   }
+  // }, [total]);
+
+  // if (isFirstLoad.current && offer) {
+  //   total = offer.toplamTutar;
+  // }
+
+ useEffect(() => {
+  if (!manualTotal) {
+    setValue("toplamTutar", total);
+  }
+}, [total, manualTotal, setValue]);
+
+
+
+  // Modal açma fonksiyonu
+  const openProductModal = async (index: number, isOption: boolean = false) => {
     let selectedProducts: Products[] = [];
-    dispacth(clearSelectedRows({ tableId: "my-table-id" }));
+    dispatch(clearSelectedRows({ tableId: "my-table-id" }));
+
     const result = await openModal({
       title: "Ürün Seçimi",
       content(close) {
         return (
-          <div>
-            <div className="flex  flex-col gap-2 ">
-              <SmartTable
-                pageSize={10}
-                enablePagination={true}
-                data={products.items ?? []}
-                columns={[
-                  { header: "#", accessor: "__select", filterable: false },
-
-                  { header: "#", accessor: "__index" },
-                  {
-                    header: "Ürün Kodu",
-                    filterable: true,
-                    accessor: "productCode",
-                  },
-                  {
-                    header: "Ürün Adı",
-                    filterable: true,
-                    accessor: "productName",
-                  },
-                  {
-                    header: "Birimi",
-                    filterable: true,
-                    accessor: "olcuBirimi",
-                  },
-                { header: "Birim Fiyatı", accessor:"birimFiyat", body:(row)=> row.birimFiyat?.toLocaleString() },
-                { header: "Para Bİrimi", accessor:"paraBirimi"},
-
-                ]}
-                onSelectedRowChange={(item) => {
-                  if (item && !selectedProducts.find((p) => p.id == item.id)) {
-                    selectedProducts.push(item);
-                  } else {
-                    selectedProducts = selectedProducts.filter(
-                      (p) => p.id != item.id
-                    );
-                  }
-                }}
-                rowIdAccessor={"id"}
-                onDoubleClick={(item) => {
-                  return;
-                  // Modal kapat
-                  close(item);
-                  // Form değerini güncelle
-                  setValue(
-                    `priceOfferLine.${index}.malzemeKodu`,
-                    item.productCode
+          <div className="flex flex-col gap-2">
+            <SmartTable
+              pageSize={10}
+              enablePagination={true}
+              data={products.items ?? []}
+              columns={[
+                { header: "#", accessor: "__select", filterable: false },
+                { header: "#", accessor: "__index" },
+                {
+                  header: "Ürün Kodu",
+                  filterable: true,
+                  accessor: "productCode",
+                },
+                {
+                  header: "Ürün Adı",
+                  filterable: true,
+                  accessor: "productName",
+                },
+                { header: "Birimi", filterable: true, accessor: "olcuBirimi" },
+                {
+                  header: "Birim Fiyatı",
+                  accessor: "birimFiyat",
+                  body: (row) => row.birimFiyat?.toLocaleString(),
+                },
+                { header: "Para Birimi", accessor: "paraBirimi" },
+              ]}
+              onSelectedRowChange={(item) => {
+                if (item && !selectedProducts.find((p) => p.id === item.id)) {
+                  selectedProducts.push(item);
+                } else {
+                  selectedProducts = selectedProducts.filter(
+                    (p) => p.id !== item.id
                   );
-                  setValue(
-                    `priceOfferLine.${index}.malzemeAdi`,
-                    item.productName
-                  );
-                  setValue(`priceOfferLine.${index}.birimi`, item.olcuBirimi);
-                    setValue(
-                    `priceOfferLine.${index}.opsiyonMu`,
-                   isOption
-                  );
-                }}
-              />
-              <button
-                onClick={(e) => close(true)}
-                className="
-                    inline-flex justify-center items-center 
-                    px-4 py-2 
-                    bg-blue-600 hover:bg-blue-700 
-                    text-white 
-                    rounded
-                  "
-              >
-                <FaCheck className="mr-2" />
-                Kaydet
-              </button>
-            </div>
+                }
+              }}
+              rowIdAccessor="id"
+              onDoubleClick={() => {}}
+            />
+            <button
+              onClick={() => close(true)}
+              className="inline-flex justify-center items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+            >
+              <FaCheck className="mr-2" />
+              Kaydet
+            </button>
           </div>
         );
       },
     });
+
     if (result) {
       selectedProducts.forEach((product) => {
         append({
@@ -249,38 +211,161 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
           malzemeAdi: product.productName,
           miktar: 1,
           birimi: product.olcuBirimi,
-          birimFiyat: 0,
-          paraBirimi: "TRY",
-          opsiyonMu: isOption,
-          kdvOraniYuzde:0,
           birimFiyat: product.birimFiyat || 0,
+          paraBirimi: product.paraBirimi || "TRY",
+          opsiyonMu: isOption,
+          kdvOraniYuzde: 0,
           indirimOraniYuzde: 0,
-          paraBirimi: product.paraBirimi || "TRY"
-          
         });
       });
     }
   };
-  setValue("toplamTutar", total);
-  (() => {
-//  lines.forEach((line, idx) => {
-    
-//                setValue(`priceOfferLine.${idx}.toplamFiyat`, calcLineTotal(line))
-//                })
-  })();
 
-  const { openModal } = useModal();
+  // Form submit
+  const onSubmit = async (data: PriceOfferDto, isRevision = false) => {
+    data = { ...data, opportunityId: Number(opportunityId) };
+    data.priceOfferLine.forEach((line) => {
+      line.toplamFiyat = calcLineTotal(line);
+    });
+
+    if (offer) {
+      if (isRevision) {
+        await dispatch(addPriceOffer({ newLeave: data, isRevision: true }));
+      } else {
+        await dispatch(updatePriceOffer({ id: offer.id, changes: data }));
+      }
+    } else {
+      await dispatch(addPriceOffer({ newLeave: data, isRevision: false }));
+    }
+
+    if (opportunityId && opportunityId !== "undefined") {
+      navigate(`/firsatdetay/${opportunityId}`);
+    } else {
+      navigate("/teklifler");
+    }
+  };
+
+  // Teslim süresi değişikliği
+  const handleDeliveryDaysChange = (days: number) => {
+    const teklifTarihiStr = getValues("teklifTarihi");
+    if (!teklifTarihiStr) return;
+
+    const date = new Date(teklifTarihiStr);
+    date.setDate(date.getDate() + days);
+    setValue("teslimTarihi", date.toISOString().split("T")[0]);
+  };
+
+  // Satır render fonksiyonu
+  const renderProductLine = (
+    field: any,
+    idx: number,
+    isOption: boolean = false
+  ) => {
+    const line = allLines[idx];
+
+    return (
+      <tr key={field.id}>
+        <td className="border p-2">
+          <input
+            type="text"
+            className="w-full border rounded p-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            {...register(`priceOfferLine.${idx}.malzemeKodu`)}
+          />
+        </td>
+        <td className="border p-2">
+          <input
+            className="border p-1 rounded w-full"
+            {...register(`priceOfferLine.${idx}.malzemeAdi`)}
+          />
+        </td>
+        <td className="border p-2">
+          <input
+            type="number"
+            className="border p-1 rounded w-full"
+            {...register(`priceOfferLine.${idx}.miktar`, {
+              valueAsNumber: true,
+            })}
+          />
+        </td>
+        <td className="border p-2">
+          <input
+            className="border p-1 rounded w-full"
+            {...register(`priceOfferLine.${idx}.birimi`)}
+          />
+        </td>
+        <td className="border p-2">
+          <input
+            type="number"
+            step="0.01"
+            className="border p-1 rounded w-full"
+            {...register(`priceOfferLine.${idx}.birimFiyat`, {
+              valueAsNumber: true,
+            })}
+          />
+        </td>
+        <td className="border p-2">
+          <input
+            type="number"
+            className="border p-1 rounded w-full"
+            {...register(`priceOfferLine.${idx}.indirimOraniYuzde`, {
+              valueAsNumber: true,
+              setValueAs: (v) => v ?? 0,
+            })}
+          />
+        </td>
+        <td className="border p-2">
+          <input
+            type="number"
+            className="border p-1 rounded w-full"
+            {...register(`priceOfferLine.${idx}.kdvOraniYuzde`, {
+              valueAsNumber: true,
+              setValueAs: (v) => v ?? 0,
+            })}
+          />
+        </td>
+        <td className="border p-2">
+          <select
+            className="border p-1 rounded w-full"
+            {...register(`priceOfferLine.${idx}.paraBirimi`)}
+          >
+            {paraBirimleri.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency}
+              </option>
+            ))}
+          </select>
+        </td>
+        {!isOption && (
+          <td className="border p-2 text-right">
+            {calcLineTotal(line).toLocaleString()}
+          </td>
+        )}
+        <td className="border p-2 text-center">
+          <button
+            type="button"
+            onClick={() => remove(idx)}
+            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Sil
+          </button>
+        </td>
+      </tr>
+    );
+  };
+
   return (
     <form
-      onSubmit={handleSubmit((e) => onSubmit(e, false))}
+      onSubmit={handleSubmit((data) => onSubmit(data, false))}
       className="max-w-8xl mx-auto p-6 bg-white shadow rounded"
     >
-      <div className="flex justify-center  bg-gray-300  mb-3  text-gray-600">
+      {/* Başlık */}
+      <div className="flex justify-center bg-gray-300 mb-3 text-gray-600">
         <h1 className="text-2xl font-bold mb-2 p-1">
-          {offer ? "Teklif Düzenle" : " Yeni Teklif"}
+          {offer ? "Teklif Düzenle" : "Yeni Teklif"}
         </h1>
       </div>
 
+      {/* Form Alanları */}
       <div className="flex flex-col justify-center gap-2">
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -293,6 +378,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               disabled
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium">Referans No</label>
             <input
@@ -323,25 +409,17 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               className="w-full border p-2 rounded-md"
             />
           </div>
-          {/* <div >
-            <label className="block text-sm font-medium">Teslim Tarihi</label>
-            <input
-              type="date"
-              required
-              {...register("teslimTarihi")}
-              className="w-full border p-2 rounded-md"
-            />
-          </div> */}
+
           <div>
             <label className="block text-sm font-medium">Müşteri</label>
             <select
               {...register("firma_Id")}
               className="border p-1 rounded w-full"
             >
-              <option value={""}>Seçiniz</option>
-              {customerState.data.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.firma}
+              <option value="">Seçiniz</option>
+              {customerState.data.map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.firma}
                 </option>
               ))}
             </select>
@@ -353,69 +431,62 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               {...register("teklifOnay", {
                 required: "Lütfen bir kullanıcı seçiniz.",
               })}
-              className={`border p-1 rounded w-full `}
+              className="border p-1 rounded w-full"
             >
               <option value="">Personel Seçiniz</option>
-              {personels.items?.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.personelAdi + " " + p.personelSoyadi}
+              {personels.items?.map((person) => (
+                <option key={person.id} value={person.id}>
+                  {`${person.personelAdi} ${person.personelSoyadi}`}
                 </option>
               ))}
             </select>
-            <span className="text-red-600">{errors.teklifOnay?.message}</span>
+            {errors.teklifOnay && (
+              <span className="text-red-600">{errors.teklifOnay.message}</span>
+            )}
           </div>
+
           <div>
             <label className="block text-sm font-medium">
               Teslim Süresi (Gün)
             </label>
             <input
               type="number"
+              className="border p-1 rounded w-full"
               {...register("teslimSuresiGun", {
                 valueAsNumber: true,
-                onChange: (e) => {
-                  const gun = Number(e.target.value) || 0;
-                  const teklifTarihiStr = getValues("teklifTarihi"); // Teklif tarihi
-                  if (!teklifTarihiStr) return;
-
-                  const date = new Date(teklifTarihiStr);
-                  date.setDate(date.getDate() + gun);
-
-                  const teslimTarihiStr = date.toISOString().split("T")[0];
-
-                  setValue("teslimTarihi", teslimTarihiStr); // Teslim tarihini güncelle
-                },
+                onChange: (e) =>
+                  handleDeliveryDaysChange(Number(e.target.value) || 0),
               })}
-              className="border p-1 rounded w-full"
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium">
               Garanti Süresi (Gün)
             </label>
             <input
               type="number"
-              {...register("garantiSuresiGun" as const, {
-                valueAsNumber: true,
-              })}
               className="border p-1 rounded w-full"
+              {...register("garantiSuresiGun", { valueAsNumber: true })}
             />
           </div>
+
           {offer && (
             <div>
               <label className="block text-sm font-medium">Teklif Durumu</label>
               <select
-                {...register(`durumu` as const)}
+                {...register("durumu")}
                 className="border p-1 rounded w-full"
               >
                 {Object.keys(PriceOfferState)
                   .filter((k) => isNaN(Number(k)))
                   .map((key) => (
                     <option
+                      key={key}
                       value={
                         PriceOfferState[key as keyof typeof PriceOfferState]
                       }
                     >
-                      {" "}
                       {
                         PriceOfferStateDescriptions[
                           PriceOfferState[key as keyof typeof PriceOfferState]
@@ -437,9 +508,11 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
           />
         </div>
       </div>
-      <div className="flex justify-center flex-col  mb-3">
-        <h1 className="text-2xl  mb-2 p-1 text-center">Ürünler</h1>
-        <table className="w-full border-collapse border table-fixed ">
+
+      {/* Ürünler Tablosu */}
+      <div className="flex justify-center flex-col mb-3">
+        <h1 className="text-2xl mb-2 p-1 text-center">Ürünler</h1>
+        <table className="w-full border-collapse border table-fixed">
           <thead className="bg-gray-100">
             <tr>
               <th className="border-r-1 w-[100px] p-2">Ürün Kodu</th>
@@ -448,138 +521,16 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               <th className="border-r-1 w-[70px] p-2">Birim</th>
               <th className="border-r-1 w-[100px] p-2">Birim Fiyat</th>
               <th className="border-r-1 w-[70px] p-2">İndirim (%)</th>
-              <th className="border-r-1 w-[70px] p-2">Kdv (%)</th>
+              <th className="border-r-1 w-[70px] p-2">KDV (%)</th>
               <th className="border-r-1 w-[75px] p-2">Para Birimi</th>
               <th className="border-r-1 w-[100px] p-2">Toplam</th>
-              {/* <th className="border-r-1 w-[150px] p-2">Teslim Tarihi</th> */}
               <th className="border-r-1 w-[70px] p-2">İşlem</th>
             </tr>
           </thead>
           <tbody>
             {fields.map((field, idx) => {
-              if (field.opsiyonMu == true) return null;
-              const line = lines[idx];
-              // field.toplamFiyat = calcLineTotal(line);
-              return (
-                <tr key={field.id}>
-                  <td className="border p-2">
-                    <div className="relative w-full max-w-sm">
-                      <input
-                        type="text"
-                        placeholder=""
-                        className="w-full border rounded p-1  pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        {...register(
-                          `priceOfferLine.${idx}.malzemeKodu` as const
-                        )}
-                      />
-                      {/* <Search
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 cursor-pointer"
-                        onClick={() => _OpenModal(idx)}
-                      /> */}
-                    </div>
-
-                    {/* <input
-                    onFocus={() => _OpenModal(idx)}
-                    {...register(`priceOfferLine.${idx}.malzemeKodu` as const)}
-                    className="border p-1 rounded w-full"
-                  /> */}
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      className="border p-1 rounded w-full"
-                      {...register(`priceOfferLine.${idx}.malzemeAdi` as const)}
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      {...register(`priceOfferLine.${idx}.miktar` as const, {
-                        valueAsNumber: true,
-                      })}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      {...register(`priceOfferLine.${idx}.birimi` as const)}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      step={"0.01"}
-                      {...register(
-                        `priceOfferLine.${idx}.birimFiyat` as const,
-                        {
-                          valueAsNumber: true,
-                        }
-                      )}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      {...register(
-                        `priceOfferLine.${idx}.indirimOraniYuzde` as const,
-                        {
-                          valueAsNumber: true,
-                          setValueAs: (v) => v ?? 0, // null olursa 0 yap
-                        }
-                      )}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      {...register(
-                        `priceOfferLine.${idx}.kdvOraniYuzde` as const,
-                        {
-                          valueAsNumber: true,
-                          setValueAs: (v) => v ?? 0, // null olursa 0 yap
-                        }
-                      )}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <select
-                      {...register(`priceOfferLine.${idx}.paraBirimi` as const)}
-                      className="border p-1 rounded w-full"
-                    >
-                      {paraBirimleri.map((p) => (
-                        <option key={p} value={p}>
-                          {p}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="border p-2 text-right">
-                    
-                     {calcLineTotal(line).toLocaleString()} 
-                  </td>
-                  {/* <td className="border p-2">
-                    <input
-                      type="date"
-                      {...register(
-                        `priceOfferLine.${idx}.teslimTarih` as const
-                      )}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td> */}
-                  <td className="border p-2 text-center">
-                    <button
-                      type="button"
-                      onClick={() => remove(idx)}
-                      className="px-2 py-1 bg-red-500 text-white rounded"
-                    >
-                      Sil
-                    </button>
-                  </td>
-                </tr>
-              );
+              if (field.opsiyonMu === true) return null;
+              return renderProductLine(field, idx, false);
             })}
           </tbody>
           <tfoot className="bg-gray-50">
@@ -587,7 +538,7 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               <td colSpan={8} className="p-2 text-right font-semibold border">
                 Ara Toplam:
               </td>
-              <td className="p-2 border font-semiboldv text-right">
+              <td className="p-2 border font-semibold text-right">
                 {subtotal.toLocaleString()}
               </td>
               <td className="border"></td>
@@ -595,46 +546,66 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
             <tr>
               <td colSpan={8} className="p-2 text-right font-semibold border">
                 <div className="flex flex-row justify-end items-center">
-                  <span> Toplam İndirim </span>
+                  <span>Toplam İndirim</span>
                   <input
                     type="number"
                     min={0}
                     max={100}
-                    {...register("belgeIndirimOraniYuzde" as const, {
+                    className="ml-3 border p-1 rounded w-[50px]"
+                    {...register("belgeIndirimOraniYuzde", {
                       valueAsNumber: true,
                     })}
-                    className="ml-3 border p-1 rounded w-[50px]"
                   />
-                  <span className="ml-1"> % </span>
+                  <span className="ml-1">%</span>
                 </div>
               </td>
               <td className="p-2 border font-semibold text-right">
-                
-                 {belgeIndirimTutari?.toLocaleString()} 
-              </td>
-              <td className="border"> </td>
-            </tr>
-            <tr>
-              <td colSpan={8} className="p-2 text-right font-semibold border">
-                KDV (%):
-              </td>
-              <td className="p-2 border font-semibold text-right">
-                {tax.toLocaleString()}{" "}
+                {belgeIndirimTutari?.toLocaleString()}
               </td>
               <td className="border"></td>
             </tr>
             <tr>
-              <td colSpan={8} className="p-2 text-right font-bold border">
+              <td colSpan={8} className="p-2 text-right font-semibold border">
+                KDV:
+              </td>
+              <td className="p-2 border font-semibold text-right">
+                {tax.toLocaleString()}
+              </td>
+              <td className="border"></td>
+            </tr>
+            <tr>
+              <td colSpan={7} className="p-2 text-right font-bold border">
                 Genel Toplam:
               </td>
-              <td className="p-2 border font-bold  text-red-700  text-right">
-                 {total.toLocaleString()}{" "} 
-              </td>
+              <td className="p-2 border font-bold text-red-700 text-right">
+               
+<input
+    type="number"
+    step="0.01"
+    className={`w-full text-right border rounded p-1 font-bold ${
+      manualTotal ? "text-red-700" : "text-gray-800 bg-gray-100"
+    }`}
+    readOnly={!manualTotal}
+    {...register("toplamTutar", {
+      valueAsNumber: true,
+    })}
+  />
+ 
+</td>
+<td> <button
+  type="button"
+  onClick={() => setManualTotal((prev) => !prev)}
+  className="ml-2 px-2 py-1 text-xs rounded border bg-white hover:bg-gray-100"
+>
+  {manualTotal ? "Otomatik Hesapla" : " Manuel Gir"}
+</button></td>
+
               <td className="border"></td>
             </tr>
           </tfoot>
         </table>
       </div>
+
       <div className="mt-4 flex gap-2">
         <button
           type="button"
@@ -649,153 +620,46 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               kdvOraniYuzde: 20,
             })
           }
-          className="px-3 py-1 bg-green-500 text-white rounded"
+          className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
         >
           Kalem Ekle
         </button>
         <button
           type="button"
-          onClick={() => _OpenModal(fields.length, false)}
-          className="px-3 py-1 bg-green-500 text-white rounded"
+          onClick={() => openProductModal(fields.length, false)}
+          className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
         >
           Ürünlerden Ekle
         </button>
       </div>
-      <div className="flex justify-center flex-col  mb-3">
-        <h1 className="text-2xl  mb-2 p-1 text-center">Opsiyonlar</h1>
-        <table className="w-full border-collapse border table-fixed ">
+
+      {/* Opsiyonlar Tablosu */}
+      <div className="flex justify-center flex-col mb-3 mt-6">
+        <h1 className="text-2xl mb-2 p-1 text-center">Opsiyonlar</h1>
+        <table className="w-full border-collapse border table-fixed">
           <thead className="bg-gray-100">
             <tr>
               <th className="border-r-1 w-[100px] p-2">Ürün Kodu</th>
               <th className="border-r-1 w-[200px] p-2">Ürün Adı</th>
               <th className="border-r-1 w-[70px] p-2">Miktar</th>
-
               <th className="border-r-1 w-[70px] p-2">Birim</th>
               <th className="border-r-1 w-[100px] p-2">Birim Fiyat</th>
               <th className="border-r-1 w-[70px] p-2">İndirim (%)</th>
-              <th className="border-r-1 w-[70px] p-2">Kdv (%)</th>
+              <th className="border-r-1 w-[70px] p-2">KDV (%)</th>
               <th className="border-r-1 w-[75px] p-2">Para Birimi</th>
-
               <th className="border-r-1 w-[70px] p-2">İşlem</th>
             </tr>
           </thead>
           <tbody>
             {fields.map((field, idx) => {
               if (field.opsiyonMu !== true) return null;
-              const line = lines[idx];
-              return (
-                <tr key={field.id}>
-                  <td className="border p-2">
-                    <div className="relative w-full max-w-sm">
-                      <input
-                        type="text"
-                        placeholder=""
-                        className="w-full border rounded p-1  pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        {...register(
-                          `priceOfferLine.${idx}.malzemeKodu` as const
-                        )}
-                      />
-                      {/* <Search
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 cursor-pointer"
-                        onClick={() => _OpenModal(idx)}
-                      /> */}
-                    </div>
-
-                    {/* <input
-                    onFocus={() => _OpenModal(idx)}
-                    {...register(`priceOfferLine.${idx}.malzemeKodu` as const)}
-                    className="border p-1 rounded w-full"
-                  /> */}
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      className="border p-1 rounded w-full"
-                      {...register(`priceOfferLine.${idx}.malzemeAdi` as const)}
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      {...register(`priceOfferLine.${idx}.miktar` as const, {
-                        valueAsNumber: true,
-                      })}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      {...register(`priceOfferLine.${idx}.birimi` as const)}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      step={"0.01"}
-                      {...register(
-                        `priceOfferLine.${idx}.birimFiyat` as const,
-                        {
-                          valueAsNumber: true,
-                        }
-                      )}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      {...register(
-                        `priceOfferLine.${idx}.indirimOraniYuzde` as const,
-                        {
-                          valueAsNumber: true,
-                          setValueAs: (v) => v ?? 0, // null olursa 0 yap
-                        }
-                      )}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <input
-                      type="number"
-                      {...register(
-                        `priceOfferLine.${idx}.kdvOraniYuzde` as const,
-                        {
-                          valueAsNumber: true,
-                          setValueAs: (v) => v ?? 0, // null olursa 0 yap
-                        }
-                      )}
-                      className="border p-1 rounded w-full"
-                    />
-                  </td>
-                  <td className="border p-2">
-                    <select
-                      {...register(`priceOfferLine.${idx}.paraBirimi` as const)}
-                      className="border p-1 rounded w-full"
-                    >
-                      {paraBirimleri.map((p) => (
-                        <option key={p} value={p}>
-                          {p}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-
-                  <td className="border p-2 text-center">
-                    <button
-                      type="button"
-                      onClick={() => remove(idx)}
-                      className="px-2 py-1 bg-red-500 text-white rounded"
-                    >
-                      Sil
-                    </button>
-                  </td>
-                </tr>
-              );
+              return renderProductLine(field, idx, true);
             })}
           </tbody>
         </table>
       </div>
-      <div className="mt-4 flex  gap-2">
+
+      <div className="mt-4 flex gap-2">
         <button
           type="button"
           onClick={() =>
@@ -811,31 +675,32 @@ export const PriceOfferAddPage = ({ offer }: { offer: PriceOfferDto }) => {
               birimi: "",
             })
           }
-          className="px-3 py-1 bg-green-500 text-white rounded"
+          className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
         >
           Kalem Ekle
         </button>
-       
         <button
           type="button"
-          onClick={() => _OpenModal(fields.length, true)}
-          className="px-3 py-1 bg-green-500 text-white rounded"
+          onClick={() => openProductModal(fields.length, true)}
+          className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600"
         >
           Ürünlerden Ekle
         </button>
       </div>
+
+      {/* Kaydet Butonları */}
       <div className="mt-4 flex justify-end gap-2">
         <button
           type="submit"
-          className="px-3 py-1 bg-blue-600 text-white rounded"
+          className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
           Teklifi Kaydet
         </button>
         {offer && (
           <button
-            onClick={handleSubmit((data) => onSubmit(data, true))} // isRevision = true
+            onClick={handleSubmit((data) => onSubmit(data, true))}
             type="button"
-            className="px-3 py-1 bg-gray-600 text-white rounded"
+            className="px-3 py-1 bg-gray-600 text-white rounded hover:bg-gray-700"
           >
             Teklifi Revize Et
           </button>
