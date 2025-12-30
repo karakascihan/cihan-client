@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {Column, SmartTable} from "@/components/SmartTable";
-import {PurchaseOrderDto} from "@/api/apiDtos";
+import {PurchaseOrderDto, PurchaseOrders} from "@/api/apiDtos";
 import { apiRequest } from "@/services";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { URL } from "@/api";
@@ -28,11 +28,11 @@ export const PurchaseOrderPage = () => {
             },
         }
     );
-    const columns: Column<PurchaseOrderDto>[] = [
+    const columns: Column<PurchaseOrders>[] = [
         { header: "#", accessor: "__index" },
 {
             header: "Sipariş Numarası",
-            accessor: "",
+            accessor: "siparisNo",
             filterable: true,
             sortable: true,
        },
@@ -183,7 +183,7 @@ export const PurchaseOrderPage = () => {
     return (
         <div className="card">
             <h2 className="text-xl text-center font-bold mb-2">Siparişler</h2>
-            <SmartTable<PurchaseOrderDto>
+            <SmartTable<PurchaseOrders>
                 data={purchaseOrders || []}
                 columns={columns}
                 rowIdAccessor={"id"}
