@@ -123,12 +123,12 @@ export interface Company {
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     opportunity: Opportunity[] | undefined;
-<<<<<<< HEAD
+//<<<<<<< HEAD
     purchaseOrders: PurchaseOrders[] | undefined; vergiNumrasi: string | undefined;
     vergiNumarasi: string | undefined;
-=======
+//=======
     purchaseOrders: PurchaseOrders[] | undefined;
->>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
+//>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CompanyPerson {
@@ -184,11 +184,11 @@ export interface ContractsDto {
     priceOfferId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
-<<<<<<< HEAD
+//<<<<<<< HEAD
 
-=======
+//=======
     id: number;
->>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
+//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface ContractsDtoForInsertion {
@@ -210,13 +210,13 @@ export interface ContractsDtoForInsertion {
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
-<<<<<<< HEAD
+//<<<<<<< HEAD
     priceOfferId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
 
-=======
->>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
+//=======
+//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface ContractsDtoForUpdate {
@@ -300,10 +300,10 @@ export interface CustomerDto {
     id: number;
     contacts: CustomerContactDto[] | undefined;
     onayDurumu: string | undefined;
-<<<<<<< HEAD
+//<<<<<<< HEAD
     vergiNumarasi: string | undefined;
-=======
->>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
+//=======
+//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoForInsertion {
@@ -323,10 +323,10 @@ export interface CustomerDtoForInsertion {
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     contacts: CustomerContactDto[] | undefined;
-<<<<<<< HEAD
+//<<<<<<< HEAD
     vergiNumarasi: string | undefined;
-=======
->>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
+//=======
+//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoForUpdate {
@@ -347,10 +347,10 @@ export interface CustomerDtoForUpdate {
     vergiNumarasi: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
-<<<<<<< HEAD
+//<<<<<<< HEAD
     vergiNumarasi: string | undefined;
-=======
->>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
+//=======
+//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoIEnumerableApiResponse {
