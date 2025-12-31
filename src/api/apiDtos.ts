@@ -1320,6 +1320,8 @@ export interface PurchaseOrderLineDto {
     tamamTarihi: DateOnly;
     durumu: string | undefined;
     stogaAktarildimi: boolean | undefined;
+    indirimOraniYuzde: number | undefined;
+    kdvOraniYuzde: number | undefined;
 }
 
 export interface PurchaseOrderLineDtoForInsertion {
@@ -1336,6 +1338,8 @@ export interface PurchaseOrderLineDtoForInsertion {
     stogaAktarildimi: boolean | undefined;
     order_Id: number | undefined;
     product_Id: number | undefined;
+    indirimOraniYuzde: number | undefined;
+    kdvOraniYuzde: number | undefined;
 }
 
 export interface PurchaseOrderLineDtoForUpdate {
@@ -1352,6 +1356,8 @@ export interface PurchaseOrderLineDtoForUpdate {
     stogaAktarildimi: boolean | undefined;
     order_Id: number | undefined;
     product_Id: number | undefined;
+    indirimOraniYuzde: number | undefined;
+    kdvOraniYuzde: number | undefined;
     id: number;
 }
 

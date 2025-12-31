@@ -12,8 +12,10 @@ import React from "react";
 import { apiRequest } from "@/services";
 import { URL } from "@/api";
 
+type Mode = "create" | "update" | "tekliftenDonusum";
+
 type Props<T> = {
-    mode: "create" | "update";
+    mode: Mode;
     form: T;
     setForm: React.Dispatch<React.SetStateAction<T>>;
     onSubmit: () => void;
@@ -116,7 +118,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
             ...prev,
             {
                 __key: makeKey(),
-                ...(mode === "update" ? ({ id: 0 } as any) : {}), // update ekranında yeni satır: id=0
+                ...(mode === "update" ? ({ id: 0 } as any) : {}),
                 product_Id: 0,
                 malzemeKodu: "",
                 malzemeAdi: "",
@@ -166,6 +168,11 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
         updateLine(lineIndex, "paraBirimi", p.paraBirimi as any);
     };
 
+    const getFallbackValue = (line: any) =>
+        line?.malzemeKodu
+            ? `offer-code:${String(line.malzemeKodu).trim()}`
+            : `offer-name:${String(line?.malzemeAdi ?? "").trim()}`;
+
     return (
         <form
             onSubmit={(e) => {
@@ -179,7 +186,11 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                 {/* Header - gri ton uyumlu */}
                 <div className="relative flex items-center mb-4 bg-gray-100 border rounded px-4 h-14">
                     <h1 className="absolute left-1/2 -translate-x-1/2 text-lg text-gray-700 font-bold">
-                        {mode === "create" ? "Yeni Sipariş" : "Sipariş Güncelle"}
+                        {mode === "create"
+                            ? "Yeni Sipariş"
+                            : mode === "update"
+                                ? "Sipariş Güncelle"
+                                : "Tekliften Sipariş Oluştur"}
                     </h1>
 
 
@@ -353,18 +364,18 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                             <table className="w-full border-collapse border table-fixed">
                                 <colgroup>
 
-                                    <col style={{ width: "240px" }} /> 
-                                    <col style={{ width: "80px" }} /> 
-                                    <col style={{ width: "80px" }} />   
-                                    <col style={{ width: "80px" }} />  
-                                    <col style={{ width: "80px" }} />  
-                                    <col style={{ width: "80px" }} />  
-                                    <col style={{ width: "160px" }} />  
-                                    <col style={{ width: "160px" }} />  
-                                    <col style={{ width: "70px" }} />  
-                                    <col style={{ width: "70px" }} />  
-                                    <col style={{ width: "70px" }} />   
-                                    <col style={{ width: "70px" }} />  
+                                    <col style={{ width: "240px" }} />
+                                    <col style={{ width: "80px" }} />
+                                    <col style={{ width: "80px" }} />
+                                    <col style={{ width: "80px" }} />
+                                    <col style={{ width: "80px" }} />
+                                    <col style={{ width: "80px" }} />
+                                    <col style={{ width: "160px" }} />
+                                    <col style={{ width: "160px" }} />
+                                    <col style={{ width: "70px" }} />
+                                    <col style={{ width: "70px" }} />
+                                    <col style={{ width: "70px" }} />
+                                    <col style={{ width: "70px" }} />
 
                                 </colgroup>
                                 <thead className="bg-gray-100">
@@ -391,21 +402,34 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                 {/* Malzeme adı - ürün seçimi dropdown */}
                                                 <select
                                                     className="w-full border rounded p-1"
-                                                    value={(line as any).product_Id ?? ""}
-                                                    onChange={(e) => onSelectProduct(idx, Number(e.target.value))}
+                                                    value={
+                                                        Number((line as any).product_Id) > 0
+                                                            ? String((line as any).product_Id)
+                                                            : getFallbackValue(line)
+                                                    }
+                                                    onChange={(e) => {
+                                                        const v = e.target.value;
+
+                                                        if (v.startsWith("offer-code:") || v.startsWith("offer-name:")) return;
+
+                                                        onSelectProduct(idx, Number(v));
+                                                    }}
                                                 >
+                                                    {Number((line as any).product_Id) <= 0 && (
+                                                        <option value={getFallbackValue(line)}>
+                                                            {line.malzemeAdi ?? "Teklif Kalemi"} {line.malzemeKodu ? `(${line.malzemeKodu})` : ""} Seçiniz...
+                                                        </option>
+                                                    )}
+
                                                     <option value="" disabled>Ürün seçiniz...</option>
+
                                                     {products.map((p) => (
-                                                        <option key={p.id} value={p.id}>
+                                                        <option key={p.id} value={String(p.id)}>
                                                             {p.malzemeAdi}
                                                         </option>
                                                     ))}
                                                 </select>
 
-                                                {/* İstersen dropdown altına küçük info */}
-                                                <div className="text-[11px] text-gray-500 mt-1 truncate">
-                                                    Seçili: {line.malzemeAdi ?? "-"}
-                                                </div>
                                             </td>
                                             <td className="border p-2">
                                                 <input
