@@ -16,7 +16,8 @@ export const AddPurchaseOrderPage2 = ({ onClose, onSuccess }: Props) => {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState<PurchaseOrderDtoForInsertion>({
-    firma_Id: 0,
+    firma_Id: null,
+    priceOfferId: null,
     firmaAdi: "",
     yetkiliKisi: "",
     siparisTarihi: null,
