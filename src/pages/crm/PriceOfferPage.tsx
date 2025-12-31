@@ -218,6 +218,20 @@ export const PriceOfferPage = ({
       sortable: true,
       summaryType: "count",
     },
+      {
+      header: "Müşteri",
+      accessor: "firma_Id",
+      filterable: true,
+      sortable: true,
+      filterType: "id_select",
+      filterOptions: customerState.data
+        ? customerState.data.map((c) => ({ label: c.firma, value: c.id }))
+        : [],
+      body: (row: PriceOfferDto) => {
+        let firma = customerState.data?.find((x) => x.id == row.firma_Id);
+        return <span>{firma?.firma}</span>;
+      },
+    },
     {
       header: "Teklif Tarihi",
       accessor: "teklifTarihi",
@@ -238,26 +252,13 @@ export const PriceOfferPage = ({
       header: "Teklif Geçerlilik Tarihi",
       accessor: "teklifGecerlilikTarihi",
       filterable: true,
-      filterType: "date_range",
+      
       sortable: true,
       body: (row: PriceOfferDto) => (
         <span>{new Date(row.teklifGecerlilikTarihi).toLocaleDateString()}</span>
       ),
     },
-    {
-      header: "Müşteri",
-      accessor: "firma_Id",
-      filterable: true,
-      sortable: true,
-      filterType: "id_select",
-      filterOptions: customerState.data
-        ? customerState.data.map((c) => ({ label: c.firma, value: c.id }))
-        : [],
-      body: (row: PriceOfferDto) => {
-        let firma = customerState.data?.find((x) => x.id == row.firma_Id);
-        return <span>{firma?.firma}</span>;
-      },
-    },
+  
     {
       header: "İlgili Kişi",
       accessor: "customerContact",
@@ -270,13 +271,7 @@ export const PriceOfferPage = ({
       filterable: true,
       sortable: true,
     },
-    {
-      header: "Açıklama",
-      accessor: "teklifAciklama",
-      filterable: true,
-      sortable: true,
-    },
-    {
+       {
       header: "Hazırlayan",
       accessor: "hazirlayan",
       filterable: true,
