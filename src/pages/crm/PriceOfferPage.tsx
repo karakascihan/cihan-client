@@ -250,7 +250,7 @@ export const PriceOfferPage = ({
         siparisTarihi: null,
         teslimTarihi: null,
 
-        aciklama: offer?.teklifAciklama ?? "",
+        aciklama:"",
         durumu: "",
         onayAcikla: "",
         siparisKosullari: "",

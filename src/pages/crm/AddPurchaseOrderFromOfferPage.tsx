@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { apiRequest } from "@/services";
 import { URL } from "@/api";
 import { ApiResponseClient } from "@/types/apiResponse";
-import { PurchaseOrderDtoForInsertion } from "@/api/apiDtos";
+import { DateOnly, PurchaseOrderDtoForInsertion } from "@/api/apiDtos";
 import { PurchaseOrderForm } from "@/components/CRM/PurchaseOrderForm";
 
 type Props = {
@@ -18,16 +18,16 @@ export const AddPurchaseOrderFromOfferPage = ({
 }: Props) => {
     const [loading, setLoading] = useState(false);
 
-    // ✅ initialOrder’ı state’e alıyoruz
+    //  initialOrder’ı state’e alıyoruz
     const [form, setForm] = useState<PurchaseOrderDtoForInsertion>(initialOrder);
 
-    // ✅ initialOrder sonradan değişirse (modal reuse / farklı teklif) formu güncelle
+    // initialOrder sonradan değişirse (modal reuse / farklı teklif) formu güncelle
     useEffect(() => {
         setForm(initialOrder);
     }, [initialOrder]);
     console.log("initial order:", initialOrder);
 
-    // ✅ (opsiyonel) ürünler load olduktan sonra product_Id normalize (productId -> product_Id)
+    //  (opsiyonel) ürünler load olduktan sonra product_Id normalize (productId -> product_Id)
     useEffect(() => {
         const fixProductIds = async () => {
             try {
@@ -42,7 +42,6 @@ export const AddPurchaseOrderFromOfferPage = ({
                 setForm((prev) => ({
                     ...prev,
                     purchaseOrderLine: (prev.purchaseOrderLine ?? []).map((l: any) => {
-                        // zaten set edilmişse dokunma
                         const existing = Number(l.product_Id ?? 0);
                         if (existing > 0) return l;
 
@@ -70,31 +69,35 @@ export const AddPurchaseOrderFromOfferPage = ({
     }, []);
 
     const handleSubmit = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
-
-            // burada senin create endpointin neyse onu kullan:
-            const res = await apiRequest<ApiResponseClient<any>>(
-                "POST",
-                URL + "/PurchaseOrder",
-                form
-            );
-
-            if (res?.isSuccess === false) {
-                console.error("Create order failed:", res);
-                alert(res?.message ?? "Sipariş oluşturulamadı.");
-                return;
-            }
-
-            await onSuccess?.();
-            onClose(res);
+          const payload: PurchaseOrderDtoForInsertion = {
+            ...form,
+            siparisTarihi: form.siparisTarihi
+              ? (form.siparisTarihi as unknown as DateOnly)
+              : null,
+            teslimTarihi: form.teslimTarihi
+              ? (form.teslimTarihi as unknown as DateOnly)
+              : null,
+            purchaseOrderLine: form.purchaseOrderLine ?? [], // boş bile olsa
+          };
+      
+          console.log("GİDEN PAYLOAD:", payload);
+      
+          // ✅ create sayfasıyla aynı endpoint
+          const res = await apiRequest<any>("POST", URL + "/PurchaseOrder/Create", payload);
+      
+          alert("Sipariş başarıyla eklendi!");
+      
+          await onSuccess?.();
+          onClose(res);
         } catch (err) {
-            console.error("Create order error:", err);
-            alert("Sipariş oluşturulamadı.");
+          console.error(err);
+          alert("Sipariş oluşturulamadı!");
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
-    };
+      };
 
     return (
         <PurchaseOrderForm

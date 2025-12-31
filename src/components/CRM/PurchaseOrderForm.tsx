@@ -410,13 +410,11 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                     onChange={(e) => {
                                                         const v = e.target.value;
 
-                                                        // fallback seçiliyse hiçbir şey yapma (zaten görüntü için)
                                                         if (v.startsWith("offer-code:") || v.startsWith("offer-name:")) return;
 
                                                         onSelectProduct(idx, Number(v));
                                                     }}
                                                 >
-                                                    {/* ✅ product_Id yoksa: tekliften gelen kalemi seçili gösteren option */}
                                                     {Number((line as any).product_Id) <= 0 && (
                                                         <option value={getFallbackValue(line)}>
                                                             {line.malzemeAdi ?? "Teklif Kalemi"} {line.malzemeKodu ? `(${line.malzemeKodu})` : ""} Seçiniz...
@@ -432,10 +430,6 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                     ))}
                                                 </select>
 
-                                                {/* İstersen dropdown altına küçük info */}
-                                                <div className="text-[11px] text-gray-500 mt-1 truncate">
-                                                    Seçili: {line.malzemeAdi ?? "-"}
-                                                </div>
                                             </td>
                                             <td className="border p-2">
                                                 <input
