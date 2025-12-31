@@ -173,6 +173,76 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
             ? `offer-code:${String(line.malzemeKodu).trim()}`
             : `offer-name:${String(line?.malzemeAdi ?? "").trim()}`;
 
+
+
+    //hesaplama çalışması
+
+
+    const toNum = (v: any) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+    };
+
+    const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+
+    const calc = React.useMemo(() => {
+        const ls = (lines ?? []);
+
+        const subtotal = ls.reduce((sum, l) => {
+            const qty = toNum((l as any).miktar);
+            const unit = toNum((l as any).birimFiyat);
+            return sum + qty * unit;
+        }, 0);
+
+        // line bazlı indirim yüzdesi varsa (indirimOraniYuzde), onu uygula:
+        const lineDiscountTotal = ls.reduce((sum, l) => {
+            const qty = toNum((l as any).miktar);
+            const unit = toNum((l as any).birimFiyat);
+            const discPct = clamp(toNum((l as any).indirimOraniYuzde), 0, 100);
+            const lineBase = qty * unit;
+            return sum + lineBase * (discPct / 100);
+        }, 0);
+
+        const afterLineDiscount = subtotal - lineDiscountTotal;
+
+        // Master’daki toplam indirim yüzdesi: (toplamIndirimOraniYuzde)
+        const masterDiscPct = clamp(toNum((form as any).toplamIndirimOraniYuzde), 0, 100);
+        const masterDiscountAmount = afterLineDiscount * (masterDiscPct / 100);
+
+        const afterAllDiscounts = afterLineDiscount - masterDiscountAmount;
+
+        // KDV: line.kdvOraniYuzde ile hesap
+        const tax = ls.reduce((sum, l) => {
+            const qty = toNum((l as any).miktar);
+            const unit = toNum((l as any).birimFiyat);
+            const discPct = clamp(toNum((l as any).indirimOraniYuzde), 0, 100);
+            const kdvPct = clamp(toNum((l as any).kdvOraniYuzde), 0, 100);
+
+            const base = qty * unit;
+            const afterDisc = base - base * (discPct / 100);
+
+            return sum + afterDisc * (kdvPct / 100);
+        }, 0);
+
+        const total = afterAllDiscounts + tax;
+
+        return {
+            subtotal,
+            lineDiscountTotal,
+            masterDiscPct,
+            masterDiscountAmount,
+            tax,
+            total,
+        };
+    }, [lines, (form as any).toplamIndirimOraniYuzde]);
+
+    React.useEffect(() => {
+        // otomatik hesap sonucu master'a yaz
+        // toplamTutar sayı alanıysa number bas
+        handleChange("toplamTutar" as any, calc.total);
+    }, [calc.total]);
+
+
     return (
         <form
             onSubmit={(e) => {
@@ -274,7 +344,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                             <input
                                 type="number"
                                 value={form.toplamIndirimOraniYuzde}
-                                onChange={(e) => handleChange("toplamIndirimOraniYuzde", e.target.value)}
+                                onChange={(e) => handleChange("toplamIndirimOraniYuzde" as any, e.target.value === "" ? 0 : Number(e.target.value))}
                                 className="w-full border p-2 rounded-md bg-white"
                             />
                         </div>
@@ -535,7 +605,18 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                         </tr>
                                     ))}
                                 </tbody>
+
                             </table>
+                            <div className="mt-3 grid grid-cols-12 gap-3 bg-gray-50 border rounded p-3 text-sm">
+                                <div className="col-span-12 md:col-span-3">Ara Toplam: <b>{calc.subtotal.toLocaleString()}</b></div>
+                                <div className="col-span-12 md:col-span-3">Kalem İndirimi: <b>{calc.lineDiscountTotal.toLocaleString()}</b></div>
+                                <div className="col-span-12 md:col-span-3">Genel İndirim ({calc.masterDiscPct}%): <b>{calc.masterDiscountAmount.toLocaleString()}</b></div>
+                                <div className="col-span-12 md:col-span-3">KDV: <b>{calc.tax.toLocaleString()}</b></div>
+                                <div className="col-span-12 md:col-span-12 text-right text-base">
+                                    Genel Toplam: <b className="text-red-700">{calc.total.toLocaleString()}</b>
+                                </div>
+                            </div>
+
                         </div>
                     )}
 
