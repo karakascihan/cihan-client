@@ -132,7 +132,7 @@ const confirm=useConfirm();
                   onClick={async () => {
                     const isConfirmed = await confirm({
                       title: "Silme işlemi",
-                      message: "Dosyayı silmek istediğinize emin misiniz?",
+                      message: "Personeli silmek istediğinize emin misiniz?",
                       confirmText: "Evet",
                       cancelText: "Vazgeç",
                     });
@@ -165,14 +165,14 @@ const confirm=useConfirm();
               label: "Personel Adı",
               type: "text",
               required:true,
-              defaultValue: row.personelAdi
+              defaultValue: row?.personelAdi
             },
             {
               name: "personelSoyadi",
               label: "Personel Soyadı",
               type: "text",
               required:true,
-              defaultValue: row.personelSoyadi
+              defaultValue: row?.personelSoyadi
             },
             {
               name: "personelDepartman",
@@ -180,7 +180,7 @@ const confirm=useConfirm();
               type: "select",
               options: departmanlar,
               required:true,
-              defaultValue: row.personelDepartman
+              defaultValue: row?.personelDepartman
 
             },
             {
@@ -188,26 +188,37 @@ const confirm=useConfirm();
               label: "Görevi",
               type: "text",
               required:true,
-              defaultValue: row.personelGorevi
+              defaultValue: row?.personelGorevi
             },
             {
               name: "telefonNo",
               label: "Telefon",
               type: "text",
-              defaultValue: row.telefonNo
+              defaultValue: row?.telefonNo
             },
             {
               name: "ePosta",
               label: "E-Posta",
               type: "text",
-              defaultValue: row.ePosta
+              defaultValue: row?.ePosta,
+              colspan:6
+
             },
             {
               name: "iseGirisTarihi",
               label: "İşe Giriş Tarihi",
               type: "date",
-              defaultValue: row.iseGirisTarihi
-            }
+              defaultValue: row?.iseGirisTarihi
+            },
+              {
+              name: "mailImzasi",
+              label: "Mail İmzası",
+              type: "editor",
+              defaultValue: row?.mailImzasi,
+              colspan:12
+              
+            },
+          
           ]}
           onSubmit={function (data: PersonelDto): void {
             if(row)

@@ -388,8 +388,19 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
         content:  (close: (result: any) => void): React.ReactNode => {
          return  <GenericForm 
         fields={fields}
-        onSubmit={function (data: ProductsDtoForInsertion): void {
-            console.log("Yeni ürün eklendi:", data);
+        onSubmit={async function (data: ProductsDtoForInsertion): void {
+            const file = data.pictures[0];
+           if(file)
+                         {
+                             if (typeof file === 'string' ) {
+                                // Eğer dosya zaten base64 formatındaysa, doğrudan kullan
+                                data.pictures = data.pictures;
+                            }    
+                            else
+                             data.pictures=await  fileToBase64(file) as any;
+                         }
+                        else
+                            data.pictures=null;
             data.id=0;
             dispatch(productsSlice.actions.createItem(data) as any);
             close(null);

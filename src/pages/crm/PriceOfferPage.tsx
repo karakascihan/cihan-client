@@ -613,7 +613,7 @@ export const PriceOfferPage = ({
       content: (close) => (
         <EmailSender priceOfferId={priceoffer.id} opportunityId={priceoffer.opportunityId}  mailDto={{
           toEmail: customerState.data.find((x) => x.id == priceoffer.firma_Id)?.email, subject: opportunities.data.find((x) => x.id == priceoffer.opportunityId)?.title,
-          body: "Teklif metnimiz ektedir.İyi Çalışmalar."
+          body: "Teklif metnimiz ektedir.İyi Çalışmalar."+ personels.items?.find((x) => x.id == priceoffer.teklifOnay).mailImzasi
           /*
           body:ReactDOMServer.renderToString(
          <Provider store={store} >
@@ -677,11 +677,6 @@ export const PriceOfferPage = ({
         else {
           teklifMetni = teklifMetni.replaceAll("~teslimSuresi~", "belirlenen süre");
         }
-
-        console.log("VAR MI:", teklifMetni.includes("~teslimSuresi~"));
-        console.log("thiss", priceoffer.teslimTarihi);
-        console.log("this fark", gunFarkiTeslim);
-        console.log("this teklşf trrih", gunFarkiTeklif);
         let fiyatSatirlarHtml = ``;
         priceoffer.priceOfferLine?.forEach((line, index) => {
           let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi}</td>
@@ -693,6 +688,20 @@ export const PriceOfferPage = ({
           fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
 
         });
+       
+           if(priceoffer.belgeIndirimOraniYuzde>0)
+           {
+ fiyatSatirlarHtml+=`<tr><td style="padding: 10px 12px;font-size: 15px; font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Ara Toplam</td>
+                       <td colspan=5 style="text-align:center; font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar+(priceoffer.toplamTutar*priceoffer.belgeIndirimOraniYuzde/100)}</td>
+           ></tr>`;
+             fiyatSatirlarHtml+=`<tr><td  style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">İskonto %${priceoffer.belgeIndirimOraniYuzde}</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar*priceoffer.belgeIndirimOraniYuzde/100}</td>
+           ></tr>`;
+           }
+
+             fiyatSatirlarHtml+=`<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar+" "+ priceoffer.priceOfferLine[0].paraBirimi}</td>
+           ></tr>`;
         teklifMetni = teklifMetni.replaceAll("~fiyatSatirlar~", fiyatSatirlarHtml);
 
         let opsiyonSatirlarHtml = ``;

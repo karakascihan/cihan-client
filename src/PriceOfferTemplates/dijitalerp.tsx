@@ -2318,7 +2318,7 @@ export const dijitalerp_price_offer_template3 = `
         <p style="margin: 8px 0; text-align: justify;">Talebinize 
 yönelik çözümümüzü sağlayan ürünler ve hizmetler bazında fiyat 
 teklifimizi ekte bilgi görüşlerinize sunmaktan memnuniyet duyuyoruz.</p>
-        <p style="margin-top: 12px; margin-bottom: 1px; text-align: justify;"><strong>~firmaAdi~ adına,</strong></p>
+        <p style="margin-top: 12px; margin-bottom: 1px; text-align: justify;"><strong>DİJİTAL ERP YAZILIM TEKNOLOJİLERİ SAN. VE TİC. A.Ş.  adına,</strong></p>
     </div>
     <img src="~BASE_URL~teklif_veren_imza.png" style="width: 200px;">
         <p style="margin: 0px 0; font-weight: 300;">Saygılarımızla<br>~teklifOnayGorev~</p>
@@ -3156,8 +3156,8 @@ alınarak arttırılacaktır.</li>
                 <th style="background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #5a67d8;">Miktar</th>
                 <th style="background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #5a67d8;">Birim</th>
                 <th style="background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #5a67d8;">Para Birimi</th>
-                <th style="background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #5a67d8;">Birim Fiyat (USD)</th>
-                <th style="background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #5a67d8;">Toplam Fiyat (USD)</th>
+                <th style="background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #5a67d8;">Birim Fiyat</th>
+                <th style="background: #667eea; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #5a67d8;">Toplam Fiyat</th>
             </tr>
         </thead>
 <tbody>
@@ -3175,8 +3175,8 @@ alınarak arttırılacaktır.</li>
                 <th style="background: #34495e; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #2c3e50;">Miktar</th>
                 <th style="background: #34495e; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #2c3e50;">Birim</th>
                 <th style="background: #34495e; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #2c3e50;">Para Birimi</th>
-                <th style="background: #34495e; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #2c3e50;">Birim Fiyat (USD)</th>
-                <th style="background: #34495e; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #2c3e50;">Toplam Fiyat (USD)</th>
+                <th style="background: #34495e; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #2c3e50;">Birim Fiyat</th>
+                <th style="background: #34495e; color: white; padding: 12px; text-align: left; font-weight: 600; border: 1px solid #2c3e50;">Toplam Fiyat</th>
             </tr>
         </thead>
 <tbody>
@@ -3195,7 +3195,7 @@ alınarak arttırılacaktır.</li>
                     <th style="background-color: #7c3aed; color: white; padding: 12px 8px; text-align: left; font-weight: bold; border: 1px solid #6d28d9; font-size: 13px;">Birim</th>
                     <th style="background-color: #7c3aed; color: white; padding: 12px 8px; text-align: left; font-weight: bold; border: 1px solid #6d28d9; font-size: 13px;">Para Birimi</th>
                     <th style="background-color: #7c3aed; color: white; padding: 12px 8px; text-align: left; font-weight: bold; border: 1px solid #6d28d9; font-size: 13px;">Birim Fiyat</th>
-                    <th style="background-color: #7c3aed; color: white; padding: 12px 8px; text-align: left; font-weight: bold; border: 1px solid #6d28d9; font-size: 13px;">Toplam Fiyat (US$)</th>
+                    <th style="background-color: #7c3aed; color: white; padding: 12px 8px; text-align: left; font-weight: bold; border: 1px solid #6d28d9; font-size: 13px;">Toplam Fiyat</th>
                 </tr>
             </thead>
             <tbody>

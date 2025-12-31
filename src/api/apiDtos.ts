@@ -123,10 +123,7 @@ export interface Company {
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     opportunity: Opportunity[] | undefined;
-//<<<<<<< HEAD
-    purchaseOrders: PurchaseOrders[] | undefined; vergiNumrasi: string | undefined;
-//=======
-//>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
+    purchaseOrders: PurchaseOrders[] | undefined;
 }
 
 export interface CompanyPerson {
@@ -182,11 +179,7 @@ export interface ContractsDto {
     priceOfferId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
-//<<<<<<< HEAD
-
-//=======
     id: number;
-//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface ContractsDtoForInsertion {
@@ -208,11 +201,6 @@ export interface ContractsDtoForInsertion {
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
-//<<<<<<< HEAD
-  
-
-//=======
-//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface ContractsDtoForUpdate {
@@ -296,9 +284,6 @@ export interface CustomerDto {
     id: number;
     contacts: CustomerContactDto[] | undefined;
     onayDurumu: string | undefined;
-//<<<<<<< HEAD
-//=======
-//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoForInsertion {
@@ -318,9 +303,6 @@ export interface CustomerDtoForInsertion {
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     contacts: CustomerContactDto[] | undefined;
-//<<<<<<< HEAD
-//=======
-//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoForUpdate {
@@ -341,9 +323,6 @@ export interface CustomerDtoForUpdate {
     vergiNumarasi: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
-//<<<<<<< HEAD
-//=======
-//>>>>>>> 9b3f68b966698588ff7c9cdf9c8f42b10fd1f165
 }
 
 export interface CustomerDtoIEnumerableApiResponse {
@@ -781,6 +760,7 @@ export interface Personel {
     education: Education[] | undefined;
     personelEducationMapping: PersonelEducationMapping[] | undefined;
     surveyResponse: SurveyResponse[] | undefined;
+    mailImzasi: string | undefined;
 }
 
 export interface PersonelCombinedResponse {
@@ -806,6 +786,7 @@ export interface PersonelDto {
     ePosta: string | undefined;
     iseGirisTarihi: string | undefined;
     isActive: boolean;
+    mailImzasi: string | undefined;
 }
 
 export interface PersonelDtoForInsertion {
@@ -838,6 +819,7 @@ export interface PersonelDtoForInsertion {
     durumu: string | undefined;
     pK3: string | undefined;
     netUcreti: number;
+    mailImzasi: string | undefined;
 }
 
 export interface PersonelDtoForName {
@@ -869,6 +851,7 @@ export interface PersonelDtoForUpdate {
     sgkSicilNo: string | undefined;
     sozlesmeTuru: string | undefined;
     acilAramaTel: string | undefined;
+    mailImzasi: string | undefined;
 }
 
 export interface PersonelEducationAssignDto {
@@ -1253,6 +1236,7 @@ export interface PurchaseOrderDto {
     id: number;
     projeNo: string | undefined;
     firma_Id: number | undefined;
+    siparisNo: string | undefined;
     faturaNo: string | undefined;
     firmaAdi: string | undefined;
     yetkiliKisi: string | undefined;
@@ -1265,11 +1249,14 @@ export interface PurchaseOrderDto {
     kaliteKosullari: string | undefined;
     siparisTipi: string | undefined;
     turu: string | undefined;
+    toplamTutar: number | undefined;
+    toplamIndirimOraniYuzde: number | undefined;
+    priceOfferId: number | undefined;
     purchaseOrderLine: PurchaseOrderLineDto[] | undefined;
 }
 
 export interface PurchaseOrderDtoForInsertion {
-    firma_Id: number;
+    firma_Id: number | undefined;
     firmaAdi: string | undefined;
     yetkiliKisi: string | undefined;
     siparisTarihi: DateOnly;
@@ -1281,11 +1268,14 @@ export interface PurchaseOrderDtoForInsertion {
     kaliteKosullari: string | undefined;
     siparisTipi: string | undefined;
     turu: string | undefined;
+    toplamIndirimOraniYuzde: number | undefined;
+    priceOfferId: number | undefined;
+    toplamTutar: number | undefined;
     purchaseOrderLine: PurchaseOrderLineDtoForInsertion[] | undefined;
 }
 
 export interface PurchaseOrderDtoForUpdate {
-    firma_Id: number;
+    firma_Id: number | undefined;
     firmaAdi: string | undefined;
     yetkiliKisi: string | undefined;
     siparisTarihi: DateOnly;
@@ -1297,6 +1287,9 @@ export interface PurchaseOrderDtoForUpdate {
     kaliteKosullari: string | undefined;
     siparisTipi: string | undefined;
     turu: string | undefined;
+    toplamIndirimOraniYuzde: number | undefined;
+    priceOfferId: number | undefined;
+    toplamTutar: number | undefined;
     purchaseOrderLine: PurchaseOrderLineDtoForUpdate[] | undefined;
     id: number;
 }
@@ -1330,7 +1323,6 @@ export interface PurchaseOrderLineDto {
 }
 
 export interface PurchaseOrderLineDtoForInsertion {
-    product_Id: number | undefined;
     malzemeKodu: string | undefined;
     malzemeAdi: string | undefined;
     miktar: number | undefined;
@@ -1343,10 +1335,10 @@ export interface PurchaseOrderLineDtoForInsertion {
     durumu: string | undefined;
     stogaAktarildimi: boolean | undefined;
     order_Id: number | undefined;
+    product_Id: number | undefined;
 }
 
 export interface PurchaseOrderLineDtoForUpdate {
-    product_Id: number | undefined;
     malzemeKodu: string | undefined;
     malzemeAdi: string | undefined;
     miktar: number | undefined;
@@ -1359,6 +1351,7 @@ export interface PurchaseOrderLineDtoForUpdate {
     durumu: string | undefined;
     stogaAktarildimi: boolean | undefined;
     order_Id: number | undefined;
+    product_Id: number | undefined;
     id: number;
 }
 

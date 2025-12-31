@@ -7679,6 +7679,10 @@
               "$ref": "#/components/schemas/SurveyResponse"
             },
             "nullable": true
+          },
+          "mailImzasi": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -7756,6 +7760,10 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "mailImzasi": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -7930,6 +7938,10 @@
           "netUcreti": {
             "type": "number",
             "format": "double"
+          },
+          "mailImzasi": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8079,6 +8091,10 @@
           "acilAramaTel": {
             "maxLength": 50,
             "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "mailImzasi": {
             "type": "string",
             "nullable": true
           }
@@ -9740,6 +9756,10 @@
             "format": "int32",
             "nullable": true
           },
+          "siparisNo": {
+            "type": "string",
+            "nullable": true
+          },
           "faturaNo": {
             "type": "string",
             "nullable": true
@@ -9786,6 +9806,21 @@
             "type": "string",
             "nullable": true
           },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "toplamIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "purchaseOrderLine": {
             "type": "array",
             "items": {
@@ -9799,6 +9834,11 @@
       "PurchaseOrderDtoForInsertion": {
         "type": "object",
         "properties": {
+          "firma_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "firmaAdi": {
             "type": "string",
             "nullable": true
@@ -9839,6 +9879,21 @@
           },
           "turu": {
             "type": "string",
+            "nullable": true
+          },
+          "toplamIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "purchaseOrderLine": {
@@ -9854,6 +9909,11 @@
       "PurchaseOrderDtoForUpdate": {
         "type": "object",
         "properties": {
+          "firma_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "firmaAdi": {
             "type": "string",
             "nullable": true
@@ -9894,6 +9954,21 @@
           },
           "turu": {
             "type": "string",
+            "nullable": true
+          },
+          "toplamIndirimOraniYuzde": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "toplamTutar": {
+            "type": "number",
+            "format": "double",
             "nullable": true
           },
           "purchaseOrderLine": {
@@ -9955,6 +10030,11 @@
             "nullable": true
           },
           "order_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "product_Id": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -10061,6 +10141,11 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "product_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -10113,6 +10198,11 @@
             "nullable": true
           },
           "order_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "product_Id": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -10326,6 +10416,11 @@
             "nullable": true
           },
           "order_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "product_Id": {
             "type": "integer",
             "format": "int32",
             "nullable": true

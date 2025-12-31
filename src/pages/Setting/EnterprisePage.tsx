@@ -118,21 +118,7 @@ export const EnterprisePage = () => {
           >
             <FaTrash title="Şirketi Sil" />
           </button>
-          <button
-            onClick={() => {
-              showDetails(row);
-            }}
-            className="
-                    inline-flex items-center 
-                    px-4 py-2 
-                    bg-purple-500 hover:bg-purple-600 
-                    text-white 
-                    rounded 
-                    mr-2
-                  "
-          >
-            <FaEye title="Detayları Göster" />
-          </button>
+       
         </div>
       ),
       accessor: "id",

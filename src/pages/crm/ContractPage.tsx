@@ -118,6 +118,10 @@ export const ContractPage = () => {
       const priceoffer = priceoffers.find(
         (po) => po.id === contract.priceOfferId
       );
+        filledTemplate = filledTemplate.replaceAll(
+      "~toplam_fiyat~",
+      priceoffer.ToplamTutar || ""
+    );
       priceoffer.priceOfferLine?.forEach((line, index) => {
         toplamFiyat += Number(line.toplamFiyat ?? 0);
         let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
@@ -145,10 +149,7 @@ export const ContractPage = () => {
         fiyatSatirlarHtml
       );
     } else filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", "");
-    filledTemplate = filledTemplate.replaceAll(
-      "~toplam_fiyat~",
-      toplamFiyat.toLocaleString() || ""
-    );
+  
     setEditorData(filledTemplate);
     setShowPreview(contract.id!);
   };

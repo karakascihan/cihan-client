@@ -147,7 +147,7 @@ export const deletePersonel = createAsyncThunk<
 
     const response = await apiRequest<ApiResponseClient<any>>(
       "DELETE",
-      URL + `/personel/${id}`,
+      URL + `/personel/delete/${id}`,
       { Authorization: "Bearer " + state.login.accessToken }
     );
 
