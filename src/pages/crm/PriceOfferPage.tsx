@@ -41,6 +41,9 @@ import { useApiRequest } from "@/hooks/useApiRequest";
 import { fetchEnterprises } from "@/store/slices/enterpriseSlice";
 import { setNotification } from "@/store/slices/notificationSlice";
 import { AddPurchaseOrderPage2 } from "./AddPurchaseOrderPage2";
+import { AddPurchaseOrderFromOfferPage } from "./AddPurchaseOrderFromOfferPage";
+import { ApiResponseClient } from "@/types/apiResponse";
+import { apiRequest } from "@/services";
 export const PriceOfferPage = ({
   opportunityId,
 }: {
@@ -89,12 +92,12 @@ export const PriceOfferPage = ({
     if (userState.data.length === 0) {
       dispatch(fetchUsers() as any);
     }
-    dispatch(fetchEnterprises()as any);
+    dispatch(fetchEnterprises() as any);
   }, []);
-   const { refetch } = useApiRequest<ContractsDto[]>(  URL + "/contracts/getall",{method: "GET", skip: true,deps: [],}
+  const { refetch } = useApiRequest<ContractsDto[]>(URL + "/contracts/getall", { method: "GET", skip: true, deps: [], }
   );
   const enterpriseState = useSelector((state: RootState) => state.enterprise);
-   const formElementsforContract: FieldDefinition[] = (
+  const formElementsforContract: FieldDefinition[] = (
     contractDtoForInsertion: ContractsDtoForInsertion
   ) => {
     let fields: FieldDefinition[] = [
@@ -183,32 +186,123 @@ export const PriceOfferPage = ({
     return fields;
   };
   const ConvertToContract = async (contract: ContractsDto) => {
-   openModal({
-     title: "Sözleşme Oluştur",
-     content: async function (close: (result: any) => void): Promise<ReactNode> {
-      return (<GenericForm
-        fields={formElementsforContract(contract)}
-        onSubmit={function (data: ContractsDtoForInsertion): void {
-          data.priceOfferId= contract.priceOfferId;
-           let result= refetch(URL + "/contracts/create", { method: "post", body: data });
-           if (result) {
-            dispatch(setNotification({ message: "Sözleşme başarıyla oluşturuldu.", type: "success" , title: "Başarılı"}));
+    openModal({
+      title: "Sözleşme Oluştur",
+      content: async function (close: (result: any) => void): Promise<ReactNode> {
+        return (<GenericForm
+          fields={formElementsforContract(contract)}
+          onSubmit={function (data: ContractsDtoForInsertion): void {
+            data.priceOfferId = contract.priceOfferId;
+            let result = refetch(URL + "/contracts/create", { method: "post", body: data });
+            if (result) {
+              dispatch(setNotification({ message: "Sözleşme başarıyla oluşturuldu.", type: "success", title: "Başarılı" }));
               close(result);
-           }
-        }}
-      />)
-     }
-   });
+            }
+          }}
+        />)
+      }
+    });
   };
-    const ConvertToOrder = async (order: PurchaseOrderDtoForInsertion) => {
-   openModal({
-     title: "Sipariş Oluştur",
-     content:  (close: (result: any) => void): ReactNode =>{
-      return (<AddPurchaseOrderPage2 />)
-     }
-   });
-  };
+  //   const ConvertToOrder = async (order: PurchaseOrderDtoForInsertion) => {
+  //  openModal({
+  //    title: "Sipariş Oluştur",
+  //    content:  (close: (result: any) => void): ReactNode =>{
+  //     return (<AddPurchaseOrderPage2 />)
+  //    }
+  //  });
+  // };
+
   const PriceOfferWith = useSelector(selectPriceOffersWithCustomerWithOpportunity);
+
+  const ConvertToOrder = async (row: PriceOfferDto) => {
+    try {
+      const res = await apiRequest<ApiResponseClient<PriceOfferDto>>(
+        "GET",
+        `${URL}/PriceOffer/${row.id}`
+      );
+      const offer = res.result;
+
+      const joined = PriceOfferWith.find(x => Number(x.id) === Number(row.id));
+
+      const offerLines =
+        joined?.priceOfferLine?.filter(l => l.opsiyonMu === false) ?? [];
+      const firmaId = joined?.firma_Id ?? null;
+      console.log("firmaId:", firmaId);
+      console.log("priceofferwith", PriceOfferWith);
+      console.log("priceofferline", offerLines);
+      const firma =
+        customerState.data.find(c => Number(c.id) === Number(firmaId)) ??
+        null;
+
+      if (!firmaId) {
+        alert("Bu teklif opportunity/customer bağlı değil (customerId yok). Firma seçilemedi.");
+        return;
+      }
+
+      const order: PurchaseOrderDtoForInsertion = {
+        firma_Id: firmaId,
+        priceOfferId: offer?.id ?? row?.id ?? null,
+
+        // UI için
+        firmaAdi: firma?.firma ?? firma?.firma ?? "",
+        yetkiliKisi: firma?.yetkili ?? firma?.yetkili ?? "",
+
+        siparisTarihi: null,
+        teslimTarihi: null,
+
+        aciklama: offer?.teklifAciklama ?? "",
+        durumu: "",
+        onayAcikla: "",
+        siparisKosullari: "",
+        kaliteKosullari: "",
+        siparisTipi: "",
+        turu: "",
+
+        toplamIndirimOraniYuzde: offer?.belgeIndirimOraniYuzde ?? 0,
+        toplamTutar: offer?.toplamTutar ?? row?.toplamTutar ?? 0,
+
+        purchaseOrderLine: (offerLines ?? []).map((l: any) => ({
+          product_Id: l?.product_Id ?? l?.productId ?? 0,
+          malzemeKodu: l?.malzemeKodu ?? "",
+          malzemeAdi: l?.malzemeAdi ?? "",
+          miktar: l?.miktar ?? 0,
+          birimi: l?.birimi ?? "",
+          birimFiyat: l?.birimFiyat ?? 0,
+          paraBirimi: l?.paraBirimi ?? "",
+          indirimOraniYuzde: l?.indirimOraniYuzde ?? 0,
+          kdvOraniYuzde: l?.kdvOraniYuzde ?? 0,
+          teslimTarih: null,
+          tamamTarihi: null,
+          durumu: "",
+          aciklama: "",
+          stogaAktarildimi: false,
+          order_Id: 0,
+        })),
+      };
+
+      openModal({
+        title: "Sipariş Oluştur",
+        maximizable: true,
+        style: { width: "85vw" },
+        content: (close) => (
+          <AddPurchaseOrderFromOfferPage
+            key={row.id}
+            initialOrder={order}
+            onClose={(r) => close(r)}
+            onSuccess={async () => {
+              await dispatch(fetchPriceOffers());
+            }}
+          />
+        ),
+      });
+    } catch (err) {
+      console.error("ConvertToOrder error:", err);
+      alert("Teklif detayı alınamadı.");
+    }
+  };
+
+
+
   const columns: Column<PriceOfferDto>[] = [
     { header: "#", accessor: "__index" },
     {
@@ -386,7 +480,7 @@ export const PriceOfferPage = ({
           >
             <FaEye title="Göster" />
           </button>
-                  <button
+          <button
             onClick={() => {
               let contract: ContractsDto = {
                 kurum: "",
@@ -421,40 +515,40 @@ export const PriceOfferPage = ({
           >
             <FaFileContract title="Sözleşme Oluştur" />
           </button>
-                   <button
+          <button
             onClick={() => {
-              const firma=customerState.data.find(c=>c.id==row.firma_Id);
-              let order: PurchaseOrderDtoForInsertion = {
-                firmaAdi: firma.firma,
-                yetkiliKisi: firma.yetkili,
-                siparisTarihi: new Date().toString(),
-                teslimTarihi: new Date().toString(),
-                aciklama: "",
-                durumu: "",
-                onayAcikla: "",
-                siparisKosullari: "",
-                kaliteKosullari: "",
-                siparisTipi: "",
-                turu: "",
-                purchaseOrderLine: []
-              };
-              row.priceOfferLine.forEach(line=>{
-                order.purchaseOrderLine.push({
-                  malzemeKodu: line.malzemeKodu,
-                  malzemeAdi: line.malzemeAdi,
-                  miktar: line.miktar,
-                  birimi: line.birimi,
-                  birimFiyat: line.birimFiyat,
-                  paraBirimi: line.paraBirimi,
-                  teslimTarih: undefined,
-                  aciklama: "",
-                  tamamTarihi: undefined,
-                  durumu: "",
-                  stogaAktarildimi: false,
-                  order_Id: 0
-                });
-              })
-              ConvertToOrder(order);
+              // const firma = customerState.data.find(c => c.id == row.firma_Id);
+              // let order: PurchaseOrderDtoForInsertion = {
+              //   firmaAdi: firma.firma,
+              //   yetkiliKisi: firma.yetkili,
+              //   siparisTarihi: new Date().toString(),
+              //   teslimTarihi: new Date().toString(),
+              //   aciklama: "",
+              //   durumu: "",
+              //   onayAcikla: "",
+              //   siparisKosullari: "",
+              //   kaliteKosullari: "",
+              //   siparisTipi: "",
+              //   turu: "",
+              //   purchaseOrderLine: []
+              // };
+              // row.priceOfferLine.forEach(line => {
+              //   order.purchaseOrderLine.push({
+              //     malzemeKodu: line.malzemeKodu,
+              //     malzemeAdi: line.malzemeAdi,
+              //     miktar: line.miktar,
+              //     birimi: line.birimi,
+              //     birimFiyat: line.birimFiyat,
+              //     paraBirimi: line.paraBirimi,
+              //     teslimTarih: undefined,
+              //     aciklama: "",
+              //     tamamTarihi: undefined,
+              //     durumu: "",
+              //     stogaAktarildimi: false,
+              //     order_Id: 0
+              //   });
+              // })
+              ConvertToOrder(row);
             }}
             className="
                     inline-flex items-center 
@@ -611,9 +705,9 @@ export const PriceOfferPage = ({
       maximizable: true,
       maximized: true,
       content: (close) => (
-        <EmailSender priceOfferId={priceoffer.id} opportunityId={priceoffer.opportunityId}  mailDto={{
+        <EmailSender priceOfferId={priceoffer.id} opportunityId={priceoffer.opportunityId} mailDto={{
           toEmail: customerState.data.find((x) => x.id == priceoffer.firma_Id)?.email, subject: opportunities.data.find((x) => x.id == priceoffer.opportunityId)?.title,
-          body: "Teklif metnimiz ektedir.İyi Çalışmalar."+ personels.items?.find((x) => x.id == priceoffer.teklifOnay).mailImzasi
+          body: "Teklif metnimiz ektedir.İyi Çalışmalar." + personels.items?.find((x) => x.id == priceoffer.teklifOnay).mailImzasi
           /*
           body:ReactDOMServer.renderToString(
          <Provider store={store} >
@@ -630,7 +724,7 @@ export const PriceOfferPage = ({
       ),
     });
   };
-  const {setLoading}=useLoading();
+  const { setLoading } = useLoading();
   const showTemplate1 = (priceoffer: PriceOfferDto) => {
     openModal({
       title: "Teklif Şablonu",
@@ -646,24 +740,24 @@ export const PriceOfferPage = ({
         teklifMetni = teklifMetni.replaceAll("~firmaAdi~", firma.firma);
         teklifMetni = teklifMetni.replaceAll("~firmaYetkili~", firma.yetkili);
         teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikTarihi~", TarihFormatiDonustur(priceoffer.teklifGecerlilikTarihi.toString()));
-        teklifMetni = teklifMetni.replaceAll("~teklifOnay~", (onayPersonel.personelAdi?? "") + " " + (onayPersonel.personelSoyadi ?? ""));
-        teklifMetni = teklifMetni.replaceAll("~teklifOnayGorev~", onayPersonel.personelGorevi??"");
-        teklifMetni = teklifMetni.replaceAll("~telefon~", onayPersonel.telefonNo??"");
-        teklifMetni = teklifMetni.replaceAll("~ePosta~", onayPersonel.ePosta??"");
+        teklifMetni = teklifMetni.replaceAll("~teklifOnay~", (onayPersonel.personelAdi ?? "") + " " + (onayPersonel.personelSoyadi ?? ""));
+        teklifMetni = teklifMetni.replaceAll("~teklifOnayGorev~", onayPersonel.personelGorevi ?? "");
+        teklifMetni = teklifMetni.replaceAll("~telefon~", onayPersonel.telefonNo ?? "");
+        teklifMetni = teklifMetni.replaceAll("~ePosta~", onayPersonel.ePosta ?? "");
 
-        const teklifTarihi=new Date(priceoffer.teklifTarihi);
+        const teklifTarihi = new Date(priceoffer.teklifTarihi);
 
         const teklifGecerlilikTarihi = new Date(priceoffer.teklifGecerlilikTarihi);
         const gunFarkiTeklif = Math.ceil((teklifGecerlilikTarihi.getTime() - teklifTarihi.getTime()) / (1000 * 60 * 60 * 24));
 
 
-         if (gunFarkiTeklif > 0) {
-        teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", gunFarkiTeklif + " gün");
+        if (gunFarkiTeklif > 0) {
+          teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", gunFarkiTeklif + " gün");
         }
-         else {
-           teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", "5 gün");
- 
-         }
+        else {
+          teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", "5 gün");
+
+        }
         teklifMetni = teklifMetni.replaceAll("~BASE_URL~", URL.replace("api", ""));
 
         const gunFarkiTeslim = Math.ceil(
@@ -688,19 +782,18 @@ export const PriceOfferPage = ({
           fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
 
         });
-       
-           if(priceoffer.belgeIndirimOraniYuzde>0)
-           {
- fiyatSatirlarHtml+=`<tr><td style="padding: 10px 12px;font-size: 15px; font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Ara Toplam</td>
-                       <td colspan=5 style="text-align:center; font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar+(priceoffer.toplamTutar*priceoffer.belgeIndirimOraniYuzde/100)}</td>
-           ></tr>`;
-             fiyatSatirlarHtml+=`<tr><td  style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">İskonto %${priceoffer.belgeIndirimOraniYuzde}</td>
-                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar*priceoffer.belgeIndirimOraniYuzde/100}</td>
-           ></tr>`;
-           }
 
-             fiyatSatirlarHtml+=`<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
-                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar+" "+ priceoffer.priceOfferLine[0].paraBirimi}</td>
+        if (priceoffer.belgeIndirimOraniYuzde > 0) {
+          fiyatSatirlarHtml += `<tr><td style="padding: 10px 12px;font-size: 15px; font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Ara Toplam</td>
+                       <td colspan=5 style="text-align:center; font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + (priceoffer.toplamTutar * priceoffer.belgeIndirimOraniYuzde / 100)}</td>
+           ></tr>`;
+          fiyatSatirlarHtml += `<tr><td  style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">İskonto %${priceoffer.belgeIndirimOraniYuzde}</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar * priceoffer.belgeIndirimOraniYuzde / 100}</td>
+           ></tr>`;
+        }
+
+        fiyatSatirlarHtml += `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi}</td>
            ></tr>`;
         teklifMetni = teklifMetni.replaceAll("~fiyatSatirlar~", fiyatSatirlarHtml);
 
@@ -721,7 +814,7 @@ export const PriceOfferPage = ({
 
         return <GenericForm
           key={priceoffer.id + "-" + Date.now()}
-         buttonNode={<button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Pdf Olarak Kaydet</button>}
+          buttonNode={<button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Pdf Olarak Kaydet</button>}
           fields={[{
             colspan: 12,
             name: "icerik",
@@ -731,18 +824,19 @@ export const PriceOfferPage = ({
 
           }]} onSubmit={function (data: any): void {
             setLoading(true);
-               dispatch( addFileRecord({
-                 fileName: "fiyat_teklifi_"+new Date().toLocaleString().replaceAll(" ", "-")+".pdf",
-                 contentType: "application/pdf",
-                 sizeKb: 0,
-                 content: data.icerik,
-                 uploadedBy: 0,
-                 relatedEntityName: "PriceOffer",
-                 relatedEntityId: priceoffer.id!,
-                 type: 5
-               })).unwrap().then(() => {
-                 setLoading(false);
-                 close(null);})
+            dispatch(addFileRecord({
+              fileName: "fiyat_teklifi_" + new Date().toLocaleString().replaceAll(" ", "-") + ".pdf",
+              contentType: "application/pdf",
+              sizeKb: 0,
+              content: data.icerik,
+              uploadedBy: 0,
+              relatedEntityName: "PriceOffer",
+              relatedEntityId: priceoffer.id!,
+              type: 5
+            })).unwrap().then(() => {
+              setLoading(false);
+              close(null);
+            })
           }} />
 
       }

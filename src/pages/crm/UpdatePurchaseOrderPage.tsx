@@ -15,7 +15,8 @@ type Props = {
 
 const emptyForm: PurchaseOrderDtoForUpdate = {
     id: 0,
-    firma_Id: 0,
+    firma_Id: null,
+    priceOfferId: null,
     firmaAdi: "",
     yetkiliKisi: "",
     siparisTipi: "",
