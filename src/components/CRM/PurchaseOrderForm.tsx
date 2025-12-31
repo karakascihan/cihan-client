@@ -168,6 +168,11 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
         updateLine(lineIndex, "paraBirimi", p.paraBirimi as any);
     };
 
+    const getFallbackValue = (line: any) =>
+        line?.malzemeKodu
+            ? `offer-code:${String(line.malzemeKodu).trim()}`
+            : `offer-name:${String(line?.malzemeAdi ?? "").trim()}`;
+
     return (
         <form
             onSubmit={(e) => {
@@ -397,12 +402,31 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                 {/* Malzeme adı - ürün seçimi dropdown */}
                                                 <select
                                                     className="w-full border rounded p-1"
-                                                    value={(line as any).product_Id ?? ""}
-                                                    onChange={(e) => onSelectProduct(idx, Number(e.target.value))}
+                                                    value={
+                                                        Number((line as any).product_Id) > 0
+                                                            ? String((line as any).product_Id)
+                                                            : getFallbackValue(line)
+                                                    }
+                                                    onChange={(e) => {
+                                                        const v = e.target.value;
+
+                                                        // fallback seçiliyse hiçbir şey yapma (zaten görüntü için)
+                                                        if (v.startsWith("offer-code:") || v.startsWith("offer-name:")) return;
+
+                                                        onSelectProduct(idx, Number(v));
+                                                    }}
                                                 >
-                                                    <option value={line.malzemeAdi} disabled>Ürün seçiniz...</option>
+                                                    {/* ✅ product_Id yoksa: tekliften gelen kalemi seçili gösteren option */}
+                                                    {Number((line as any).product_Id) <= 0 && (
+                                                        <option value={getFallbackValue(line)}>
+                                                            {line.malzemeAdi ?? "Teklif Kalemi"} {line.malzemeKodu ? `(${line.malzemeKodu})` : ""} Seçiniz...
+                                                        </option>
+                                                    )}
+
+                                                    <option value="" disabled>Ürün seçiniz...</option>
+
                                                     {products.map((p) => (
-                                                        <option key={p.id} value={p.id}>
+                                                        <option key={p.id} value={String(p.id)}>
                                                             {p.malzemeAdi}
                                                         </option>
                                                     ))}
