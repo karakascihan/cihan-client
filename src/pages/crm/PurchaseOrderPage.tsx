@@ -96,12 +96,22 @@ export const PurchaseOrderPage = () => {
             accessor: "siparisTarihi",
             filterable: true,
             sortable: true,
+            body: (row) =>
+                row.siparisTarihi
+                  ? String(row.siparisTarihi).substring(0, 10).split("-").reverse().join(".")
+                  : "",
+            
         },
         {
             header: "Teslim Tarihi",
             accessor: "teslimTarihi",
             filterable: true,
             sortable: true,
+            body: (row) =>
+                row.teslimTarihi
+                  ? String(row.teslimTarihi).substring(0, 10).split("-").reverse().join(".")
+                  : "",
+            
         },
         {
             header: "Toplam İndirim Oranı (%)",
