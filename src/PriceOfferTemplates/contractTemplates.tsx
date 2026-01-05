@@ -84,7 +84,7 @@ export const contractTemplate1 = `<div
 
         <h2 style="font-size: 16px; font-weight: bold; margin-top: 25px; margin-bottom: 10px;">5. KAPSAM</h2>
 
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" >
             <thead>
                 <tr style="background-color: #f2f2f2;">
                     <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Açıklama</th>
@@ -113,7 +113,7 @@ export const contractTemplate1 = `<div
                 Müşteriye fatura edilecektir.
                <p style="margin: 20px 0; text-decoration: underline; font-weight: bold;">GENEL TOPLAM LİSANS+ HİZMET BEDELİ
             (TL) :~toplam_fiyat~</p>
-        <p style="margin: 10px 0; text-decoration: underline; font-weight: bold;">(~toplam_fiyat~'dir.) (KDV Dahil
+        <p style="margin: 10px 0; text-decoration: underline; font-weight: bold;"> (KDV Dahil
             değildir)</p></li>
                 <li style="margin: 10px 0;"><strong>5.3.</strong>Sözleşme kapsamında verilecek hizmetler ("Destek Hizmet(ler)i") aşağıda
                 belirtilmiştir;</li>

@@ -120,7 +120,7 @@ export const ContractPage = () => {
       );
         filledTemplate = filledTemplate.replaceAll(
       "~toplam_fiyat~",
-      priceoffer.toplamTutar || ""
+      (priceoffer.toplamTutar+" "+priceoffer.priceOfferLine[0].paraBirimi) || ""
     );
       priceoffer.priceOfferLine?.forEach((line, index) => {
         toplamFiyat += Number(line.toplamFiyat ?? 0);
@@ -146,7 +146,7 @@ export const ContractPage = () => {
       });
        let genelToplam = `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
                        <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar+" "+ priceoffer.priceOfferLine[0].paraBirimi}</td>
-           ></tr>`;
+           </tr>`;
            fiyatSatirlarHtml+=genelToplam;
       filledTemplate = filledTemplate.replaceAll(
         "~kapsam_satirlari~",

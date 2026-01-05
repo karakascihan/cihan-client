@@ -118,7 +118,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
   const belgeIndirim = watch("belgeIndirimOraniYuzde") || 0;
 
   const subtotal = productLines.reduce(
-    (acc, line) => acc + calcLineTotal(line),
+    (acc, line) => acc + calcLineTotal(line)+calcLineTotalKdv(line),
     0
   );
   const belgeIndirimTutari = subtotal * (belgeIndirim / 100);
@@ -337,7 +337,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
         </td>
         {!isOption && (
           <td className="border p-2 text-right">
-            {calcLineTotal(line).toLocaleString()}
+            {(calcLineTotal(line)+calcLineTotalKdv(line)).toLocaleString()}
           </td>
         )}
         <td className="border p-2 text-center">
