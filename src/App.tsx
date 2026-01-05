@@ -32,6 +32,7 @@ import { AddPurchaseOrderPage2 } from "./pages/crm/AddPurchaseOrderPage2";
 import { PurchaseOrderPage } from "./pages/crm/PurchaseOrderPage";
 import { UpdatePurchaseOrderPage } from "./pages/crm/UpdatePurchaseOrderPage";
 import { EnterprisePage } from "./pages/Setting/EnterprisePage";
+import { SidebarProvider } from "./context/SidebarContext";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -153,11 +154,13 @@ export default function App() {
       <AuthProvider>
         <ConfirmProvider>
           <UIProvider>
+            <SidebarProvider>
             <LoadingProvider>
               <ModalProvider>
                 <AppRoutes />
               </ModalProvider>
             </LoadingProvider>
+            </SidebarProvider>
           </UIProvider>
         </ConfirmProvider>
       </AuthProvider>
