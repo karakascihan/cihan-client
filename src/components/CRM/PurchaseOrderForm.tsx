@@ -173,6 +173,76 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
             ? `offer-code:${String(line.malzemeKodu).trim()}`
             : `offer-name:${String(line?.malzemeAdi ?? "").trim()}`;
 
+
+
+    //hesaplama çalışması
+
+
+    const toNum = (v: any) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+    };
+
+    const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+
+    const calc = React.useMemo(() => {
+        const ls = (lines ?? []);
+
+        const computedLines = ls.map((l) => {
+            const qty = toNum((l as any).miktar);
+            const unit = toNum((l as any).birimFiyat);
+
+            const discPct = clamp(toNum((l as any).indirimOraniYuzde), 0, 100);
+            const kdvPct = clamp(toNum((l as any).kdvOraniYuzde), 0, 100);
+
+            const base = qty * unit;                          //indirimsiz, kdvsiz
+            const discountAmount = base * (discPct / 100);     //indirim tutarı
+            const afterDiscount = base - discountAmount;       //indirimli tutar (kdvsiz)
+
+            const kdvAmount = afterDiscount * (kdvPct / 100);  //KDV tutarı (indirim sonrası)
+            const lineTotal = afterDiscount + kdvAmount;       //KDV dahil satır toplamı
+
+            return {
+                key: getLineKey(l as any, 0), // key sadece debug için; UI zaten getLineKey kullanıyor
+                base,
+                discountAmount,
+                afterDiscount,
+                kdvAmount,
+                lineTotal,
+            };
+        });
+
+        const subtotal = computedLines.reduce((s, x) => s + x.base, 0);
+        const lineDiscountTotal = computedLines.reduce((s, x) => s + x.discountAmount, 0);
+        const afterLineDiscount = computedLines.reduce((s, x) => s + x.afterDiscount, 0);
+        const tax = computedLines.reduce((s, x) => s + x.kdvAmount, 0);
+        const afterLineDiscountWithTax = computedLines.reduce((s, x) => s + x.lineTotal, 0);
+
+        const masterDiscPct = clamp(toNum((form as any).toplamIndirimOraniYuzde), 0, 100);
+        const masterDiscountAmount = afterLineDiscountWithTax * (masterDiscPct / 100);
+
+
+
+        const total = afterLineDiscountWithTax - masterDiscountAmount;
+
+        return {
+            lines: computedLines,
+            subtotal,
+            lineDiscountTotal,
+            afterLineDiscount,
+            masterDiscPct,
+            masterDiscountAmount,
+            tax,
+            afterLineDiscountWithTax,
+            total,
+        };
+    }, [lines, (form as any).toplamIndirimOraniYuzde]);
+
+    React.useEffect(() => {
+        handleChange("toplamTutar" as any, calc.total);
+    }, [calc.total]);
+
+
     return (
         <form
             onSubmit={(e) => {
@@ -182,8 +252,6 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
             className="p-6 bg-white shadow rounded"
         >
             <div className="max-w-8xl mx-auto">
-
-                {/* Header - gri ton uyumlu */}
                 <div className="relative flex items-center mb-4 bg-gray-100 border rounded px-4 h-14">
                     <h1 className="absolute left-1/2 -translate-x-1/2 text-lg text-gray-700 font-bold">
                         {mode === "create"
@@ -231,7 +299,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                         </div>
 
                         {/* Sipariş Tarihi */}
-                        <div className="col-span-12 md:col-span-3">
+                        <div className="col-span-12 md:col-span-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Sipariş Tarihi</label>
                             <input
                                 type="date"
@@ -242,7 +310,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                         </div>
 
                         {/* Teslim Tarihi */}
-                        <div className="col-span-12 md:col-span-3">
+                        <div className="col-span-12 md:col-span-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Teslim Tarihi</label>
                             <input
                                 type="date"
@@ -253,7 +321,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                         </div>
 
                         {/* Durumu */}
-                        <div className="col-span-12 md:col-span-2">
+                        <div className="col-span-12 md:col-span-4">
                             <label className="block text-xs font-semibold text-gray-600 mb-1">Durumu</label>
 
                             <select
@@ -267,26 +335,6 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                 <option value="stokgiris">Stok Girişi Yapıldı</option>
                                 <option value="iade">İade Sipariş</option>
                             </select>
-                        </div>
-                        {/* Toplam İndirim Oranı Yüzdesi */}
-                        <div className="col-span-12 md:col-span-2">
-                            <label className="block text-xs font-semibold text-gray-600 mb-1">Toplam İndirim Oranı Yüzdesi</label>
-                            <input
-                                type="number"
-                                value={form.toplamIndirimOraniYuzde}
-                                onChange={(e) => handleChange("toplamIndirimOraniYuzde", e.target.value)}
-                                className="w-full border p-2 rounded-md bg-white"
-                            />
-                        </div>
-                        {/* Toplam Tutar*/}
-                        <div className="col-span-12 md:col-span-2">
-                            <label className="block text-xs font-semibold text-gray-600 mb-1">Toplam Tutar</label>
-                            <input
-                                type="number"
-                                value={form.toplamTutar}
-                                onChange={(e) => handleChange("toplamTutar", e.target.value)}
-                                className="w-full border p-2 rounded-md bg-white"
-                            />
                         </div>
 
                         {/* Sipariş Koşulları */}
@@ -350,7 +398,6 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                 + Kalem Ekle
                             </button>
 
-                            {/* İstersen modal ile “Ürünlerden Ekle” de ekleriz (aşağıda anlatıyorum) */}
                             {/* <button type="button" onClick={...} className="px-3 py-1.5 rounded bg-green-600 text-white text-sm">
         Ürünlerden Ekle
       </button> */}
@@ -370,11 +417,11 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                     <col style={{ width: "80px" }} />
                                     <col style={{ width: "80px" }} />
                                     <col style={{ width: "80px" }} />
+                                    <col style={{ width: "70px" }} />
+                                    <col style={{ width: "70px" }} />
                                     <col style={{ width: "160px" }} />
                                     <col style={{ width: "160px" }} />
-                                    <col style={{ width: "70px" }} />
-                                    <col style={{ width: "70px" }} />
-                                    <col style={{ width: "70px" }} />
+                                    <col style={{ width: "160px" }} />
                                     <col style={{ width: "70px" }} />
 
                                 </colgroup>
@@ -386,11 +433,15 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                         <th className="border p-2 w-[120px]">Birim Fiyat</th>
                                         <th className="border p-2 w-[90px]">Para Birimi</th>
                                         <th className="border p-2 w-[90px]">Miktar</th>
-                                        <th className="border p-2 w-[160px]">Durumu</th>
-                                        <th className="border p-2 w-[220px]">Açıklama</th>
+
                                         <th className="border p-2 w-[220px]">İndirim Oranı Yüzdesi</th>
                                         <th className="border p-2 w-[220px]">KDV Oranı Yüzdesi</th>
-                                        <th className="border p-2 w-[120px]">Stoğa</th>
+
+
+                                        <th className="border p-2 w-[200px]">Toplam Tutar (İndirim + KDV)</th>
+                                        <th className="border p-2 w-[160px]">Durumu</th>
+                                        <th className="border p-2 w-[220px]">Açıklama</th>
+                                        <th className="border p-2 w-[120px]">Stoğa Aktarıldı Mı?</th>
                                         <th className="border p-2 w-[90px]">İşlem</th>
                                     </tr>
                                 </thead>
@@ -431,7 +482,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                 </select>
 
                                             </td>
-                                            <td className="border p-2">
+                                            <td className="border p-2 align-middle">
                                                 <input
                                                     value={line.malzemeKodu ?? ""}
                                                     onChange={(e) => updateLine(idx, "malzemeKodu", e.target.value as any)}
@@ -439,7 +490,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                 />
                                             </td>
 
-                                            <td className="border p-2">
+                                            <td className="border p-2 align-middle">
                                                 <input
                                                     value={line.birimi ?? ""}
                                                     onChange={(e) => updateLine(idx, "birimi", e.target.value as any)}
@@ -447,7 +498,7 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                 />
                                             </td>
 
-                                            <td className="border p-2">
+                                            <td className="border p-2 align-middle">
                                                 <input
                                                     type="number"
                                                     value={line.birimFiyat ?? ""}
@@ -458,14 +509,14 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                 />
                                             </td>
 
-                                            <td className="border p-2">
+                                            <td className="border p-2 align-middle">
                                                 <input
                                                     value={line.paraBirimi ?? ""}
                                                     onChange={(e) => updateLine(idx, "paraBirimi", e.target.value as any)}
                                                     className="w-full border rounded p-1"
                                                 />
                                             </td>
-                                            <td className="border p-2">
+                                            <td className="border p-2 align-middle">
                                                 <input
                                                     type="number"
                                                     value={line.miktar ?? ""}
@@ -474,6 +525,33 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                     }
                                                     className="w-full border rounded p-1"
                                                 />
+                                            </td>
+
+
+                                            <td className="border p-1 w-[70px] align-middle">
+                                                <input
+                                                    type="number"
+                                                    value={line.indirimOraniYuzde ?? ""}
+                                                    onChange={(e) =>
+                                                        updateLine(idx, "indirimOraniYuzde", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
+                                                    }
+                                                    className="w-full border rounded px-1 py-0.5 text-center text-sm align-middle"
+                                                />
+                                            </td>
+                                            <td className="border p-1 w-[40px] align-middle">
+                                                <input
+                                                    type="number"
+                                                    value={line.kdvOraniYuzde ?? ""}
+                                                    onChange={(e) =>
+                                                        updateLine(idx, "kdvOraniYuzde", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
+                                                    }
+                                                    className="w-full border rounded px-1 py-0.5 text-center text-sm align-middle"
+                                                />
+                                            </td>
+
+
+                                            <td className="border p-2 text-center font-semibold">
+                                                {calc.lines[idx]?.lineTotal?.toLocaleString() ?? "0"}
                                             </td>
 
                                             <td className="border p-2">
@@ -491,52 +569,92 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                                     className="w-full border rounded p-1"
                                                 />
                                             </td>
-                                            <td className="border p-1 w-[70px]">
-                                                <input
-                                                    type="number"
-                                                    value={line.indirimOraniYuzde ?? ""}
-                                                    onChange={(e) =>
-                                                        updateLine(idx, "indirimOraniYuzde", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
-                                                    }
-                                                    className="w-[55px] border rounded px-1 py-0.5 text-center text-sm"
-                                                />
-                                            </td>
-                                            <td className="border p-1 w-[40px]">
-                                                <input
-                                                    type="number"
-                                                    value={line.kdvOraniYuzde ?? ""}
-                                                    onChange={(e) =>
-                                                        updateLine(idx, "kdvOraniYuzde", (e.target.value === "" ? undefined : Number(e.target.value)) as any)
-                                                    }
-                                                    className="w-[55px] border rounded px-1 py-0.5 text-center text-sm"
-                                                />
-                                            </td>
-
-                                            <td className="border p-2">
-                                                <label className="flex items-center gap-2">
+                                            <td className="border p-2 align-middle">
+                                                <div className="flex items-center justify-center">
                                                     <input
                                                         type="checkbox"
                                                         checked={!!line.stogaAktarildimi}
                                                         onChange={(e) => updateLine(idx, "stogaAktarildimi", e.target.checked as any)}
                                                     />
-                                                    <span className="text-sm">Aktarıldı</span>
-                                                </label>
+                                                </div>
                                             </td>
 
-                                            <td className="border p-2 text-center">
+                                            <td className="border p-2 text-center ">
                                                 <button
                                                     type="button"
                                                     onClick={() => removeLine(idx)}
                                                     className="px-2 py-1 rounded border border-red-300 text-red-700 hover:bg-red-50"
                                                 >
-                                                    Kaldır
+                                                    Sil
                                                 </button>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
+                                <tfoot>
+
+                                    {/* Ara Toplam (Kalem indirimi + KDV) */}
+                                    <tr className="bg-gray-50">
+                                        <td colSpan={10} className="text-right p-2 text-sm font-semibold text-gray-600">
+                                            Ara Toplam (Kalem İndirimi + KDV)
+                                        </td>
+                                        <td colSpan={3} className="text-right p-2 font-bold">
+                                            {calc.afterLineDiscountWithTax.toLocaleString()}
+                                        </td>
+                                    </tr>
+
+                                    {/* Toplam İndirim Oranı (%) */}
+                                    <tr className="bg-gray-50">
+                                        <td colSpan={10} className="text-right p-2 text-sm font-semibold text-gray-600">
+                                            Toplam İndirim Oranı (%)
+                                        </td>
+                                        <td colSpan={3} className="text-right p-2">
+                                            <input
+                                                type="number"
+                                                value={form.toplamIndirimOraniYuzde ?? 0}
+                                                onChange={(e) =>
+                                                    handleChange(
+                                                        "toplamIndirimOraniYuzde" as any,
+                                                        e.target.value === "" ? 0 : Number(e.target.value)
+                                                    )
+                                                }
+                                                className="w-20 border rounded px-2 py-1 text-right text-sm bg-white"
+                                            />
+                                        </td>
+                                    </tr>
+
+                                    {/* Genel İndirim Tutarı */}
+                                    <tr className="bg-gray-50">
+                                        <td colSpan={10} className="text-right p-2 text-sm font-semibold">
+                                            Genel İndirim ({Number(form.toplamIndirimOraniYuzde ?? 0)}%)
+                                        </td>
+                                        <td colSpan={3} className="text-right p-2 font-bold">
+                                            {calc.masterDiscountAmount.toLocaleString()}
+                                        </td>
+                                    </tr>
+
+                                    {/* Genel Toplam */}
+                                    <tr className="border-t bg-gray-100">
+                                        <td colSpan={10} className="text-right p-3 text-base font-bold">
+                                            GENEL TOPLAM
+                                        </td>
+                                        <td colSpan={3} className="text-right p-3">
+                                            <input
+                                                type="number"
+                                                readOnly
+                                                value={form.toplamTutar ?? 0}
+                                                className="w-40 border-2 border-red-200 bg-red-50 px-2 py-1 rounded text-right font-bold text-red-700"
+                                            />
+                                        </td>
+                                    </tr>
+
+                                </tfoot>
+
+
                             </table>
+
                         </div>
+
                     )}
 
                 </div>
