@@ -18,27 +18,56 @@ import {
     PlugInIcon,
     TableIcon,
     UserCircleIcon,
-  } from "../icons";
+} from "../icons";
 
 import {
-  Home,
-  Users,
-  Settings,
-  FileMinus,
-  Warehouse,
-  Boxes,
-  Coins,
-  FileText,
-  FilePlus2,
-  FileSpreadsheet,
-  ChevronDown,
-  ChevronRight,
-  Calendar,
-  CalendarDays,
-  Building2,
-  User,
-  UserCog,
-  UserCheck,
+    Home,
+    Users,
+    Settings,
+    FileMinus,
+    Warehouse,
+    Boxes,
+    Coins,
+    FileText,
+    FilePlus2,
+    FileSpreadsheet,
+    ChevronDown,
+    ChevronRight,
+    Calendar,
+    CalendarDays,
+    Building2,
+    User,
+    UserCog,
+    UserCheck,
+    MousePointerClick,
+    Sparkles,
+    WandSparkles,
+    Activity,
+    TrendingUp,
+    AudioWaveformIcon,
+    Zap,
+    Building,
+    Landmark,
+    Receipt,
+    BadgeDollarSign,
+    DollarSign,
+    FileSignature,
+    Package,
+    Package2,
+    PackageCheck,
+    CalendarCheck,
+    CalendarClock,
+    PackagePlus,
+    LayoutDashboard,
+    Orbit,
+    List,
+    PackageSearch,
+    UserCog2,
+    ListX,
+    FileChartLine,
+    FileLineChart,
+    ListChecks
+
 } from "lucide-react";
 import { FaFileCirclePlus } from "react-icons/fa6";
 import { LuUser } from "react-icons/lu";
@@ -58,7 +87,10 @@ interface MenuItem {
 /*MENU DATA*/
 const menus: MenuItem[] = [{
     title: "Anasayfa",
-    icon: <Home/>,
+    icon: <LayoutDashboard style={{
+        stroke: "#0284C7",
+        filter: "drop-shadow(0 1px 2px rgba(3,105,161,0.35))"
+    }} />,
     path: "/",
     roles: [-1],
 },
@@ -75,28 +107,48 @@ const menus: MenuItem[] = [{
 //   ],
 // },
 {
-    title: "CRM", icon: <LuUser />,
+    title: "CRM", icon: <Orbit
+        size={20}
+        style={{
+            stroke: "#6D28D9", // violet-700
+            filter: "drop-shadow(0 1px 2px rgba(109,40,217,0.35))"
+        }}
+    />,
     roles: [1, 2],
     items: [
-        { title: "Fırsatlar", icon: <Coins className="w-4 h-4 text-yellow-500" />, path: "/firsatlar" }
-        , { title: "Müşteriler", icon: <Building2 className="w-4 h-4 text-blue-500" />, path: "/musteriler" }
-        , { title: "Aktiviteler", icon: <CalendarDays className="w-4 h-4 text-green-500" />, path: "/aktiviteler" }
-        , { title: "Teklifler", icon: <FileSpreadsheet  className="w-4 h-4 text-purple-500" />, path: "/teklifler" }
-        , { title: "Sözleşmeler", icon: <FileText className="w-4 h-4 text-purple-500" />, path: "/sozlesmeler" }
-        , { title: "Siparişler", icon: <FileText className="w-4 h-4 text-purple-500" />, path: "/siparisler" }
-        , { title: "Yeni Sipariş", icon: <FilePlus2 className="w-4 h-4 text-blue-600" />, path: "/yenisiparis" }
-        , { title: "Yeni Teklif", icon: <FaFileCirclePlus className="w-4 h-4 text-blue-600" />, path: "/yeniteklif" }
-        , { title: "Takvim", icon: <Calendar className="w-4 h-4 text-gray-600" />, path: "/takvim" }]
+        { title: "Fırsatlar", icon: <Sparkles className="w-5 h-5 text-yellow-500" />, path: "/firsatlar" }
+        , { title: "Müşteriler", icon: <Landmark className="w-5 h-5 text-blue-600" />, path: "/musteriler" }
+        , { title: "Aktiviteler", icon: <Zap className="w-5 h-5 text-green-500" />, path: "/aktiviteler" }
+        , {
+            title: "Teklif Yönetimi", icon: <DollarSign className="w-5 h-5 text-orange-800" />, path: "/teklifler",
+            items: [
+                { title: "Teklif Listesi", path: "/teklifler" },
+                { title: "Yeni Teklif", path: "/yeniteklif" }
+            ],
+        }
+        , { title: "Sözleşmeler", icon: <FileSignature className="w-5 h-5 text-green-900" />, path: "/sozlesmeler" }
+        , {
+            title: "Sipariş Yönetimi", icon: <Package className="w-5 h-5 text-yellow-600" />, path: "/siparisler",
+            items: [
+                { title: "Sipariş Listesi", path: "/siparisler" },
+                { title: "Yeni Sipariş", path: "/yenisiparis" }
+            ],
+        },
+
+        ,
+        , { title: "Takvim", icon: <CalendarClock className="w-5 h-5 text-indigo-600" />, path: "/takvim" }]
 
 },
 {
     title: "Ürün Yönetimi",
-    icon: <Warehouse />,
+    icon: <PackageSearch style={{
+        stroke: "#b27d10",
+    }} />,
     roles: [-1],
     items: [
         {
             title: "Ürün Fiyat Listesi",
-            icon: <FileMinus />,
+            icon: <FileSpreadsheet />,
             roles: [-1],
             path: "/urunler",
 
@@ -232,7 +284,9 @@ const menus: MenuItem[] = [{
 // },
 {
     title: "İnsan Kaynakları",
-    icon: <UserCog/>,
+    icon: <UserCog2 style={{
+        stroke: "#85AB6C",
+    }} />,
     roles: [-1],
     items: [
         /* {
@@ -268,7 +322,7 @@ const menus: MenuItem[] = [{
              { title: "Diğer Formlar", path: "/formlar/3" },
            ],
          },*/
-        { title: "Personeller", roles: [1, 2, 15], icon: <Users />, path: "/personeller" },/*
+        { title: "Personeller", roles: [1, 2, 15], icon: <Users style={{ stroke: "#12608C" }} />, path: "/personeller" },/*
       { title: "Pasif Personeller",roles: [1,2,15], icon: <FiUserX />, path: "/pasifpersoneller" },
       { title: "Personel Eğitim Durumu",roles: [1,2,15], icon: <FiUsers />, path: "/PersonelEgitim" },
       {
@@ -288,7 +342,9 @@ const menus: MenuItem[] = [{
 },
 {
     title: "Ayarlar", icon: <Settings />, roles: [1, 2], items: [{
-        title: "Şirketlerim", icon: <Building2 />, path: "/sirketlerim"
+        title: "Şirketlerim", icon: <Building2 style={{
+            stroke: "#194223"
+        }} />, path: "/sirketlerim"
     }]
 },
 ];
@@ -368,7 +424,7 @@ const Row = React.memo(function Row({
                 to={item.path}
                 className={({ isActive }) =>
                     `${base} ${pad} ${justify} ${isActive
-                        ? "bg-gradient-to-r from-pink-600 to-blue-500 text-white shadow-sm"
+                        ? "bg-gradient-to-r from-teal-50 via-sky-50 to-blue-100 ring-1 ring-sky-200/60 shadow-md"
                         : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
                     }`
                 }
@@ -460,9 +516,11 @@ export const AppSidebar: React.FC = () => {
 
     return (
         <aside
-            className="h-screen border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+            className="h-screen bg-white text-gray-900
+        border-r border-slate-200
+        shadow-[inset_-1px_0_0_rgba(15,23,42,0.06)]"
             style={{
-                width: showText ? "290px" : "90px",
+                width: showText ? "300px" : "90px",
                 transition: "width 200ms cubic-bezier(0.4, 0, 0.2, 1)",
                 willChange: "width",
             }}
@@ -488,7 +546,7 @@ export const AppSidebar: React.FC = () => {
             </div>
 
             {/* Menu */}
-            <div className="px-5 pb-6 flex flex-col overflow-y-auto no-scrollbar">
+            <div className="px-5 pb-6 mt-6 flex flex-col overflow-y-auto no-scrollbar">
                 <div className="mb-6">
                     <h2 className={`mb-4 text-md uppercase text-gray-400 ${showText ? "text-left" : "text-center"}`}>
                         {showText ? "Menu" : "•••"}

@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FiMenu, FiBell } from "react-icons/fi";
+import { FiBell } from "react-icons/fi";
 import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { RootState } from "../store/store";
 
 import Badge from "./../ui/badge/Badge";
-import { UserMenu } from "./../components/UserMenu";
 import MenuButton, { MenuItem } from "./../components/MenuButton";
 import { apiRequest } from "@/services/apiRequestService";
 import { ApiResponseClient } from "@/types/apiResponse";
 import { URL } from "@/api";
 import { useSidebar } from "@/context/SidebarContext";
+import { PanelLeft, Search } from "lucide-react";
+import { Avatar } from "@/components/Avatar";
+import UserMenu2 from "@/components/UserMenu2";
+import NotificationDropdown from "@/components/NotificationDropdown";
 
 export const AppHeader: React.FC = () => {
   const navigate = useNavigate();
@@ -53,63 +56,71 @@ export const AppHeader: React.FC = () => {
   }
 
   return (
-    <header className="sticky top-0 flex w-full bg-white border-b border-gray-200 z-50 dark:border-gray-800 dark:bg-gray-900">
-      <div className="flex items-center justify-between w-full px-6 py-4">
-        {/* SOL - Toggle Button */}
-        <button
-          className="flex items-center justify-center w-11 h-11 text-gray-500 border border-gray-200 rounded-lg dark:border-gray-800 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          onClick={toggleSidebar}
-          aria-label="Toggle Sidebar"
-        >
-          <FiMenu size={20} />
-        </button>
+    <header className="sticky top-0 z-50 w-full
+    bg-white/85 backdrop-blur
+    border-b border-slate-200
+    shadow-[0_1px_0_rgba(15,23,42,0.06)]
+  ">
+      <div className="flex items-center justify-between px-6 py-4">
 
-        {/* ORTA - Search */}
-        <div className="flex-1 max-w-2xl mx-6">
+        <div className="flex items-center gap-4">
+          <button
+            className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors
+                       dark:border-gray-800 dark:text-gray-400 dark:hover:bg-gray-800"
+            onClick={toggleSidebar}
+            aria-label="Toggle Sidebar"
+          >
+            <PanelLeft size={20} style={{ stroke: "#798FB8" }} />
+          </button>
+
           <form onSubmit={(e) => e.preventDefault()}>
-            <div className="relative">
-              <span className="absolute -translate-y-1/2 pointer-events-none left-4 top-1/2">
-                <svg className="fill-gray-500 dark:fill-gray-400" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M3.04175 9.37363C3.04175 5.87693 5.87711 3.04199 9.37508 3.04199C12.8731 3.04199 15.7084 5.87693 15.7084 9.37363C15.7084 12.8703 12.8731 15.7053 9.37508 15.7053C5.87711 15.7053 3.04175 12.8703 3.04175 9.37363ZM9.37508 1.54199C5.04902 1.54199 1.54175 5.04817 1.54175 9.37363C1.54175 13.6991 5.04902 17.2053 9.37508 17.2053C11.2674 17.2053 13.003 16.5344 14.357 15.4176L17.177 18.238C17.4699 18.5309 17.9448 18.5309 18.2377 18.238C18.5306 17.9451 18.5306 17.4703 18.2377 17.1774L15.418 14.3573C16.5365 13.0033 17.2084 11.2669 17.2084 9.37363C17.2084 5.04817 13.7011 1.54199 9.37508 1.54199Z"
-                    fill=""
-                  />
-                </svg>
+            <div className="relative w-72">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none">
+                <Search
+                  size={18}
+                  className="text-gray-500 dark:text-gray-400"
+                />
               </span>
+
+
               <input
                 ref={inputRef}
                 type="text"
                 placeholder="Ara..."
-                className="h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-4 text-sm text-gray-800 shadow-sm placeholder:text-gray-400 focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/10 dark:border-gray-800 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30"
+                className="h-11 w-full rounded-lg border border-gray-200 bg-transparent py-2.5 pl-12 pr-4 text-sm
+                           text-gray-800 shadow-sm placeholder:text-gray-400
+                           focus:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500/10
+                           dark:border-gray-800 dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30"
               />
             </div>
           </form>
         </div>
 
-        {/* SAĞ - Notifications & User */}
         <div className="flex items-center gap-3">
-          <MenuButton
-            items={buttons}
-            buttonIcon={
-              <div className="relative">
-                <FiBell size={22} />
-                {educationState !== 0 && (
-                  <div className="absolute -top-1 -right-1">
-                    <Badge variant="solid" color="error" size="sm">
-                      {educationState}
-                    </Badge>
-                  </div>
-                )}
-              </div>
-            }
-          />
-          <UserMenu user={userData} />
+          <NotificationDropdown>
+            <div className="relative">
+              <Avatar
+                imageUrl="src/images/notification-bell.png"
+                className="gap-0"
+                avatarClassName="w-6 h-6 rounded-none border-0 bg-transparent ring-0 hover:ring-0 mt-2"
+                nameClassName="hidden"
+              />
+              {educationState !== 0 && (
+                <div className="absolute -top-1 -right-1">
+                  <Badge variant="solid" color="error" size="sm">
+                    {educationState}
+                  </Badge>
+                </div>
+              )}
+            </div>
+          </NotificationDropdown>
+
+          <UserMenu2 user={userData} />
         </div>
+
+
       </div>
     </header>
   );
 };
-
 export default AppHeader;
