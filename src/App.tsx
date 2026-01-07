@@ -34,6 +34,7 @@ import { UpdatePurchaseOrderPage } from "./pages/crm/UpdatePurchaseOrderPage";
 import { EnterprisePage } from "./pages/Setting/EnterprisePage";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import { SidebarProvider2 } from "./context/SidebarContext2";
+import BoardView from "./components/board/BoardView";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -64,6 +65,7 @@ function AppRoutes() {
         <Route element={<PrivateRoute />}>
           {/* Layout */}
           <Route element={<AppLayout />}>
+          <Route path="/proje/:boardId?" element={<BoardView />} />
             <Route path="/" element={<CrmDashboard />} />
 
 

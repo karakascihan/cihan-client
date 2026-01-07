@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { URL } from "@/api";
 
 import { useSidebar2 } from "../context/SidebarContext2";
-import { ChevronDownIcon, DotIcon } from "lucide-react";
+import { ChevronDownIcon, DotIcon, Kanban } from "lucide-react";
 import {
   Users,
   Settings,
@@ -89,6 +89,28 @@ const navItems: NavItem[] = [
 
       },
 
+    ],
+  },
+  {
+    name: "Proje Yönetimi",
+    icon: (
+      <Kanban 
+        style={{
+          stroke: "#b27d10",
+        }}
+      />
+    ),
+    children: [
+      {
+        name: "Dijital Erp Kurulum Projesi",
+        icon: <FileSpreadsheet />,
+        path: "/proje/7",
+      },
+      {
+        name: "Örnek Proje",
+        icon: <FileSpreadsheet />,
+        path: "/proje/6",
+      },
     ],
   },
   {

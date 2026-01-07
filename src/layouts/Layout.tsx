@@ -1,6 +1,4 @@
-import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import { Outlet } from "react-router";
-import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import AppSidebar2 from "@/components/AppSidebar2";
 import { SidebarProvider2, useSidebar2 } from "@/context/SidebarContext2";

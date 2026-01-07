@@ -49,6 +49,8 @@ import ItemRow from '../item/ItemRow';
 import { getRandomColor } from '../../utils/colors';
 import { FiPlus } from 'react-icons/fi';
 import { DEFAULT_ZOOM_INDEX } from '../common/constants';
+import { useParams } from 'react-router-dom';
+import { setSelectedBoard } from '@/store/features/boardSlice';
 
 const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -61,8 +63,13 @@ export const INDENT_STEP = 40;
 
 const BoardView: React.FC = () => {
     const dispatch = useAppDispatch();
-    const { selectedBoardId } = useAppSelector((state) => state.boards);
-
+    const { boardId } = useParams();
+       const { selectedBoardId } = useAppSelector(s => s.boards);
+    useEffect(() => {
+        if(boardId)
+      dispatch(setSelectedBoard(Number(boardId)))
+    }, [boardId,selectedBoardId])
+    
     // Selectors
     const boardViews = useAppSelector(selectBoardViews);
     const activeViewId = useAppSelector(selectActiveViewId);
