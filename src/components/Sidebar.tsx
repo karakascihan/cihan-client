@@ -275,6 +275,10 @@ const menus: MenuItem[] = [
      title: "Şirketlerim", icon:<FaBuilding/>, path:"/sirketlerim"
    }] },
 ];
+
+
+
+
 export const Sidebar: React.FC = () => {
   const { sidebarOpen, closeSidebar, collapsed,toggleCollapsed } = useUI();
   const sidebarRef = useRef<HTMLDivElement>(null);

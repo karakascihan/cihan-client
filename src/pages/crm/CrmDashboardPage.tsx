@@ -19,6 +19,7 @@ import { OpportunityStage } from "@/api/apiDtos";
 import * as XLSX from "xlsx";
 // import { saveAs } from "file-saver";
 import jsPDF from "jspdf";
+import PageMeta from "@/components/common/PageMeta";
 // import autoTable from "jspdf-autotable";
 //import robotoNormal from "./fonts/Roboto-Regular-normal.js"; // base64 font
 
@@ -283,6 +284,7 @@ export default function CrmDashboard() {
  */
 
   return (
+    <PageMeta title="CRM Dashboard" description="CRM Dashboard Sayfası">
     <div className="grid grid-cols-1 gap-6 p-6">
       {/* <div className="flex justify-end gap-3 mb-4">
         <button
@@ -490,5 +492,6 @@ export default function CrmDashboard() {
         )}
       </div>
     </div>
+    </PageMeta>
   );
 }

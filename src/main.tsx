@@ -12,6 +12,7 @@ import { locale } from 'primereact/api';
 import { Sidebar } from 'lucide-react'
 import GlobalSidebar from './components/GlobalSidebar.tsx'
 import { GlobalSidebarProvider } from './context/GlobalSidebarContext.tsx'
+import { ThemeProvider } from './context/ThemeContext.tsx'
        addLocale('tr', {
     firstDayOfWeek: 1,
     dayNames: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],
@@ -38,6 +39,7 @@ import { GlobalSidebarProvider } from './context/GlobalSidebarContext.tsx'
 locale('tr');
 createRoot(document.getElementById('root')!).render(
    <Provider store={store}>
+    <ThemeProvider>
     <GlobalSidebarProvider>
         <PrimeReactProvider value={{ locale: "tr" }}>
         {/* <PrimeReactProvider> */}
@@ -48,5 +50,6 @@ createRoot(document.getElementById('root')!).render(
      
     </PrimeReactProvider>
     </GlobalSidebarProvider>
-  </Provider>,
+    </ThemeProvider>
+  </Provider>
 )
