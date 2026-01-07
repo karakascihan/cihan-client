@@ -17,7 +17,7 @@ const initialState: BoardState = {
     items: [],
     status: 'idle',
     error: null,
-    selectedBoardId: 7,  
+    selectedBoardId: null,  
 };
 
 // YENİ ASENKRON ACTION: Bir panoyu güncellemek için
