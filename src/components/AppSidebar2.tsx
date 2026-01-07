@@ -408,7 +408,7 @@ const AppSidebar: React.FC = () => {
       <div className="flex h-full flex-col">
 
         <div
-          className={`py-8 flex ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+          className={`${isMobileOpen ? "hidden" : "flex"} py-8 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
             }`}
         >
           <Link to="/">
@@ -445,7 +445,7 @@ const AppSidebar: React.FC = () => {
             <div className="flex flex-col gap-4">
               <div>
                 <h2
-                  className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
+                  className={`mb-4 mt-8 ml-3 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
                     ? "lg:justify-center"
                     : "justify-start"
                     }`}
@@ -453,7 +453,7 @@ const AppSidebar: React.FC = () => {
                   {isExpanded || isHovered || isMobileOpen ? (
                     "Menu"
                   ) : (
-                    <DotIcon className="size-6" />
+                    <DotIcon className="size-6 mr-3" />
                   )}
                 </h2>
                 {renderItems(navItems)}
