@@ -167,3 +167,16 @@ export interface KanbanColumnProps {
   opportunities: OpportunityDto[];
   onDragEnd: (id: string, newStatus: OpportunityStage) => void;
 }
+export enum DependencyAction {
+  Ignore = 'ignore',   // Mod 1: Kontrol yok (Default)
+  Restrict = 'restrict', // Mod 2: İhlal varsa izin verme
+  AutoMove = 'autoMove'  // Mod 3: Zincirleme hareket (Auto-schedule)
+}
+export interface DependencyLink {
+    id: number;       
+    type: DependencyType; 
+}
+export type DependencyType = 'FS' | 'SS' | 'FF' | 'SF';
+export interface ColumnSettings {
+    dependencyAction?: DependencyAction;
+}

@@ -103,6 +103,39 @@ export interface AssignToStateDto {
     state: PersonelEgitimDurumlari;
 }
 
+export interface BoardDto {
+    name: string;
+    description: string | undefined;
+    id: number;
+}
+
+export interface BoardViewDto {
+    id: number;
+    name: string | undefined;
+    type: string | undefined;
+    order: number;
+    settingsJson: string | undefined;
+}
+
+export interface ColumnDto {
+    id: number;
+    title: string | undefined;
+    type: ColumnType;
+    boardId: number;
+    order: number;
+    settings: string | undefined;
+}
+
+export enum ColumnType {
+    Text = 0,
+    Status = 1,
+    Date = 2,
+    Person = 3,
+    Timeline = 4,
+    Document = 5,
+    Dependency = 6,
+}
+
 export interface Company {
     id: number;
     firma: string | undefined;
@@ -228,6 +261,35 @@ export interface ContractsDtoIEnumerableApiResponse {
     statusCode: number;
     result: ContractsDto[] | undefined;
     isSuccess: boolean;
+}
+
+export interface CreateBoardDto {
+    name: string;
+    description: string | undefined;
+}
+
+export interface CreateBoardViewDto {
+    name: string;
+    type: string;
+    settingsJson: string | undefined;
+}
+
+export interface CreateColumnDto {
+    title: string;
+    type: ColumnType;
+    settings: string | undefined;
+}
+
+export interface CreateGroupDto {
+    title: string;
+    color: string | undefined;
+    position: string | undefined;
+}
+
+export interface CreateItemDto {
+    name: string;
+    groupId: number;
+    parentItemId: number | undefined;
 }
 
 export interface CreateOptionDto {
@@ -543,6 +605,38 @@ export interface FileRecordDtoIEnumerableApiResponse {
     isSuccess: boolean;
 }
 
+export interface GroupDto {
+    title: string;
+    color: string | undefined;
+    id: number;
+    boardId: number;
+}
+
+export interface ItemDto {
+    name: string;
+    id: number;
+    groupId: number;
+    parentItemId: number | undefined;
+    itemValues: ItemValueDto[] | undefined;
+}
+
+export interface ItemTreeDto {
+    name: string;
+    id: number;
+    groupId: number;
+    order: number;
+    parentItemId: number | undefined;
+    itemValues: ItemValueDto[] | undefined;
+    children: ItemTreeDto[] | undefined;
+}
+
+export interface ItemValueDto {
+    id: number;
+    value: string | undefined;
+    itemId: number;
+    columnId: number;
+}
+
 export interface KysDocument {
     id: number;
     documentNo: string | undefined;
@@ -586,6 +680,13 @@ export interface MailSendDto {
     smtpUser: string | undefined;
     smtpPassword: string | undefined;
     attachmentPaths: string[] | undefined;
+}
+
+export interface MoveItemDto {
+    itemId: number;
+    destinationGroupId: number;
+    destinationIndex: number;
+    parentItemId: number | undefined;
 }
 
 export interface Operation {
@@ -1113,6 +1214,16 @@ export enum PriceOfferState {
     Waiting = 6,
 }
 
+export interface ProblemDetails {
+    type: string | undefined;
+    title: string | undefined;
+    status: number | undefined;
+    detail: string | undefined;
+    instance: string | undefined;
+
+    [key: string]: any;
+}
+
 export interface Products {
     id: number;
     productCode: string | undefined;
@@ -1417,6 +1528,16 @@ export enum QuestionType {
     MultipleChoice = 1,
 }
 
+export interface ReorderColumnsDto {
+    orderedColumnIds: number[];
+}
+
+export interface ReorderGroupsDto {
+    groupId: number;
+    newIndex: number;
+    orderedGroupIds: number[];
+}
+
 export interface ReviewList1Dto {
     soru: string | undefined;
     evet: boolean | undefined;
@@ -1657,6 +1778,37 @@ export interface TokenDto {
     role: number;
     accessToken: string | undefined;
     refreshToken: string | undefined;
+}
+
+export interface UpdateBoardDto {
+    name: string;
+    description: string | undefined;
+}
+
+export interface UpdateBoardViewDto {
+    name: string;
+    order: number | undefined;
+    settingsJson: string | undefined;
+}
+
+export interface UpdateColumnDto {
+    title: string;
+    settings: string | undefined;
+}
+
+export interface UpdateGroupDto {
+    title: string;
+    color: string | undefined;
+}
+
+export interface UpdateItemDto {
+    name: string;
+    parentItemId: number | undefined;
+}
+
+export interface UpdateItemValueDto {
+    columnId: number;
+    value: string | undefined;
 }
 
 export interface UserDtoForChangePassword {

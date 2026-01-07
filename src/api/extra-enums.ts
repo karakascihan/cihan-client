@@ -1,6 +1,6 @@
 // Auto-generated from Swagger x-enumDescriptions
 
-import { ActivityState, ActivityType, CustomerType, DayOfWeek, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SurveyType } from "./apiDtos";
+import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SurveyType } from "./apiDtos";
 
 // Auto-generated from Swagger x-enumDescriptions
 
@@ -21,6 +21,16 @@ export const ActivityTypeDescriptions: Record<ActivityType, string> = {
   [ActivityType.Activity]: "Aktivite",
   [ActivityType.Visiting]: "Ziyaret",
   [ActivityType.Other]: "Diğer",
+};
+
+export const ColumnTypeDescriptions: Record<ColumnType, string> = {
+  [ColumnType.Text]: "Text",
+  [ColumnType.Status]: "Status",
+  [ColumnType.Date]: "Date",
+  [ColumnType.Person]: "Person",
+  [ColumnType.Timeline]: "Timeline",
+  [ColumnType.Document]: "Document",
+  [ColumnType.Dependency]: "Dependency",
 };
 
 export const CustomerTypeDescriptions: Record<CustomerType, string> = {

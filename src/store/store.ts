@@ -20,6 +20,11 @@ import enterpriseReducer from './slices/enterpriseSlice';
 import fileRecordReducer from './slices/fileRecordSlice';
 import { sliceBuilder } from './sliceBuilder';
 import { URL } from '@/api';
+import boardReducer from './features/boardSlice';
+import boardViewReducer from './features/boardViewSlice';
+import columnReducer from './features/columnSlice';
+import groupReducer from './features/groupSlice';
+import itemReducer from './features/itemSlice';
 export const projectsSlice = createGenericSlice<Projects>('project', '/projects');
 export const productsSlice = createGenericSlice<Products>('product', '/products');
 export const projectReportSlice = createGenericSlice<ProjectReport>('projectReport', '/projectreport');
@@ -46,7 +51,11 @@ const rootReducer = combineReducers({
   systemLog : systemLogReducer,
   enterprise: enterpriseReducer,
   fileRecord:fileRecordReducer,
-
+  boards :boardReducer,
+  boardViews :boardViewReducer,
+  columns:columnReducer,
+  groups:groupReducer,
+  items:itemReducer
 })
 const persistConfig = {
   key: 'root',
