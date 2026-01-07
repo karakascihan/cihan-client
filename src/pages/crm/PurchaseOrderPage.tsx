@@ -98,9 +98,9 @@ export const PurchaseOrderPage = () => {
             sortable: true,
             body: (row) =>
                 row.siparisTarihi
-                  ? String(row.siparisTarihi).substring(0, 10).split("-").reverse().join(".")
-                  : "",
-            
+                    ? String(row.siparisTarihi).substring(0, 10).split("-").reverse().join(".")
+                    : "",
+
         },
         {
             header: "Teslim Tarihi",
@@ -109,15 +109,15 @@ export const PurchaseOrderPage = () => {
             sortable: true,
             body: (row) =>
                 row.teslimTarihi
-                  ? String(row.teslimTarihi).substring(0, 10).split("-").reverse().join(".")
-                  : "",
-            
+                    ? String(row.teslimTarihi).substring(0, 10).split("-").reverse().join(".")
+                    : "",
+
         },
         {
             header: "Toplam İndirim Oranı (%)",
             accessor: "toplamIndirimOraniYuzde",
             filterable: true,
-       
+
             sortable: true,
         },
         {
@@ -251,29 +251,32 @@ export const PurchaseOrderPage = () => {
     return (
         <div className="card">
             <h2 className="text-xl text-center font-bold mb-2">Siparişler</h2>
-            <SmartTable<Partial<PurchaseOrders>>
-                data={getAllPurchaseOrders()}
-                columns={columns}
-                rowIdAccessor={"id"}
-                frozenColumns={[{ name: "id", right: true }]}
-                isExport={true}
-                newRecordVoid={() => {
-                    openModal({
-                        title: "",
-                        maximizable: true,
-                        style: { width: "70vw" },
-                        content: (close) => (
-                            <AddPurchaseOrderPage2
-                                onSuccess={refetchOrders}
-                                onClose={() => close(true)}
-                            />
-                        ),
-                    });
-                }}
+            <div className="w-full overflow-x-auto">
 
-                scrollHeight="calc(100vh - 200px)"
-                enablePagination={false}
-            ></SmartTable>
+                <SmartTable<Partial<PurchaseOrders>>
+                    data={getAllPurchaseOrders()}
+                    columns={columns}
+                    rowIdAccessor={"id"}
+                    frozenColumns={[{ name: "id", right: true }]}
+                    isExport={true}
+                    newRecordVoid={() => {
+                        openModal({
+                            title: "",
+                            maximizable: true,
+                            style: { width: "70vw" },
+                            content: (close) => (
+                                <AddPurchaseOrderPage2
+                                    onSuccess={refetchOrders}
+                                    onClose={() => close(true)}
+                                />
+                            ),
+                        });
+                    }}
+
+                    scrollHeight="calc(100vh - 200px)"
+                    enablePagination={false}
+                ></SmartTable>
+            </div>
         </div>
     );
 };

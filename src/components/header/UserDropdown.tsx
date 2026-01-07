@@ -14,11 +14,11 @@ export default function UserDropdown({ user }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const UserAvatar = (
     <img
-      width={15}
-      height={15}
+      width={10}
+      height={10}
       src={userProfileIcon}
       alt="Notification"
-      className="w-8 h-8 overflow-hidden rounded-full object-contain bg-transparent p-1 dark:bg-gray-800"
+      className="w-6 h-6 overflow-hidden rounded-full object-contain bg-transparent p-1 dark:bg-gray-800"
     />
   );
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ export default function UserDropdown({ user }: Props) {
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
-        <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
+        <span className="mr-3 overflow-hidden rounded-full h-9 w-9">
           <img src={userProfileIcon} alt="User" />
         </span>
 
