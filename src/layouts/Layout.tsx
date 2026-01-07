@@ -1,45 +1,29 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { AppSidebar } from "@/components/AppSidebar";
+import { SidebarProvider, useSidebar } from "../context/SidebarContext";
+import { Outlet } from "react-router";
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
-import { SidebarProvider, useSidebar } from "@/context/SidebarContext";
+import AppSidebar2 from "@/components/AppSidebar2";
+import { SidebarProvider2, useSidebar2 } from "@/context/SidebarContext2";
+import AppHeader2 from "./AppHeader2";
 
 const LayoutContent: React.FC = () => {
-  const { isExpanded, isHovered, isMobile } = useSidebar();
-  const showExpanded = isExpanded || isHovered;
+  const { isExpanded, isHovered, isMobileOpen } = useSidebar2();
 
   return (
-    <div className="h-screen flex overflow-hidden">
-      {/* SOL: Desktop'ta flow'da yer kaplasın (sadece kendi genişliği kadar) */}
-      <div
-        className="hidden xl:block h-screen flex-shrink-0"
-        style={{
-          width: showExpanded ? 300 : 90,
-          transition: "width 200ms cubic-bezier(0.4, 0, 0.2, 1)",
-          willChange: "width",
-        }}
-      >
-        <AppSidebar />
-      </div>
-
-      {/* MOBIL: Sidebar overlay */}
-      <div className="xl:hidden">
-        <AppSidebar />
+    <div className="min-h-screen xl:flex">
+      <div>
+        <AppSidebar2 />
         <Backdrop />
       </div>
-
-      {/* SAĞ: Header + Content */}
-      <div className="flex-1 min-w-0 h-screen flex flex-col">
-        <div className="sticky top-0 z-50">
-          <AppHeader />
+      <div
+        className={`flex-1 transition-all duration-300 ease-in-out ${
+          isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"
+        } ${isMobileOpen ? "ml-0" : ""}`}
+      >
+        <AppHeader2 />
+        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+          <Outlet />
         </div>
-
-        <main className="flex-1 min-h-0 overflow-y-auto">
-          <div className="w-full p-4 md:p-6">
-            <Outlet />
-          </div>
-        </main>
       </div>
     </div>
   );
@@ -47,9 +31,9 @@ const LayoutContent: React.FC = () => {
 
 const AppLayout: React.FC = () => {
   return (
-    <SidebarProvider>
+    <SidebarProvider2>
       <LayoutContent />
-    </SidebarProvider>
+    </SidebarProvider2>
   );
 };
 

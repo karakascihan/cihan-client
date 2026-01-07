@@ -1,20 +1,29 @@
-import { HelmetProvider, Helmet } from "react-helmet-async";
+import React from "react";
+
+type PageMetaProps = {
+  title: string;
+  description?: string;
+  children?: React.ReactNode;
+};
 
 const PageMeta = ({
   title,
   description,
-}: {
-  title: string;
-  description: string;
-}) => (
-  <Helmet>
-    <title>{title}</title>
-    <meta name="description" content={description} />
-  </Helmet>
-);
+  children,
+}: PageMetaProps) => {
+  return (
+    <>
+      {/* React 19 native head management */}
+      <title>{title}</title>
 
-export const AppWrapper = ({ children }: { children: React.ReactNode }) => (
-  <HelmetProvider>{children}</HelmetProvider>
-);
+      {description && (
+        <meta name="description" content={description} />
+      )}
+
+      {/* Sayfa içeriği */}
+      {children}
+    </>
+  );
+};
 
 export default PageMeta;

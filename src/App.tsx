@@ -34,6 +34,7 @@ import { UpdatePurchaseOrderPage } from "./pages/crm/UpdatePurchaseOrderPage";
 import { EnterprisePage } from "./pages/Setting/EnterprisePage";
 import { SidebarProvider } from "./context/SidebarContext";
 import { ScrollToTop } from "./components/common/ScrollToTop";
+import { SidebarProvider2 } from "./context/SidebarContext2";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -167,13 +168,13 @@ export default function App() {
     <BrowserRouter basename={base}>
     <AuthProvider>
       <ConfirmProvider>
-        <UIProvider>
+        <SidebarProvider2>
           <LoadingProvider>
             <ModalProvider>
               <AppRoutes />
             </ModalProvider>
           </LoadingProvider>
-        </UIProvider>
+        </SidebarProvider2>
       </ConfirmProvider>
     </AuthProvider>
   </BrowserRouter>
