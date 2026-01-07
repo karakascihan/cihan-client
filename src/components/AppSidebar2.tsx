@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 import { URL } from "@/api";
 
 import { useSidebar2 } from "../context/SidebarContext2";
-import SidebarWidget from "./SidebarWidget";
 import { ChevronDownIcon, DotIcon } from "lucide-react";
 import {
   Users,
@@ -150,7 +149,7 @@ const AppSidebar: React.FC = () => {
       "shrink-0 inline-flex items-center justify-center rounded-md w-6 h-6";
 
     const titleClass =
-      level === 0 ? "text-lg font-semibold" : "text-lg font-medium";
+      level === 0 ? "text-md font-semibold" : "text-md font-medium";
 
     return (
       <ul className={`flex flex-col gap-2 ${level > 0 ? "mt-1" : ""}`}>
@@ -395,9 +394,9 @@ const AppSidebar: React.FC = () => {
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
         ${isExpanded || isMobileOpen
-          ? "w-[300px]"
+          ? "w-[280px]"
           : isHovered
-            ? "w-[300px]"
+            ? "w-[280px]"
             : "w-[90px]"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}

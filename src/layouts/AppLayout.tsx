@@ -1,14 +1,12 @@
-import { SidebarProvider, useSidebar } from "./../context/SidebarContext";
 import { Outlet } from "react-router";
-import {AppHeader} from "./../layouts/AppHeader";
 import Backdrop from "./Backdrop";
 import {AppSidebar} from "./../components/AppSidebar";
-import { SidebarProvider2 } from "@/context/SidebarContext2";
+import { SidebarProvider2, useSidebar2 } from "@/context/SidebarContext2";
 import AppHeader2 from "./AppHeader2";
 import AppSidebar2 from "@/components/AppSidebar2";
 
 const LayoutContent: React.FC = () => {
-  const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const { isExpanded, isHovered, isMobileOpen } = useSidebar2();
 
   return (
     <div className="min-h-screen xl:flex">
