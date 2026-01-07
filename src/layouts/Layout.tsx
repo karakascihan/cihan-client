@@ -1,28 +1,40 @@
-import React from "react";
-import { Sidebar } from "../components/Sidebar";
-import { Header } from "../components/Header";
-import { useUI } from "../context/UIContext";
-import { useLoading } from "@/context/LoadingContext";
+import { SidebarProvider, useSidebar } from "../context/SidebarContext";
+import { Outlet } from "react-router";
+import AppHeader from "./AppHeader";
+import Backdrop from "./Backdrop";
+import AppSidebar2 from "@/components/AppSidebar2";
+import { SidebarProvider2, useSidebar2 } from "@/context/SidebarContext2";
+import AppHeader2 from "./AppHeader2";
 
-export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { collapsed } = useUI();
-  const {loading} = useLoading();
+const LayoutContent: React.FC = () => {
+  const { isExpanded, isHovered, isMobileOpen } = useSidebar2();
+
   return (
-    <div className="card">
-      <Sidebar />
-      <div className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${
-          collapsed ? "md:ml-16" : "md:ml-64"
-        }`}>
-        <Header />
-        <main className="flex-1 p-4">
-           {children}
-        </main>
-        <footer className="p-4 text-center text-lg text-gray-600 ">
-        <p className="2xl:px-20">
-              Dijital ERP 2025 © Tüm hakları saklıdır.
-            </p>
-        </footer>
+    <div className="min-h-screen xl:flex">
+      <div>
+        <AppSidebar2 />
+        <Backdrop />
+      </div>
+      <div
+        className={`flex-1 transition-all duration-300 ease-in-out ${
+          isExpanded || isHovered ? "lg:ml-[290px]" : "lg:ml-[90px]"
+        } ${isMobileOpen ? "ml-0" : ""}`}
+      >
+        <AppHeader2 />
+        <div className=" mx-auto  md:p-6">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
 };
+
+const AppLayout: React.FC = () => {
+  return (
+    <SidebarProvider2>
+      <LayoutContent />
+    </SidebarProvider2>
+  );
+};
+
+export default AppLayout;
