@@ -24,18 +24,18 @@ export default function NotificationDropdown() {
   };
   const NotifAvatar = (
     <img
-      width={20}
-      height={20}
+      width={10}
+      height={10}
       src={notifUserIcon}
       alt="Notification"
-      className="w-10 h-10 overflow-hidden rounded-full object-contain bg-transparent p-1 dark:bg-gray-800"
+      className="w-6 h-6 overflow-hidden rounded-full object-contain bg-transparent p-1 dark:bg-gray-800"
     />
   );
   const BellAvatar = (
     <img
       src={bellIcon}
       alt="Notifications"
-      className="w-10 h-10 object-contain"
+      className="w-9 h-9 object-contain"
     />
   );
 

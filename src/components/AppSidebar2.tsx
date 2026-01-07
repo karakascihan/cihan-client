@@ -460,9 +460,13 @@ const AppSidebar: React.FC = () => {
             </div>
           </nav>
         </div>
-        <div className="mt-auto mb-4 px-3 text-xs text-gray-600 text-center leading-relaxed">
-          Dijital ERP 2025 ©<br />Tüm hakları saklıdır.
-        </div>
+        {(isExpanded || isHovered || isMobileOpen) && (
+          <div className="mt-auto mb-4 px-3 text-xs text-gray-600 text-center leading-relaxed">
+            Dijital ERP 2025 ©<br />Tüm hakları saklıdır.
+          </div>
+
+        )}
+
 
       </div>
     </aside>
