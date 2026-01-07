@@ -13,6 +13,8 @@ import { SurveyAnswerList } from "./pages/Survey/SurveyAnswerList";
 import FileUpload from "./pages/DocumentManagement/FileUpload";
 import DocumentViewer from "./pages/DocumentManagement/DocumentViewer";
 import { DocumentList } from "./pages/KysDocument/DocumentList";
+import { StaffLeaveList } from "./pages/person/StaffLeaveList";
+import { OvertimeList } from "./pages/person/OvertimeList";
 import { ProjectReportList } from "./pages/Project/ProjectReport";
 import { PersonelEducation } from "./pages/person/PersonelEducation";
 import { OpportunityPage } from "./pages/crm/OpportunityPage";
@@ -32,7 +34,6 @@ import { UpdatePurchaseOrderPage } from "./pages/crm/UpdatePurchaseOrderPage";
 import { EnterprisePage } from "./pages/Setting/EnterprisePage";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import { SidebarProvider2 } from "./context/SidebarContext2";
-import BoardView from "./components/board/BoardView";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -64,7 +65,6 @@ function AppRoutes() {
           {/* Layout */}
           <Route element={<AppLayout />}>
             <Route path="/" element={<CrmDashboard />} />
-        <Route path="/proje/:boardId?" element={<BoardView />} />
 
 
             {/* Survey */}

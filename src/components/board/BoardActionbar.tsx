@@ -37,7 +37,7 @@ const BoardActionbar: React.FC = () => {
             <div className="flex items-center gap-x-2">
                 <button 
                     onClick={handleCreateGroupAtTop}
-                    className="flex items-center gap-x-2 px-4 py-2 text-sm font-medium text-white bg-purple-500 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main-purple"
+                    className="flex items-center gap-x-2 px-4 py-2 text-sm font-medium text-white bg-main-purple rounded-lg shadow-md hover:bg-dark-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main-purple"
                 >
                     <FiPlus />
                     <span>Yeni Grup</span>

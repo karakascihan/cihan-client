@@ -5,7 +5,7 @@ import { URL } from "@/api";
 
 import { useSidebar2 } from "../context/SidebarContext2";
 import SidebarWidget from "./SidebarWidget";
-import { ChevronDownIcon, DotIcon, Kanban } from "lucide-react";
+import { ChevronDownIcon, DotIcon } from "lucide-react";
 import {
   Users,
   Settings,
@@ -24,6 +24,8 @@ import {
   Orbit,
   PackageSearch,
   UserCog2,
+
+
 } from "lucide-react";
 type NavItem = {
   name: string;
@@ -37,149 +39,79 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     name: "Anasayfa",
-    icon: (
-      <LayoutDashboard
-        style={{
-          stroke: "#0284C7",
-          filter: "drop-shadow(0 1px 2px rgba(3,105,161,0.35))",
-        }}
-      />
-    ),
+    icon: <LayoutDashboard style={{
+      stroke: "#0284C7",
+      filter: "drop-shadow(0 1px 2px rgba(3,105,161,0.35))",
+    }} />,
     path: "/",
   },
 
   {
     name: "CRM",
-    icon: (
-      <Orbit
-        size={20}
-        style={{
-          stroke: "#6D28D9", // violet-700
-          filter: "drop-shadow(0 1px 2px rgba(109,40,217,0.35))",
-        }}
-      />
-    ),
+    icon: <Orbit
+      size={20}
+      style={{
+        stroke: "#6D28D9", // violet-700
+        filter: "drop-shadow(0 1px 2px rgba(109,40,217,0.35))"
+      }}
+    />,
     children: [
-      {
-        name: "Fırsatlar",
-        icon: <Sparkles className="w-5 h-5 text-yellow-500" />,
-        path: "/firsatlar",
-      },
-      {
-        name: "Müşteriler",
-        icon: <Landmark className="w-5 h-5 text-blue-600" />,
-        path: "/musteriler",
-      },
-      {
-        name: "Aktiviteler",
-        icon: <Zap className="w-5 h-5 text-green-500" />,
-        path: "/aktiviteler",
-      },
-      {
-        name: "Teklif Yönetimi",
-        icon: <DollarSign className="w-5 h-5 text-orange-800" />,
-        path: "/teklifler",
+      { name: "Fırsatlar", icon: <Sparkles className="w-5 h-5 text-yellow-500" />, path: "/firsatlar" }
+      , { name: "Müşteriler", icon: <Landmark className="w-5 h-5 text-blue-600" />, path: "/musteriler" }
+      , { name: "Aktiviteler", icon: <Zap className="w-5 h-5 text-green-500" />, path: "/aktiviteler" }
+      , {
+        name: "Teklif Yönetimi", icon: <DollarSign className="w-5 h-5 text-orange-800" />, path: "/teklifler",
         children: [
           { name: "Teklif Listesi", path: "/teklifler" },
-          { name: "Yeni Teklif", path: "/yeniteklif" },
+          { name: "Yeni Teklif", path: "/yeniteklif" }
         ],
-      },
-      {
-        name: "Sözleşmeler",
-        icon: <FileSignature className="w-5 h-5 text-green-900" />,
-        path: "/sozlesmeler",
-      },
-      {
-        name: "Sipariş Yönetimi",
-        icon: <Package className="w-5 h-5 text-yellow-600" />,
-        path: "/siparisler",
+      }
+      , { name: "Sözleşmeler", icon: <FileSignature className="w-5 h-5 text-green-900" />, path: "/sozlesmeler" }
+      , {
+        name: "Sipariş Yönetimi", icon: <Package className="w-5 h-5 text-yellow-600" />, path: "/siparisler",
         children: [
           { name: "Sipariş Listesi", path: "/siparisler" },
-          { name: "Yeni Sipariş", path: "/yenisiparis" },
+          { name: "Yeni Sipariş", path: "/yenisiparis" }
         ],
       },
 
-      {
-        name: "Takvim",
-        icon: <CalendarClock className="w-5 h-5 text-indigo-600" />,
-        path: "/takvim",
-      },
-    ],
+      { name: "Takvim", icon: <CalendarClock className="w-5 h-5 text-indigo-600" />, path: "/takvim" }],
   },
   {
     name: "Ürün Yönetimi",
-    icon: (
-      <PackageSearch
-        style={{
-          stroke: "#b27d10",
-        }}
-      />
-    ),
+    icon: <PackageSearch style={{
+      stroke: "#b27d10",
+    }} />,
     children: [
       {
         name: "Ürün Fiyat Listesi",
         icon: <FileSpreadsheet />,
         path: "/urunler",
+
       },
-    ],
-  },
-   {
-    name: "Proje Yönetimi",
-    icon: (
-      <Kanban 
-        style={{
-          stroke: "#b27d10",
-        }}
-      />
-    ),
-    children: [
-      {
-        name: "Dijital Erp Kurulum Projesi",
-        icon: <FileSpreadsheet />,
-        path: "/proje/7",
-      },
-      {
-        name: "Örnek Proje",
-        icon: <FileSpreadsheet />,
-        path: "/proje/6",
-      },
+
     ],
   },
   {
     name: "İnsan Kaynakları",
-    icon: (
-      <UserCog2
-        style={{
-          stroke: "#85AB6C",
-        }}
-      />
-    ),
+    icon: <UserCog2 style={{
+      stroke: "#85AB6C",
+    }} />,
     children: [
       {
-        name: "Personeller",
-        icon: <Users style={{ stroke: "#12608C" }} />,
-        path: "/personeller",
+        name: "Personeller", icon: <Users style={{ stroke: "#12608C" }} />, path: "/personeller"
       },
     ],
   },
   {
-    name: "Ayarlar",
-    icon: <Settings />,
-    children: [
-      {
-        name: "Şirketlerim",
-        icon: (
-          <Building2
-            style={{
-              stroke: "#194223",
-            }}
-          />
-        ),
-        path: "/sirketlerim",
-      },
-    ],
+    name: "Ayarlar", icon: <Settings />, children: [{
+      name: "Şirketlerim", icon: <Building2 style={{
+        stroke: "#194223"
+      }} />, path: "/sirketlerim"
+    }]
   },
-];
+
+]
 const AppSidebar: React.FC = () => {
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar2();
   const location = useLocation();
@@ -201,7 +133,7 @@ const AppSidebar: React.FC = () => {
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
 
   const toggleMenu = (key: string) => {
-    setOpenMenus((prev) => ({
+    setOpenMenus(prev => ({
       ...prev,
       [key]: !prev[key],
     }));
@@ -232,18 +164,15 @@ const AppSidebar: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => toggleMenu(item.name)}
-                  className={`${base} ${pad} ${justify} ${
-                    isOpen
-                      ? "bg-gray-100 dark:bg-gray-800"
-                      : "text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
-                  }`}
+                  className={`${base} ${pad} ${justify} ${isOpen
+                    ? "bg-gray-100 dark:bg-gray-800"
+                    : "text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    }`}
                 >
                   {item.icon && <span className={iconWrap}>{item.icon}</span>}
 
                   {showText && (
-                    <span
-                      className={`${titleClass} text-gray-900 dark:text-gray-100`}
-                    >
+                    <span className={`${titleClass} text-gray-900 dark:text-gray-100`}>
                       {item.name}
                     </span>
                   )}
@@ -263,18 +192,15 @@ const AppSidebar: React.FC = () => {
                   <NavLink
                     to={item.path}
                     className={({ isActive }) =>
-                      `${base} ${pad} ${justify} ${
-                        isActive
-                          ? "bg-gradient-to-r from-teal-50 via-sky-50 to-blue-100 ring-1 ring-sky-200/60 shadow-md text-gray-900"
-                          : "text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      `${base} ${pad} ${justify} ${isActive
+                        ? "bg-gradient-to-r from-teal-50 via-sky-50 to-blue-100 ring-1 ring-sky-200/60 shadow-md text-gray-900"
+                        : "text-gray-900 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800"
                       }`
                     }
                   >
                     {item.icon && <span className={iconWrap}>{item.icon}</span>}
 
-                    {showText && (
-                      <span className={titleClass}>{item.name}</span>
-                    )}
+                    {showText && <span className={titleClass}>{item.name}</span>}
                   </NavLink>
                 )
               )}
@@ -284,6 +210,8 @@ const AppSidebar: React.FC = () => {
                   {renderItems(item.children!, level + 1)}
                 </div>
               )}
+
+
             </li>
           );
         })}
@@ -466,10 +394,9 @@ const AppSidebar: React.FC = () => {
   return (
     <aside
       className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
-        ${
-          isExpanded || isMobileOpen
-            ? "w-[300px]"
-            : isHovered
+        ${isExpanded || isMobileOpen
+          ? "w-[300px]"
+          : isHovered
             ? "w-[300px]"
             : "w-[90px]"
         }
@@ -479,10 +406,10 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex h-full flex-col">
+
         <div
-          className={`${isMobileOpen ? "hidden" : "flex"} py-8 ${
-            !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
-          }`}
+          className={`${isMobileOpen ? "hidden" : "flex"} py-8 ${!isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
+            }`}
         >
           <Link to="/">
             {isExpanded || isHovered || isMobileOpen ? (
@@ -518,11 +445,10 @@ const AppSidebar: React.FC = () => {
             <div className="flex flex-col gap-4">
               <div>
                 <h2
-                  className={`mb-4 mt-8 ml-3 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                    !isExpanded && !isHovered
-                      ? "lg:justify-center"
-                      : "justify-start"
-                  }`}
+                  className={`mb-4 mt-8 ml-3 text-xs uppercase flex leading-[20px] text-gray-400 ${!isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "justify-start"
+                    }`}
                 >
                   {isExpanded || isHovered || isMobileOpen ? (
                     "Menu"
@@ -536,9 +462,9 @@ const AppSidebar: React.FC = () => {
           </nav>
         </div>
         <div className="mt-auto mb-4 px-3 text-xs text-gray-600 text-center leading-relaxed">
-          Dijital ERP 2025 ©<br />
-          Tüm hakları saklıdır.
+          Dijital ERP 2025 ©<br />Tüm hakları saklıdır.
         </div>
+
       </div>
     </aside>
   );

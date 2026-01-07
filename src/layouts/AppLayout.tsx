@@ -1,13 +1,14 @@
-import { SidebarProvider, useSidebar } from "../context/SidebarContext";
+import { SidebarProvider, useSidebar } from "./../context/SidebarContext";
 import { Outlet } from "react-router";
-import AppHeader from "./AppHeader";
+import {AppHeader} from "./../layouts/AppHeader";
 import Backdrop from "./Backdrop";
-import AppSidebar2 from "@/components/AppSidebar2";
-import { SidebarProvider2, useSidebar2 } from "@/context/SidebarContext2";
+import {AppSidebar} from "./../components/AppSidebar";
+import { SidebarProvider2 } from "@/context/SidebarContext2";
 import AppHeader2 from "./AppHeader2";
+import AppSidebar2 from "@/components/AppSidebar2";
 
 const LayoutContent: React.FC = () => {
-  const { isExpanded, isHovered, isMobileOpen } = useSidebar2();
+  const { isExpanded, isHovered, isMobileOpen } = useSidebar();
 
   return (
     <div className="min-h-screen xl:flex">
@@ -21,7 +22,7 @@ const LayoutContent: React.FC = () => {
         } ${isMobileOpen ? "ml-0" : ""}`}
       >
         <AppHeader2 />
-        <div className=" mx-auto  md:p-6">
+        <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
           <Outlet />
         </div>
       </div>
