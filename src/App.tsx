@@ -21,7 +21,7 @@ import { OpportunityPage } from "./pages/crm/OpportunityPage";
 import { CustomerPage } from "./pages/crm/CustomerPage";
 import { ActivityPage } from "./pages/crm/ActivityPage";
 import { PriceOfferPage } from "./pages/crm/PriceOfferPage";
-import { PriceOfferAddPage, PriceOfferDto } from "./pages/crm/PriceOfferAddPage";
+import { PriceOfferAddPage } from "./pages/crm/PriceOfferAddPage";
 import { OpportunityPageDetail } from "./pages/crm/OpportunityPageDetail";
 import { CalendarPage } from "./pages/crm/CalendarPage";
 import Product from "./pages/ProductPage/Product";
@@ -32,7 +32,8 @@ import { AddPurchaseOrderPage2 } from "./pages/crm/AddPurchaseOrderPage2";
 import { PurchaseOrderPage } from "./pages/crm/PurchaseOrderPage";
 import { UpdatePurchaseOrderPage } from "./pages/crm/UpdatePurchaseOrderPage";
 import { EnterprisePage } from "./pages/Setting/EnterprisePage";
-import BoardView from "./components/board/BoardView";
+import { ScrollToTop } from "./components/common/ScrollToTop";
+import { SidebarProvider2 } from "./context/SidebarContext2";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -56,8 +57,14 @@ function AppRoutes() {
       <ScrollToTop />
 
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PrivateRoute element={<CrmDashboard />} />} />
-        <Route path="/proje" element={<PrivateRoute element={<BoardView />} />} />
+        {/* Public */}
+        <Route path="/giris" element={<SignIn />} />
+
+        {/* Protected */}
+        <Route element={<PrivateRoute />}>
+          {/* Layout */}
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<CrmDashboard />} />
 
 
             {/* Survey */}

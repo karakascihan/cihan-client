@@ -416,7 +416,7 @@ const AppSidebar: React.FC = () => {
               <>
                 <img
                   className="block w-55 h-auto dark:hidden"
-                  src={URL + "/logo-white.png"}
+                  src={URL + "/logo.png"}
                   alt="Logo"
                   style={{ display: "block" }}
                   width={150}
