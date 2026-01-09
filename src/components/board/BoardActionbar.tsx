@@ -37,7 +37,7 @@ const BoardActionbar: React.FC = () => {
             <div className="flex items-center gap-x-2">
                 <button 
                     onClick={handleCreateGroupAtTop}
-                    className="flex items-center gap-x-2 px-4 py-2 text-sm font-medium text-white bg-main-purple rounded-lg shadow-md hover:bg-dark-purple focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main-purple"
+                    className="flex items-center gap-x-2 px-4 py-2 text-sm font-medium text-white bg-purple-500 rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-main-purple"
                 >
                     <FiPlus />
                     <span>Yeni Grup</span>
@@ -59,7 +59,7 @@ const BoardActionbar: React.FC = () => {
             </div>
 
             {/* ... Sağ taraf (Search vs) aynı kalabilir ... */}
-             <div className="flex items-center gap-x-2">
+             {/* <div className="flex items-center gap-x-2">
                 <div className="relative">
                     <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" />
                     <input 
@@ -72,7 +72,7 @@ const BoardActionbar: React.FC = () => {
                 <button className="p-2 rounded-md text-text-secondary hover:bg-gray-100">
                     <FiMoreHorizontal />
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 };

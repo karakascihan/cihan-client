@@ -6,19 +6,6 @@ import { useSidebar } from "./../context/SidebarContext";
 import icon from "../images/logo/favicon.ico";
 import { URL } from "@/api";
 
-import {
-    BoxCubeIcon,
-    CalenderIcon,
-    ChevronDownIcon,
-    GridIcon,
-    HorizontaLDots,
-    ListIcon,
-    PageIcon,
-    PieChartIcon,
-    PlugInIcon,
-    TableIcon,
-    UserCircleIcon,
-} from "../icons";
 
 import {
     Users,
@@ -41,8 +28,8 @@ import {
 
 
 } from "lucide-react";
-import { FaFileCirclePlus } from "react-icons/fa6";
-import { LuUser } from "react-icons/lu";
+import { FaProjectDiagram } from "react-icons/fa";
+import { HiOutlineDocumentReport } from "react-icons/hi";
 
 
 
@@ -66,18 +53,30 @@ const menus: MenuItem[] = [{
     path: "/",
     roles: [-1],
 },
-// {
-//   title: "Proje Yönetimi",
-//   icon: <FaProjectDiagram />,
-//   roles: [-1],
-//   items: [
-//     {
-//       title: "Proje Takip Raporları",
-//       path: "/projetakipraporlari",
-//       icon: <HiOutlineDocumentReport />,
-//     },
-//   ],
-// },
+{
+  title: "Proje Yönetimi",
+  icon: <FaProjectDiagram />,
+  roles: [-1],
+  items: [
+    // {
+    //   title: "Proje Takip Raporları",
+    //   path: "/projetakipraporlari",
+    //   icon: <HiOutlineDocumentReport />,
+    // },
+    {
+      title: "Proje Uygulama Takvimi",
+      icon: <HiOutlineDocumentReport />,
+      items:[ {
+          title: "Dijital Erp Essav",
+          path:"/proje/7"
+      },
+    {
+          title: "Dijital Erp AC Makina",
+          path:"/proje/6"
+      }]
+    },
+  ],
+},
 {
     title: "CRM", icon: <Orbit
         size={20}
@@ -107,8 +106,8 @@ const menus: MenuItem[] = [{
             ],
         },
 
-        ,
-        , { title: "Takvim", icon: <CalendarClock className="w-5 h-5 text-indigo-600" />, path: "/takvim" }]
+        
+         { title: "Takvim", icon: <CalendarClock className="w-5 h-5 text-indigo-600" />, path: "/takvim" }]
 
 },
 {

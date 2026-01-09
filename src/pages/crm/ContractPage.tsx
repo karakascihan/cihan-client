@@ -10,7 +10,7 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { FileRecordPage } from "./FileRecordPage";
 import { useModal } from "@/context/ModalContext";
-import { FaEye, FaFile, FaShower, FaUpload } from "react-icons/fa6";
+import { FaEye, FaFile, FaRProject, FaShower, FaUpload } from "react-icons/fa6";
 import { useLoading } from "@/context/LoadingContext";
 import { contractTemplate1 } from "@/PriceOfferTemplates/contractTemplates";
 import { Editor } from "@tinymce/tinymce-react";
@@ -23,12 +23,14 @@ import enterpriseSlice, {
   fetchEnterprises,
 } from "@/store/slices/enterpriseSlice";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
+import AddBoardForm from "@/components/board/AddBoardForm";
+import { useNavigate } from "react-router-dom";
 
 export const ContractPage = () => {
   const confirm = useConfirm();
   const sidebar = useSidebar();
   const dispatch = useDispatch();
-
+const navigate=useNavigate();
   const productsState = useSelector((state: RootState) => state.products);
   const customersState = useSelector((state: RootState) => state.customer);
   const enterpriseState = useSelector((state: RootState) => state.enterprise);
@@ -279,6 +281,35 @@ export const ContractPage = () => {
                   "
           >
             <FaEye title="Göster" />
+          </button>
+           <button
+            onClick={() => {
+              openModal({
+                title: "Proje Uygulama Takimi Oluşturma",
+                content: function (
+                  close: (result: any) => void
+                ): React.ReactNode {
+                  return (
+                   <AddBoardForm onClose={function (boardId:number): void {
+                    if (boardId!=-1) {
+                      close(null);
+                      navigate("/proje/"+boardId)
+                    }
+                    } } />
+                  );
+                },
+              });
+            }}
+            className="
+                    inline-flex items-center 
+                    px-4 py-2 
+                    bg-purple-500 hover:bg-purple-600 
+                    text-white 
+                    rounded 
+                    mr-2
+                  "
+          >
+            <FaRProject title="Proje Takvimi Oluştur" />
           </button>
           <button
             className="

@@ -39,7 +39,7 @@ import { ThemeProvider } from './context/ThemeContext.tsx'
 locale('tr');
 createRoot(document.getElementById('root')!).render(
    <Provider store={store}>
-    <ThemeProvider>
+    {/* <ThemeProvider> */}
     <GlobalSidebarProvider>
         <PrimeReactProvider value={{ locale: "tr" }}>
         {/* <PrimeReactProvider> */}
@@ -50,6 +50,6 @@ createRoot(document.getElementById('root')!).render(
      
     </PrimeReactProvider>
     </GlobalSidebarProvider>
-    </ThemeProvider>
+    {/* </ThemeProvider> */}
   </Provider>
 )

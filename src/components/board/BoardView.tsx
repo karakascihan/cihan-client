@@ -51,6 +51,7 @@ import { FiPlus } from 'react-icons/fi';
 import { DEFAULT_ZOOM_INDEX } from '../common/constants';
 import { useParams } from 'react-router-dom';
 import { setSelectedBoard } from '@/store/features/boardSlice';
+import { fetchUsers } from '@/store/slices/userSlice';
 
 const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -69,7 +70,7 @@ const BoardView: React.FC = () => {
         if(boardId)
       dispatch(setSelectedBoard(Number(boardId)))
     }, [boardId,selectedBoardId])
-    
+ 
     // Selectors
     const boardViews = useAppSelector(selectBoardViews);
     const activeViewId = useAppSelector(selectActiveViewId);
@@ -100,6 +101,8 @@ const BoardView: React.FC = () => {
     );
 
     useEffect(() => {
+     dispatch(fetchUsers());
+
         if (selectedBoardId) {
             dispatch(fetchViewsForBoard(selectedBoardId));
             dispatch(fetchGroupsForBoard(selectedBoardId));
@@ -330,7 +333,7 @@ const BoardView: React.FC = () => {
     return (
         <div className={`flex flex-col ${isGanttView ? 'h-full' : ''}`}>
             <div className="sticky top-0 z-30 bg-white">
-                <div className="px-6 pt-5 pb-2"><BoardHeader /></div>
+                <div className="px-6  pb-2"><BoardHeader /></div>
                 <div className="px-6">
                     <BoardViewTabs
                         views={boardViews.map(v => ({ id: v.id, name: v.name, type: v.type.toLowerCase() as any }))}

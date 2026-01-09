@@ -43,15 +43,25 @@ const DateCell: React.FC<DateCellProps> = ({ item, column }) => {
             value: valueToSave,
         }));
     };
-
+const [isOpen, setIsOpen] = React.useState(false);
     return (
         <div className="w-full h-full flex items-center justify-center cursor-pointer">
         <DatePicker
+       isClearable
+        clearButtonTitle='Temizle'
+        open={isOpen}
+        onChange={(date) => {
+    handleDateChange(date);
+    setIsOpen(false); // tarih seçince kapat
+  }}
+  onClickOutside={() => setIsOpen(false)} // 🔑 DIŞA TIKLAYINCA
+  onInputClick={() => setIsOpen(true)}
             selected={selectedDate}
-            onChange={handleDateChange}
-            dateFormat="MMM d" // "Eki 19" gibi görünecek
+            dateFormat="d MMMM YYYY" // "Eki 19" gibi görünecek
             placeholderText="-"
             className="w-full bg-transparent text-center outline-none cursor-pointer"
+                locale="tr"
+     portalId="root"
         />
         </div>
     );

@@ -117,7 +117,7 @@ export const EmailSender = ({ mailDto,priceOfferId,opportunityId}:{mailDto?:Mail
           data
         );
         if (result.statusCode === 200) {
-           dispatch(addActivity({ activityState: ActivityState.Completed, relatedEntityId:opportunityId, relatedEntityName:"Opportunity", scheduledAt:new Date(), activityType:ActivityType.Email ,subject:"Fiyat Teklifi Mail Gönderildi", notes:"Ek dosya yolu: "+data.attachmentPaths }));
+           dispatch(addActivity({ activityState: ActivityState.Completed, relatedEntityId:opportunityId ?? priceOfferId, relatedEntityName:opportunityId ?"Opportunity":"PriceOffer", scheduledAt:new Date(), activityType:ActivityType.Email ,subject:"Fiyat Teklifi Mail Gönderildi", notes:"Ek dosya yolu: "+URL+"/"+data.attachmentPaths }));
           // close modal if any 
         }
         dispatch(

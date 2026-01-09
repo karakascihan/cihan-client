@@ -113,7 +113,9 @@ const GanttBaselineModal: React.FC<GanttBaselineModalProps> = ({
                             if (!minDate || sd < minDate) minDate = sd;
                             if (!maxDate || ed > maxDate) maxDate = ed;
                         }
-                    } catch (e) { }
+                    } catch (e) {
+                        console.log();
+                     }
                 }
             }
         }

@@ -20,7 +20,7 @@ import { RootState } from '@/store/store';
 import { User } from '@/types/user';
 import { Group } from '@/store/features/groupSlice';
 import { Item } from '@/store/features/itemSlice';
-import { ColumnDto } from '@/api/apiDtos';
+import { ColumnDto, ColumnType } from '@/api/apiDtos';
 
 const transformUserForView = (user: User) => {
   const initials = `${user.name || ''}${user.surname || ''}`.toUpperCase();

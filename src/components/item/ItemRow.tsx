@@ -147,7 +147,7 @@ const ItemRow: React.FC<ItemRowProps> = ({
 
     const mainRowStyle = {
         gridTemplateColumns,
-        transform: CSS.Translate.toString(transform),
+        transform: isDragging ? CSS.Translate.toString(transform) : undefined,
         transition,
         opacity: isDragging ? 0.3 : 1,
         position: 'relative',
@@ -172,7 +172,7 @@ const ItemRow: React.FC<ItemRowProps> = ({
     return (
         <>
             {/* ANA GÖREV SATIRI */}
-            <div
+            <div 
                 ref={setNodeRef}
                 style={mainRowStyle}
                 className={`grid items-center border-b border-gray-100 last:border-b-0 text-base group ${

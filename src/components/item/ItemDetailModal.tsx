@@ -22,6 +22,7 @@ import DependencyCell from './DependencyCell';
 import PersonCell from './PersonCell';
 import { STATUS_OPTIONS } from '../common/constants';
 import { ColumnDto, ColumnType } from '@/api/apiDtos';
+import { URL } from '@/api';
 
 // Türkçe yerelleştirme
 registerLocale('tr', tr);
@@ -573,7 +574,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                                                     <div className="p-2 bg-blue-50 text-blue-600 rounded">
                                                         <FiFileText size={24} />
                                                     </div>
-                                                    <a href={docValue} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium hover:underline text-sm break-all">
+                                                    <a href={URL+"/"+docValue} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-medium hover:underline text-sm break-all">
                                                         {docValue.substring(docValue.lastIndexOf('/') + 1)}
                                                     </a>
                                                 </div>

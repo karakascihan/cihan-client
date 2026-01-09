@@ -13,12 +13,12 @@ import { AppDispatch, RootState } from '@/store/store';
 const transformUserForView = (user: any) => {
     // TODO: Gravatar veya başka bir servis için e-posta kullanılabilir
     // Şimdilik avatarUrl'i kaldırıyoruz, 'initials' kullanacağız.
-    const initials = `${user.firstName[0] || ''}${user.lastName[0] || ''}`.toUpperCase();
+    const initials = `${user.name.charAt(0) || ''}${user.surname.charAt(0) || ''}`.toUpperCase();
     return {
         id: user.id,
-        name: `${user.firstName} ${user.lastName}`,
+        name: `${user.name} ${user.surname}`,
         avatarUrl: undefined, // Backend'den gelmediği için 'undefined'
-        initials: initials || user.username[0].toUpperCase(),
+        initials: initials || user.userName.toUpperCase(),
     };
 };
 
@@ -74,20 +74,20 @@ const PersonPopoverContent: React.FC<{
                             checked={selectedIds.has(user.id)}
                             onChange={() => handleCheckboxChange(user.id)}
                         />
-                        <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold mr-2 flex-shrink-0">
+                        {/* <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-semibold mr-2 flex-shrink-0">
                             {user.avatarUrl ? (
                                 <img src={user.avatarUrl} alt={user.name} className="w-full h-full rounded-full object-cover" />
                             ) : (
                                 user.initials
                             )}
-                        </div>
+                        </div> */}
                         <span className="text-sm text-gray-800 truncate">{user.name}</span>
                     </label>
                 ))}
             </div>
             <button
                 onClick={handleSave}
-                className="w-full bg-main-purple text-white text-sm font-semibold py-1.5 rounded hover:bg-dark-purple focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-main-purple"
+                className="w-full bg-purple-700 text-white text-sm font-semibold py-1.5 rounded hover:bg-purple-950 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-main-purple"
             >
                 Kaydet
             </button>
@@ -152,29 +152,34 @@ const PersonCell: React.FC<PersonCellProps> = ({ item, column, align = 'center' 
                 className={`w-full h-full flex items-center ${align === 'left' ? 'justify-start' : 'justify-center'} cursor-pointer group p-2`}            >
                 {assignedUsers.length > 0 ? (
                     // Eğer kullanıcı(lar) atanmışsa, avatarları göster
-                    <div className="flex -space-x-2 overflow-hidden items-center"> {/* Avatarları üst üste bindir */}
-                        {assignedUsers.slice(0, maxAvatarsToShow).map(user => (
-                            <div
-                                key={user.id}
-                                className="inline-block h-7 w-7 rounded-full ring-2 ring-white bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold" // Boyut ve ring eklendi
-                                title={user.name}>
-                                {user.avatarUrl ? (
-                                    <img className="h-full w-full rounded-full object-cover" src={user.avatarUrl} alt={user.name} />
-                                ) : (
-                                    user.initials
-                                )}
-                            </div>
-                        ))}
-                        {/* Eğer limitten fazla kişi varsa "+X" göster */}
-                        {assignedUsers.length > maxAvatarsToShow && (
-                            <div
-                                className="inline-flex items-center justify-center h-7 w-7 rounded-full ring-2 ring-white bg-gray-200 text-gray-600 text-xs font-bold"
-                                title={`${assignedUsers.length - maxAvatarsToShow} kişi daha`}
-                            >
-                                +{assignedUsers.length - maxAvatarsToShow}
-                            </div>
-                        )}
-                    </div>
+                  <div className="flex justify-center">
+  <div className="flex -space-x-2 items-center">
+    {assignedUsers.slice(0, maxAvatarsToShow).map(user => (
+      <div
+        key={user.id}
+        className="relative inline-flex h-7 w-7 rounded-full ring-2 ring-white bg-blue-100 text-blue-700 items-center justify-center text-xs font-bold"
+        title={user.name}
+      >
+        {user.avatarUrl ? (
+          <img
+            className="h-full w-full rounded-full object-cover"
+            src={user.avatarUrl}
+            alt={user.name}
+          />
+        ) : (
+          user.initials
+        )}
+      </div>
+    ))}
+
+    {assignedUsers.length > maxAvatarsToShow && (
+      <div className="inline-flex h-7 w-7 items-center justify-center rounded-full ring-2 ring-white bg-gray-200 text-gray-600 text-xs font-bold">
+        +{assignedUsers.length - maxAvatarsToShow}
+      </div>
+    )}
+  </div>
+</div>
+
                 ) : (
                     // Eğer kimse atanmamışsa, "+" ikonu göster
                     <div className="w-7 h-7 rounded-full border-2 border-dashed border-gray-300 text-gray-400 group-hover:bg-blue-100 group-hover:border-blue-300 group-hover:text-blue-500 flex items-center justify-center transition-colors">

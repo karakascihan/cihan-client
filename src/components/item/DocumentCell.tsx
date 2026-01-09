@@ -3,8 +3,13 @@
 import React, { useRef } from 'react';
 import { useAppDispatch } from '../../store/hooks';
 import { Item, updateItemValue } from '../../store/features/itemSlice';
-import { FiPaperclip, FiPlus, FiExternalLink } from 'react-icons/fi'; // FiExternalLink eklendi
-import { ColumnDto } from '@/api/apiDtos';
+import { FiPaperclip, FiPlus, FiExternalLink, FiDelete } from 'react-icons/fi'; // FiExternalLink eklendi
+import { ColumnDto, FileRecordDtoForInsertion } from '@/api/apiDtos';
+import { addFileRecord } from '@/store/slices/fileRecordSlice';
+import { convertFileToBase64 } from '@/utils/commonUtils';
+import { URL } from '@/api';
+import { FaDeleteLeft } from 'react-icons/fa6';
+import { useConfirm } from '@/context/ConfirmContext';
 
 interface DocumentCellProps {
     item: Item;
@@ -16,20 +21,33 @@ const DocumentCell: React.FC<DocumentCellProps> = ({ item, column }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const currentValue = item.itemValues.find(v => v.columnId === column.id)?.value || '';
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
             const fileName = file.name;
-
-            console.log("Dosya seçildi:", fileName, " - GERÇEK YÜKLEME GEREKİR!");
-            const valueToSave = fileName; // BURASI SUNUCUDAN GELEN URL OLMALI (Şimdilik dosya adı)
-
-            dispatch(updateItemValue({
+           
+               if (!file) return;
+           
+               // Base model
+               const newFile: FileRecordDtoForInsertion = {
+                 relatedEntityId: item.id,
+                 relatedEntityName: "Item",
+                 fileName: file.name,
+                 contentType: file.type,
+                 content: await convertFileToBase64(file), // Base64 string
+               };
+           
+                dispatch(addFileRecord(newFile)).unwrap().then((c) => {
+             dispatch(updateItemValue({
                 itemId: item.id,
                 columnId: column.id,
-                value: valueToSave, // URL'yi kaydet
+                value:  c.filePath, // URL'yi kaydet
             }));
             e.target.value = '';
+            })
+           
+
+           
         }
     };
 
@@ -50,7 +68,7 @@ const DocumentCell: React.FC<DocumentCellProps> = ({ item, column }) => {
     };
 
     const displayFileName = isUrl ? getFileNameFromUrl(currentValue) : currentValue;
-
+const confirm = useConfirm();
     return (
         // Ana div'e tıklama olayını ekle
         <div 
@@ -65,8 +83,9 @@ const DocumentCell: React.FC<DocumentCellProps> = ({ item, column }) => {
             />
             {currentValue ? (
                 // Değer varsa (URL varsayıyoruz), tıklanabilir link oluştur
+                <>
                 <a
-                    href={currentValue} // href'e URL'yi ver
+                    href={URL+"/"+ currentValue} // href'e URL'yi ver
                     target="_blank"
                     rel="noopener noreferrer"
                     // KRİTİK DÜZELTME: Linki hücre içinde tutmak için w-full ve block/flex özellikleri
@@ -76,8 +95,21 @@ const DocumentCell: React.FC<DocumentCellProps> = ({ item, column }) => {
                     <FiPaperclip className="flex-shrink-0"/> 
                     {/* Metni taşmayı önlemek için flex-grow ve truncate */}
                     <span className="truncate flex-grow min-w-0">{displayFileName}</span>
-                    <FiExternalLink className="flex-shrink-0 w-3 h-3 opacity-70" />
+                    {/* <FiExternalLink className="flex-shrink-0 w-3 h-3 opacity-70" /> */}
                 </a>
+                <FiDelete onClick={async ()=>{  const isConfirmed = await confirm({
+                            title: "Silme işlemi",
+                            message: "Dosyayı silmek istediğinize emin misiniz?",
+                            confirmText: "Evet",
+                            cancelText: "Vazgeç",
+                          });
+                          if (isConfirmed) {
+                          dispatch(updateItemValue({
+                itemId: item.id,
+                columnId: column.id,
+                value:  "", // URL'yi kaydet
+            }));}}}/>
+                </>
             ) : (
                 // Değer yoksa, dosya ekleme (+) ikonunu göster
                 <div className="w-6 h-6 rounded bg-gray-200 text-gray-500 group-hover:bg-blue-500 group-hover:text-white flex items-center justify-center transition-colors">

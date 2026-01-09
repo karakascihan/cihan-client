@@ -4,9 +4,10 @@ interface UIContextType {
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   closeSidebar: () => void;
-
   collapsed: boolean;
   toggleCollapsed: () => void;
+  openMenus:string[];
+  toggleMenu: (den:string) => void;
 }
 
 const UIContext = createContext<UIContextType | undefined>(undefined);
@@ -14,12 +15,19 @@ const UIContext = createContext<UIContextType | undefined>(undefined);
 export const UIProvider = ({ children }: { children: ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+const [openMenus, setOpenMenus] = useState<string[]>([]);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
   const closeSidebar = () => setSidebarOpen(false);
 
   const toggleCollapsed = () => setCollapsed(!collapsed);
-
+const toggleMenu = (title: string) => {
+  setOpenMenus(prev =>
+    prev.includes(title)
+      ? prev.filter(t => t !== title)
+      : [...prev, title]
+  );
+};
   return (
     <UIContext.Provider
       value={{
@@ -27,7 +35,7 @@ export const UIProvider = ({ children }: { children: ReactNode }) => {
         toggleSidebar,
         closeSidebar,
         collapsed,
-        toggleCollapsed
+        toggleCollapsed,openMenus,toggleMenu
       }}
     >
       {children}

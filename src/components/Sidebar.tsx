@@ -15,7 +15,7 @@ import {
 import { useUI } from "../context/UIContext";
 import { useSelector } from "react-redux";
 import icon from "../images/logo/favicon.ico";
-import { FaBuilding, FaFileCirclePlus, FaFileContract, FaWarehouse } from "react-icons/fa6";
+import { FaBuilding, FaCalendar, FaFileCirclePlus, FaFileContract, FaWarehouse } from "react-icons/fa6";
 import {
   FaBoxes,
   FaCoins,
@@ -59,6 +59,16 @@ const menus: MenuItem[] = [
   //     },
   //   ],
   // },
+   {
+        title: "Proje Yönetimi",
+        icon: <HiOutlineDocumentReport />,
+        items:[ {
+            title: "Proje Takvimi",
+            path:"/projetakvimi",
+            icon:<FaCalendar/>
+        }
+     ]
+      },
   {
     title: "CRM",icon: <LuUser />,
     roles: [1,2],
@@ -280,9 +290,9 @@ const menus: MenuItem[] = [
 
 
 export const Sidebar: React.FC = () => {
-  const { sidebarOpen, closeSidebar, collapsed,toggleCollapsed } = useUI();
+  const { sidebarOpen, closeSidebar, collapsed,toggleCollapsed,toggleMenu,openMenus } = useUI();
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const [openMenus, setOpenMenus] = useState<string[]>([]);
+  // const [openMenus, setOpenMenus] = useState<string[]>([]);
   const user = useSelector((state: RootState) => state.login.user);
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -298,11 +308,11 @@ export const Sidebar: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [sidebarOpen]);
 
-  const toggleMenu = (title: string) => {
-    setOpenMenus((prev) =>
-      prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
-    );
-  };
+  // const toggleMenu = (title: string) => {
+  //   setOpenMenus((prev) =>
+  //     prev.includes(title) ? prev.filter((t) => t !== title) : [...prev, title]
+  //   );
+  // };
 
  const MenuList: React.FC<{ items: MenuItem[]; level?: number }> = ({
     items,
@@ -381,7 +391,7 @@ export const Sidebar: React.FC = () => {
       {sidebarOpen && (
         <div
           onClick={closeSidebar}
-          className="fixed inset-0 bg-black bg-opacity-40 z-40 md:hidden"
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
         ></div>
       )}
       <div

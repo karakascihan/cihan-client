@@ -3,6 +3,7 @@ import { Avatar } from "./Avatar";
 import { useDispatch } from "react-redux";
 import { resetLoginSuccess } from "../store/slices/loginSlice";
 import { useNavigate } from "react-router-dom";
+import { URL } from "@/api";
 
 
 interface Props {
@@ -29,7 +30,7 @@ export const UserMenu: React.FC<Props> = ({ user }) => {
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
       <Avatar
-        imageUrl="src/images/user/user2.png"   
+        imageUrl={URL+"/user2.png"} 
         name={user?.name + " " + user?.surname}
         onClick={() => setIsOpen(!isOpen)}
       />

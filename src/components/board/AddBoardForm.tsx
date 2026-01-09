@@ -1,125 +1,215 @@
 // src/components/board/AddBoardForm.tsx
 
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import type { SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAppDispatch } from '../../store/hooks';
 import { createBoard } from '../../store/features/boardSlice';
 import { createBoardView } from '../../store/features/boardViewSlice';
 import { createGroup } from '../../store/features/groupSlice';
 import { createItem } from '../../store/features/itemSlice';
-import { getRandomColor } from '../../utils/colors'; // Renk utils dosyan varsa
+import { createColumn } from '@/store/features/columnSlice';
+import { ColumnType } from '@/api/apiDtos';
+import { getRandomColor } from '../../utils/colors';
 
 interface BoardFormData {
-    name: string;
-    description: string;
+  name: string;
+  description: string;
 }
 
 interface AddBoardFormProps {
-    onClose: () => void;
+  onClose: (boardId:number) => void;
 }
 
+/* =======================
+   PROJE ŞABLON DATASI
+======================= */
+const projectTemplate = [
+  {
+    title: 'Sistem Analizi Çalışması',
+    items: [
+      'Satış Departmanı Sistem Analizi',
+      'Satınalma Departmanı Sistem Analizi',
+      'Lojistik Sistem Analizi',
+      'Finansman Sistem Analizi',
+      'Muhasebe Sistem Analizi',
+      'Bakım Yönetimi Sistem Analizi',
+      'Proje Yönetimi Sistem Analizi',
+    ],
+  },
+  {
+    title: 'Data Hazırlıkları',
+    items: [
+      'Var Olan Dataların Düzenlenmesi ve Test Olarak Aktarılması',
+      'Satış Datalarının Geçiş Öncesi Aktarma Programlarının Yazılması',
+      'Finansman ve Muhasebe Datalarının Geçiş Öncesi Aktarma Programlarının Yazılması',
+      'Bakım Yönetimi Datalarının Aktarılması',
+    ],
+  },
+  {
+    title: '1. Faz Eğitimler',
+    items: [
+      'Malzeme Yönetimi Eğitimleri',
+      'Satış Yönetimi Eğitimleri',
+      'Satınalma Eğitimleri',
+      'İthalat Birimi Eğitimleri',
+      'Satınalma Departmanı Eğitimleri',
+      'Finansman Departmanı Eğitimleri',
+      'Muhasebe Eğitimleri',
+      'Entegrasyon Eğitimleri',
+      'Bakım Yönetimi Kullanıcı Eğitimleri',
+      'Şantiye / Proje Yönetimi Kullanıcı Eğitimleri',
+    ],
+  },
+  {
+    title: '2. Faz Eğitimler & Modifikasyonlar',
+    items: [
+      'Malzeme Yönetimi Eğitimleri ve Sevkiyat Simülasyonları',
+      'Satış Yönetimi Eğitimleri',
+      'Satınalma Eğitimleri ve İhtiyaç Toplanması',
+      'İthalat Birimi Eğitimleri',
+      'Satınalma Departmanı Eğitimleri',
+      'Finansman Departmanı Eğitimleri',
+      'Muhasebe Geliştirme Eğitimleri',
+      'Entegrasyon Geliştirme Eğitimleri',
+      'Bakım Yönetimi Geliştirme Eğitimleri',
+    ],
+  },
+  {
+    title: 'Paralel Test Kullanımı',
+    items: ['Paralel Test Kullanımı'],
+  },
+  {
+    title: 'Day 1 .( Projenin Gerçek Kullanıma Alınması',
+    items: ['Day 1 .( Projenin Gerçek Kullanıma Alınması'],
+  },
+  {
+    title: 'Maliyet Çalışmaları',
+    items: ['Maliyet Çalışmaları'],
+  },
+  {
+    title: 'Yönetim Raporlama Sistemleri',
+    items: [ 'Yönetim Raporlama Sistemleri'],
+  },
+];
+
 const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose }) => {
-    const dispatch = useAppDispatch();
-    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<BoardFormData>();
+  const dispatch = useAppDispatch();
+  const { register, handleSubmit, formState: { errors, isSubmitting } } =
+    useForm<BoardFormData>();
 
-    const onSubmit: SubmitHandler<BoardFormData> = async (data) => {
-        try {
-            // 1. ADIM: Panoyu oluştur
-            const newBoard = await dispatch(createBoard(data)).unwrap();
+  const onSubmit: SubmitHandler<BoardFormData> = async (data) => {
+    try {
+      const board = await dispatch(createBoard(data)).unwrap();
+      if (!board?.id) return;
 
-            if (newBoard && newBoard.id) {
-                const boardId = newBoard.id;
+      const boardId = board.id;
 
-                // 2. ADIM: Varsayılan 'Tablo' görünümünü oluştur
-                await dispatch(createBoardView({
-                    boardId,
-                    payload: { name: 'Ana Tablo', type: 'table' }
-                })).unwrap();
+      /* ===== Varsayılan Görünüm ===== */
+      await dispatch(
+        createBoardView({
+          boardId,
+          payload: { name: 'Ana Tablo', type: 'table' },
+        })
+      ).unwrap();
 
-                // 3. ADIM: Başlangıç Grubunu oluştur
-                const newGroup = await dispatch(createGroup({
-                    boardId,
-                    groupData: { 
-                        title: 'Yeni Grup', 
-                        color: getRandomColor() || '#579bfc' // Rastgele veya sabit bir renk
-                    },
-                    position: 'bottom'
-                })).unwrap();
+      /* ===== Kolonlar ===== */
+     
+        dispatch(createColumn({
+          boardId,
+          columnData: { title: 'Başlangıç-Bitiş', type: ColumnType.Timeline },
+        })).unwrap();
+        dispatch(createColumn({
+          boardId,
+          columnData: { title: 'Durum', type: ColumnType.Status },
+        })).unwrap();
+        dispatch(createColumn({
+          boardId,
+          columnData: { title: 'Tamamlanma Tarihi', type: ColumnType.Date },
+        })).unwrap();
+         dispatch(createColumn({
+          boardId,
+          columnData: { title: 'Atama', type: ColumnType.Person },
+        })).unwrap();
+        dispatch(createColumn({
+          boardId,
+          columnData: { title: 'Dosya', type: ColumnType.Document },
+        })).unwrap();
+     
 
-                // 4. ADIM: Eğer grup oluştuysa içine 3 tane varsayılan proje (Item) ekle
-                if (newGroup && newGroup.id) {
-                    // İşlemleri hızlandırmak için Promise.all ile paralel gönderiyoruz
-                    await Promise.all([
-                        dispatch(createItem({ 
-                            boardId, 
-                            groupId: newGroup.id, 
-                            itemData: { name: 'Proje 1' } 
-                        })),
-                        dispatch(createItem({ 
-                            boardId, 
-                            groupId: newGroup.id, 
-                            itemData: { name: 'Proje 2' } 
-                        })),
-                        dispatch(createItem({ 
-                            boardId, 
-                            groupId: newGroup.id, 
-                            itemData: { name: 'Proje 3' } 
-                        }))
-                    ]);
-                }
-            }
+      /* ===== Gruplar & Itemlar ===== */
+      for (const group of projectTemplate) {
+        const newGroup = await dispatch(
+          createGroup({
+            boardId,
+            groupData: {
+              title: group.title,
+              color: getRandomColor() || '#579bfc',
+            },
+            position: 'bottom',
+          })
+        ).unwrap();
 
-            // Her şey bittiğinde modalı kapat
-            onClose();
+        if (newGroup?.id && group.items.length) {
+        
+            group.items.map((item) =>
+              dispatch(
+                createItem({
+                  boardId,
+                  groupId: newGroup.id,
+                  itemData: { name: item },
+                })
+              ).unwrap()
+            )
+        } 
+      }
 
-        } catch (error) {
-            console.error("Başlangıç verileri oluşturulurken hata:", error);
-            // Hata olsa bile modalı kapatabiliriz veya kullanıcıya bildirebiliriz.
-            onClose();
-        }
-    };
+      onClose(boardId);
+    } catch (error) {
+      console.error('Board oluşturulurken hata:', error);
+      onClose(-1);
+    }
+  };
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Pano Adı</label>
-                <input
-                    id="name"
-                    {...register('name', { required: 'Pano adı zorunludur' })}
-                    placeholder="Örn: Pazarlama Projeleri"
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>}
-            </div>
-            <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700">Açıklama (Opsiyonel)</label>
-                <textarea
-                    id="description"
-                    {...register('description')}
-                    rows={3}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                />
-            </div>
-            <div className="flex justify-end space-x-2">
-                <button 
-                    type="button" 
-                    onClick={onClose} 
-                    disabled={isSubmitting}
-                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 disabled:opacity-50"
-                >
-                    İptal
-                </button>
-                <button 
-                    type="submit" 
-                    disabled={isSubmitting}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-                >
-                    {isSubmitting ? 'Oluşturuluyor...' : 'Oluştur'}
-                </button>
-            </div>
-        </form>
-    );
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium">Pano Adı</label>
+        <input
+          {...register('name', { required: 'Pano adı zorunludur' })}
+          className="mt-1 w-full rounded border px-3 py-2"
+        />
+        {errors.name && (
+          <p className="text-xs text-red-500">{errors.name.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Açıklama</label>
+        <textarea
+          {...register('description')}
+          rows={3}
+          className="mt-1 w-full rounded border px-3 py-2"
+        />
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <button
+          type="button"
+          onClick={onClose}
+          className="rounded bg-gray-200 px-4 py-2"
+        >
+          İptal
+        </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="rounded bg-blue-600 px-4 py-2 text-white"
+        >
+          {isSubmitting ? 'Oluşturuluyor...' : 'Oluştur'}
+        </button>
+      </div>
+    </form>
+  );
 };
 
 export default AddBoardForm;

@@ -7,6 +7,7 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { resetLoginSuccess } from "../store/slices/loginSlice";
 import { LogOut, Settings } from "lucide-react";
+import { URL } from "@/api";
 
 interface Props {
     user: any;
@@ -42,7 +43,7 @@ export const UserMenu2: React.FC<Props> = ({ user }) => {
                 type="button"
             >
                 <span className="mr-3 mt-3 overflow-hidden rounded-full h-11 w-11">
-                    <Avatar imageUrl="src/images/user/user2.png" />
+                    <Avatar imageUrl= {URL+"/user2.png"} />
                 </span>
 
                 <span className="block mr-1 font-medium text-theme-sm">
