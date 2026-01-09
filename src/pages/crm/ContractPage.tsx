@@ -19,6 +19,10 @@ import { fetchPriceOffers } from "@/store/slices/priceOfferSlice";
 import { apiRequest } from "@/services/apiRequestService";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { URL } from "@/api";
+import axios, { AxiosHeaders } from "axios";
+
+import type { AxiosRequestHeaders } from "axios";
+
 import enterpriseSlice, {
   fetchEnterprises,
 } from "@/store/slices/enterpriseSlice";
@@ -59,6 +63,8 @@ export const ContractPage = () => {
       deps: [],
     }
   );
+
+
   useEffect(() => {
     if (productsState.items.length === 0) {
       dispatch(productsSlice.actions.fetchAll() as any);
@@ -75,6 +81,7 @@ export const ContractPage = () => {
   }, []);
 
   const showTemplate1 = async (contract: ContractsDto) => {
+
     let filledTemplate = contractTemplate1;
     filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
     filledTemplate = filledTemplate.replaceAll(
@@ -124,18 +131,59 @@ export const ContractPage = () => {
     let toplamFiyat = 0;
 
     if (contract.priceOfferId) {
-      let fiyatSatirlarHtml = ``;
-      const priceoffers = await dispatch(fetchPriceOffers() as any).unwrap();
-      const priceoffer = priceoffers.find(
-        (po) => po.id == contract.priceOfferId
-      );
-      filledTemplate = filledTemplate.replaceAll(
-        "~toplam_fiyat~",
-        (priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi) || ""
-      );
-      priceoffer.priceOfferLine?.forEach((line, index) => {
+      {
+        let fiyatSatirlarHtml = ``;
+        const priceoffers = await dispatch(fetchPriceOffers() as any).unwrap();
+        const priceoffer = priceoffers.find(
+          (po) => po.id == contract.priceOfferId
+        );
+        filledTemplate = filledTemplate.replaceAll(
+          "~toplam_fiyat~",
+          (priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi) || ""
+        );
+        priceoffer.priceOfferLine?.forEach((line, index) => {
+          toplamFiyat += Number(line.toplamFiyat ?? 0);
+          let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""
+            }</td>`;
+          fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
+        });
+        let genelToplam = `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi}</td>
+           </tr>`;
+        fiyatSatirlarHtml += genelToplam;
+        filledTemplate = filledTemplate.replaceAll(
+          "~kapsam_satirlari~",
+          fiyatSatirlarHtml
+        );
+      }
+    }
+    else if (contract.purchaseOrdersId) {
+      let siparisSatirlariHtml = ``;
+
+
+      const po = await refetchOrders(URL + "/PurchaseOrder/" + contract.purchaseOrdersId, { method: "GET" });
+      console.log("PO RESULT KEYS:", Object.keys(po.result ?? {}));
+      console.log("PO RESULT:", po.result);
+//po.result doğru veri getirio linelar dahil, po.result.plines undefined geliyor.
+      let poLines = po.result?.purchaseOrdersLine || [];
+
+
+
+      let calculatedTotal = 0;
+
+      poLines.forEach((line, index) => {
         toplamFiyat += Number(line.toplamFiyat ?? 0);
-        let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
+        let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
           }</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
           }</td>
@@ -147,18 +195,38 @@ export const ContractPage = () => {
           }</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""
           }</td>`;
-        fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
-      });
-      let genelToplam = `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
-                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi}</td>
-           </tr>`;
-      fiyatSatirlarHtml += genelToplam;
-      filledTemplate = filledTemplate.replaceAll(
-        "~kapsam_satirlari~",
-        fiyatSatirlarHtml
-      );
-    } else filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", "");
 
+        siparisSatirlariHtml += `<tr>${siparisSatir}</tr>`;
+      });
+
+
+
+      const paraBirimi = poLines?.[0]?.paraBirimi ?? "";
+
+      const finalTotal = po?.result.toplamTutar ?? 0;
+
+      filledTemplate = filledTemplate.replaceAll(
+        "~toplam_fiyat~",
+        finalTotal ? `${finalTotal} ${paraBirimi}` : ""
+      );
+
+      siparisSatirlariHtml += `
+        <tr>
+          <td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
+          <td colspan="5" style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">
+            ${finalTotal ? `${finalTotal} ${paraBirimi}` : ""}
+          </td>
+        </tr>
+      `;
+
+      filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", siparisSatirlariHtml);
+
+      console.log("CalculatedTotal vs DB:", calculatedTotal, po?.result.toplamTutar);
+    }
+    else {
+      filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", "");
+      filledTemplate = filledTemplate.replaceAll("~toplam_fiyat~", "");
+    }
     setEditorData(filledTemplate);
     setShowPreview(contract.id!);
   };
@@ -449,7 +517,7 @@ export const ContractPage = () => {
           )?.siparisNo
           ?? `Sipariş #${contractDtoForInsertion?.purchaseOrdersId ?? ""}`,
       },
-      
+
 
 
       {
