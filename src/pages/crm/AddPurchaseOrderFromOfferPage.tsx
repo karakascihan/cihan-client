@@ -18,16 +18,13 @@ export const AddPurchaseOrderFromOfferPage = ({
 }: Props) => {
     const [loading, setLoading] = useState(false);
 
-    //  initialOrder’ı state’e alıyoruz
     const [form, setForm] = useState<PurchaseOrderDtoForInsertion>(initialOrder);
 
-    // initialOrder sonradan değişirse (modal reuse / farklı teklif) formu güncelle
     useEffect(() => {
         setForm(initialOrder);
     }, [initialOrder]);
     console.log("initial order:", initialOrder);
 
-    //  (opsiyonel) ürünler load olduktan sonra product_Id normalize (productId -> product_Id)
     useEffect(() => {
         const fixProductIds = async () => {
             try {
@@ -49,9 +46,7 @@ export const AddPurchaseOrderFromOfferPage = ({
                         const name = norm(l.malzemeAdi);
 
                         const match =
-                            // 1) kod ile eşleştir (en sağlam)
                             list.find((p: any) => norm(p.productCode) === code) ||
-                            // 2) isim ile eşleştir
                             list.find((p: any) => norm(p.productName) === name);
 
                         return {
@@ -84,7 +79,6 @@ export const AddPurchaseOrderFromOfferPage = ({
       
           console.log("GİDEN PAYLOAD:", payload);
       
-          // ✅ create sayfasıyla aynı endpoint
           const res = await apiRequest<any>("POST", URL + "/PurchaseOrder/Create", payload);
       
           alert("Sipariş başarıyla eklendi!");

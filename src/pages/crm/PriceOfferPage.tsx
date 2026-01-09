@@ -243,25 +243,19 @@ export const PriceOfferPage = ({
       const order: PurchaseOrderDtoForInsertion = {
         firma_Id: firmaId,
         priceOfferId: offer?.id ?? row?.id ?? null,
-
-        // UI için
         firmaAdi: firma?.firma ?? firma?.firma ?? "",
         yetkiliKisi: firma?.yetkili ?? firma?.yetkili ?? "",
-
         siparisTarihi: null,
         teslimTarihi: null,
-
-        aciklama:"",
+        aciklama: "",
         durumu: "",
         onayAcikla: "",
         siparisKosullari: "",
         kaliteKosullari: "",
         siparisTipi: "",
         turu: "",
-
         toplamIndirimOraniYuzde: offer?.belgeIndirimOraniYuzde ?? 0,
         toplamTutar: offer?.toplamTutar ?? row?.toplamTutar ?? 0,
-
         purchaseOrderLine: (offerLines ?? []).map((l: any) => ({
           product_Id: l?.product_Id ?? l?.productId ?? 0,
           malzemeKodu: l?.malzemeKodu ?? "",
@@ -313,7 +307,7 @@ export const PriceOfferPage = ({
       sortable: true,
       summaryType: "count",
     },
-      {
+    {
       header: "Müşteri",
       accessor: "firma_Id",
       filterable: true,
@@ -347,13 +341,13 @@ export const PriceOfferPage = ({
       header: "Teklif Geçerlilik Tarihi",
       accessor: "teklifGecerlilikTarihi",
       filterable: true,
-      
+
       sortable: true,
       body: (row: PriceOfferDto) => (
         <span>{new Date(row.teklifGecerlilikTarihi).toLocaleDateString()}</span>
       ),
     },
-  
+
     {
       header: "İlgili Kişi",
       accessor: "customerContact",
@@ -366,7 +360,7 @@ export const PriceOfferPage = ({
       filterable: true,
       sortable: true,
     },
-       {
+    {
       header: "Hazırlayan",
       accessor: "hazirlayan",
       filterable: true,
