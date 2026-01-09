@@ -24,11 +24,11 @@ import {
   FaPencilAlt,
   FaProjectDiagram,
 } from "react-icons/fa";
-import {  FcFile, FcSurvey } from "react-icons/fc";
+import { FcFile, FcSurvey } from "react-icons/fc";
 import { RootState } from "@/store/store";
 import { HiOutlineDocumentReport } from "react-icons/hi"; // Rapor dokümanı (net)
 import { LuUser } from "react-icons/lu"; // CRM
-import { Building2, Calendar } from "lucide-react";
+import { Building2, Calendar, CalendarClock, DollarSign, FileSignature, Landmark, Package, Plus, Sparkles, Zap } from "lucide-react";
 import { CalendarDays } from "lucide-react";
 import { URL } from "@/api";
 
@@ -59,29 +59,45 @@ const menus: MenuItem[] = [
   //     },
   //   ],
   // },
-   {
-        title: "Proje Yönetimi",
-        icon: <HiOutlineDocumentReport />,
-        items:[ {
-            title: "Proje Takvimi",
-            path:"/projetakvimi",
-            icon:<FaCalendar/>
-        }
-     ]
-      },
   {
-    title: "CRM",icon: <LuUser />,
-    roles: [1,2],
+    title: "Proje Yönetimi",
+    icon: <HiOutlineDocumentReport />,
+    items: [{
+      title: "Proje Takvimi",
+      path: "/projetakvimi",
+      icon: <FaCalendar />
+    }
+    ]
+  },
+  {
+    title: "CRM", icon: <LuUser />,
+    roles: [1, 2],
     items: [
-      { title: "Fırsatlar", icon: <FaCoins className="w-4 h-4 text-yellow-500"/>, path: "/firsatlar" }
-      ,{ title: "Müşteriler", icon: <Building2 className="w-4 h-4 text-blue-500"  />, path: "/musteriler" }
-      ,{ title: "Aktiviteler", icon: <CalendarDays className="w-4 h-4 text-green-500"   />, path: "/aktiviteler" }
-      ,{ title: "Teklifler", icon: <FaFileInvoiceDollar className="w-4 h-4 text-purple-500"/>, path: "/teklifler" }
-      ,{ title: "Sözleşmeler", icon: <FaFileContract className="w-4 h-4 text-purple-500"/>, path: "/sozlesmeler" }
-      ,{ title: "Siparişler", icon: <FaFileContract className="w-4 h-4 text-purple-500"/>, path: "/siparisler" }
-      ,{ title: "Yeni Sipariş", icon: <FaFileCirclePlus className="w-4 h-4 text-blue-600"/>, path: "/yenisiparis" }
-      ,{ title: "Yeni Teklif", icon: <FaFileCirclePlus className="w-4 h-4 text-blue-600"/>, path: "/yeniteklif" }
-      ,{ title: "Takvim", icon: <Calendar className="w-4 h-4 text-gray-600"/>, path: "/takvim" }]
+      { title: "Fırsatlar", icon: <Sparkles className="w-4 h-4 text-yellow-400" />, path: "/firsatlar" }
+      , { title: "Müşteriler", icon: <Building2 className="w-4 h-4 text-blue-100" />, path: "/musteriler" }
+      , { title: "Aktiviteler", icon: <Zap className="w-4 h-4 text-pink-300" />, path: "/aktiviteler" }
+
+      , {
+        title: "Teklif Yönetimi",
+        icon: <DollarSign className="w-4 h-4 text-green-300" />,
+        items: [
+          { title: "Teklif Listesi", path: "/teklifler" },
+          { title: "Yeni Teklif", path: "/yeniteklif" }
+        ]
+      }
+
+      , { title: "Sözleşmeler", icon: <FileSignature className="w-4 h-4 text-purple-100" />, path: "/sozlesmeler" }
+
+      , {
+        title: "Sipariş Yönetimi",
+        icon: <Package className="w-4 h-4 text-amber-500" />,
+        items: [
+          { title: "Sipariş Listesi", path: "/siparisler" },
+          { title: "Yeni Sipariş", path: "/yenisiparis" }
+        ]
+      }
+
+      , { title: "Takvim", icon: <CalendarClock className="w-4 h-4 text-gray-600" />, path: "/takvim" }]
 
   },
   {
@@ -94,9 +110,9 @@ const menus: MenuItem[] = [
         icon: <FaBoxes />,
         roles: [-1],
         path: "/urunler",
-       
+
       },
-     
+
     ],
   },
   // {
@@ -150,7 +166,7 @@ const menus: MenuItem[] = [
   //     {
   //       title: "Formlar",
   //       icon: null,
-  
+
   //       items: [
   //         { title: "Depo Sevkiyat F.", icon: null, path: "/kysdokumanlar/4.1" },
   //         {
@@ -222,7 +238,7 @@ const menus: MenuItem[] = [
   //     { title: "Etiketler", icon: null, path: "/kysdokumanlar/7" },
   //     { title: "Şemalar", icon: null, path: "/kysdokumanlar/8" },
   //     { title: "Politikalar", icon: null, path: "/kysdokumanlar/9" },
-  
+
   //   ],
   // },
   {
@@ -230,40 +246,40 @@ const menus: MenuItem[] = [
     icon: <FiFileMinus />,
     roles: [-1],
     items: [
-     /* {
-        title: "Eğitim",
-        icon: <FaPencilAlt />,
-        roles: [-1],
-        items: [
-          { title: "Eğitimler", path: "/egitimler" },
-          { title: "Eğitim Değerlendirme Sonuçları",roles: [1,2,15], path: "/form/sonuc/0" },
-          { title: "Personel Değerlendirme Sonuçları",roles: [1,2,15], path: "/form/sonuc/4" },
-        ],
-      },
-      { title: "Yeni Form", roles: [1,2,4,9,15],icon: <FcSurvey />, path: "/form/olustur" },
-      {
-        title: "Form Sonuçları",
-        icon: <FcFile />,
-        items: [
-          { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1" },
-          { title: "Yetkinlik Değerlendirme Sonuçları", path: "/form/sonuc/2" },
-          { title: "Diğer Form Sonuçları", path: "/form/sonuc/3" },
-        ],
-        roles: [1,2,4,9]
-      },
-      {
-        title: "Formlar",
-        icon: <FiTable />,
-              roles: [1,2,15],
-        items: [
-          { title: "Eğitim Değerlendirme Formları", path: "/formlar/0" },
-          { title: "Tedarikçi Değerlendirme Formları", path: "/formlar/1" },
-          { title: "Yetkinlik Değerlendirme Formları", path: "/formlar/2" },
-          { title: "Personel Değerlendirme Formları", path: "/formlar/4" },
-          { title: "Diğer Formlar", path: "/formlar/3" },
-        ],
-      },*/
-      { title: "Personeller",roles: [1,2,15], icon: <FiUsers />, path: "/personeller" },/*
+      /* {
+         title: "Eğitim",
+         icon: <FaPencilAlt />,
+         roles: [-1],
+         items: [
+           { title: "Eğitimler", path: "/egitimler" },
+           { title: "Eğitim Değerlendirme Sonuçları",roles: [1,2,15], path: "/form/sonuc/0" },
+           { title: "Personel Değerlendirme Sonuçları",roles: [1,2,15], path: "/form/sonuc/4" },
+         ],
+       },
+       { title: "Yeni Form", roles: [1,2,4,9,15],icon: <FcSurvey />, path: "/form/olustur" },
+       {
+         title: "Form Sonuçları",
+         icon: <FcFile />,
+         items: [
+           { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1" },
+           { title: "Yetkinlik Değerlendirme Sonuçları", path: "/form/sonuc/2" },
+           { title: "Diğer Form Sonuçları", path: "/form/sonuc/3" },
+         ],
+         roles: [1,2,4,9]
+       },
+       {
+         title: "Formlar",
+         icon: <FiTable />,
+               roles: [1,2,15],
+         items: [
+           { title: "Eğitim Değerlendirme Formları", path: "/formlar/0" },
+           { title: "Tedarikçi Değerlendirme Formları", path: "/formlar/1" },
+           { title: "Yetkinlik Değerlendirme Formları", path: "/formlar/2" },
+           { title: "Personel Değerlendirme Formları", path: "/formlar/4" },
+           { title: "Diğer Formlar", path: "/formlar/3" },
+         ],
+       },*/
+      { title: "Personeller", roles: [1, 2, 15], icon: <FiUsers />, path: "/personeller" },/*
       { title: "Pasif Personeller",roles: [1,2,15], icon: <FiUserX />, path: "/pasifpersoneller" },
       { title: "Personel Eğitim Durumu",roles: [1,2,15], icon: <FiUsers />, path: "/PersonelEgitim" },
       {
@@ -281,16 +297,18 @@ const menus: MenuItem[] = [
       },*/
     ],
   },
-   { title: "Ayarlar", icon: <FiSettings />,  roles: [1,2] ,items: [{
-     title: "Şirketlerim", icon:<FaBuilding/>, path:"/sirketlerim"
-   }] },
+  {
+    title: "Ayarlar", icon: <FiSettings />, roles: [1, 2], items: [{
+      title: "Şirketlerim", icon: <FaBuilding />, path: "/sirketlerim"
+    }]
+  },
 ];
 
 
 
 
 export const Sidebar: React.FC = () => {
-  const { sidebarOpen, closeSidebar, collapsed,toggleCollapsed,toggleMenu,openMenus } = useUI();
+  const { sidebarOpen, closeSidebar, collapsed, toggleCollapsed, toggleMenu, openMenus } = useUI();
   const sidebarRef = useRef<HTMLDivElement>(null);
   // const [openMenus, setOpenMenus] = useState<string[]>([]);
   const user = useSelector((state: RootState) => state.login.user);
@@ -314,7 +332,7 @@ export const Sidebar: React.FC = () => {
   //   );
   // };
 
- const MenuList: React.FC<{ items: MenuItem[]; level?: number }> = ({
+  const MenuList: React.FC<{ items: MenuItem[]; level?: number }> = ({
     items,
     level = 0,
   }) => {
@@ -396,18 +414,16 @@ export const Sidebar: React.FC = () => {
       )}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 left-0 h-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 text-white shadow-2xl transform md:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }
-          transition-transform duration-300 z-50 flex flex-col ${
-            collapsed ? "w-16" : "w-64"
+        className={`fixed top-0 left-0 h-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 text-white shadow-2xl transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }
+          transition-transform duration-300 z-50 flex flex-col ${collapsed ? "w-16" : "w-64"
           }`}
       >
         {/* Logo */}
         <div className="flex items-center justify-center px-4 py-3  ">
           <NavLink to="/">
             <img
-              src={collapsed ? icon : URL+"/logo-white.png"}
+              src={collapsed ? icon : URL + "/logo-white.png"}
               alt="Logo"
               className={`transition-all duration-300 ${collapsed ? "w-8 h-8" : "w-48 h-10"}`}
             />
