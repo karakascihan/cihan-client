@@ -97,9 +97,9 @@ export const PriceOfferPage = ({
   const { refetch } = useApiRequest<ContractsDto[]>(URL + "/contracts/getall", { method: "GET", skip: true, deps: [], }
   );
   const enterpriseState = useSelector((state: RootState) => state.enterprise);
-  const formElementsforContract: FieldDefinition[] = (
+  const formElementsforContract = (
     contractDtoForInsertion: ContractsDtoForInsertion
-  ) => {
+  ): FieldDefinition[] => {
     let fields: FieldDefinition[] = [
       {
         name: "kurum",
@@ -185,19 +185,20 @@ export const PriceOfferPage = ({
     ];
     return fields;
   };
-  const ConvertToContract = async (contract: ContractsDto) => {
+  const ConvertToContract = async (contract: ContractsDtoForInsertion) => {
     openModal({
       title: "Sözleşme Oluştur",
-      content: async function (close: (result: any) => void): Promise<ReactNode> {
+      content: function (close: (result: any) => void): ReactNode {
         return (<GenericForm
           fields={formElementsforContract(contract)}
           onSubmit={function (data: ContractsDtoForInsertion): void {
             data.priceOfferId = contract.priceOfferId;
-            let result = refetch(URL + "/contracts/create", { method: "post", body: data });
-            if (result) {
-              dispatch(setNotification({ message: "Sözleşme başarıyla oluşturuldu.", type: "success", title: "Başarılı" }));
-              close(result);
-            }
+            refetch(URL + "/contracts/create", { method: "post", body: data }).then((result) => {
+              if (result) {
+                dispatch(setNotification({ message: "Sözleşme başarıyla oluşturuldu.", type: "success", title: "Başarılı" }));
+                close(result);
+              }
+            });
           }}
         />)
       }
@@ -477,7 +478,8 @@ export const PriceOfferPage = ({
           </button>
           <button
             onClick={() => {
-              let contract: ContractsDto = {
+              let contract: ContractsDtoForInsertion = {
+                isActive: true,
                 kurum: "",
                 sirket: customerState.data?.find(c => c.id === row.firma_Id)?.firma ?? "",
                 sozlesmeTarihi: undefined,
@@ -492,7 +494,6 @@ export const PriceOfferPage = ({
                 teslimTarihi: undefined,
                 durum: "",
                 aciklama: "",
-                id: 0,
                 priceOfferId: row.id!,
                 sozlesmeBaslangicTarihi: undefined,
                 sozlesmeBitisTarihi: undefined

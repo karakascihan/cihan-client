@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, Route } from "react-router-dom";
 import {
   FiHome,
   FiFileMinus,
@@ -28,7 +28,7 @@ import { FcFile, FcSurvey } from "react-icons/fc";
 import { RootState } from "@/store/store";
 import { HiOutlineDocumentReport } from "react-icons/hi"; // Rapor dokümanı (net)
 import { LuUser } from "react-icons/lu"; // CRM
-import { Building2, Calendar, CalendarClock, DollarSign, FileSignature, Landmark, Package, Plus, Sparkles, Zap } from "lucide-react";
+import { Building2, Calendar, CalendarClock, ClipboardList, DollarSign, FileSignature, FileSpreadsheet, Landmark, LayoutDashboard, Orbit, Package, PackageSearch, Plus, Repeat2, RouteIcon, Settings, Sparkles, Spline, UserCog2, Users, Workflow, Zap } from "lucide-react";
 import { CalendarDays } from "lucide-react";
 import { URL } from "@/api";
 
@@ -43,7 +43,7 @@ interface MenuItem {
 const menus: MenuItem[] = [
   {
     title: "Anasayfa",
-    icon: <FiHome />,
+    icon: <LayoutDashboard />,
     path: "/",
     roles: [-1],
   },
@@ -61,7 +61,7 @@ const menus: MenuItem[] = [
   // },
   {
     title: "Proje Yönetimi",
-    icon: <HiOutlineDocumentReport />,
+    icon: <Workflow />,
     items: [{
       title: "Proje Takvimi",
       path: "/projetakvimi",
@@ -70,10 +70,10 @@ const menus: MenuItem[] = [
     ]
   },
   {
-    title: "CRM", icon: <LuUser />,
+    title: "CRM", icon: <Orbit />,
     roles: [1, 2],
     items: [
-      { title: "Fırsatlar", icon: <Sparkles className="w-4 h-4 text-yellow-400" />, path: "/firsatlar" }
+      { title: "Fırsatlar", icon: <Sparkles className="w-4 h-4 text-yellow-300" />, path: "/firsatlar" }
       , { title: "Müşteriler", icon: <Building2 className="w-4 h-4 text-blue-100" />, path: "/musteriler" }
       , { title: "Aktiviteler", icon: <Zap className="w-4 h-4 text-pink-300" />, path: "/aktiviteler" }
 
@@ -97,17 +97,17 @@ const menus: MenuItem[] = [
         ]
       }
 
-      , { title: "Takvim", icon: <CalendarClock className="w-4 h-4 text-gray-600" />, path: "/takvim" }]
+      , { title: "Takvim", icon: <CalendarClock className="w-4 h-4 text-cyan-100" />, path: "/takvim" }]
 
   },
   {
     title: "Ürün Yönetimi",
-    icon: <FaWarehouse />,
+    icon: <PackageSearch />,
     roles: [-1],
     items: [
       {
         title: "Ürün Fiyat Listesi",
-        icon: <FaBoxes />,
+        icon: <FileSpreadsheet />,
         roles: [-1],
         path: "/urunler",
 
@@ -243,7 +243,7 @@ const menus: MenuItem[] = [
   // },
   {
     title: "İnsan Kaynakları",
-    icon: <FiFileMinus />,
+    icon: <UserCog2 />,
     roles: [-1],
     items: [
       /* {
@@ -279,7 +279,7 @@ const menus: MenuItem[] = [
            { title: "Diğer Formlar", path: "/formlar/3" },
          ],
        },*/
-      { title: "Personeller", roles: [1, 2, 15], icon: <FiUsers />, path: "/personeller" },/*
+      { title: "Personeller", roles: [1, 2, 15], icon: <Users />, path: "/personeller" },/*
       { title: "Pasif Personeller",roles: [1,2,15], icon: <FiUserX />, path: "/pasifpersoneller" },
       { title: "Personel Eğitim Durumu",roles: [1,2,15], icon: <FiUsers />, path: "/PersonelEgitim" },
       {
@@ -298,8 +298,8 @@ const menus: MenuItem[] = [
     ],
   },
   {
-    title: "Ayarlar", icon: <FiSettings />, roles: [1, 2], items: [{
-      title: "Şirketlerim", icon: <FaBuilding />, path: "/sirketlerim"
+    title: "Ayarlar", icon: <Settings />, roles: [1, 2], items: [{
+      title: "Şirketlerim", icon: <Building2 />, path: "/sirketlerim"
     }]
   },
 ];
