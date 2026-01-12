@@ -700,7 +700,7 @@ export const PriceOfferPage = ({
       maximizable: true,
       maximized: true,
       content: (close) => (
-        <EmailSender priceOfferId={priceoffer.id} opportunityId={priceoffer.opportunityId} mailDto={{
+        <EmailSender priceOffer={priceoffer} mailDto={{
           toEmail: customerState.data.find((x) => x.id == priceoffer.firma_Id)?.email, subject: opportunities.data.find((x) => x.id == priceoffer.opportunityId)?.title,
           body: "Teklif metnimiz ektedir.İyi Çalışmalar." + personels.items?.find((x) => x.id == priceoffer.teklifOnay).mailImzasi
           /*

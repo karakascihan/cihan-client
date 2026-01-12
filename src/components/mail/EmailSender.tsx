@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { FieldOption, GenericForm } from '../GenericForm'
-import { ActivityState, ActivityType, MailSendDto } from '@/api/apiDtos'
+import { ActivityState, ActivityType, MailSendDto, PriceOfferDto } from '@/api/apiDtos'
 import { apiRequest } from '@/services/apiRequestService'
 import { ApiResponse, ApiResponseClient } from '@/types/apiResponse'
 import { URL } from '@/api'
@@ -13,7 +13,7 @@ import { FaUpload } from 'react-icons/fa6'
 import { FileRecordPage } from '@/pages/crm/FileRecordPage'
 import { useModal } from '@/context/ModalContext'
 import { addActivity } from '@/store/slices/activitySlice'
-export const EmailSender = ({ mailDto,priceOfferId,opportunityId}:{mailDto?:MailSendDto,priceOfferId?:number,opportunityId?:number} ) => {
+export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOffer?:PriceOfferDto} ) => {
     const dispatch =useDispatch<AppDispatch>();
     // const fileRecordState = useSelector( (state: RootState) => state.fileRecord);
     const token=useSelector((state:any)=>state.login.accessToken);
@@ -99,7 +99,7 @@ export const EmailSender = ({ mailDto,priceOfferId,opportunityId}:{mailDto?:Mail
              const result = await openModal({
                 title: "Dosya Seç",
                 content: function (close: (result: any) => void): React.ReactNode {
-                  return <FileRecordPage onDoubleClick={(row)=>{ setValue("attachmentPaths.0", row.filePath);close(null);}} relatedEntityId={priceOfferId} relatedEntityName='PriceOffer' />
+                  return <FileRecordPage onDoubleClick={(row)=>{ setValue("attachmentPaths.0", row.filePath);close(null);}} relatedEntityId={priceOffer.id} relatedEntityName='PriceOffer' />
                 }})
                 // if(result)
                 // {
@@ -117,7 +117,7 @@ export const EmailSender = ({ mailDto,priceOfferId,opportunityId}:{mailDto?:Mail
           data
         );
         if (result.statusCode === 200) {
-           dispatch(addActivity({ activityState: ActivityState.Completed, relatedEntityId:opportunityId ?? priceOfferId, relatedEntityName:opportunityId ?"Opportunity":"PriceOffer", scheduledAt:new Date(), activityType:ActivityType.Email ,subject:"Fiyat Teklifi Mail Gönderildi", notes:"Ek dosya yolu: "+URL+"/"+data.attachmentPaths }));
+           dispatch(addActivity({ activityState: ActivityState.Completed, relatedEntityId:priceOffer.opportunityId ?? priceOffer.firma_Id, relatedEntityName:priceOffer.opportunityId ?"Opportunity":"Customer", scheduledAt:new Date(), activityType:ActivityType.Email ,subject:"Fiyat Teklifi Mail Gönderildi", notes:data.attachmentPaths ?("Ek dosya yolu: "+URL+"/"+data.attachmentPaths):"" }));
           // close modal if any 
         }
         dispatch(

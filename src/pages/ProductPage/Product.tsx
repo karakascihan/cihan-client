@@ -430,6 +430,7 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
                 newRecordVoid={CreateProduct}
                 scrollHeight="calc(100vh - 200px)"
                 enablePagination={true}
+                pageSize={10}
             />
         </div>
     )

@@ -247,12 +247,12 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
     const allGroups = useAppSelector(selectAllGroups);
 
     // --- State'ler ---
-    const [activeTab, setActiveTab] = useState<ItemDetailTab>('updates');
+    const [activeTab, setActiveTab] = useState<ItemDetailTab>('files');
     const tabs = [
-        { key: 'updates', label: 'Güncellemeler', icon: <FiFileText /> },
+        // { key: 'updates', label: 'Güncellemeler', icon: <FiFileText /> },
         { key: 'files', label: 'Dosyalar', icon: <FiPaperclip /> },
-        { key: 'activity', label: 'Etkinlik Günlüğü', icon: <FiActivity /> },
-        { key: 'more', label: '', icon: <FiPlus /> }
+        // { key: 'activity', label: 'Etkinlik Günlüğü', icon: <FiActivity /> },
+        // { key: 'more', label: '', icon: <FiPlus /> }
     ];
 
     const [itemName, setItemName] = useState(item.name);
