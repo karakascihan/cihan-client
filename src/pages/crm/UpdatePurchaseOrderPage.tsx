@@ -86,15 +86,15 @@ export const UpdatePurchaseOrderPage = ({ id: propId, onClose, onSuccess }: Prop
     }, [form]);
 
 
-    const handleUpdate = async () => {
-        if (!form || !id) return;
+    const handleUpdate = async (currentForm: PurchaseOrderDtoForUpdate) => {
+        if (!currentForm || !id) return;
         setLoading(true);
         try {
             const payload: PurchaseOrderDtoForUpdate = {
-                ...form,
-                siparisTarihi: form.siparisTarihi ?? null,
-                teslimTarihi: form.teslimTarihi ?? null,
-                firma_Id: form.firma_Id ?? null,
+                ...currentForm,
+                siparisTarihi: currentForm.siparisTarihi ?? null,
+                teslimTarihi: currentForm.teslimTarihi ?? null,
+                firma_Id: currentForm.firma_Id ?? null,
             };
 
             await apiRequest("PUT", URL + `/PurchaseOrder/Update/${id}`, payload);

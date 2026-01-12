@@ -18,8 +18,8 @@ type Props<T> = {
     mode: Mode;
     form: T;
     setForm: React.Dispatch<React.SetStateAction<T>>;
-    onSubmit: () => void;
     loading: boolean;
+    onSubmit: (payload: T) => void;
 };
 
 export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | PurchaseOrderDtoForUpdate>({
@@ -237,20 +237,45 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
             total,
         };
     }, [lines, (form as any).toplamIndirimOraniYuzde]);
-
+    const [manualTotal, setManualTotal] = React.useState(false);
+    const initForIdRef = React.useRef<number | null>(null);
     React.useEffect(() => {
-        handleChange("toplamTutar" as any, calc.total);
-    }, [calc.total]);
+        if (mode !== "update") return;
+
+        const currentId = Number((form as any).id ?? 0);
+        if (!currentId) return;
+        if (initForIdRef.current === currentId) return;
+        const saved = Number((form as any).toplamTutar ?? 0);
+        const auto = Number(calc.total ?? 0);
+        const isManual = Math.abs(saved - auto) > 0.0001;
+
+        setManualTotal(isManual);
+
+        initForIdRef.current = currentId;
+    }, [mode, (form as any).id, calc.total]);
+
+
+    const autoTotal = calc.total;
+    const manualValue = form.toplamTutar;
+    const displayedTotal = manualTotal ? manualValue : autoTotal;
+
+
 
 
     return (
         <form
             onSubmit={(e) => {
                 e.preventDefault();
-                onSubmit();
+
+                const payload = {
+                    ...form,
+                    toplamTutar: manualTotal ? (form as any).toplamTutar : calc.total,
+                } as T;
+
+                onSubmit(payload);
             }}
-            className="p-6 bg-white shadow rounded"
         >
+
             <div className="max-w-8xl mx-auto">
                 <div className="relative flex items-center mb-4 bg-gray-100 border rounded px-4 h-14">
                     <h1 className="absolute left-1/2 -translate-x-1/2 text-lg text-gray-700 font-bold">
@@ -639,12 +664,45 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                                             GENEL TOPLAM
                                         </td>
                                         <td colSpan={3} className="text-right p-3">
-                                            <input
-                                                type="number"
-                                                readOnly
-                                                value={form.toplamTutar ?? 0}
-                                                className="w-40 border-2 border-red-200 bg-red-50 px-2 py-1 rounded text-right font-bold text-red-700"
-                                            />
+                                            <div className="flex items-center justify-end gap-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setManualTotal(prev => {
+                                                            if (!prev) {
+                                                                // otomatikten manuele geçerken
+                                                                handleChange("toplamTutar" as any, autoTotal);
+                                                            }
+                                                            return !prev;
+                                                        });
+                                                    }}
+                                                    className="px-2 py-1 text-xs rounded border bg-white hover:bg-gray-50"
+                                                >
+                                                    {manualTotal ? "Otomatik Hesapla" : "Manuel Gir"}
+                                                </button>
+
+
+                                                <input
+                                                    type="number"
+                                                    step="0.01"
+                                                    readOnly={!manualTotal}
+                                                    value={displayedTotal}
+                                                    onChange={(e) => {
+                                                        if (!manualTotal) return;
+                                                        handleChange(
+                                                            "toplamTutar" as any,
+                                                            e.target.value === "" ? 0 : Number(e.target.value)
+                                                        );
+                                                    }}
+                                                    className={`w-40 border-2 px-2 py-1 rounded text-right font-bold ${manualTotal
+                                                        ? "border-red-300 bg-white text-red-700"
+                                                        : "border-red-200 bg-red-50 text-red-700"
+                                                        }`}
+                                                />
+
+
+
+                                            </div>
                                         </td>
                                     </tr>
 
@@ -666,6 +724,6 @@ export const PurchaseOrderForm = <T extends PurchaseOrderDtoForInsertion | Purch
                     {loading ? "Kaydediliyor..." : "Kaydet"}
                 </button>
             </div>
-        </form>
+        </form >
     );
 };

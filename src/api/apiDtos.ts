@@ -210,6 +210,7 @@ export interface ContractsDto {
     durum: string | undefined;
     aciklama: string | undefined;
     priceOfferId: number | undefined;
+    purchaseOrdersId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     id: number;
@@ -234,6 +235,7 @@ export interface ContractsDtoForInsertion {
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
+    purchaseOrdersId: number | undefined;
 }
 
 export interface ContractsDtoForUpdate {
@@ -254,6 +256,8 @@ export interface ContractsDtoForUpdate {
     priceOfferId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
+    purchaseOrdersId: number | undefined;
+
 }
 
 export interface ContractsDtoIEnumerableApiResponse {

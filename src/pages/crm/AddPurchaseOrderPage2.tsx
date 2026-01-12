@@ -38,16 +38,16 @@ export const AddPurchaseOrderPage2 = ({ onClose, onSuccess }: Props) => {
     "OPEN MODE:",
     onClose ? "MODAL" : "PAGE"
   );
-  const handleCreate = async () => {
+  const handleCreate = async (currentForm: PurchaseOrderDtoForInsertion) => {
     setLoading(true);
     try {
       const payload: PurchaseOrderDtoForInsertion = {
-        ...form,
-        siparisTarihi: form.siparisTarihi
-          ? (form.siparisTarihi as unknown as DateOnly)
+        ...currentForm,
+        siparisTarihi: currentForm.siparisTarihi
+          ? (currentForm.siparisTarihi as unknown as DateOnly)
           : null,
-        teslimTarihi: form.teslimTarihi
-          ? (form.teslimTarihi as unknown as DateOnly)
+        teslimTarihi: currentForm.teslimTarihi
+          ? (currentForm.teslimTarihi as unknown as DateOnly)
           : null,
       };
 

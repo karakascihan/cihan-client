@@ -97,9 +97,9 @@ export const PriceOfferPage = ({
   const { refetch } = useApiRequest<ContractsDto[]>(URL + "/contracts/getall", { method: "GET", skip: true, deps: [], }
   );
   const enterpriseState = useSelector((state: RootState) => state.enterprise);
-  const formElementsforContract: FieldDefinition[] = (
+  const formElementsforContract = (
     contractDtoForInsertion: ContractsDtoForInsertion
-  ) => {
+  ): FieldDefinition[] => {
     let fields: FieldDefinition[] = [
       {
         name: "kurum",
@@ -185,19 +185,20 @@ export const PriceOfferPage = ({
     ];
     return fields;
   };
-  const ConvertToContract = async (contract: ContractsDto) => {
+  const ConvertToContract = async (contract: ContractsDtoForInsertion) => {
     openModal({
       title: "Sözleşme Oluştur",
-      content: async function (close: (result: any) => void): Promise<ReactNode> {
+      content: function (close: (result: any) => void): ReactNode {
         return (<GenericForm
           fields={formElementsforContract(contract)}
           onSubmit={function (data: ContractsDtoForInsertion): void {
             data.priceOfferId = contract.priceOfferId;
-            let result = refetch(URL + "/contracts/create", { method: "post", body: data });
-            if (result) {
-              dispatch(setNotification({ message: "Sözleşme başarıyla oluşturuldu.", type: "success", title: "Başarılı" }));
-              close(result);
-            }
+            refetch(URL + "/contracts/create", { method: "post", body: data }).then((result) => {
+              if (result) {
+                dispatch(setNotification({ message: "Sözleşme başarıyla oluşturuldu.", type: "success", title: "Başarılı" }));
+                close(result);
+              }
+            });
           }}
         />)
       }
@@ -242,25 +243,19 @@ export const PriceOfferPage = ({
       const order: PurchaseOrderDtoForInsertion = {
         firma_Id: firmaId,
         priceOfferId: offer?.id ?? row?.id ?? null,
-
-        // UI için
         firmaAdi: firma?.firma ?? firma?.firma ?? "",
         yetkiliKisi: firma?.yetkili ?? firma?.yetkili ?? "",
-
         siparisTarihi: null,
         teslimTarihi: null,
-
-        aciklama:"",
+        aciklama: "",
         durumu: "",
         onayAcikla: "",
         siparisKosullari: "",
         kaliteKosullari: "",
         siparisTipi: "",
         turu: "",
-
         toplamIndirimOraniYuzde: offer?.belgeIndirimOraniYuzde ?? 0,
         toplamTutar: offer?.toplamTutar ?? row?.toplamTutar ?? 0,
-
         purchaseOrderLine: (offerLines ?? []).map((l: any) => ({
           product_Id: l?.product_Id ?? l?.productId ?? 0,
           malzemeKodu: l?.malzemeKodu ?? "",
@@ -312,7 +307,7 @@ export const PriceOfferPage = ({
       sortable: true,
       summaryType: "count",
     },
-      {
+    {
       header: "Müşteri",
       accessor: "firma_Id",
       filterable: true,
@@ -346,13 +341,13 @@ export const PriceOfferPage = ({
       header: "Teklif Geçerlilik Tarihi",
       accessor: "teklifGecerlilikTarihi",
       filterable: true,
-      
+
       sortable: true,
       body: (row: PriceOfferDto) => (
         <span>{new Date(row.teklifGecerlilikTarihi).toLocaleDateString()}</span>
       ),
     },
-  
+
     {
       header: "İlgili Kişi",
       accessor: "customerContact",
@@ -365,7 +360,7 @@ export const PriceOfferPage = ({
       filterable: true,
       sortable: true,
     },
-       {
+    {
       header: "Hazırlayan",
       accessor: "hazirlayan",
       filterable: true,
@@ -477,7 +472,8 @@ export const PriceOfferPage = ({
           </button>
           <button
             onClick={() => {
-              let contract: ContractsDto = {
+              let contract: ContractsDtoForInsertion = {
+                isActive: true,
                 kurum: "",
                 sirket: customerState.data?.find(c => c.id === row.firma_Id)?.firma ?? "",
                 sozlesmeTarihi: undefined,
@@ -492,7 +488,6 @@ export const PriceOfferPage = ({
                 teslimTarihi: undefined,
                 durum: "",
                 aciklama: "",
-                id: 0,
                 priceOfferId: row.id!,
                 sozlesmeBaslangicTarihi: undefined,
                 sozlesmeBitisTarihi: undefined
