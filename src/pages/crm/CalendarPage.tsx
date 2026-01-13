@@ -31,6 +31,9 @@ import { fetchUsers, UserState } from "@/store/slices/userSlice";
 import { formatDateForCalendar } from "@/utils/commonUtils";
 import { fetchOpportunities } from "@/store/slices/opportunitySlice";
 import tippy from "tippy.js";
+import { useApiRequest } from "@/hooks/useApiRequest";
+import { CalendarEvent } from "@/types/commonType";
+import { URL } from "@/api";
 //import listPlugin from "@fullcalendar/list";
 
 export const CalendarPage = () => {
@@ -42,14 +45,14 @@ export const CalendarPage = () => {
   );
   const userState = useSelector((state: RootState) => state.user as UserState);
   useEffect(() => {
-    if ( customerState.data.length === 0) {
+    if (customerState.data.length === 0) {
       dispatch(fetchCustomers());
     }
   }, []);
 
-    const opportunityState = useSelector((state: RootState) => state.opportunity);
+  const opportunityState = useSelector((state: RootState) => state.opportunity);
   useEffect(() => {
-    if ( opportunityState.data.length === 0) {
+    if (opportunityState.data.length === 0) {
       dispatch(fetchOpportunities());
     }
   }, []);
@@ -73,8 +76,11 @@ export const CalendarPage = () => {
       //     }))
     });
   }, []);
-  
-  const newRecordVoid = (id?: number,date?:Date) => {
+
+  const newRecordVoid = (entityName:string="Activity",id?: number, date?: Date) => {
+    if(entityName!="Activity"){
+      return;
+    }
     let activityDtoForInsertion: ActivityDtoForInsertion | undefined =
       id && activityState.data.find((x) => x.id == id);
     sidebar.openSidebar(
@@ -111,7 +117,7 @@ export const CalendarPage = () => {
             required: true,
             defaultValue: activityDtoForInsertion?.assignedToUserId,
           },
-      
+
           {
             name: "activityType",
             label: "Aktivite Türü",
@@ -130,144 +136,165 @@ export const CalendarPage = () => {
             required: true,
             defaultValue: activityDtoForInsertion?.activityType,
           },
-    //          {
-    //   name: "relatedEntityId",
-    //   label: "İlgili Müşteri",
-    //   type: "select",
-    //   options: customerState.data.map((c) => ({
-    //     label: c.firma?.substring(0, 40) ?? "",
-    //     value: c.id,
-    //   })),
-    //   colspan: 12,
-    //   group: "Genel",
-    //   defaultValue: activityDtoForInsertion?.relatedEntityId,
-    //   hidden:  true,
-    // },
-           {
-      name: "relatedEntityName",
-      label: "Müşteri/Fırsat",
-      type: "select",
-      required: true,
-      colspan: 12,
-      options: [
-        {
-          label: "Müşteri",
-          value: "Customer",
-        },
-        {
-          label: "Fırsat",
-          value: "Opportunity",
-        },
-      ],
-      group: "Genel",
-      defaultValue: activityDtoForInsertion?.relatedEntityName ?? "Customer",
-      onChangeEffect: (
-        value: any,
-        allValues: any,
-        setFields_: any,
-        setValue: any
-      ) => {
-        setFields_((prev:any) => {
-          const updated = prev.map((f:any) =>
-            f.name === "relatedEntityId"
-              ? {
-                  ...f,
-                  // defaultValue: activityDtoForInsertion?.relatedEntityId ?? relatedEntityId,
+          //          {
+          //   name: "relatedEntityId",
+          //   label: "İlgili Müşteri",
+          //   type: "select",
+          //   options: customerState.data.map((c) => ({
+          //     label: c.firma?.substring(0, 40) ?? "",
+          //     value: c.id,
+          //   })),
+          //   colspan: 12,
+          //   group: "Genel",
+          //   defaultValue: activityDtoForInsertion?.relatedEntityId,
+          //   hidden:  true,
+          // },
+          {
+            name: "relatedEntityName",
+            label: "Müşteri/Fırsat",
+            type: "select",
+            required: true,
+            colspan: 12,
+            options: [
+              {
+                label: "Müşteri",
+                value: "Customer",
+              },
+              {
+                label: "Fırsat",
+                value: "Opportunity",
+              },
+            ],
+            group: "Genel",
+            defaultValue:
+              activityDtoForInsertion?.relatedEntityName ?? "Customer",
+            onChangeEffect: (
+              value: any,
+              allValues: any,
+              setFields_: any,
+              setValue: any
+            ) => {
+              setFields_((prev: any) => {
+                const updated = prev.map((f: any) =>
+                  f.name === "relatedEntityId"
+                    ? {
+                        ...f,
+                        // defaultValue: activityDtoForInsertion?.relatedEntityId ?? relatedEntityId,
 
-                  label:
-                    value == "Customer" ? "İlgili Müşteri" : "İlgili Fırsat",
-                  options:
-                    value == "Opportunity"
-                      ? opportunityState.data.map((c) => ({
-                          label: c.title ?? "",
-                          value: c.id,
-                        }))
-                      : customerState.data.map((c) => ({
-                          label: c.firma ?? "",
-                          value: c.id,
-                        })),
+                        label:
+                          value == "Customer"
+                            ? "İlgili Müşteri"
+                            : "İlgili Fırsat",
+                        options:
+                          value == "Opportunity"
+                            ? opportunityState.data.map((c) => ({
+                                label: c.title ?? "",
+                                value: c.id,
+                              }))
+                            : customerState.data.map((c) => ({
+                                label: c.firma ?? "",
+                                value: c.id,
+                              })),
+                      }
+                    : f
+                );
+
+                // Eğer alanlarda gerçekten fark yoksa state'i değiştirme
+                if (JSON.stringify(prev) === JSON.stringify(updated)) {
+                  return prev;
                 }
-              : f
-          );
-
-          // Eğer alanlarda gerçekten fark yoksa state'i değiştirme
-          if (JSON.stringify(prev) === JSON.stringify(updated)) {
-            return prev;
-          }
-          return updated;
-        });
-      },
-    },
-    {
-      name: "relatedEntityId",
-      label: "İlgili Müşteri",
-      type: "select",
-       options:
-        activityDtoForInsertion?.relatedEntityName === "Opportunity"
-          ? opportunityState.data.map((c) => ({ label: c.title, value: c.id }))
-          : customerState.data.map((c) => ({ label: c.firma, value: c.id })),
-      group: "Genel",
-      colspan: 12,
-      defaultValue: activityDtoForInsertion?.relatedEntityId,
-       onChangeEffect: (
-        value: any,
-        allValues: any,
-        setFields_: any,
-        setValue: any
-      ) => {
-        const selectedCustomer =
-          allValues["relatedEntityName"] == "Customer"
-            ? customerState.data.find((x) => x.id == value)
-            : customerState.data.find(
-                (c) =>
-                  c.id ===
-                  opportunityState.data.find((o) => o.id == value)?.customerId
-              );
-        setFields_((prev:any) => {
-          const updated = prev.map((f:any) =>
-            f.name === "customerContactPersonId"
-              ? {
-                  ...f,
-                  options:
-                    selectedCustomer?.contacts?.map((c) => ({
+                return updated;
+              });
+            },
+          },
+          {
+            name: "relatedEntityId",
+            label: "İlgili Müşteri",
+            type: "select",
+            options:
+              activityDtoForInsertion?.relatedEntityName === "Opportunity"
+                ? opportunityState.data.map((c) => ({
+                    label: c.title,
+                    value: c.id,
+                  }))
+                : customerState.data.map((c) => ({
+                    label: c.firma,
+                    value: c.id,
+                  })),
+            group: "Genel",
+            colspan: 12,
+            defaultValue: activityDtoForInsertion?.relatedEntityId,
+            onChangeEffect: (
+              value: any,
+              allValues: any,
+              setFields_: any,
+              setValue: any
+            ) => {
+              const selectedCustomer =
+                allValues["relatedEntityName"] == "Customer"
+                  ? customerState.data.find((x) => x.id == value)
+                  : customerState.data.find(
+                      (c) =>
+                        c.id ===
+                        opportunityState.data.find((o) => o.id == value)
+                          ?.customerId
+                    );
+              setFields_((prev: any) => {
+                const updated = prev.map((f: any) =>
+                  f.name === "customerContactPersonId"
+                    ? {
+                        ...f,
+                        options:
+                          selectedCustomer?.contacts?.map((c) => ({
+                            label:
+                              c.yetkiliKisi +
+                              (c.gorevi ? ` (${c.gorevi})` : ""),
+                            value: c.id,
+                          })) || [],
+                      }
+                    : f
+                );
+                // Eğer alanlarda gerçekten fark yoksa state'i değiştirme
+                if (JSON.stringify(prev) === JSON.stringify(updated)) {
+                  return prev;
+                }
+                return updated;
+              });
+            },
+          },
+          {
+            name: "customerContactPersonId",
+            label: "Müşterideki İlgili kişi",
+            type: "select",
+            options:
+              activityDtoForInsertion?.relatedEntityName == "Customer"
+                ? customerState.data
+                    .find(
+                      (x) => x.id == activityDtoForInsertion?.relatedEntityId
+                    )
+                    ?.contacts?.map((c) => ({
+                      label: c.yetkiliKisi + (c.gorevi ? ` (${c.gorevi})` : ""),
+                      value: c.id,
+                    }))
+                : customerState.data
+                    .find(
+                      (c) =>
+                        c.id ===
+                        opportunityState.data.find(
+                          (o) =>
+                            o.id == activityDtoForInsertion?.relatedEntityId
+                        )?.customerId
+                    )
+                    ?.contacts?.map((c) => ({
                       label: c.yetkiliKisi + (c.gorevi ? ` (${c.gorevi})` : ""),
                       value: c.id,
                     })) || [],
-                }
-              : f
-          );
-          // Eğer alanlarda gerçekten fark yoksa state'i değiştirme
-          if (JSON.stringify(prev) === JSON.stringify(updated)) {
-            return prev;
-          }
-          return updated;
-        });
-      },
-    },
-     {
-      name: "customerContactPersonId",
-      label: "Müşterideki İlgili kişi",
-      type: "select",
-      options: activityDtoForInsertion?.relatedEntityName == "Customer"
-            ? customerState.data.find((x) => x.id == activityDtoForInsertion?.relatedEntityId)?.
-            contacts?.map((c) => ({
-            label: c.yetkiliKisi + (c.gorevi ? ` (${c.gorevi})` : ""),
-            value: c.id,
-          }))
-            : customerState.data.find(
-                (c) =>
-                  c.id ===
-                  opportunityState.data.find((o) => o.id == activityDtoForInsertion?.relatedEntityId)?.customerId
-              )
-          ?.contacts?.map((c) => ({
-            label: c.yetkiliKisi + (c.gorevi ? ` (${c.gorevi})` : ""),
-            value: c.id,
-          })) || [],
 
-      colspan: 12,
-      group: "Genel",
-      defaultValue: activityDtoForInsertion?.customerContactPersonId || "",
-    },
+            colspan: 12,
+            group: "Genel",
+            defaultValue:
+              activityDtoForInsertion?.customerContactPersonId || "",
+          },
           {
             name: "scheduledAt",
             label: "Tarih",
@@ -275,7 +302,7 @@ export const CalendarPage = () => {
             colspan: 12,
             group: "Genel",
             required: true,
-            defaultValue: date? date: activityDtoForInsertion?.scheduledAt,
+            defaultValue: date ? date : activityDtoForInsertion?.scheduledAt,
           },
           {
             name: "activityState",
@@ -299,11 +326,17 @@ export const CalendarPage = () => {
         onSubmit={(data: ActivityDtoForInsertion) => {
           if (activityDtoForInsertion && activityDtoForInsertion.id) {
             data.id = activityDtoForInsertion.id;
-            dispatch(updateActivity(data));
+            dispatch(updateActivity(data)).unwrap().then(() => {
+             refetch(URL + "/calendar-events", { method: "GET" });
+            });
           } else {
-            dispatch(addActivity(data));
-          }
+            dispatch(addActivity(data)).unwrap().then(() => {
+             refetch(URL + "/calendar-events", { method: "GET" });
+            } );
+          } 
           sidebar.closeSidebar();
+             
+
         }}
       />,
       "right",
@@ -312,55 +345,68 @@ export const CalendarPage = () => {
     );
   };
 
-  function getEventClass(status: ActivityState){
-    switch(status){
-        case ActivityState.Planned:
-            return ["Planned"];
-       case ActivityState.InProgress:
+  function getEventClass(status: ActivityState) {
+    switch (status) {
+      case ActivityState.Planned:
+        return ["Planned"];
+      case ActivityState.InProgress:
         return ["InProgress"];
-        case ActivityState.Completed:
-            return["Completed"];
-        case ActivityState.Canceled:
-            return["Canceled"];
-        case ActivityState.Postponed:
-            return["Postponed"];
-        case ActivityState.Failed:
-            return["Failed"];
-    }  
+      case ActivityState.Completed:
+        return ["Completed"];
+      case ActivityState.Canceled:
+        return ["Canceled"];
+      case ActivityState.Postponed:
+        return ["Postponed"];
+      case ActivityState.Failed:
+        return ["Failed"];
+    }
   }
-
-  
-
+  const { data: calendarEvents  , refetch } = useApiRequest<CalendarEvent>(
+      URL + "/calendar-events",
+      {
+        method: "GET",
+        skip: false,
+        deps: [],
+      }
+    );
+   
+ 
   return (
     <div className="p-2 text-black">
-      {/* <h2 className="text-center text-2xl font-bold mb-2">Aktivite Takvimi</h2> */}
       <div className="flex gap-2">
-        {/* Takvim */}
         <div className="flex-1">
-          <FullCalendar
+            <FullCalendar
             locale={trLocale}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView="dayGridMonth"
-            events={activityState.data?.map<EventInput>((act) => {
+            events={calendarEvents?.map<EventInput>((act) => {
               return {
-                id: act.id,
-                title:  act.relatedEntityName ==="Customer" ? customerState.data.find(c=>c.id==act.relatedEntityId)?.firma : opportunityState.data.find(o=>o.id==act.relatedEntityId)?.title,
-                start: new Date(act.scheduledAt?.toString()),
-                subject: act.subject,
-                 classNames:getEventClass(act.activityState),
+                id: act.id.toString(),
+                title:act.title,
+                start: new Date(act.endDate ?? act.startDate!),
+                subject: act.title,
+                classNames: getEventClass(act.status),
                 extendedProps: {
-                  type: act.activityType,
-                  state: act.activityState,
+                  type: act.eventType,
+                  state: act.status,
+                  releatedName: act.releatedName,
+                  releatedId: act.releatedId,
                 },
               };
             })}
             eventDidMount={(info) => {
-        tippy(info.el, {
-          content: info.event.extendedProps.subject,
-          placement: "top",
-        })}}
-            eventClick={(e) =>{ newRecordVoid(e.event.id)}}
-            dateClick={(e)=> {  newRecordVoid(undefined, formatDateForCalendar(e.date))}}
+              tippy(info.el, {
+                content: info.event.extendedProps.subject,
+                placement: "top",
+              });
+            }}
+            eventClick={(e) => {
+              
+              newRecordVoid(e.event.extendedProps.releatedName,e.event.extendedProps.releatedId);
+            }}
+            dateClick={(e) => {
+              newRecordVoid("Activity",undefined, formatDateForCalendar(e.date));
+            }}
             height="auto"
             headerToolbar={{
               left: "prev,next today",
@@ -386,37 +432,33 @@ export const CalendarPage = () => {
                 </div>
               );
             }}
-            
-
           />
-          
           <div className="mt-4 pr-4 flex justify-end flex-wrap gap-4">
-  <div className="flex items-center gap-2">
-    <span className="w-4 h-4 bg-yellow-400 rounded-sm inline-block"></span>
-    <span>Planlandı</span>
-  </div>
-  <div className="flex items-center gap-2">
-    <span className="w-4 h-4 bg-purple-500 rounded-sm inline-block"></span>
-    <span>İlerliyor</span>
-  </div>
-  <div className="flex items-center gap-2">
-    <span className="w-4 h-4 bg-green-400 rounded-sm inline-block"></span>
-    <span>Tamamlandı</span>
-  </div>
-  <div className="flex items-center gap-2">
-    <span className="w-4 h-4 bg-red-400 rounded-sm inline-block"></span>
-    <span>İptal</span>
-  </div>
-  <div className="flex items-center gap-2">
-    <span className="w-4 h-4 bg-orange-400 rounded-sm inline-block"></span>
-    <span>Ertelendi</span>
-  </div>
-  <div className="flex items-center gap-2">
-    <span className="w-4 h-4 bg-gray-400 rounded-sm inline-block"></span>
-    <span>Başarısız</span>
-  </div>
-</div>
-
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-yellow-400 rounded-sm inline-block"></span>
+              <span>Planlandı</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-purple-500 rounded-sm inline-block"></span>
+              <span>İlerliyor</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-green-400 rounded-sm inline-block"></span>
+              <span>Tamamlandı</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-red-400 rounded-sm inline-block"></span>
+              <span>İptal</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-orange-400 rounded-sm inline-block"></span>
+              <span>Ertelendi</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-4 h-4 bg-gray-400 rounded-sm inline-block"></span>
+              <span>Başarısız</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

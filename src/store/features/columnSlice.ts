@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store'; // <-- 1. BU IMPORT'U EKLEYİN
 import { ColumnDto, ColumnType } from '@/api/apiDtos';
 import { URL } from '@/api';
+import { stat } from 'fs';
 interface ColumnState {
     items: ColumnDto[];
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -28,7 +29,7 @@ interface UpdateColumnOrderArgs {
 
 export const updateColumnOrder = createAsyncThunk<void, UpdateColumnOrderArgs>(
     'columns/updateColumnOrder',
-    async ({ boardId, orderedColumnIds }) => {
+    async ({ boardId, orderedColumnIds }, { getState }) => {
 
         // --- ÇOK ÖNEMLİ DÜZELTME ---
         // Hata logu, /order URL'sinin backend'de /:columnId olarak 
@@ -37,13 +38,14 @@ export const updateColumnOrder = createAsyncThunk<void, UpdateColumnOrderArgs>(
         // endpoint'in doğru URL'sini buraya girmelisiniz.
         // 
         // "reorder" olduğunu varsayıyorum. Lütfen backend'den teyit edin.
+           const state = getState() as RootState;
         const response = await fetch(`${URL}/boards/${boardId}/columns/reorder`, {
             // --- ESKİ YANLIŞ URL ---
             // const response = await fetch(`${URL}/boards/${boardId}/columns/order`, {
             // --- DÜZELTME SONU ---
 
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
 
             // Önceki düzeltmemiz (nesne olarak yollamak) muhtemelen hala geçerli.
             // Backend'inizin [FromBody] kısmının bir nesne beklemesi çok olası.
@@ -62,10 +64,11 @@ export const updateColumnOrder = createAsyncThunk<void, UpdateColumnOrderArgs>(
 // ... (dosyanın geri kalanı aynı)
 export const createColumn = createAsyncThunk<ColumnDto, CreateColumnArgs>(
     'columns/createColumn',
-    async ({ boardId, columnData }) => {
+    async ({ boardId, columnData }, { getState }) => {
+        const state = getState() as RootState;
         const response = await fetch(`${URL}/boards/${boardId}/columns`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
             body: JSON.stringify(columnData),
         });
         if (!response.ok) {
@@ -82,10 +85,11 @@ interface UpdateColumnArgs {
 }
 export const updateColumn = createAsyncThunk<ColumnDto, UpdateColumnArgs>(
     'columns/updateColumn',
-    async ({ boardId, columnId, columnData }) => {
+    async ({ boardId, columnId, columnData }, { getState }) => {
+        const state = getState() as RootState;
         await fetch(`${URL}/boards/${boardId}/columns/${columnId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
             body: JSON.stringify(columnData),
         });
         // Backend 204 NoContent döndürdüğü için, state'i güncellemek üzere
@@ -103,8 +107,12 @@ interface DeleteColumnArgs {
 }
 export const deleteColumn = createAsyncThunk<number, DeleteColumnArgs>(
     'columns/deleteColumn',
-    async ({ boardId, columnId }) => {
-        await fetch(`${URL}/boards/${boardId}/columns/${columnId}`, { method: 'DELETE' });
+    async ({ boardId, columnId }, { getState }) => {
+        const state = getState() as RootState;
+        await fetch(`${URL}/boards/${boardId}/columns/${columnId}`, {
+            method: 'DELETE',
+            headers: { authorization: `Bearer ${state.login.accessToken}` }
+        });
         return columnId; // Reducer'a silinen sütunun ID'sini döndür
     }
 );
@@ -114,8 +122,11 @@ const initialState: ColumnState = { items: [], status: 'idle', error: null };
 
 export const fetchColumnsForBoard = createAsyncThunk<ColumnDto[], number>(
     'columns/fetchColumnsForBoard',
-    async (boardId) => {
-        const response = await fetch(`${URL}/boards/${boardId}/columns`);
+    async (boardId, { getState }) => {
+        const state = getState() as RootState;
+        const response = await fetch(`${URL}/boards/${boardId}/columns`, {
+            headers: { authorization: `Bearer ${state.login.accessToken}` }
+        });
         if (!response.ok) throw new Error('Failed to fetch columns');
         return await response.json() as ColumnDto[];
     }

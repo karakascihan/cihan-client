@@ -301,6 +301,7 @@ export const CustomerPage = () => {
         });
       }
     }
+    
     fields.push({
       defaultValue: null,
       type: "button",
@@ -356,6 +357,14 @@ export const CustomerPage = () => {
               defaultValue: "",
               colspan: 12,
               group: "Kişiler",
+            },
+            {
+               name: `line_${contactsLength + 1}`,
+          label: "",
+          type: "line",
+          group: "Kişiler",
+          colspan: 12,
+          defaultValue: "",
             }
             
           ],
@@ -371,6 +380,7 @@ export const CustomerPage = () => {
         onSubmit={function (data: CustomerDtoForInsertion): void {
           if (customer && customer.id) {
             data.id = customer.id;
+            data.contacts = data.contacts?? [];
             dispatch(updateCustomer(data));
             sidebar.closeSidebar();
           } else dispatch(addCustomer(data));

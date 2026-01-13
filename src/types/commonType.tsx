@@ -180,3 +180,18 @@ export type DependencyType = 'FS' | 'SS' | 'FF' | 'SF';
 export interface ColumnSettings {
     dependencyAction?: DependencyAction;
 }
+export interface CalendarEvent {
+    id: number;
+    title: string;
+    startDate: string | null;
+    endDate: string | null;
+    allDay: boolean | null;
+    eventType: number | null;
+    releatedName: string | null;
+    releatedId: number | null;
+    assignedId: number | null;
+    status: number | null;
+    priority: number | null;
+    createdBy: number | null;
+    createdAt: string | null;
+}

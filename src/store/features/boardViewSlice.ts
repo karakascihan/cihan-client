@@ -54,10 +54,12 @@ const initialState: BoardViewState = {
 export const fetchViewsForBoard = createAsyncThunk<
     BoardViewData[], // Başarılı olursa dönecek tip
     number,          // Argüman tipi (boardId)
-    { rejectValue: string } // Hata durumunda dönecek tip
->('boardViews/fetchViewsForBoard', async (boardId, { rejectWithValue }) => {
+    { rejectValue: string} // Hata durumunda dönecek tip
+>('boardViews/fetchViewsForBoard', async (boardId, { rejectWithValue, getState }) => {
     try {
-        const response = await fetch(`${URL}/boards/${boardId}/views`);
+        const state = getState() as RootState;
+        const aut = `Bearer ${state.login.accessToken}`;
+        const response = await fetch(`${URL}/boards/${boardId}/views`,{headers:{ authorization: aut }});
         if (!response.ok) {
             throw new Error(`Server Error: ${response.status}`);
         }
@@ -72,11 +74,13 @@ export const createBoardView = createAsyncThunk<
     BoardViewData,
     { boardId: number; payload: CreateBoardViewPayload },
     { rejectValue: string }
->('boardViews/createBoardView', async ({ boardId, payload }, { rejectWithValue }) => {
+>('boardViews/createBoardView', async ({ boardId, payload }, { rejectWithValue, getState }) => {
     try {
+        const state = getState() as RootState;
+        const aut = `Bearer ${state.login.accessToken}`;
         const response = await fetch(`${URL}/boards/${boardId}/views`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', authorization: aut },
             body: JSON.stringify(payload),
         });
         if (!response.ok) {
@@ -94,10 +98,13 @@ export const deleteBoardView = createAsyncThunk<
     number, // Silinen viewId'yi döndür
     { boardId: number; viewId: number },
     { rejectValue: string }
->('boardViews/deleteBoardView', async ({ boardId, viewId }, { rejectWithValue }) => {
+>('boardViews/deleteBoardView', async ({ boardId, viewId }, { rejectWithValue, getState }) => {
     try {
+        const state = getState() as RootState;
+        const aut = `Bearer ${state.login.accessToken}`;
         const response = await fetch(`${URL}/boards/${boardId}/views/${viewId}`, { // URL doğru varsayılıyor
             method: 'DELETE',
+            headers: { authorization: aut }
         });
         if (!response.ok) {
             const errorText = await response.text();
@@ -137,8 +144,9 @@ export const updateBoardView = createAsyncThunk<
 
             const response = await fetch(`${URL}/boards/${boardId}/views/${viewId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' ,authorization: `Bearer ${state.login.accessToken}`},
                 body: JSON.stringify(combinedPayload), // Birleştirilmiş payload'ı gönder
+
             });
 
             if (!response.ok) {
@@ -161,11 +169,13 @@ export const reorderBoardViews = createAsyncThunk<
     void, // Bir şey döndürmeyecek
     { boardId: number; orderedViewIds: number[] },
     { rejectValue: string }
->('boardViews/reorderBoardViews', async ({ boardId, orderedViewIds }, { rejectWithValue }) => {
+>('boardViews/reorderBoardViews', async ({ boardId, orderedViewIds }, { rejectWithValue, getState }) => {
     try {
+        const state = getState() as RootState;
+        const aut = `Bearer ${state.login.accessToken}`;
         const response = await fetch(`${URL}/boards/${boardId}/views/reorder`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', authorization: aut },
             body: JSON.stringify(orderedViewIds),
         });
         if (!response.ok) {
@@ -206,7 +216,8 @@ export const updateBoardViewSettings = createAsyncThunk<
 
             const response = await fetch(`${URL}/boards/${boardId}/views/${viewId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
+
                 body: JSON.stringify(combinedPayload), // Birleştirilmiş payload'ı gönder
             });
 

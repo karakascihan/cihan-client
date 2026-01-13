@@ -50,8 +50,12 @@ interface DeleteBoardArgs {
 }
 export const deleteBoard = createAsyncThunk<number, DeleteBoardArgs>(
     'boards/deleteBoard',
-    async ({ boardId }) => {
-        await fetch(`${URL}/board/${boardId}`, { method: 'DELETE' });
+    async ({ boardId },{getState}) => {
+        const state = getState() as RootState;
+        await fetch(`${URL}/board/${boardId}`, { 
+            method: 'DELETE',
+            headers: { authorization: `Bearer ${state.login.accessToken}` }
+        });
         return boardId; // Reducer'a silinen panonun ID'sini döndür
     }
 );
@@ -59,8 +63,9 @@ export const deleteBoard = createAsyncThunk<number, DeleteBoardArgs>(
 // 1. Dönecek verinin tipi (Board[]), 2. argüman tipi (void), 3. thunk'ın ekstra tipleri
 export const fetchBoards = createAsyncThunk<BoardDto[]>(
     'boards/fetchBoards', 
-    async () => {
-        const response = await fetch(`${URL}/Board/getall`);
+    async (_, { getState }) => {
+        const state = getState() as RootState;
+        const response = await fetch(`${URL}/Board/getall`,{headers: {authorization: `Bearer ${state.login.accessToken}`}});
         // fetch'in de tip-güvenli olması için kontrol ekleyebiliriz
         if (!response.ok) {
             throw new Error('Server responded with an error!');
@@ -71,13 +76,15 @@ export const fetchBoards = createAsyncThunk<BoardDto[]>(
 );
 export const createBoard = createAsyncThunk<BoardDto, { name: string; description?: string }>(
     'boards/createBoard',
-    async (newBoardData) => {
+    async (newBoardData, { getState }) => {
+         const state = getState() as RootState;
         const response = await fetch(`${URL}/board`, { // DİKKAT: Controller adınız "BoardController" ise burası "board" olmalı
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json',authorization: `Bearer ${state.login.accessToken}`
             },
             body: JSON.stringify(newBoardData),
+            
         });
         if (!response.ok) {
             throw new Error('Server responded with an error!');

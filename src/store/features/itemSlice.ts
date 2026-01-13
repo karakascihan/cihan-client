@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, createSelector, type PayloadAction } fro
 import type { RootState } from '../store';
 import {URL as API_BASE_URL } from '@/api';
 import { calculateStatusChangeEffects } from '../../utils/automationLogic';
+import { he } from 'date-fns/locale';
 
 // --- STATE ---
 export interface ItemValue {
@@ -111,12 +112,13 @@ export const updateMultipleItemValues = createAsyncThunk<
     { itemId: number; columnId: number; value: string }[],
     BulkUpdateItemValueArgs,
     { rejectValue: string }
->('items/updateMultipleItemValues', async ({ updates }, { rejectWithValue }) => {
+>('items/updateMultipleItemValues', async ({ updates }, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
     try {
         const promises = updates.map(u =>
             fetch(`${API_BASE_URL}/items/${u.itemId}/values`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
                 body: JSON.stringify({ columnId: u.columnId, value: u.value }),
             }).then(res => {
                 if (!res.ok) throw new Error('Update failed');
@@ -137,9 +139,12 @@ export const fetchItemsForBoard = createAsyncThunk<
     Item[],
     number,
     { rejectValue: string }
->('items/fetchItemsForBoard', async (boardId, { rejectWithValue }) => {
+>('items/fetchItemsForBoard', async (boardId, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
     try {
-        const res = await fetch(`${API_BASE_URL}/boards/${boardId}/items`);
+        const res = await fetch(`${API_BASE_URL}/boards/${boardId}/items`, {
+            headers: { authorization: `Bearer ${state.login.accessToken}` }
+        });
         if (!res.ok) throw new Error(await res.text());
         return (await res.json()) as Item[];
     } catch (err: any) {
@@ -156,9 +161,12 @@ export const fetchItemsForGroup = createAsyncThunk<
     Item[],
     FetchItemsArgs,
     { rejectValue: string }
->('items/fetchItemsForGroup', async ({ boardId, groupId }, { rejectWithValue }) => {
+>('items/fetchItemsForGroup', async ({ boardId, groupId }, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
     try {
-        const res = await fetch(`${API_BASE_URL}/boards/${boardId}/items?groupId=${groupId}`);
+        const res = await fetch(`${API_BASE_URL}/boards/${boardId}/items?groupId=${groupId}`, {
+            headers: { authorization: `Bearer ${state.login.accessToken}` }
+        });
         if (!res.ok) throw new Error(await res.text());
         return (await res.json()) as Item[];
     } catch (err: any) {
@@ -176,11 +184,12 @@ export const createItem = createAsyncThunk<
     Item,
     CreateItemArgs,
     { rejectValue: string }
->('items/createItem', async ({ boardId, groupId, itemData }, { dispatch, rejectWithValue }) => {
+>('items/createItem', async ({ boardId, groupId, itemData }, { dispatch, rejectWithValue, getState }) => {
+    const state = getState() as RootState;
     try {
         const res = await fetch(`${API_BASE_URL}/boards/${boardId}/items?groupId=${groupId}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
             body: JSON.stringify(itemData),
         });
 
@@ -212,7 +221,8 @@ export const updateItem = createAsyncThunk<
     { itemId: number, groupId: number, newName: string },
     UpdateItemArgs,
     { rejectValue: string }
->('items/updateItem', async ({ boardId, itemId, groupId, itemData }, { dispatch, rejectWithValue }) => {
+>('items/updateItem', async ({ boardId, itemId, groupId, itemData }, { dispatch, rejectWithValue, getState }) => {
+    const state = getState() as RootState;
     try {
         const response = await fetch(`${API_BASE_URL}/boards/${boardId}/items/${itemId}`, {
             method: 'PUT',
@@ -245,10 +255,12 @@ export const deleteItem = createAsyncThunk<
     number,
     DeleteItemArgs,
     { rejectValue: string }
->('items/deleteItem', async ({ boardId, itemId, groupId }, { dispatch, rejectWithValue }) => {
+>('items/deleteItem', async ({ boardId, itemId, groupId }, { dispatch, rejectWithValue, getState }) => {
     try {
+        const state = getState() as RootState;
         const res = await fetch(`${API_BASE_URL}/boards/${boardId}/items/${itemId}`, {
             method: 'DELETE',
+            headers: { authorization: `Bearer ${state.login.accessToken}` }
         });
         if (!res.ok) throw new Error(await res.text());
 
@@ -268,9 +280,10 @@ export const fetchItemTree = createAsyncThunk<
     { boardId: number; groupId: number }
 >(
     "items/fetchItemTree",
-    async ({ boardId, groupId }) => {
+    async ({ boardId, groupId },{getState}) => {
+        const state = getState() as RootState;
         const response = await fetch(
-            `${API_BASE_URL}/boards/${boardId}/items/tree?groupId=${groupId}`
+            `${API_BASE_URL}/boards/${boardId}/items/tree?groupId=${groupId}`, { headers: { authorization: `Bearer ${state.login.accessToken}` } }
         );
         if (!response.ok) throw new Error("Item tree alınamadı");
 
@@ -293,12 +306,13 @@ export const moveItem = createAsyncThunk<void, MoveItemArgs, { rejectValue: stri
     'items/moveItem',
     async (
         { boardId, itemId, destinationGroupId, destinationIndex, parentItemId },
-        { rejectWithValue }
+        { rejectWithValue, getState }
     ) => {
+        const state = getState() as RootState;
         try {
             const res = await fetch(`${API_BASE_URL}/boards/${boardId}/items/move`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
                 body: JSON.stringify({
                     itemId,
                     destinationGroupId,
@@ -328,11 +342,12 @@ export const updateItemValue = createAsyncThunk<
     ItemValue,
     UpdateItemValueArgs,
     { rejectValue: string }
->('items/updateItemValue', async ({ itemId, columnId, value }, { rejectWithValue }) => {
+>('items/updateItemValue', async ({ itemId, columnId, value }, { rejectWithValue, getState }) => {
+    const state = getState() as RootState;
     try {
         const res = await fetch(`${API_BASE_URL}/items/${itemId}/values`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
             body: JSON.stringify({ columnId, value }),
         });
         if (!res.ok) throw new Error(await res.text());

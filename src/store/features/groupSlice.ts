@@ -17,9 +17,12 @@ export const selectAllGroups = (state: RootState) => state.groups.items;
 // Belirli bir panoya ait grupları getirmek için Thunk
 export const fetchGroupsForBoard = createAsyncThunk<Group[], number, { rejectValue: string }>(
     'groups/fetchGroupsForBoard', // Action tipi öneki
-    async (boardId, { rejectWithValue }) => { // boardId parametresini alır
+    async (boardId, { rejectWithValue, getState }) => { // boardId parametresini alır
+        const state = getState() as RootState;
         try {
-            const response = await fetch(`${URL}/boards/${boardId}/groups`); // Backend endpoint'ine istek at
+            const response = await fetch(`${URL}/boards/${boardId}/groups`, {
+                headers: { authorization: `Bearer ${state.login.accessToken}` }
+            }); // Backend endpoint'ine istek at
             if (!response.ok) {
                 // Hata durumunda daha fazla detay almaya çalış
                 const errorData = await response.text();
@@ -47,7 +50,8 @@ interface CreateGroupArgs {
 // Yeni grup oluşturmak için Thunk
 export const createGroup = createAsyncThunk<Group, CreateGroupArgs, { rejectValue: string }>(
     'groups/createGroup',
-    async ({ boardId, groupData, position }, { rejectWithValue }) => {
+    async ({ boardId, groupData, position }, { rejectWithValue, getState }) => {
+        const state = getState() as RootState;
         try {
             // --- DÜZELTME BURADA ---
             // Backend'e gönderilen veriyi hazırlıyoruz.
@@ -59,7 +63,7 @@ export const createGroup = createAsyncThunk<Group, CreateGroupArgs, { rejectValu
 
             const response = await fetch(`${URL}/boards/${boardId}/groups`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
                 body: JSON.stringify(payload), // Artık payload içinde position var
             });
 
@@ -86,11 +90,12 @@ interface UpdateGroupArgs {
 // Grup güncellemek için Thunk
 export const updateGroup = createAsyncThunk<Group, UpdateGroupArgs, { rejectValue: string }>(
     'groups/updateGroup',
-    async ({ boardId, groupId, groupData }, { rejectWithValue }) => {
+    async ({ boardId, groupId, groupData }, { rejectWithValue, getState }) => {
+        const state = getState() as RootState;
         try {
             const response = await fetch(`${URL}/boards/${boardId}/groups/${groupId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
                 body: JSON.stringify(groupData),
             });
             if (!response.ok) {
@@ -114,9 +119,13 @@ interface DeleteGroupArgs {
 // Grup silmek için Thunk
 export const deleteGroup = createAsyncThunk<number, DeleteGroupArgs, { rejectValue: string }>(
     'groups/deleteGroup',
-    async ({ boardId, groupId }, { rejectWithValue }) => {
+    async ({ boardId, groupId }, { rejectWithValue, getState }) => {
+        const state = getState() as RootState;
         try {
-            const response = await fetch(`${URL}/boards/${boardId}/groups/${groupId}`, { method: 'DELETE' });
+            const response = await fetch(`${URL}/boards/${boardId}/groups/${groupId}`, {
+                method: 'DELETE',
+                headers: { authorization: `Bearer ${state.login.accessToken}` }
+            });
             if (!response.ok) {
                 const errorData = await response.text();
                 console.error(`Grup ${groupId} silinirken hata: ${response.status} ${response.statusText}`, errorData);
@@ -137,12 +146,13 @@ interface ReorderGroupsArgs {
 // Grup sırasını güncellemek için Thunk
 export const updateGroupOrder = createAsyncThunk<void, ReorderGroupsArgs, { rejectValue: string }>(
     'groups/updateOrder',
-    async ({ boardId, orderedGroupIds }, { rejectWithValue }) => {
+    async ({ boardId, orderedGroupIds }, { rejectWithValue, getState }) => {
+        const state = getState() as RootState;
         try {
             // Backend endpoint'inizin URL ve body formatıyla eşleştiğinden emin olun
             const response = await fetch(`${URL}/boards/${boardId}/groups/reorder`, { // <-- ENDPOINT'İ KONTROL ET
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
                 // Backend'in List<int> yerine { orderedGroupIds: [...] } bekleme ihtimaline karşı bu formatı gönderiyoruz
                 body: JSON.stringify({ orderedGroupIds: orderedGroupIds }),
             });
