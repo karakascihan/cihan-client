@@ -174,8 +174,9 @@ export const ContractPage = () => {
       const po = await refetchOrders(URL + "/PurchaseOrder/" + contract.purchaseOrdersId, { method: "GET" });
       console.log("PO RESULT KEYS:", Object.keys(po.result ?? {}));
       console.log("PO RESULT:", po.result);
+      console.log("PO LINES:", po.result?.purchaseOrderLine);
 //po.result doğru veri getirio linelar dahil, po.result.plines undefined geliyor.
-      let poLines = po.result?.purchaseOrdersLine || [];
+      let poLines = po.result?.purchaseOrderLine || [];
 
 
 
