@@ -1500,7 +1500,7 @@ export interface PurchaseOrders {
     toplamTutar: number | undefined;
     firma: Company;
     priceOffer: PriceOffer;
-    purchaseOrdersLine: PurchaseOrdersLine[] | undefined;
+    purchaseOrderLine: PurchaseOrdersLine[] | undefined;
 }
 
 export interface PurchaseOrdersLine {
