@@ -1843,6 +1843,34 @@ export interface UserForAuthenticationDto {
     password: string | undefined;
 }
 
+
+export interface UserDtoForManipulation  {
+    file?: string | null; 
+    firstName?: string | null;
+    lastName?: string | null;
+    userName?: string | null;
+    email?: string | null;
+    tckno?: string | null;
+    phoneNumber?: string | null;
+    phoneNumber2?: string | null;
+    address?: string | null;
+    field?: string | null;
+    departmentID?: number | null;
+    title?: string | null;
+    birthday?: string | Date | null;
+    startDate?: string | Date | null;
+    departureDate?: string | Date | null;
+    gender?: string | null;
+    isActive?: boolean | null;
+  };
+  
+  export interface UserDtoForInsertion extends UserDtoForManipulation {
+    password: string | null;
+  };
+  
+  export interface UserDtoForUpdate extends UserDtoForManipulation {
+    password?: string | null;
+  };
 export interface Users {
     id: number;
     tckno: string | undefined;

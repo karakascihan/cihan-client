@@ -34,6 +34,7 @@ import { UpdatePurchaseOrderPage } from "./pages/crm/UpdatePurchaseOrderPage";
 import { EnterprisePage } from "./pages/Setting/EnterprisePage";
 import BoardView from "./components/board/BoardView";
 import BoardPage from "./pages/Project/BoardPage";
+import { UsersPage } from "./pages/crm/UsersPage";
 
 // Lazy-loaded pages
 const EducationList = lazy(() => import("./pages/education/EducationList"));
@@ -87,6 +88,7 @@ function AppRoutes() {
         <Route path="/yenisiparis" element={<PrivateRoute element={<AddPurchaseOrderPage2/>} />} />
         <Route path="/siparisiguncelle/:id" element={<PrivateRoute element={<UpdatePurchaseOrderPage />} />} />
         <Route path="/sirketlerim" element={<PrivateRoute element={<EnterprisePage/>} />} />
+        <Route path="/kullanicilar" element={<PrivateRoute element={<UsersPage/>} />} />
         <Route path="/proje/:boardId" element={<PrivateRoute element={<BoardView/>} />} />
         <Route path="/projetakvimi" element={<PrivateRoute element={<BoardPage/>} />} />
 
