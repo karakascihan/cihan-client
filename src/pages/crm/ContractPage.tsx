@@ -169,13 +169,13 @@ export const ContractPage = () => {
     }
     else if (contract.purchaseOrdersId) {
       let siparisSatirlariHtml = ``;
+      let satirToplam = 0;
 
 
       const po = await refetchOrders(URL + "/PurchaseOrder/" + contract.purchaseOrdersId, { method: "GET" });
       console.log("PO RESULT KEYS:", Object.keys(po.result ?? {}));
       console.log("PO RESULT:", po.result);
       console.log("PO LINES:", po.result?.purchaseOrderLine);
-//po.result doğru veri getirio linelar dahil, po.result.plines undefined geliyor.
       let poLines = po.result?.purchaseOrderLine || [];
 
 
@@ -183,7 +183,15 @@ export const ContractPage = () => {
       let calculatedTotal = 0;
 
       poLines.forEach((line, index) => {
-        toplamFiyat += Number(line.toplamFiyat ?? 0);
+        satirToplam =
+          line.miktar && line.birimFiyat
+            ? Number(
+              line.miktar *
+              line.birimFiyat *
+              (1 - (line.indirimOraniYuzde || 0) / 100)
+            )
+            : 0;
+
         let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
           }</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
@@ -194,7 +202,7 @@ export const ContractPage = () => {
           }</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
           }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${satirToplam ?? ""
           }</td>`;
 
         siparisSatirlariHtml += `<tr>${siparisSatir}</tr>`;
