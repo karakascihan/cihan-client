@@ -194,7 +194,7 @@ export const UsersPage = () => {
                                 e.preventDefault();
                                 e.stopPropagation();
                                 openModal({
-                                    title: "",
+                                    title: "Kullanıcı Düzenle",
                                     maximizable: true,
                                     style: { width: "70vw" },
                                     content: (close) => (

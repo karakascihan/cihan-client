@@ -105,6 +105,7 @@ export const UserForm = <T extends UserDtoForInsertion | UserDtoForUpdate>({
                 group: "Genel",
                 defaultValue: (form as any).rolId ?? "",
                 options: roleOptions,
+                required: true,
             },
             { name: "userName", label: "Kullanıcı Adı", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).userName ?? "" },
             { name: "password", label: "Şifre", type: "password", required: isCreate, hidden: !isCreate, colspan: 6, group: "Genel", defaultValue: "" },
