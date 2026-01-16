@@ -1960,6 +1960,36 @@ export interface UserForAuthenticationDto {
     password: string | undefined;
 }
 
+
+export interface UserDtoForManipulation  {
+    file?: string | null; 
+    rolName: string | undefined;
+    rolId: number | undefined;
+    firstName?: string | null;
+    lastName?: string | null;
+    userName?: string | null;
+    email?: string | null;
+    tckno?: string | null;
+    phoneNumber?: string | null;
+    phoneNumber2?: string | null;
+    address?: string | null;
+    department?: string | null;
+    departmentID?: number | null;
+    title?: string | null;
+    birthday?: string | Date | null;
+    startDate?: string | Date | null;
+    departureDate?: string | Date | null;
+    gender?: string | null;
+    isActive?: boolean | null;
+  };
+  
+  export interface UserDtoForInsertion extends UserDtoForManipulation {
+    password: string | null;
+  };
+  
+  export interface UserDtoForUpdate extends UserDtoForManipulation {
+    password?: string | null;
+  };
 export interface Users {
     id: number;
     tckno: string | undefined;
@@ -2003,4 +2033,9 @@ export interface Users {
 export interface FileParameter {
     data: any;
     fileName: string;
+}
+
+export interface Roles {
+    id: number;
+    rol_Yetki_Adi: string;
 }

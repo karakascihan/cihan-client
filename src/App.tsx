@@ -88,6 +88,7 @@ function AppRoutes() {
         <Route path="/yenisiparis" element={<PrivateRoute element={<AddPurchaseOrderPage2/>} />} />
         <Route path="/siparisiguncelle/:id" element={<PrivateRoute element={<UpdatePurchaseOrderPage />} />} />
         <Route path="/sirketlerim" element={<PrivateRoute element={<EnterprisePage/>} />} />
+        <Route path="/kullanicilar" element={<PrivateRoute element={<UsersPage/>} />} />
         <Route path="/proje/:boardId" element={<PrivateRoute element={<BoardView/>} />} />
         <Route path="/projetakvimi" element={<PrivateRoute element={<BoardPage/>} />} />
         <Route path="/kasa-hesaplari" element={<PrivateRoute element={<CashAccountPage/>} />} />

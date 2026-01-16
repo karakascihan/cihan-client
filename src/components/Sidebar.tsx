@@ -28,7 +28,7 @@ import { FcFile, FcSurvey } from "react-icons/fc";
 import { RootState } from "@/store/store";
 import { HiOutlineDocumentReport } from "react-icons/hi"; // Rapor dokümanı (net)
 import { LuUser } from "react-icons/lu"; // CRM
-import { Building2, Calendar, CalendarClock, ClipboardList, DollarSign, FileSignature, FileSpreadsheet, Landmark, LayoutDashboard, Orbit, Package, PackageSearch, Plus, Repeat2, RouteIcon, Settings, Sparkles, Spline, UserCog2, Users, Workflow, Zap } from "lucide-react";
+import { Building2, Calendar, CalendarClock, ClipboardList, DollarSign, FileSignature, FileSpreadsheet, Landmark, LayoutDashboard, Orbit, Package, PackageSearch, Plus, Repeat2, RouteIcon, Settings, Sparkles, Spline, User2, UserCog2, Users, Workflow, Zap } from "lucide-react";
 import { CalendarDays } from "lucide-react";
 import { URL } from "@/api";
 
@@ -308,9 +308,11 @@ const menus: MenuItem[] = [
     ],
   },
   {
-    title: "Ayarlar", icon: <Settings />, roles: [1, 2], items: [{
-      title: "Şirketlerim", icon: <Building2 />, path: "/sirketlerim"
-    }]
+    title: "Ayarlar", icon: <Settings />, roles: [1, 2], items: [
+      { title: "Şirketlerim", icon: <Building2 />, path: "/sirketlerim" },
+      { title: "Kullanıcılar", icon: <User2 />, path: "/kullanicilar" }
+
+    ]
   },
 ];
 
