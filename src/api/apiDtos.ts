@@ -1846,6 +1846,8 @@ export interface UserForAuthenticationDto {
 
 export interface UserDtoForManipulation  {
     file?: string | null; 
+    rolName: string | undefined;
+    rolId: number | undefined;
     firstName?: string | null;
     lastName?: string | null;
     userName?: string | null;
@@ -1854,7 +1856,7 @@ export interface UserDtoForManipulation  {
     phoneNumber?: string | null;
     phoneNumber2?: string | null;
     address?: string | null;
-    field?: string | null;
+    department?: string | null;
     departmentID?: number | null;
     title?: string | null;
     birthday?: string | Date | null;
@@ -1910,4 +1912,9 @@ export interface Users {
 export interface FileParameter {
     data: any;
     fileName: string;
+}
+
+export interface Roles {
+    id: number;
+    rol_Yetki_Adi: string;
 }

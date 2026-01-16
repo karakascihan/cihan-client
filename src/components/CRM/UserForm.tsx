@@ -1,6 +1,10 @@
 import React from "react";
-import { UserDtoForInsertion, UserDtoForUpdate } from "@/api/apiDtos";
+import { Roles, UserDtoForInsertion, UserDtoForUpdate } from "@/api/apiDtos";
 import { GenericForm, FieldDefinition } from "../GenericForm";
+import { useApiRequest } from "@/hooks/useApiRequest";
+import { ApiResponse, ApiResponseClient } from "@/types/apiResponse";
+import { URL } from "@/api";
+
 
 type Mode = "create" | "update";
 
@@ -11,6 +15,8 @@ type Props<T extends UserDtoForInsertion | UserDtoForUpdate> = {
     loading: boolean;
     onSubmit: (payload: T) => void;
 };
+
+
 
 const toDateInputValue = (v: any) => {
     if (!v) return "";
@@ -26,6 +32,52 @@ export const UserForm = <T extends UserDtoForInsertion | UserDtoForUpdate>({
     onSubmit,
     loading,
 }: Props<T>) => {
+
+    const { data: roles } = useApiRequest<Roles[]>(
+        URL + "/roles/GetAll",
+        { method: "GET", skip: false, deps: [] }
+    );
+
+
+
+
+    const roleOptions = React.useMemo(() => {
+        return [
+            ...(roles ?? []).map((r: any) => ({
+                label: r.rol_Yetki_Adi ?? r.Rol_Yetki_Adi ?? "-",
+                value: String(r.id ?? r.Id ?? ""),
+            })),
+        ];
+    }, [roles]);
+
+
+
+    React.useEffect(() => {
+        console.log("roles len:", roles?.length);
+        console.log("roleOptions:", roleOptions);
+    }, [roles, roleOptions]);
+
+
+    const roleNameById = React.useMemo(() => {
+        const map = new Map<string, string>();
+        (roles ?? []).forEach((r: any) => {
+            const id = String(r.id ?? r.Id ?? "");
+            const name = String(r.rol_Yetki_Adi ?? r.Rol_Yetki_Adi ?? "");
+            if (id) map.set(id, name);
+        });
+        return map;
+    }, [roles]);
+
+    React.useEffect(() => {
+        const rid = String((form as any).rolId ?? "");
+        const rname = roleNameById.get(rid) ?? "";
+
+        setForm((prev: any) => ({
+            ...prev,
+            rolName: rname,
+        }));
+    }, [(form as any).rolId, roleNameById, setForm]);
+
     const fields = React.useMemo<FieldDefinition[]>(() => {
         const isCreate = mode === "create";
 
@@ -35,16 +87,24 @@ export const UserForm = <T extends UserDtoForInsertion | UserDtoForUpdate>({
             { name: "lastName", label: "Soyad", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).lastName ?? "" },
 
 
-            { name: "tckno", label: "TCKNO", type: "text", colspan: 4, group: "Genel", defaultValue: (form as any).tckno ?? "" },
-            { name: "birthday", label: "Doğum Tarihi", type: "date", colspan: 4, group: "Genel", defaultValue: toDateInputValue((form as any).birthday) },
+            { name: "tckno", label: "TCKNO", type: "text", colspan: 3, group: "Genel", defaultValue: (form as any).tckno ?? "" },
+            { name: "birthday", label: "Doğum Tarihi", type: "date", colspan: 3, group: "Genel", defaultValue: toDateInputValue((form as any).birthday) },
 
             {
-                name: "gender", label: "Cinsiyet", type: "select", colspan: 4, group: "Genel", defaultValue: (form as any).gender ?? "", options: [
-                    { label: "Seçiniz", value: "" },
+                name: "gender", label: "Cinsiyet", type: "select", colspan: 3, group: "Genel", defaultValue: (form as any).gender ?? "", options: [
                     { label: "Kadın", value: "kadin" },
                     { label: "Erkek", value: "erkek" },
                     { label: "Diğer", value: "diger" },
                 ]
+            },
+            {
+                name: "rolId",
+                label: "Rol",
+                type: "select",
+                colspan: 3,
+                group: "Genel",
+                defaultValue: (form as any).rolId ?? "",
+                options: roleOptions,
             },
             { name: "userName", label: "Kullanıcı Adı", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).userName ?? "" },
             { name: "password", label: "Şifre", type: "password", required: isCreate, hidden: !isCreate, colspan: 6, group: "Genel", defaultValue: "" },
@@ -57,17 +117,23 @@ export const UserForm = <T extends UserDtoForInsertion | UserDtoForUpdate>({
 
             // --- İş Bilgileri ---
             { name: "title", label: "Ünvan", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).title ?? "" },
-            { name: "field", label: "Departman", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).field ?? "" },
+            { name: "department", label: "Departman", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).department ?? "" },
             { name: "startDate", label: "Başlangıç Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).startDate) },
             { name: "departureDate", label: "Ayrılış Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).departureDate) },
 
         ];
-    }, [mode, form]);
+    }, [mode, form, roleOptions]);
+    React.useEffect(() => {
+        console.log("roles raw:", roles);
+    }, [roles]);
 
     return (
         <GenericForm
+            key={roleOptions.length}
             fields={fields}
             onSubmit={(data: any) => {
+                const selectedRoleName = roleNameById.get(String(data.rolId ?? "")) ?? "";
+
                 const payload = {
                     ...(form as any),
 
@@ -88,6 +154,10 @@ export const UserForm = <T extends UserDtoForInsertion | UserDtoForUpdate>({
                     startDate: data.startDate ? data.startDate : null,
                     departureDate: data.departureDate ? data.departureDate : null,
 
+                    rolId: data.rolId === "" ? null : Number(data.rolId),
+                    rolName: selectedRoleName,
+
+                    department: data.department ?? "",
                     gender: data.gender ?? "",
                     isActive: true,
 

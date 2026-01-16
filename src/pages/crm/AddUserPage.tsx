@@ -29,12 +29,14 @@ export const AddUserPage = ({ onClose, onSuccess }: Props) => {
         file: "",
         userName:"",
         tckno:"",
-        field: "",
+        department: "",
         title: "",
         birthday: "",
         startDate: "",
         departureDate: "",
         gender: "",
+        rolId: null,
+        rolName: "",
     });
     console.log(
         "[Users]",

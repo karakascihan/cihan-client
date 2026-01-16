@@ -13,7 +13,7 @@ import { setNotification } from "@/store/slices/notificationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { FaFile } from "react-icons/fa6";
-import { Users } from "@/api/apiDtos";
+import { Roles, Users } from "@/api/apiDtos";
 import { AddUserPage } from "./AddUserPage";
 
 
@@ -24,10 +24,13 @@ export const UsersPage = () => {
 
 
     const { data: users, refetch: refetchUsers } = useApiRequest<Users>(
-        URL + "/User/GetAllByCrm",
+        URL + "/User/GetAllFull",
         { method: "GET", skip: false, deps: [] }
     );
-
+    const { data: roles, refetch: refetchRoles } = useApiRequest<Roles>(
+        URL + "/roles/GetAll",
+        { method: "GET", skip: false, deps: [] }
+    );
 
     console.log("users:", users);
     const getAllUsers = (): Partial<Users>[] => {
@@ -98,6 +101,12 @@ export const UsersPage = () => {
             sortable: true,
         },
         {
+            header: "Rolü",
+            accessor: "rolName",
+            filterable: true,
+            sortable: true,
+        },
+        {
             header: "TC Kimlik No",
             accessor: "tckno",
             filterable: true,
@@ -134,7 +143,6 @@ export const UsersPage = () => {
             header: "Departman",
             accessor: "department",
             filterable: true,
-
             sortable: true,
         },
         {
@@ -163,12 +171,7 @@ export const UsersPage = () => {
                     ? String(row.departureDate).substring(0, 10).split("-").reverse().join(".")
                     : "",
         },
-        {
-            header: "Rol",
-            accessor: "rolName",
-            filterable: true,
-            sortable: true,
-        },
+       
         {
             header: "Cinsiyet",
             accessor: "cinsiyet",
@@ -178,7 +181,7 @@ export const UsersPage = () => {
 
         {
 
-            header: "Actions",
+            header: "İşlemler",
             accessor: "id",
             body: (row) => {
                 return (
@@ -336,10 +339,6 @@ export const UsersPage = () => {
         },
     ];
 
-    console.log("users raw:", users);
-    console.log("isArray:", Array.isArray(users));
-    console.log("users?.result:", (users as any)?.result);
-    console.log("result isArray:", Array.isArray((users as any)?.result));
 
 
     return (
