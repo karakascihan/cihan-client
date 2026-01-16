@@ -845,6 +845,210 @@
         }
       }
     },
+    "/api/calendar-events": {
+      "get": {
+        "tags": [
+          "CalendarEvent"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "CalendarEvent"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarEvent"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarEvent"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarEvent"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalendarEvent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/cash-account/{id}": {
+      "get": {
+        "tags": [
+          "CashAccount"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/cash-account/getall": {
+      "get": {
+        "tags": [
+          "CashAccount"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashAccountDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashAccountDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CashAccountDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cash-account/create": {
+      "post": {
+        "tags": [
+          "CashAccount"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForInsertion"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForInsertion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForInsertion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/cash-account/update/{id}": {
+      "put": {
+        "tags": [
+          "CashAccount"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CashAccountDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/cash-account/delete/{id}": {
+      "delete": {
+        "tags": [
+          "CashAccount"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/boards/{boardId}/columns": {
       "get": {
         "tags": [
@@ -1433,6 +1637,164 @@
       "delete": {
         "tags": [
           "Contracts"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/currency/{id}": {
+      "get": {
+        "tags": [
+          "Currency"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/currency/getall": {
+      "get": {
+        "tags": [
+          "Currency"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/currency/create": {
+      "post": {
+        "tags": [
+          "Currency"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForInsertion"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForInsertion"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForInsertion"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForInsertion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/currency/update/{id}": {
+      "put": {
+        "tags": [
+          "Currency"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/currency/delete/{id}": {
+      "delete": {
+        "tags": [
+          "Currency"
         ],
         "parameters": [
           {
@@ -6869,6 +7231,288 @@
         },
         "additionalProperties": false
       },
+      "CalendarEvent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "allDay": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "eventType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "releatedName": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "releatedId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "assignedId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "assigned": {
+            "$ref": "#/components/schemas/Users"
+          },
+          "createdByNavigation": {
+            "$ref": "#/components/schemas/Users"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CashAccount": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cashCode": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "cashName": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specialCode": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isPassive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedBy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdByNavigation": {
+            "$ref": "#/components/schemas/Users"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "updatedByNavigation": {
+            "$ref": "#/components/schemas/Users"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CashAccountDto": {
+        "type": "object",
+        "properties": {
+          "cashName": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specialCode": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isPassive": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cashCode": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CashAccountDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "cashName": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specialCode": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isPassive": {
+            "type": "boolean"
+          },
+          "cashCode": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updatedBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CashAccountDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "cashName": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specialCode": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isPassive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CashAccountDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CashAccountDto"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ColumnDto": {
         "type": "object",
         "properties": {
@@ -7110,13 +7754,13 @@
             "format": "int32"
           },
           "kurum": {
-            "maxLength": 250,
+            "maxLength": 50,
             "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "sirket": {
-            "maxLength": 250,
+            "maxLength": 50,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -7131,7 +7775,7 @@
             "nullable": true
           },
           "sozlesmeAdi": {
-            "maxLength": 250,
+            "maxLength": 50,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -7143,7 +7787,7 @@
             "nullable": true
           },
           "urunAdi": {
-            "maxLength": 250,
+            "maxLength": 50,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -7199,8 +7843,16 @@
           "sozlesmeBitisTarihi": {
             "$ref": "#/components/schemas/DateOnly"
           },
+          "purchaseOrdersId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "priceOffer": {
             "$ref": "#/components/schemas/PriceOffer"
+          },
+          "purchaseOrders": {
+            "$ref": "#/components/schemas/PurchaseOrders"
           }
         },
         "additionalProperties": false
@@ -7284,6 +7936,11 @@
             "nullable": true
           },
           "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "purchaseOrdersId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -7384,6 +8041,11 @@
             "format": "int32",
             "nullable": true
           },
+          "purchaseOrdersId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "sozlesmeBaslangicTarihi": {
             "$ref": "#/components/schemas/DateOnly"
           },
@@ -7476,6 +8138,11 @@
             "nullable": true
           },
           "priceOfferId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "purchaseOrdersId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -7706,6 +8373,176 @@
           "puanIsShow": {
             "type": "boolean",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Currency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "currencyName": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "symbol": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isPassive": {
+            "type": "boolean"
+          },
+          "pennyName": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "cashAccount": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CashAccount"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CurrencyDto": {
+        "type": "object",
+        "properties": {
+          "currencyName": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "symbol": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "pennyName": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CurrencyDtoForInsertion": {
+        "type": "object",
+        "properties": {
+          "currencyName": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "symbol": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "pennyName": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CurrencyDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "currencyName": {
+            "maxLength": 150,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "symbol": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "pennyName": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CurrencyDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrencyDto"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -9102,7 +9939,7 @@
             },
             "nullable": true
           },
-          "children": {
+          "inverseParentItem": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ItemTreeDto"
@@ -10113,6 +10950,10 @@
             "type": "number",
             "format": "double"
           },
+          "mailImzasi": {
+            "type": "string",
+            "nullable": true
+          },
           "education": {
             "type": "array",
             "items": {
@@ -10132,10 +10973,6 @@
             "items": {
               "$ref": "#/components/schemas/SurveyResponse"
             },
-            "nullable": true
-          },
-          "mailImzasi": {
-            "type": "string",
             "nullable": true
           }
         },
@@ -11799,6 +12636,13 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "purchaseOrdersLine": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PurchaseOrdersLine"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -12836,6 +13680,13 @@
             "format": "double",
             "nullable": true
           },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contracts"
+            },
+            "nullable": true
+          },
           "firma": {
             "$ref": "#/components/schemas/Company"
           },
@@ -12931,11 +13782,6 @@
             "format": "int32",
             "nullable": true
           },
-          "product_Id": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "stogaAktarildimi": {
             "type": "boolean",
             "nullable": true
@@ -12954,8 +13800,16 @@
             "format": "double",
             "nullable": true
           },
+          "product_Id": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "order": {
             "$ref": "#/components/schemas/PurchaseOrders"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Products"
           }
         },
         "additionalProperties": false
@@ -14304,6 +15158,34 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Activity"
+            },
+            "nullable": true
+          },
+          "calendarEventAssigned": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarEvent"
+            },
+            "nullable": true
+          },
+          "calendarEventCreatedByNavigation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CalendarEvent"
+            },
+            "nullable": true
+          },
+          "cashAccountCreatedByNavigation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CashAccount"
+            },
+            "nullable": true
+          },
+          "cashAccountUpdatedByNavigation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CashAccount"
             },
             "nullable": true
           },

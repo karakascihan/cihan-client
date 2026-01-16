@@ -15,7 +15,7 @@ import {
 import { useUI } from "../context/UIContext";
 import { useSelector } from "react-redux";
 import icon from "../images/logo/favicon.ico";
-import { FaBuilding, FaCalendar, FaFileCirclePlus, FaFileContract, FaWarehouse } from "react-icons/fa6";
+import { FaBuilding, FaCalendar, FaCashRegister, FaFileCirclePlus, FaFileContract, FaMoneyBill, FaWarehouse } from "react-icons/fa6";
 import {
   FaBoxes,
   FaCoins,
@@ -59,6 +59,16 @@ const menus: MenuItem[] = [
   //     },
   //   ],
   // },
+   {
+    title: "Finans Yönetimi",
+    icon: <FaMoneyBill />,
+    items: [{
+      title: "Kasa Hesapları",
+      path: "/kasa-hesaplari",
+      icon: <FaCashRegister />
+    }
+    ]
+  },
   {
     title: "Proje Yönetimi",
     icon: <Workflow />,

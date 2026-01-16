@@ -99,8 +99,8 @@ const GroupSection: React.FC<GroupSectionProps> = ({
         };
         const filterNodes = (nodes: ItemTree[]): ItemTree[] => {
             return nodes.reduce<ItemTree[]>((acc, node) => {
-                const children = node.children ? filterNodes(node.children) : [];
-                if (isDone(node) || children.length > 0) acc.push({ ...node, children });
+                const children = node.inverseParentItem ? filterNodes(node.inverseParentItem) : [];
+                if (isDone(node) || children.length > 0) acc.push({ ...node,    inverseParentItem: children });
                 return acc;
             }, []);
         };
@@ -111,8 +111,8 @@ const GroupSection: React.FC<GroupSectionProps> = ({
     const totalVisibleItems = useMemo(() => {
         const countNodes = (nodes: ItemTree[]): number => {
             return nodes.reduce((acc, n) => {
-                const childrenCount = (n.children && !collapsedItemIds.has(n.id)) 
-                    ? countNodes(n.children) 
+                const childrenCount = (n.inverseParentItem && !collapsedItemIds.has(n.id)) 
+                    ? countNodes(n.inverseParentItem) 
                     : 0;
                 return acc + 1 + childrenCount;
             }, 0);
@@ -175,8 +175,8 @@ const GroupSection: React.FC<GroupSectionProps> = ({
             nodes.forEach(node => { 
                 ids.push(`item-${node.id}`); 
                 // Sadece açık olanların çocuklarını gez
-                if (node.children && !collapsedItemIds.has(node.id)) {
-                    walk(node.children);
+                if (node.inverseParentItem && !collapsedItemIds.has(node.id)) {
+                    walk(node.inverseParentItem);
                 }
             });
         };
@@ -188,7 +188,7 @@ const GroupSection: React.FC<GroupSectionProps> = ({
     const renderTree = (nodes: ItemTree[], depth = 0): React.ReactNode[] =>
         nodes.flatMap(node => {
             const rowKey = `item-${node.id}`;
-            const children = node.children ?? [];
+            const children = node.inverseParentItem ?? [];
             const hasChildren = children.length > 0;
             const isItemCollapsed = collapsedItemIds.has(node.id);
 

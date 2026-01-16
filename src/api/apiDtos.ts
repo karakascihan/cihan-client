@@ -117,6 +117,78 @@ export interface BoardViewDto {
     settingsJson: string | undefined;
 }
 
+export interface CalendarEvent {
+    id: number;
+    title: string | undefined;
+    startDate: Date | undefined;
+    endDate: Date | undefined;
+    allDay: boolean | undefined;
+    eventType: number | undefined;
+    releatedName: string | undefined;
+    releatedId: number | undefined;
+    assignedId: number | undefined;
+    status: number | undefined;
+    priority: number | undefined;
+    createdBy: number | undefined;
+    createdAt: Date | undefined;
+    assigned: Users;
+    createdByNavigation: Users;
+}
+
+export interface CashAccount {
+    id: number;
+    cashCode: string | undefined;
+    cashName: string | undefined;
+    description: string | undefined;
+    currencyId: number;
+    specialCode: string | undefined;
+    isPassive: boolean;
+    createdAt: Date;
+    createdBy: number;
+    updatedAt: Date;
+    updatedBy: number;
+    createdByNavigation: Users;
+    currency: Currency;
+    updatedByNavigation: Users;
+}
+
+export interface CashAccountDto {
+    cashName: string | undefined;
+    description: string | undefined;
+    currencyId: number;
+    specialCode: string | undefined;
+    isPassive: boolean;
+    id: number;
+    cashCode: string | undefined;
+    currencyCode: string | undefined;
+}
+
+export interface CashAccountDtoForInsertion {
+    cashName: string | undefined;
+    description: string | undefined;
+    currencyId: number;
+    specialCode: string | undefined;
+    isPassive: boolean;
+    cashCode: string | undefined;
+    createdBy: number | undefined;
+    updatedBy: number | undefined;
+}
+
+export interface CashAccountDtoForUpdate {
+    cashName: string | undefined;
+    description: string | undefined;
+    currencyId: number;
+    specialCode: string | undefined;
+    isPassive: boolean;
+}
+
+export interface CashAccountDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: CashAccountDto[] | undefined;
+    isSuccess: boolean;
+}
+
 export interface ColumnDto {
     id: number;
     title: string | undefined;
@@ -191,7 +263,9 @@ export interface Contracts {
     priceOfferId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
+    purchaseOrdersId: number | undefined;
     priceOffer: PriceOffer;
+    purchaseOrders: PurchaseOrders;
 }
 
 export interface ContractsDto {
@@ -232,10 +306,10 @@ export interface ContractsDtoForInsertion {
     durum: string | undefined;
     aciklama: string | undefined;
     priceOfferId: number | undefined;
+    purchaseOrdersId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
-    purchaseOrdersId: number | undefined;
 }
 
 export interface ContractsDtoForUpdate {
@@ -254,10 +328,9 @@ export interface ContractsDtoForUpdate {
     durum: string | undefined;
     aciklama: string | undefined;
     priceOfferId: number | undefined;
+    purchaseOrdersId: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
-    purchaseOrdersId: number | undefined;
-
 }
 
 export interface ContractsDtoIEnumerableApiResponse {
@@ -319,6 +392,47 @@ export interface CreateSurveyDto {
     surveyType: SurveyType;
     surveyQuestionGroup: CreateQuestionGroupDto[] | undefined;
     puanIsShow: boolean | undefined;
+}
+
+export interface Currency {
+    id: number;
+    createdAt: Date;
+    currencyName: string | undefined;
+    symbol: string | undefined;
+    isPassive: boolean;
+    pennyName: string | undefined;
+    currencyCode: string | undefined;
+    cashAccount: CashAccount[] | undefined;
+}
+
+export interface CurrencyDto {
+    currencyName: string | undefined;
+    symbol: string | undefined;
+    pennyName: string | undefined;
+    currencyCode: string | undefined;
+    id: number;
+    createdAt: Date;
+}
+
+export interface CurrencyDtoForInsertion {
+    currencyName: string | undefined;
+    symbol: string | undefined;
+    pennyName: string | undefined;
+    currencyCode: string | undefined;
+}
+
+export interface CurrencyDtoForUpdate {
+    currencyName: string | undefined;
+    symbol: string | undefined;
+    pennyName: string | undefined;
+    currencyCode: string | undefined;
+}
+
+export interface CurrencyDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: CurrencyDto[] | undefined;
+    isSuccess: boolean;
 }
 
 export interface CustomerContactDto {
@@ -631,7 +745,7 @@ export interface ItemTreeDto {
     order: number;
     parentItemId: number | undefined;
     itemValues: ItemValueDto[] | undefined;
-    children: ItemTreeDto[] | undefined;
+    inverseParentItem: ItemTreeDto[] | undefined;
 }
 
 export interface ItemValueDto {
@@ -862,10 +976,10 @@ export interface Personel {
     durumu: string | undefined;
     pK3: string | undefined;
     netUcreti: number;
+    mailImzasi: string | undefined;
     education: Education[] | undefined;
     personelEducationMapping: PersonelEducationMapping[] | undefined;
     surveyResponse: SurveyResponse[] | undefined;
-    mailImzasi: string | undefined;
 }
 
 export interface PersonelCombinedResponse {
@@ -1259,6 +1373,7 @@ export interface Products {
     stokMiktar: string | undefined;
     birimFiyat: number | undefined;
     paraBirimi: string | undefined;
+    purchaseOrdersLine: PurchaseOrdersLine[] | undefined;
 }
 
 export interface ProductsDtoForInsertion {
@@ -1498,9 +1613,10 @@ export interface PurchaseOrders {
     toplamIndirimOraniYuzde: number | undefined;
     priceOfferId: number | undefined;
     toplamTutar: number | undefined;
+    contracts: Contracts[] | undefined;
     firma: Company;
     priceOffer: PriceOffer;
-    purchaseOrderLine: PurchaseOrdersLine[] | undefined;
+    purchaseOrdersLine: PurchaseOrdersLine[] | undefined;
 }
 
 export interface PurchaseOrdersLine {
@@ -1519,12 +1635,13 @@ export interface PurchaseOrdersLine {
     durumu: string | undefined;
     faturaNo: string | undefined;
     order_Id: number | undefined;
-    product_Id: number | undefined;
     stogaAktarildimi: boolean | undefined;
     isActive: boolean | undefined;
     indirimOraniYuzde: number | undefined;
     kdvOraniYuzde: number | undefined;
+    product_Id: number | undefined;
     order: PurchaseOrders;
+    product: Products;
 }
 
 export enum QuestionType {
@@ -1865,6 +1982,10 @@ export interface Users {
     isActive: boolean | undefined;
     activityAssignedToUser: Activity[] | undefined;
     activityCreatedByUser: Activity[] | undefined;
+    calendarEventAssigned: CalendarEvent[] | undefined;
+    calendarEventCreatedByNavigation: CalendarEvent[] | undefined;
+    cashAccountCreatedByNavigation: CashAccount[] | undefined;
+    cashAccountUpdatedByNavigation: CashAccount[] | undefined;
     educationCreatedByUser: Education[] | undefined;
     educationUpdatedByUser: Education[] | undefined;
     fileRecord: FileRecord[] | undefined;

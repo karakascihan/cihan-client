@@ -22,7 +22,7 @@ export interface Item {
     parentItemId: number | null;
 }
 export interface ItemTree extends Item {
-    children: ItemTree[];
+    inverseParentItem: ItemTree[];
 }
 interface ItemState {
     itemsByGroup: Record<number, Item[]>;
@@ -85,8 +85,8 @@ function updateItemValueInTreeMap(
                 break;
             }
 
-            if (node.children && node.children.length > 0) {
-                stack.push(...node.children);
+            if (node.inverseParentItem && node.inverseParentItem.length > 0) {
+                stack.push(...node.inverseParentItem);
             }
         }
     }
