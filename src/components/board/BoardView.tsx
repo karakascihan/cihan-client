@@ -328,7 +328,7 @@ const BoardView: React.FC = () => {
     };
 
     // 🔴 DÜZELTME: Güvenli Tip Kontrolü
-    const isGanttView = activeView?.type?.toUpperCase() === 'GANTT';
+    const isGanttView = activeView?.type?.toUpperCase() === '1';
 
     return (
         <div className={`flex flex-col ${isGanttView ? 'h-full' : ''}`}>

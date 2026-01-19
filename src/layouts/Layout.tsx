@@ -17,11 +17,11 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         <main className="flex-1 p-4">
            {children}
         </main>
-        <footer className="p-4 text-center text-lg text-gray-600 ">
+        {/* <footer className="p-4 text-center text-lg text-gray-600 ">
         <p className="2xl:px-20">
               Dijital ERP 2025 © Tüm hakları saklıdır.
             </p>
-        </footer>
+        </footer> */}
       </div>
     </div>
   );

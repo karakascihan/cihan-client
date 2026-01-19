@@ -9,6 +9,19 @@
 
 
 
+export interface AccountTransaction {
+    id: number;
+    accountId: number;
+    documentType: string | undefined;
+    documentId: number | undefined;
+    debit: number;
+    credit: number;
+    transactionDate: Date;
+    createtAt: Date;
+    createdBy: number | undefined;
+    account: Company;
+}
+
 export interface Activity {
     id: number;
     subject: string | undefined;
@@ -101,6 +114,103 @@ export interface AnswerDto {
 export interface AssignToStateDto {
     educationId: number;
     state: PersonelEgitimDurumlari;
+}
+
+export interface Bank {
+    id: number;
+    bankCode: string | undefined;
+    bankName: string | undefined;
+    isActive: boolean;
+    createdDate: Date;
+    bankAccount: BankAccount[] | undefined;
+}
+
+export interface BankAccount {
+    id: number;
+    bankId: number;
+    bankAccountCode: string | undefined;
+    accountName: string | undefined;
+    iban: string | undefined;
+    branchCode: string | undefined;
+    accountNumber: string | undefined;
+    currencyId: number;
+    openingBalance: number;
+    isActive: boolean;
+    createtAt: Date;
+    updatedAt: Date;
+    createdBy: number | undefined;
+    updatedBy: number | undefined;
+    bank: Bank;
+    createdByNavigation: Users;
+    currency: Currency;
+    updatedByNavigation: Users;
+}
+
+export interface BankAccountDto {
+    bankAccountCode: string | undefined;
+    accountNumber: string | undefined;
+    accountName: string | undefined;
+    bankId: number;
+    branchCode: string | undefined;
+    iban: string | undefined;
+    currencyId: number;
+    balance: number;
+    isPassive: boolean;
+    id: number;
+    bankName: string | undefined;
+    currencyCode: string | undefined;
+}
+
+export interface BankAccountDtoForInsertion {
+    bankAccountCode: string | undefined;
+    accountNumber: string | undefined;
+    accountName: string | undefined;
+    bankId: number;
+    branchCode: string | undefined;
+    iban: string | undefined;
+    currencyId: number;
+    balance: number;
+    isPassive: boolean;
+}
+
+export interface BankAccountDtoForManipulation {
+    bankAccountCode: string | undefined;
+    accountNumber: string | undefined;
+    accountName: string | undefined;
+    bankId: number;
+    branchCode: string | undefined;
+    iban: string | undefined;
+    currencyId: number;
+    balance: number;
+    isPassive: boolean;
+}
+
+export interface BankAccountDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: BankAccountDto[] | undefined;
+    isSuccess: boolean;
+}
+
+export interface BankDto {
+    bankCode: string | undefined;
+    bankName: string | undefined;
+    isActive: boolean;
+    id: number;
+    createdDate: Date;
+}
+
+export interface BankDtoForInsertion {
+    bankCode: string | undefined;
+    bankName: string | undefined;
+    isActive: boolean;
+}
+
+export interface BankDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: BankDto[] | undefined;
+    isSuccess: boolean;
 }
 
 export interface BoardDto {
@@ -227,6 +337,7 @@ export interface Company {
     sirketTuru: number | undefined;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
+    accountTransaction: AccountTransaction[] | undefined;
     opportunity: Opportunity[] | undefined;
     purchaseOrders: PurchaseOrders[] | undefined;
 }
@@ -402,6 +513,7 @@ export interface Currency {
     isPassive: boolean;
     pennyName: string | undefined;
     currencyCode: string | undefined;
+    bankAccount: BankAccount[] | undefined;
     cashAccount: CashAccount[] | undefined;
 }
 
@@ -721,6 +833,21 @@ export interface FileRecordDtoIEnumerableApiResponse {
     statusCode: number;
     result: FileRecordDto[] | undefined;
     isSuccess: boolean;
+}
+
+export interface FinancalTransaction {
+    id: number;
+    description: string | undefined;
+    transactionDate: Date | undefined;
+    transactionType: string | undefined;
+    sourceType: string | undefined;
+    sourceId: number;
+    targetType: string | undefined;
+    targetId: number;
+    amount: number;
+    createtAt: Date;
+    createdBy: number;
+    createdByNavigation: Users;
 }
 
 export interface GroupDto {
@@ -1955,41 +2082,34 @@ export interface UserDtoForCrmIEnumerableApiResponse {
     isSuccess: boolean;
 }
 
+export interface UserDtoForInsertion {
+    file: string | undefined;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    rolName: string;
+    rolId: number;
+    email: string;
+    tckno: string | undefined;
+    phoneNumber: string | undefined;
+    phoneNumber2: string | undefined;
+    address: string | undefined;
+    department: string | undefined;
+    departmentID: number | undefined;
+    title: string | undefined;
+    birthday: Date | undefined;
+    startDate: Date | undefined;
+    departureDate: Date | undefined;
+    gender: string | undefined;
+    isActive: boolean | undefined;
+    password: string | undefined;
+}
+
 export interface UserForAuthenticationDto {
     userName: string | undefined;
     password: string | undefined;
 }
 
-
-export interface UserDtoForManipulation  {
-    file?: string | null; 
-    rolName: string | undefined;
-    rolId: number | undefined;
-    firstName?: string | null;
-    lastName?: string | null;
-    userName?: string | null;
-    email?: string | null;
-    tckno?: string | null;
-    phoneNumber?: string | null;
-    phoneNumber2?: string | null;
-    address?: string | null;
-    department?: string | null;
-    departmentID?: number | null;
-    title?: string | null;
-    birthday?: string | Date | null;
-    startDate?: string | Date | null;
-    departureDate?: string | Date | null;
-    gender?: string | null;
-    isActive?: boolean | null;
-  };
-  
-  export interface UserDtoForInsertion extends UserDtoForManipulation {
-    password: string | null;
-  };
-  
-  export interface UserDtoForUpdate extends UserDtoForManipulation {
-    password?: string | null;
-  };
 export interface Users {
     id: number;
     tckno: string | undefined;
@@ -2012,6 +2132,8 @@ export interface Users {
     isActive: boolean | undefined;
     activityAssignedToUser: Activity[] | undefined;
     activityCreatedByUser: Activity[] | undefined;
+    bankAccountCreatedByNavigation: BankAccount[] | undefined;
+    bankAccountUpdatedByNavigation: BankAccount[] | undefined;
     calendarEventAssigned: CalendarEvent[] | undefined;
     calendarEventCreatedByNavigation: CalendarEvent[] | undefined;
     cashAccountCreatedByNavigation: CashAccount[] | undefined;
@@ -2019,6 +2141,7 @@ export interface Users {
     educationCreatedByUser: Education[] | undefined;
     educationUpdatedByUser: Education[] | undefined;
     fileRecord: FileRecord[] | undefined;
+    financalTransaction: FinancalTransaction[] | undefined;
     kysDocumentCreatedByUser: KysDocument[] | undefined;
     kysDocumentUpdatedByUser: KysDocument[] | undefined;
     log: Log[] | undefined;
@@ -2028,14 +2151,4 @@ export interface Users {
     surveyResponse: SurveyResponse[] | undefined;
     surveyUpdatedByUser: Survey[] | undefined;
     systemLog: SystemLog[] | undefined;
-}
-
-export interface FileParameter {
-    data: any;
-    fileName: string;
-}
-
-export interface Roles {
-    id: number;
-    rol_Yetki_Adi: string;
 }

@@ -22,6 +22,7 @@ import {
   FaDochub,
   FaFileInvoiceDollar,
   FaPencilAlt,
+  FaPiggyBank,
   FaProjectDiagram,
 } from "react-icons/fa";
 import { FcFile, FcSurvey } from "react-icons/fc";
@@ -66,6 +67,11 @@ const menus: MenuItem[] = [
       title: "Kasa Hesapları",
       path: "/kasa-hesaplari",
       icon: <FaCashRegister />
+    },
+    {
+      title: "Banka Hesapları",
+      path: "/banka-hesaplari",
+      icon: <FaPiggyBank />
     }
     ]
   },
