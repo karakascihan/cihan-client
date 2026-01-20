@@ -87,7 +87,7 @@ const menus: MenuItem[] = [
   },
   {
     title: "CRM", icon: <Orbit />,
-    roles: [1, 2],
+  
     items: [
       { title: "Fırsatlar", icon: <Sparkles className="w-4 h-4 text-yellow-300" />, path: "/firsatlar" }
       , { title: "Müşteriler", icon: <Building2 className="w-4 h-4 text-blue-100" />, path: "/musteriler" }
@@ -314,7 +314,7 @@ const menus: MenuItem[] = [
     ],
   },
   {
-    title: "Ayarlar", icon: <Settings />, roles: [1, 2], items: [
+    title: "Ayarlar", icon: <Settings />,  items: [
       { title: "Şirketlerim", icon: <Building2 />, path: "/sirketlerim" },
       { title: "Kullanıcılar", icon: <User2 />, path: "/kullanicilar" }
 

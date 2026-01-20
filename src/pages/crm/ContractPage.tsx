@@ -12,7 +12,7 @@ import { FileRecordPage } from "./FileRecordPage";
 import { useModal } from "@/context/ModalContext";
 import { FaEye, FaFile, FaRProject, FaShower, FaUpload } from "react-icons/fa6";
 import { useLoading } from "@/context/LoadingContext";
-import { contractTemplate1 } from "@/PriceOfferTemplates/contractTemplates";
+import { contractTemplate1 } from "@/price-offer-templates/contractTemplates";
 import { Editor } from "@tinymce/tinymce-react";
 import { fetchCustomers } from "@/store/slices/customerSlice";
 import { fetchPriceOffers } from "@/store/slices/priceOfferSlice";
@@ -30,7 +30,7 @@ import { addFileRecord } from "@/store/slices/fileRecordSlice";
 import AddBoardForm from "@/components/board/AddBoardForm";
 import { useNavigate } from "react-router-dom";
 
-export const ContractPage = () => {
+ const ContractPage = () => {
   const confirm = useConfirm();
   const sidebar = useSidebar();
   const dispatch = useDispatch();
@@ -733,3 +733,4 @@ export const ContractPage = () => {
     </div>
   );
 };
+export default ContractPage;

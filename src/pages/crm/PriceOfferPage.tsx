@@ -21,7 +21,6 @@ import { formatDateForInput } from "@/utils/commonUtils";
 import { ReactNode, use, useEffect, useState } from "react";
 import { FaAdversal, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { PriceOfferAddPage } from "./PriceOfferAddPage";
 import ProfessionalOffer from "@/components/CRM/PriceOfferComponent2";
 import { CustomerState, fetchCustomers } from "@/store/slices/customerSlice";
 import { FaEye, FaFileContract, FaFirstOrder } from "react-icons/fa6";
@@ -33,18 +32,18 @@ import { MdSend, MdTempleHindu } from "react-icons/md";
 import { EmailSender } from "@/components/mail/EmailSender";
 import { OpportunityState, fetchOpportunities } from "@/store/slices/opportunitySlice";
 import { selectPriceOffersWithCustomerWithOpportunity } from "@/store/selectors/opportunitySelector";
-import { dijitalerp_price_offer_template, dijitalerp_price_offer_template2, dijitalerp_price_offer_template3, TarihFormatiDonustur } from "@/PriceOfferTemplates/dijitalerp";
+import { dijitalerp_price_offer_template, dijitalerp_price_offer_template2, dijitalerp_price_offer_template3, TarihFormatiDonustur } from "@/price-offer-templates/dijitalerp";
 import { URL } from "@/api";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
 import { useLoading } from "@/context/LoadingContext";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { fetchEnterprises } from "@/store/slices/enterpriseSlice";
 import { setNotification } from "@/store/slices/notificationSlice";
-import { AddPurchaseOrderPage2 } from "./AddPurchaseOrderPage2";
 import { AddPurchaseOrderFromOfferPage } from "./AddPurchaseOrderFromOfferPage";
 import { ApiResponseClient } from "@/types/apiResponse";
 import { apiRequest } from "@/services";
-export const PriceOfferPage = ({
+import PriceOfferAddPage from "./PriceOfferAddPage";
+ const PriceOfferPage = ({
   opportunityId,
 }: {
   opportunityId?: number;
@@ -859,5 +858,5 @@ export const PriceOfferPage = ({
     </div>
   );
 };
-
+export default PriceOfferPage;
 

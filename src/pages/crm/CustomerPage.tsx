@@ -25,7 +25,7 @@ import { use, useEffect } from "react";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
-export const CustomerPage = () => {
+ const CustomerPage = () => {
   const { data, loading, error } = useSelector(
     (state: RootState) => state.customer
   );
@@ -408,3 +408,4 @@ export const CustomerPage = () => {
     </div>
   );
 };
+export default CustomerPage;

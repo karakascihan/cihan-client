@@ -5,7 +5,7 @@ import { BankAccounList } from '@/components/account/BankAccountList'
 import { TabItem, Tabs } from '@/components/Tabs'
 import { ReactNode, useState } from 'react'
 
-export const BankAccountPage = () => {
+ const BankAccountPage = () => {
    const [tabs, setTabs] = useState<TabItem[]>([ {
              key: 'bankaHesaplari',
              label: 'Banka Hesapları',
@@ -30,3 +30,4 @@ export const BankAccountPage = () => {
         
   )
 }
+export default BankAccountPage;

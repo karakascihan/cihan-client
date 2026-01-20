@@ -36,7 +36,7 @@ import { CalendarEvent } from "@/types/commonType";
 import { URL } from "@/api";
 //import listPlugin from "@fullcalendar/list";
 
-export const CalendarPage = () => {
+ const CalendarPage = () => {
   const activityState = useSelector((state: RootState) => state.activity);
   const dispatch = useDispatch<AppDispatch>();
   const sidebar = useSidebar();
@@ -464,3 +464,4 @@ export const CalendarPage = () => {
     </div>
   );
 };
+export default CalendarPage;

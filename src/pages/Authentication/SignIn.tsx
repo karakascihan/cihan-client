@@ -17,8 +17,10 @@ const SignIn: React.FC = () => {
     e.preventDefault();
     try {
       if (userName && password) {
-        dispatch(await loginData({ data: { userName, password } }));
-        navigate('/');
+        dispatch(await loginData({ data: { userName, password } })).unwrap().then(() => {
+          init();
+          navigate('/');
+        });
       } else {
         console.error('Invalid login response:');
       }

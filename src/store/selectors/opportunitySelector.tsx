@@ -6,7 +6,7 @@ export const selectOpportunitiesWithCustomer = createSelector(
   [(state: RootState) => state.opportunity.data,(state: RootState) => state.customer.data,(state: RootState) => state.user.data],
   (opportunities, customers,users) => {
     return  opportunities.map((opportunity :OpportunityDto) => {
-      const customer = customers.find((c:CustomerDto) => c.id === opportunity.customerId);
+      const customer = customers?.find((c:CustomerDto) => c.id === opportunity.customerId);
       const user = users.find(u=>u.id===opportunity.createdByUserId);
       return {
         ...opportunity,

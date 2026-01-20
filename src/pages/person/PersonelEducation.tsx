@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { departmanlar } from './OvertimeList';
 import { useLoading } from '@/context/LoadingContext';
 
-export const PersonelEducation = () => {
+export default function PersonelEducation  ()  {
     const dispatch=useDispatch<AppDispatch>();
      const { items , loading, error } = useSelector(
     (state: RootState) => state.personelWithEducation

@@ -11,7 +11,7 @@ type Props = {
   onSuccess?: () => void | Promise<unknown>;
 };
 
-export const AddPurchaseOrderPage2 = ({ onClose, onSuccess }: Props) => {
+ const AddPurchaseOrderPage2 = ({ onClose, onSuccess }: Props) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -81,3 +81,4 @@ export const AddPurchaseOrderPage2 = ({ onClose, onSuccess }: Props) => {
     />
   );
 };
+export default AddPurchaseOrderPage2;

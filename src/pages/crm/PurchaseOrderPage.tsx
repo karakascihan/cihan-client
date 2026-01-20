@@ -6,8 +6,8 @@ import { URL } from "@/api";
 import { FaFileArchive, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { useDeleteResource } from "@/hooks/useDeleteResource";
 import { useModal } from '@/context/ModalContext'
-import { AddPurchaseOrderPage2 } from "./AddPurchaseOrderPage2";
-import { UpdatePurchaseOrderPage } from "./UpdatePurchaseOrderPage";
+import  AddPurchaseOrderPage2  from "./AddPurchaseOrderPage2";
+import  UpdatePurchaseOrderPage  from "./UpdatePurchaseOrderPage";
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { File, FileAxis3dIcon, FileCheck, FileIcon, MoreHorizontal } from "lucide-react";
@@ -19,7 +19,7 @@ import { CustomerState, fetchCustomers } from "@/store/slices/customerSlice";
 import { FaFile } from "react-icons/fa6";
 
 
-export const PurchaseOrderPage = () => {
+ const PurchaseOrderPage = () => {
     const navigate = useNavigate();
     const { openModal } = useModal();
     const dispatch = useDispatch<AppDispatch>();
@@ -529,6 +529,7 @@ export const PurchaseOrderPage = () => {
         </div>
     );
 };
+export default PurchaseOrderPage;
 
 
 

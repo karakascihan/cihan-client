@@ -11,10 +11,10 @@ import { useApiRequest } from "@/hooks/useApiRequest";
 import { URL } from "@/api";
 import { ReactNode } from "react";
 
-export const EnterprisePage = () => {
+ const EnterprisePage = () => {
   const confirm = useConfirm();
   const sidebar = useSidebar();
-  const { data: enterprise, refetch } = useApiRequest<EnterpriseDto[]>(
+  const { data: enterprise, refetch } = useApiRequest<EnterpriseDto>(
     URL + "/enterprise/getall",
     {
       method: "GET",
@@ -301,3 +301,4 @@ export const EnterprisePage = () => {
     </div>
   );
 };
+export default EnterprisePage;

@@ -1851,14 +1851,14 @@ export interface Services {
 export interface ServicesDtoForInsertion {
     name: string | undefined;
     endPoint: string | undefined;
-    userId: string | undefined;
+    userId: number | undefined;
     createdAt: Date | undefined;
 }
 
 export interface ServicesDtoForUpdate {
     name: string | undefined;
     endPoint: string | undefined;
-    userId: string | undefined;
+    userId: number | undefined;
     id: number;
     trackChanges: boolean | undefined;
     updatedAt: Date | undefined;
@@ -2110,6 +2110,40 @@ export interface UserForAuthenticationDto {
     password: string | undefined;
 }
 
+export interface UserPermission {
+    id: number;
+    userId: number | undefined;
+    serviceName: string | undefined;
+    canRead: boolean;
+    canWrite: boolean;
+    canDelete: boolean;
+    createdAt: Date | undefined;
+    updatedAt: Date | undefined;
+    user: Users;
+}
+
+export interface UserPermissionDtoForInsertion {
+    userId: number | undefined;
+    user: Users;
+    serviceName: string | undefined;
+    canRead: boolean;
+    canWrite: boolean;
+    canDelete: boolean;
+    createdAt: Date | undefined;
+}
+
+export interface UserPermissionDtoForUpdate {
+    userId: number | undefined;
+    user: Users;
+    serviceName: string | undefined;
+    canRead: boolean;
+    canWrite: boolean;
+    canDelete: boolean;
+    id: number;
+    trackChanges: boolean | undefined;
+    updatedAt: Date | undefined;
+}
+
 export interface Users {
     id: number;
     tckno: string | undefined;
@@ -2151,4 +2185,5 @@ export interface Users {
     surveyResponse: SurveyResponse[] | undefined;
     surveyUpdatedByUser: Survey[] | undefined;
     systemLog: SystemLog[] | undefined;
+    userPermission: UserPermission[] | undefined;
 }

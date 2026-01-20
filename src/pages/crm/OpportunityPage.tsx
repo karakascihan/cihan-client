@@ -91,7 +91,7 @@ export const OpportunityPage = () => {
           value: cust.id || "",
         })),
            onChangeEffect: (value: any, allValues: any, setFields_: any) => {
-          const selectedCustomer = customers.find((x) => x.id == value);
+          const selectedCustomer = customers?.find((x) => x.id == value);
          setFields_((prev) => {
   const updated = prev.map((f) =>
     f.name === "customerContactPersonId"

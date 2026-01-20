@@ -33,7 +33,7 @@ import { Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { selectActivitiesWithCustomerWithOpportunity } from "@/store/selectors/opportunitySelector";
 
-export const ActivityPage = ({
+ const ActivityPage = ({
   relatedEntityId,
   relatedEntityName = "Customer",
   title,
@@ -530,3 +530,4 @@ export const ActivityPage = ({
     </div>
   );
 };
+export default ActivityPage;

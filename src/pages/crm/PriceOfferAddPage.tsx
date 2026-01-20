@@ -49,7 +49,7 @@ interface PriceOfferAddPageProps {
   offer: PriceOfferDto;
 }
 
-export const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
+ const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
   offer,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -709,3 +709,4 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
     </form>
   );
 };
+export default PriceOfferAddPage;

@@ -9,10 +9,7 @@ import { GlobalNotification } from './components/GlobalNotification.tsx'
  import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import { locale } from 'primereact/api';
-import { Sidebar } from 'lucide-react'
-import GlobalSidebar from './components/GlobalSidebar.tsx'
 import { GlobalSidebarProvider } from './context/GlobalSidebarContext.tsx'
-import { ThemeProvider } from './context/ThemeContext.tsx'
        addLocale('tr', {
     firstDayOfWeek: 1,
     dayNames: ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"],

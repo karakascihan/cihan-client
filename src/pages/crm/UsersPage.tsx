@@ -7,17 +7,19 @@ import { useDeleteResource } from "@/hooks/useDeleteResource";
 import { useModal } from '@/context/ModalContext'
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { File, FileAxis3dIcon, FileCheck, FileIcon, MoreHorizontal } from "lucide-react";
+import { File, FileAxis3dIcon, FileCheck, FileIcon, MoreHorizontal, User } from "lucide-react";
 import { FieldDefinition, GenericForm } from "@/components/GenericForm";
 import { setNotification } from "@/store/slices/notificationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { FaFile } from "react-icons/fa6";
+import { FaColonSign, FaFile, FaKey } from "react-icons/fa6";
 import { Roles, Users } from "@/api/apiDtos";
 import { AddUserPage } from "./AddUserPage";
+import { UserPermissionForm } from "@/components/user-profile/UserPermissionForm";
+import UserPermissionList from "@/components/user-profile/UserPermissionList";
 
 
-export const UsersPage = () => {
+ const UsersPage = () => {
     const navigate = useNavigate();
     const { openModal } = useModal();
 
@@ -233,6 +235,49 @@ export const UsersPage = () => {
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
+                                e.stopPropagation(); 
+                                openModal({
+                                    title: "Kullanıcı Yetkilendir ("+row.name+ " "+row.surname+")",
+                                    maximizable: true,
+                                    style: { width: "50vw" },
+                                    content: (close) => (
+                                        <UserPermissionList userId={row.id} />
+                                    ),
+                                });
+
+                            }}
+                            disabled={deletingId === row.id}
+                            className="
+                    inline-flex items-center justify-center
+                    h-8 w-8
+                    rounded-md
+
+                    bg-green-50
+                    border border-green-300
+                    text-green-700
+
+                    transition-all duration-200 ease-out
+                    transform
+
+                    hover:-translate-y-0.5
+                    hover:bg-green-100
+                    hover:border-green-400
+                    hover:text-green-800
+                    hover:shadow-lg
+
+                    shadow-md
+                    focus:outline-none
+                    focus:ring-2 focus:ring-red-300
+                    active:translate-y-0
+                    active:shadow-sm
+                    "
+                            title="Yetkilendir"
+                        >
+                            {deletingId === row.id ? "…" : <FaKey className="text-[13px]" />}
+                        </button>
+                        <button
+                            onClick={(e) => {
+                                e.preventDefault();
                                 e.stopPropagation(); row.id && deleteUser(row.id)
 
                             }}
@@ -373,7 +418,7 @@ export const UsersPage = () => {
         </div >
     );
 };
-
+export default UsersPage;
 
 
 

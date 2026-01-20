@@ -30,7 +30,7 @@ import { setNotification } from "@/store/slices/notificationSlice";
 import { fromIsoDateString, toIsoDateString } from "../person/StaffLeaveList";
 import { getMimeType } from "@/utils/commonUtils";
 
-export const ProjectReportList = () => {
+ const ProjectReportList = () => {
   const [personels, setPersonels] = useState<PersonelNames[]>([]);
   const data = useSelector((state: RootState) => state.projectReport.items);
   const loading = useSelector(
@@ -643,3 +643,4 @@ export const ProjectReportList = () => {
     </div>
   );
 };
+export default ProjectReportList;

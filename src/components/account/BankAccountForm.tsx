@@ -14,7 +14,7 @@ export const BankAccountForm = ({bankAccount,onSubmit}:{bankAccount:BankAccountD
   return (
 <>
 { 
-   (loading &&loadingBanks) ? <div>Yükleniyor...</div>: <GenericForm fields={[{
+   (loading ||loadingBanks) ? <div>Yükleniyor...</div>: <GenericForm fields={[{
           name: 'bankAccountCode',
           label: 'Banka Hesap Kodu',
           type: 'text',

@@ -34,7 +34,7 @@ const emptyForm: PurchaseOrderDtoForUpdate = {
 };
 
 
-export const UpdatePurchaseOrderPage = ({ id: propId, onClose, onSuccess }: Props) => {
+ const UpdatePurchaseOrderPage = ({ id: propId, onClose, onSuccess }: Props) => {
     const { id: routeId } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const id = propId ?? (routeId ? Number(routeId) : null);
@@ -126,3 +126,4 @@ export const UpdatePurchaseOrderPage = ({ id: propId, onClose, onSuccess }: Prop
         />
     );
 };
+export default UpdatePurchaseOrderPage;

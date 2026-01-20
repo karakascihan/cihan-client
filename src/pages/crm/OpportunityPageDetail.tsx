@@ -14,13 +14,11 @@ import { AppDispatch, RootState } from "@/store/store";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { convertFileToBase64, formatDateForInput } from "@/utils/commonUtils";
-import { ActivityPage } from "./ActivityPage";
+import  ActivityPage  from "./ActivityPage";
 import { useParams } from "react-router-dom";
 import { GenericForm } from "@/components/GenericForm";
 import { addsystemLog, fetchsystemLogs } from "@/store/slices/systemLogSlice";
-import { fetchOpportunities } from "@/store/slices/opportunitySlice";
-import { PriceOfferAddPage } from "./PriceOfferAddPage";
-import { PriceOfferPage } from "./PriceOfferPage";
+import  PriceOfferPage  from "./PriceOfferPage";
 import { Column, SmartTable } from "@/components/SmartTable";
 import { ActivityStateDescriptions, ActivityTypeDescriptions } from "@/api/extra-enums";
 import { fetchActivities, updateActivity } from "@/store/slices/activitySlice";
@@ -33,7 +31,7 @@ import { addFileRecord, fetchFileRecords } from "@/store/slices/fileRecordSlice"
 import { FileRecordPage } from "./FileRecordPage";
 import { fetchpersonels } from "@/store/slices/personalSlice";
 
-export const OpportunityPageDetail: React.FC = () => {
+ const OpportunityPageDetail: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
     "details" | "activities" | "notes" | "files" | "priceoffers"
   >("details");
@@ -306,7 +304,7 @@ const {openModal} = useModal();
 else return ""
   
 };
-
+export  default OpportunityPageDetail;
 // Modal Component
 const Modal: React.FC<{
   title: string;

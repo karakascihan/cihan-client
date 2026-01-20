@@ -27,7 +27,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import MenuButton, { MenuItem } from "@/components/MenuButton";
-export const DocumentList = () => {
+ const DocumentList = () => {
   const { type } = useParams<{ type?: string }>();
   const { data, setData } = useApiRequest<KysDocument[]>(
     KYSDOCUMENT_GETALL + (type ? "?type=" + type : "")
@@ -604,3 +604,4 @@ let buttons: MenuItem[] = [];
     </>
   );
 };
+export default DocumentList;
