@@ -12,7 +12,7 @@ import { FileRecordPage } from "./FileRecordPage";
 import { useModal } from "@/context/ModalContext";
 import { FaEye, FaFile, FaRProject, FaShower, FaUpload } from "react-icons/fa6";
 import { useLoading } from "@/context/LoadingContext";
-import { contractTemplate1, nda_contract_template } from "@/price-offer-templates/contractTemplates";
+import { contractTemplate1, nda_contract_template, nda_contract_template_en } from "@/price-offer-templates/contractTemplates";
 import { Editor } from "@tinymce/tinymce-react";
 import { fetchCustomers } from "@/store/slices/customerSlice";
 import { fetchPriceOffers } from "@/store/slices/priceOfferSlice";
@@ -30,6 +30,7 @@ import { addFileRecord } from "@/store/slices/fileRecordSlice";
 import AddBoardForm, { ProjectType } from "@/components/board/AddBoardForm";
 import { useNavigate } from "react-router-dom";
 import { EnumSelect } from "@/components/EnumSelect";
+import { fetchpersonels } from "@/store/slices/personalSlice";
 
  const ContractPage = ({sozlesmeTipi}:{sozlesmeTipi?: SozlesmeTipi}) => {
   const confirm = useConfirm();
@@ -40,6 +41,7 @@ import { EnumSelect } from "@/components/EnumSelect";
   const customersState = useSelector((state: RootState) => state.customer);
   const enterpriseState = useSelector((state: RootState) => state.enterprise);
   const priceOffersState = useSelector((state: RootState) => state.priceOffer);
+  const employeesState = useSelector((state: RootState) => state.personel);
   const [showPreview, setShowPreview] = useState(0);
   const [editorData, setEditorData] = useState(contractTemplate1);
   const loginState = useSelector((state: RootState) => state.login);
@@ -78,6 +80,9 @@ import { EnumSelect } from "@/components/EnumSelect";
     }
     if (priceOffersState.data.length === 0) {
       dispatch(fetchPriceOffers() as any);
+    }
+    if (employeesState.items.length === 0) {
+        dispatch(fetchpersonels({ onlyNames: false, isActive: true }) as any);
     }
   }, []);
 
@@ -242,7 +247,7 @@ import { EnumSelect } from "@/components/EnumSelect";
   };
   const showTemplateNDA = async (contract: ContractsDto) => {
 
-    let filledTemplate = nda_contract_template;
+    let filledTemplate = nda_contract_template_en;
     filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
     filledTemplate = filledTemplate.replaceAll(
       "~sirket~",
@@ -288,6 +293,30 @@ import { EnumSelect } from "@/components/EnumSelect";
       customersState.data.find((en) => en.firma === contract.sirket)
         ?.vergiNumarasi || ""
     );
+    let imzalayanPersonel = employeesState.items.find((en) => en.id === contract.personelId);
+   
+        filledTemplate = filledTemplate.replaceAll(
+      "~personelAdi~",
+      imzalayanPersonel?.personelAdi ?? ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~personelSoyadi~",
+      imzalayanPersonel?.personelSoyadi ?? ""
+    );
+     filledTemplate = filledTemplate.replaceAll(
+      "~personelGorevi~",
+      imzalayanPersonel?.personelGorevi ?? ""
+    );
+      filledTemplate = filledTemplate.replaceAll(
+      "~telefonNo~",
+      imzalayanPersonel?.telefonNo ?? ""
+    );
+        filledTemplate = filledTemplate.replaceAll(
+      "~ePosta~",
+      imzalayanPersonel?.ePosta ?? ""
+    );
+    
+    
     let toplamFiyat = 0;
 
     if (contract.priceOfferId) {
@@ -587,9 +616,9 @@ import { EnumSelect } from "@/components/EnumSelect";
       accessor: "id",
     },
   ];
-  const formElements: FieldDefinition[] = (
+  const formElements = (
     contractDtoForInsertion: ContractsDtoForInsertion
-  ) => {
+  ): FieldDefinition[] => {
     let fields: FieldDefinition[] = [
       {
         name: "kurum",
@@ -677,6 +706,19 @@ import { EnumSelect } from "@/components/EnumSelect";
         colspan: 12,
         group: "Genel",
         defaultValue: contractDtoForInsertion?.sozlesmeBitisTarihi || "",
+      },
+      {
+        name: "personelId",
+        label: "İmza Personel",
+        type: "select",
+        options:
+          employeesState.items?.map((employee) => ({
+            label: employee.personelAdi+" "+employee.personelSoyadi,
+            value: employee.id,
+          })) || [],
+        colspan: 12,
+        group: "Genel",
+        defaultValue: contractDtoForInsertion?.personelId ?? "",
       },
       {
         name: "priceOfferId",

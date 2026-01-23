@@ -8778,11 +8778,43 @@
             "format": "int32",
             "nullable": true
           },
+          "createtAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updatedBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "personelId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdByNavigation": {
+            "$ref": "#/components/schemas/Users"
+          },
+          "personel": {
+            "$ref": "#/components/schemas/Personel"
+          },
           "priceOffer": {
             "$ref": "#/components/schemas/PriceOffer"
           },
           "purchaseOrders": {
             "$ref": "#/components/schemas/PurchaseOrders"
+          },
+          "updatedByNavigation": {
+            "$ref": "#/components/schemas/Users"
           }
         },
         "additionalProperties": false
@@ -8885,6 +8917,11 @@
           },
           "sozlesmeBitisTarihi": {
             "$ref": "#/components/schemas/DateOnly"
+          },
+          "personelId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -8992,8 +9029,23 @@
           "sozlesmeBitisTarihi": {
             "$ref": "#/components/schemas/DateOnly"
           },
+          "personelId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "isActive": {
             "type": "boolean",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },
@@ -9097,6 +9149,21 @@
           },
           "sozlesmeBitisTarihi": {
             "$ref": "#/components/schemas/DateOnly"
+          },
+          "personelId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updatedBy": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -11966,6 +12033,13 @@
           },
           "mailImzasi": {
             "type": "string",
+            "nullable": true
+          },
+          "contracts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contracts"
+            },
             "nullable": true
           },
           "education": {
@@ -16550,6 +16624,20 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CashAccount"
+            },
+            "nullable": true
+          },
+          "contractsCreatedByNavigation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contracts"
+            },
+            "nullable": true
+          },
+          "contractsUpdatedByNavigation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Contracts"
             },
             "nullable": true
           },

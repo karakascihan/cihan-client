@@ -376,8 +376,16 @@ export interface Contracts {
     sozlesmeBitisTarihi: DateOnly;
     purchaseOrdersId: number | undefined;
     sozlesmeTipi: number | undefined;
+    createtAt: Date;
+    updatedAt: Date;
+    createdBy: number | undefined;
+    updatedBy: number | undefined;
+    personelId: number | undefined;
+    createdByNavigation: Users;
+    personel: Personel;
     priceOffer: PriceOffer;
     purchaseOrders: PurchaseOrders;
+    updatedByNavigation: Users;
 }
 
 export interface ContractsDto {
@@ -400,6 +408,7 @@ export interface ContractsDto {
     sozlesmeTipi: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
+    personelId: number | undefined;
     id: number;
 }
 
@@ -423,7 +432,10 @@ export interface ContractsDtoForInsertion {
     sozlesmeTipi: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
+    personelId: number | undefined;
     isActive: boolean | undefined;
+    createdBy: number | undefined;
+    createdAt: Date | undefined;
 }
 
 export interface ContractsDtoForUpdate {
@@ -446,6 +458,9 @@ export interface ContractsDtoForUpdate {
     sozlesmeTipi: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
+    personelId: number | undefined;
+    updatedBy: number | undefined;
+    updatedAt: Date | undefined;
 }
 
 export interface ContractsDtoIEnumerableApiResponse {
@@ -1108,6 +1123,7 @@ export interface Personel {
     pK3: string | undefined;
     netUcreti: number;
     mailImzasi: string | undefined;
+    contracts: Contracts[] | undefined;
     education: Education[] | undefined;
     personelEducationMapping: PersonelEducationMapping[] | undefined;
     surveyResponse: SurveyResponse[] | undefined;
@@ -1872,10 +1888,10 @@ export interface ServicesDtoForUpdate {
 }
 
 export enum SozlesmeTipi {
-    NDA = 0,
-    HizmetSozlesmesi = 1,
-    TedarikSozlesmesi = 2,
-    Diger = 3,
+    NDA = 1,
+    HizmetSozlesmesi = 2,
+    TedarikSozlesmesi = 3,
+    Diger = 4,
 }
 
 export interface SozlesmeTipiApiResponse {
@@ -2213,6 +2229,8 @@ export interface Users {
     calendarEventCreatedByNavigation: CalendarEvent[] | undefined;
     cashAccountCreatedByNavigation: CashAccount[] | undefined;
     cashAccountUpdatedByNavigation: CashAccount[] | undefined;
+    contractsCreatedByNavigation: Contracts[] | undefined;
+    contractsUpdatedByNavigation: Contracts[] | undefined;
     educationCreatedByUser: Education[] | undefined;
     educationUpdatedByUser: Education[] | undefined;
     fileRecord: FileRecord[] | undefined;

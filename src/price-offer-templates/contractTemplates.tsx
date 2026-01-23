@@ -682,7 +682,7 @@ export const contractTemplate1 = `<div
                 </tr>
                 <tr>
                     <td>Ek:</td>
-                    <td>59</td>
+                    <td>5</td>
                 </tr>
             </table>
         </div>
@@ -701,7 +701,7 @@ export const contractTemplate1 = `<div
 
             <p style="text-align: justify; margin: 20px 0;"><strong>~kurum_adres~</strong> adresinde
                 yerleşik ve Türkiye Cumhuriyeti yasaları uyarınca kurulmuş <strong>~kurum~</strong>
-                (bundan böyle <strong>"BİCİNET"</strong> olarak anılacaktır) ile
+                (bundan böyle <strong>"~kurum_shortname~"</strong> olarak anılacaktır) ile
                 <strong>~sirket_adres~</strong>
                 adresinde yerleşik ve Türkiye Cumhuriyeti yasaları uyarınca kurulmuş
                 <strong>~sirket~</strong> (bundan böyle
@@ -754,7 +754,7 @@ export const contractTemplate1 = `<div
                         <tr>
                             <td style=" padding: 8px; width: 15%;"><strong>İsim</strong></td>
                             <td style=" padding: 8px; width: 2%;"><strong>:</strong></td>
-                            <td style=" padding: 8px; width: 33%;"></td>
+                            <td style=" padding: 8px; width: 33%;">~personelAdi~ ~personelSoyadi~</td>
                             <td style=" padding: 8px; width: 15%;"><strong>İsim</strong></td>
                             <td style=" padding: 8px; width: 2%;"><strong>:</strong></td>
                             <td style=" padding: 8px; width: 33%;"></td>
@@ -762,7 +762,7 @@ export const contractTemplate1 = `<div
                         <tr>
                             <td style=" padding: 8px;"><strong>Unvan</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
-                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;">~personelGorevi~</td>
                             <td style=" padding: 8px;"><strong>Unvan</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
                             <td style=" padding: 8px;"></td>
@@ -770,7 +770,7 @@ export const contractTemplate1 = `<div
                         <tr>
                             <td style=" padding: 8px;"><strong>Telefon No</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
-                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;">~telefonNo~</td>
                             <td style=" padding: 8px;"><strong>Telefon No</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
                             <td style=" padding: 8px;"></td>
@@ -778,7 +778,7 @@ export const contractTemplate1 = `<div
                         <tr>
                             <td style=" padding: 8px;"><strong>Faks No</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
-                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;">~telefonNo~</td>
                             <td style=" padding: 8px;"><strong>Faks No</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
                             <td style=" padding: 8px;"></td>
@@ -786,7 +786,7 @@ export const contractTemplate1 = `<div
                         <tr>
                             <td style=" padding: 8px;"><strong>E-Mail</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
-                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;">~ePosta~</td>
                             <td style=" padding: 8px;"><strong>E-Mail</strong></td>
                             <td style=" padding: 8px;"><strong>:</strong></td>
                             <td style=" padding: 8px;"></td>
@@ -939,7 +939,7 @@ export const contractTemplate1 = `<div
                 <tr>
                     <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
                     <td style=" padding: 8px;width: 2%; "><strong>:</strong></td>
-                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                    <td style=" padding: 8px;width: 33%;">~personelAdi~ ~personelSoyadi~</td>
                     <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
                     <td style=" padding: 8px;width: 2%; ">:</td>
                     <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
@@ -947,7 +947,7 @@ export const contractTemplate1 = `<div
                 <tr>
                     <td style=" padding: 8px;"><strong>Unvan</strong></td>
                     <td style=" padding: 8px;"><strong>:</strong></td>
-                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                    <td style=" padding: 8px;">~personelGorevi~</td>
                     <td style=" padding: 8px;"><strong>Unvan</strong></td>
                     <td style=" padding: 8px;"><strong>:</strong></td>
                     <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
@@ -995,3 +995,225 @@ export const contractTemplate1 = `<div
             <!-- <div style="position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 10pt; color: #666;">Sayfa 1</div> -->
         </div>
     </div>`;
+    export const nda_contract_template_en=`<div style="box-sizing: border-box; max-width: 210mm; margin: 0 auto; padding: 20mm; font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.2; color: #000;">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; border:1px solid;">
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;width: 75%;">
+            <h1 style="font-size:14pt; font-weight:bold;">
+                NON-DISCLOSURE AGREEMENT (NDA)
+            </h1>
+        </div>
+
+        <table style="font-size: 10px; border-left: 2px solid;width: 25%;padding:5px">
+            <tr>
+                <td>Document No:</td>
+                <td>~sozlesme_no~</td>
+            </tr>
+            <tr>
+                <td>Date:</td>
+                <td>~sozlesme_tarihi~</td>
+            </tr>
+            <tr>
+                <td>Rev:</td>
+                <td>00</td>
+            </tr>
+            <tr>
+                <td>Rev. Date:</td>
+                <td>:-</td>
+            </tr>
+            <tr>
+                <td>Annex:</td>
+                <td>5</td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="position: relative; padding-bottom: 40px;">
+        <p style="text-align: left; margin-bottom: 20px;"><strong>No:</strong> / /</p>
+
+        <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 30px 0;">~kurum~</h1>
+
+        <h2 style="text-align: center; font-size: 12pt; font-weight: bold; margin: 20px 0;">AND</h2>
+
+        <h2 style="text-align: center; font-size: 12pt; font-weight: bold; margin: 20px 0;">~sirket~</h2>
+
+        <h2 style="text-align: center; font-size: 12pt; font-weight: bold; margin: 20px 0;">BETWEEN</h2>
+
+        <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 30px 0;">NON-DISCLOSURE AGREEMENT<br>(NDA)</h1>
+
+        <p style="text-align: justify; margin: 20px 0;">This Agreement is made and entered into between <strong>~kurum~</strong>, located at <strong>~kurum_adres~</strong>, established under the laws of the REPUBLIC of TURKIYE (hereinafter referred to as <strong>"~kurum_shortname~"</strong>) and <strong>.~sirket~</strong> located at <strong>~sirket_adres~</strong> (hereinafter referred to as <strong>"ŞİRKET KISA AD"</strong>) (each individually referred to as a "<strong>Party</strong>" and collectively as the "<strong>Parties</strong>").</p>
+
+        <h3 style="font-size: 12pt; font-weight: bold; margin: 20px 0;">This Agreement hereby:</h3>
+
+        <p style="text-align: justify; margin: 15px 0;">Establishes the regulation of the exchange of confidential information that the Parties will disclose to each other in the work they will carry out within the scope of <strong>"~sozlesme_adi~"</strong> (hereinafter referred to as the <strong>"Project"</strong>) and to determine the rights and obligations for the protection of the disclosed information.</p>
+
+        <p style="text-align: justify; margin: 15px 0;">For the above-mentioned purpose, the Parties have agreed as follows:</p>
+
+        <ol style="text-align: justify; margin: 15px 0; padding-left: 25px;">
+            <li style="margin-bottom: 15px;">This agreement sets out the obligations of both Parties with respect to the use and protection of confidential information to be exchanged between the Parties in order to carry out the work required under the Project. However, this Agreement does not obligate the Parties to disclose any documents and/or information to each other.</li>
+
+            <li style="margin-bottom: 15px;">The term "Confidential Information" as used in this Agreement shall mean any written information, documents, software, etc. provided by the disclosing Party to the other Party and marked by the disclosing Party as "Top Secret", "Confidential", "Trade Secret", "Restricted Data" or similar notices, including, but not limited to, any written information, documents, software, etc. on the System owned by the disclosing Party containing information and programs of the Information Processing, design information of the company, technical information, trade secrets, ideas and inventions. In addition, any confidential information disclosed orally, visually, by means of samples and models (not in writing) and/or any confidential information that may be obtained by examining, testing or using similar methods of examining, or testing devices or components that may be provided by the disclosing Party to the other Party shall therein be referred to as "Confidential Information" and shall be treated under this Agreement. In the event that Confidential Information is disclosed orally, it shall be stated that the Confidential Information is confidential Information and this shall be confirmed in writing within fifteen (15) days. The obligations under the Agreement shall also apply within such fifteen (15) day period.</li>
+
+            <li style="margin-bottom: 15px;">The points of contact designated by both parties for the purpose of receiving and controlling the information to be exchanged pursuant to this Agreement are given below.
+
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <tr>
+                        <td colspan="2" style="padding: 8px;"><strong>~kurum_shortname~</strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 8px;"><strong>~kurum_adres~</strong></td>
+                    </tr>
+                </table>
+
+                <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <tr>
+                        <td style="padding: 8px; width: 15%;"><strong>Name</strong></td>
+                        <td style="padding: 8px; width: 2%;"><strong>:</strong></td>
+                        <td style="padding: 8px; width: 33%;">~personelAdi~ ~personelSoyadi~</td>
+                        <td style="padding: 8px; width: 15%;"><strong>Name</strong></td>
+                        <td style="padding: 8px; width: 2%;"><strong>:</strong></td>
+                        <td style="padding: 8px; width: 33%;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>Title</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;"></td>
+                        <td style="padding: 8px;"><strong>Title</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>Phone No</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;">~telefonNo~</td>
+                        <td style="padding: 8px;"><strong>Phone No</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>Fax No</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;">~telefonNo~</td>
+                        <td style="padding: 8px;"><strong>Fax No</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>E-Mail</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;">~ePosta~</td>
+                        <td style="padding: 8px;"><strong>E-Mail</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>Signature</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px; height: 60px;"></td>
+                        <td style="padding: 8px;"><strong>Signature</strong></td>
+                        <td style="padding: 8px;"><strong>:</strong></td>
+                        <td style="padding: 8px;"></td>
+                    </tr>
+                </table>
+
+                <p style="text-align: justify; margin: 20px 0; padding-left: 20px;">Each Party shall have the right and authority to change the person authorized to receive the information to be exchanged under this Agreement within its own organization by giving written notice to the other Party. Confidential Information to be exchanged between the above-named officials may be transmitted by mail/courier system, any written or printed document, electronic media, sample, model or by any other method that the Parties may choose during the term of this Agreement.</p>
+            </li>
+
+            <li style="margin-bottom: 15px;">Parties shall;
+                <ol type="a" style="margin-top: 10px; padding-left: 20px;">
+                    <li style="margin-bottom: 10px;">Use the Confidential Information only for the Project purposes and in accordance with the purpose which it was disclosed by the other Party,</li>
+                    <li style="margin-bottom: 10px;">Make Confidential Information available to its own personnel on a "Need-to-Know" basis, provided that they are relevant and that they comply with the terms of this Agreement,</li>
+                    <li style="margin-bottom: 10px;">Not to disclose Confidential Information to third parties, including its shareholders, affiliates and subsidiaries, without the consent of the Party providing the Confidential Information,</li>
+                    <li style="margin-bottom: 10px;">Not copy or reproduce the Confidential Information in whole or in part in any form whatsoever, except to the extent necessary for the fulfillment of the purposes of this Agreement; if copied or reproduced in whole or in part with the written consent of the other Party, to ensure that the copied or reproduced copies bear a restrictive legend equivalent that on the original text,</li>
+                    <li style="margin-bottom: 10px;">Not directly or indirectly manufacture, sell at home or abroad, or have others manufacture, devices that contain or use the Confidential Information of the other Party or make use of the Confidential Information,</li>
+                    <li style="margin-bottom: 10px;">In accordance with the provisions of this Agreement, the organization, subcontractor or other third party to whom Confidential Information is transferred shall be bound by the same limitations on the retention and disclosure of Confidential Information, and the Party receiving the Confidential Information shall be responsible for ensuring this condition,</li>
+                </ol>
+                <p style="margin: 15px 0; padding-left: 20px;">accept and undertake.</p>
+            </li>
+
+            <li style="margin-bottom: 15px;">If the Confidential Information disclosed by the Parties:
+                <ol type="a" style="margin-top: 10px; padding-left: 20px;">
+                    <li style="margin-bottom: 10px;">Was known to the receiving Party at the time of receipt and this can be proven with sufficient documentation, or</li>
+                    <li style="margin-bottom: 10px;">Was independently developed by employees of the receiving Party who were not aware of the Confidential Information, and this can be proven with sufficient documentation, or</li>
+                    <li style="margin-bottom: 10px;">Was known to the public at the time of disclosure or subsequently became public through no fault of the receiving Party, or</li>
+                    <li style="margin-bottom: 10px;">Was lawfully obtained from a third party without similar restrictions and without breach of this Agreement, provided that necessary research and investigation were conducted to confirm that the third party was not under an obligation not to disclose the Confidential Information, and this can be proven with sufficient documentation, or</li>
+                    <li style="margin-bottom: 10px;">Needs to be disclosed by the receiving Party to its Government and/or to its country's civil servants or institutions or judicial authorities performing their legal duties within the framework of the laws, provided that the disclosing Party is informed in writing in advance and upon the receiving Party's request, cooperation is made to discuss such disclosure and to find the most appropriate alternative protection solution, or is approved with the written consent of the disclosing Party for publication or use, the restrictions under Article 4 shall not apply to the receiving Party.</li>
+                </ol>
+            </li>
+
+            <li style="margin-bottom: 15px;">The Receiving Party shall exercise at least the same degree of care in protecting the Confidential Information as it uses to protect its own Confidential Information of equal importance.</li>
+
+            <li style="margin-bottom: 15px;">In the event that either Party breaches any of its obligations under this Agreement, particularly those related to the protection of Confidential Information obtained under this Agreement, the breaching Party shall be liable for any damages and losses that may occur. Additionally;
+                <ol type="a" style="margin-top: 10px; padding-left: 20px;">
+                    <li style="margin-bottom: 10px;">In the event that the disclosure or use of this information is discovered, the Receiving Party shall make efforts to prevent any further disclosure or use.</li>
+                    <li style="margin-bottom: 10px;">The Receiving Party shall immediately notify the Disclosing Party of the current circumstances and shall implement all corrective measures requested by the Disclosing Party.</li>
+                </ol>
+            </li>
+
+            <li style="margin-bottom: 15px;">The Disclosing Party shall not be held liable for any errors or omissions in the Confidential Information disclosed under this Agreement, or for any damage or harm that may occur to the Receiving Party's equipment, tools, devices, personnel, and/or third parties as a result of using this information.</li>
+
+            <li style="margin-bottom: 15px;">Nothing in this Agreement shall be construed as granting, either expressly or impliedly, any rights to any intellectual and/or industrial property.</li>
+
+            <li style="margin-bottom: 15px;">This Agreement shall remain in effect for a period of 5 (Five) years from the date it is signed by the Parties, unless extended by written agreement of the Parties. However, either Party may terminate this Agreement before its expiration date by giving the other Party written notice 30 (Thirty) calendar days in advance.</li>
+
+            <li style="margin-bottom: 15px;">In the event that this Agreement is terminated or expires as specified herein, the Parties shall immediately cease using the Confidential Information belonging to the other Party. All copies of Confidential Information and documents belonging to the Disclosing Party that are in the possession of the Receiving Party shall be returned to the Disclosing Party upon request or destroyed as directed by the Disclosing Party, and a certificate of destruction shall be provided.</li>
+
+            <li style="margin-bottom: 15px;">The termination or expiration of this Agreement shall not relieve the Parties of their obligations under Articles 4 and 5 regarding the protection of information obtained before the termination or expiration date.</li>
+
+            <li style="margin-bottom: 15px;">This Agreement, except for the provisions set forth herein, does not confer any rights or obligations on the Parties. Furthermore, it shall not be construed as an intention by the Parties to establish a joint venture, partnership, or any other formal business arrangement, nor as an agreement to work together or to enter into another contract in the future.</li>
+
+            <li style="margin-bottom: 15px;">This Agreement does not prevent the Parties from entering into similar agreements with third parties on the same or similar subjects.</li>
+
+            <li style="margin-bottom: 15px;">The Parties agree not to request reimbursement from the other Party for any expenses that may be incurred in performing the work under this Agreement. If payment is requested for any activity under this Agreement, the terms and conditions shall be determined by a separate agreement with the mutual consent of the Parties.</li>
+
+            <li style="margin-bottom: 15px;">The technical drawings or documents sent by Bicinet to obtain cost or quotations may not be shared with any third party.</li>
+
+            <li style="margin-bottom: 15px;">Any disputes arising from the interpretation and execution of this Agreement shall be resolved through mutual negotiations, and for all unresolved disputes, the laws of the Republic of Turkey shall apply, and the Ankara Courts and Enforcement Offices shall have jurisdiction.</li>
+
+            <li style="margin-bottom: 15px;">Products and technical data for which Bicinet owns the rights and for which technical data sets are provided by Bicinet to the other party for production purposes cannot be exhibited at any fair or promotional organization within the scope of commercial activities.</li>
+
+            <li style="margin-bottom: 15px;">The above Articles constitute the entire Agreement between the Parties and supersede any prior oral or written agreements, commitments, or understandings related to the subject matter of this Agreement. Any Amendments to this Agreement can only be made with the written consent of the Parties and shall only take effect upon the signatures of the authorized representatives of the Parties.</li>
+        </ol>
+
+        <p style="text-align: justify; margin: 30px 0 20px 0;">In confirmation of the above matters, this Agreement has been signed and come into effect on / / by the authorized representatives of the Parties, in eighteen (18) Articles and two (2) copies.</p>
+
+        <table style="width: 100%; border-collapse: collapse; margin: 30px 0;">
+            <tr>
+                <td style="padding: 8px;" colspan="3"><strong>Representing ~kurum_shortname~</strong></td>
+                <td style="padding: 8px;" colspan="3"><strong>Representing</strong></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px;width: 15%;"><strong>Name</strong></td>
+                <td style="padding: 8px;width: 2%;"><strong>:</strong></td>
+                <td style="padding: 8px;width: 33%;">~personelAdi~ ~personelSoyadi~</td>
+                <td style="padding: 8px;width: 15%;"><strong>Name</strong></td>
+                <td style="padding: 8px;width: 2%;">:</td>
+                <td style="padding: 8px;width: 33%;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px;"><strong>Title</strong></td>
+                <td style="padding: 8px;"><strong>:</strong></td>
+                <td style="padding: 8px;"></td>
+                <td style="padding: 8px;"><strong>Title</strong></td>
+                <td style="padding: 8px;"><strong>:</strong></td>
+                <td style="padding: 8px;"></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px;"><strong>Date</strong></td>
+                <td style="padding: 8px;"><strong>:</strong></td>
+                <td style="padding: 8px;">~sozlesmeTarihi~</td>
+                <td style="padding: 8px;"><strong>Date</strong></td>
+                <td style="padding: 8px;"><strong>:</strong></td>
+                <td style="padding: 8px;">~sozlesmeTarihi~</td>
+            </tr>
+            <tr>
+                <td style="padding: 8px;"><strong>Stamp/Signature</strong></td>
+                <td style="padding: 8px;"><strong>:</strong></td>
+                <td style="padding: 8px; height: 80px;"></td>
+                <td style="padding: 8px;"><strong>Stamp/Signature</strong></td>
+                <td style="padding: 8px;"><strong>:</strong></td>
+                <td style="padding: 8px;"></td>
+            </tr>
+        </table>
+    </div>
+</div>`;
