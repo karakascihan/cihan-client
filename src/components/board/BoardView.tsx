@@ -49,9 +49,11 @@ import ItemRow from '../item/ItemRow';
 import { getRandomColor } from '../../utils/colors';
 import { FiPlus } from 'react-icons/fi';
 import { DEFAULT_ZOOM_INDEX } from '../common/constants';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { setSelectedBoard } from '@/store/features/boardSlice';
 import { fetchUsers } from '@/store/slices/userSlice';
+import { useModal } from '@/context/ModalContext';
+import AddBoardForm from './AddBoardForm';
 
 const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -65,10 +67,31 @@ export const INDENT_STEP = 40;
 const BoardView: React.FC = () => {
     const dispatch = useAppDispatch();
     const { boardId } = useParams();
+    const { openModal } = useModal();
+    const navigate = useNavigate();
+    
        const { selectedBoardId } = useAppSelector(s => s.boards);
     useEffect(() => {
         if(boardId)
       dispatch(setSelectedBoard(Number(boardId)))
+    else {
+        openModal({
+                title: "Proje Uygulama Takimi Oluşturma",
+                content: function (
+                  close: (result: any) => void
+                ): React.ReactNode {
+                  return (
+                    <AddBoardForm projectType={undefined} onClose={function (boardId: number): void {
+                      if (boardId != -1) {
+                        close(null);
+                        navigate("/proje/" + boardId)
+                      }
+                    }} />
+                  );
+                },
+              });
+        
+    }
     }, [boardId,selectedBoardId])
  
     // Selectors
@@ -114,9 +137,9 @@ const BoardView: React.FC = () => {
     }, [selectedBoardId, dispatch]);
 
     // --- HANDLERS ---
-    const handleCreateView = (type: 'table' | 'gantt' | 'calendar') => {
+    const handleCreateView = (type: 'table' | 'gantt') => {
         if (!selectedBoardId) return;
-        let defaultName = type === 'table' ? 'Tablo Görünümü' : type === 'gantt' ? 'Gantt Görünümü' : 'Takvim';
+        let defaultName = type === 'table' ? 'Tablo Görünümü' : type === 'gantt' ? 'Gantt Görünümü' : 'table';
         dispatch(createBoardView({
             boardId: selectedBoardId,
             payload: { name: defaultName, type: type }

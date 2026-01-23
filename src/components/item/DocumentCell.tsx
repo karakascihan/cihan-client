@@ -19,7 +19,7 @@ interface DocumentCellProps {
 const DocumentCell: React.FC<DocumentCellProps> = ({ item, column }) => {
     const dispatch = useAppDispatch();
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const currentValue = item.itemValues.find(v => v.columnId === column.id)?.value || '';
+    const currentValue = item.itemValue.find(v => v.columnId === column.id)?.value || '';
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {

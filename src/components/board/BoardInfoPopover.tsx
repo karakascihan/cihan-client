@@ -1,8 +1,11 @@
 import React from 'react';
 import { useAppSelector } from '../../store/hooks';
-import { FiStar, FiBell } from 'react-icons/fi';
+import { FiStar, FiBell, FiEdit } from 'react-icons/fi';
 import { BsKanban } from 'react-icons/bs';
 import { selectSelectedBoard } from '../../store/features/boardSlice';
+import { useModal } from '@/context/ModalContext';
+import { Edit } from 'lucide-react';
+import EditBoardForm from './EditBoardForm';
 
 const InfoRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
     <div className="flex items-center justify-between text-sm">
@@ -14,8 +17,8 @@ const InfoRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label
 );
 
 const BoardInfoPopover: React.FC = () => {
-    const selectedBoard = useAppSelector(selectSelectedBoard);
-
+        const selectedBoard = useAppSelector(selectSelectedBoard);
+    const { openModal } = useModal();
     if (!selectedBoard) return null;
 
     return (
@@ -24,7 +27,16 @@ const BoardInfoPopover: React.FC = () => {
             <div className="flex items-center justify-between">
                 <h3 className="font-title text-lg font-bold text-text-primary truncate">{selectedBoard.name}</h3>
                 <div className="flex items-center">
-                    <button className="p-2 text-text-secondary hover:bg-gray-100 rounded-md"><FiStar /></button>
+                    <button onClick={()=>{
+                       openModal({
+                           title: 'Proje düzenle',
+                           content: function (close: (result: any) => void): React.ReactNode {
+                               return <EditBoardForm
+                                   board={selectedBoard}
+                                   onClose={() => close(null)} />;
+                           }
+                       });
+                    }} className="p-2 text-text-secondary hover:bg-gray-100 rounded-md"><FiEdit /></button>
                 </div>
             </div>
 

@@ -651,3 +651,347 @@ export const contractTemplate1 = `<div
             </div>
         </div>
     </div>`;
+    export const nda_contract_template=`
+    <div
+        style="box-sizing: border-box; max-width: 210mm; margin: 0 auto; font-family:  Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.2; color: #000;">
+
+        <div style="display:flex; justify-content:space-between; align-items:center; border:1px solid;">
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;width: 75%;">
+
+                <h1 style=" font-size:14pt; font-weight:bold;">
+                    NDA GİZLİLİK ANLAŞMASI
+                </h1>
+            </div>
+
+            <table style="font-size: 10px; border-left: 2px solid;width: 25%;padding:5px">
+                <tr>
+                    <td>Doküman No:</td>
+                    <td>~sozlesme_no~</td>
+                </tr>
+                <tr>
+                    <td>Tarih:</td>
+                    <td>~sozlesme_tarihi~</td>
+                </tr>
+                <tr>
+                    <td>Rev:</td>
+                    <td>00</td>
+                </tr>
+                <tr>
+                    <td>Rev. Tar.:</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Ek:</td>
+                    <td>59</td>
+                </tr>
+            </table>
+        </div>
+        <div style="  position: relative; padding-bottom: 40px;">
+            <p style="text-align: left; margin-bottom: 20px;"><strong>Sayı:</strong></p>
+
+            <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 30px 0;">~kurum~</h1>
+
+            <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 20px 0;">İLE</h1>
+
+            <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 20px 0;">~sirket~</h1>
+
+            <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 20px 0;">ARASINDA</h1>
+            <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 30px 0;">GİZLİLİK
+                ANLAŞMASI<br>NON-DISCLOSURE AGREEMENT</h1>
+
+            <p style="text-align: justify; margin: 20px 0;"><strong>~kurum_adres~</strong> adresinde
+                yerleşik ve Türkiye Cumhuriyeti yasaları uyarınca kurulmuş <strong>~kurum~</strong>
+                (bundan böyle <strong>"BİCİNET"</strong> olarak anılacaktır) ile
+                <strong>~sirket_adres~</strong>
+                adresinde yerleşik ve Türkiye Cumhuriyeti yasaları uyarınca kurulmuş
+                <strong>~sirket~</strong> (bundan böyle
+                <strong>"ŞİRKET KISA AD"</strong> olarak anılacaktır) arasında (her ikisi de tek tek "Taraf" veya
+                birlikte "Taraflar" olarak anılacaktır) akdedilen,
+            </p>
+
+            <h3 style="font-size: 12pt; font-weight: bold; margin: 20px 0;">İşbu Anlaşma;</h3>
+
+            <p style="text-align: justify; margin: 15px 0;">Tarafların <strong>"~sozlesme_adi~"</strong> Projesi
+                (bundan böyle <strong>"Proje"</strong> olarak anılacaktır) kapsamında yapacakları çalışmalarda
+                birbirlerine açıklayacakları gizlilik dereceli bilgilerin değişiminin düzenlenmesi ve açıklanan
+                bilgilerin korunmasına yönelik hak ve yükümlülüklerin belirlenmesi amacıyla düzenlenmiştir.</p>
+
+            <p style="text-align: justify; margin: 15px 0;">Yukarıda belirtilen amaç doğrultusunda, Taraflar aşağıdaki
+                hususlarda anlaşmaya varmışlardır:</p>
+
+            <ol style="text-align: justify; margin: 15px 0; padding-left: 25px;">
+                <li style="margin-bottom: 15px;">Bu Anlaşma, Proje kapsamında yapılması gereken çalışmaların
+                    sürdürülebilmesi için Taraflar arasında değişimi yapılacak olan gizlilik dereceli bilgilerin
+                    kullanılması ve korunması konusunda, her iki Tarafın yükümlülüklerini belirler. Ancak; bu Anlaşma
+                    Tarafları, herhangi bir doküman ve/veya bilgiyi birbirlerine ifşa etmek yükümlüğüne sokmaz.</li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşmada kullanılan "Gizli Bilgi" terimi ile, açıklayan Tarafça
+                    diğer Tarafa verilen ve üzerinde açıklayan Tarafça konulmuş "Çok Gizli", "Gizli", "Ticari Gizli",
+                    "Hizmete Özel" veya benzeri uyarılar bulunan ve bunlarla sınırlı olmamak üzere; açıklayan Tarafın
+                    sahip olduğu Sistem üzerinde bilgi İşleme ait bilgi ve programları, firmaya ait tasarım bilgilerini,
+                    teknik bilgileri, ticari sırları, fikirleri ve buluşları içeren her türlü yazılı bilgi, belge,
+                    yazılım vb. kastedilecektir. Ayrıca; sözlü, görsel, örnekler veya modeller ile açıklanan (yazılı
+                    olmayan) ve gizlilik derecesi olan bilgiler ve/veya açıklayan Tarafça diğer Tarafa verilebilecek
+                    cihazların veya komponentlerinin incelenmesi, test edilmesi ve benzeri yöntemlerin kullanılması
+                    sureti ile edinilebilecek gizlilik dereceli bilgiler bundan böyle "Gizli Bilgi" olarak anılacaktır
+                    ve bu Anlaşma kapsamında işlem görecektir. Gizli Bilgi'nin sözlü olarak açıklanması durumunda ise
+                    açıklama esnasında Gizli Bilgi'nin bilginin gizlilik dereceli olduğu belirtilecek ve ayrıca bu durum
+                    onbeş (15) gün içinde yazılı olarak teyit edilecektir. Anlaşma kapsamındaki yükümlülükler bahse konu
+                    on beş (15) günlük süre içerisinde de geçerli olacaktır.</li>
+                <li style="margin-bottom: 15px;">Bu Anlaşmaya göre değişimi yapılacak bilgilerin teslim alınması ve
+                    kontrol altında tutulması amacı ile her iki tarafça tayin edilen temas noktaları aşağıda
+                    verilmiştir.
+                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0; ">
+                        <tr>
+                            <td colspan="2" style=" padding: 8px;"><strong>~kurum_shortname~</strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style=" padding: 8px;"><strong>~kurum_adres~</strong></td>
+                        </tr>
+                    </table>
+                    <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                        <tr>
+                            <td style=" padding: 8px; width: 15%;"><strong>İsim</strong></td>
+                            <td style=" padding: 8px; width: 2%;"><strong>:</strong></td>
+                            <td style=" padding: 8px; width: 33%;"></td>
+                            <td style=" padding: 8px; width: 15%;"><strong>İsim</strong></td>
+                            <td style=" padding: 8px; width: 2%;"><strong>:</strong></td>
+                            <td style=" padding: 8px; width: 33%;"></td>
+                        </tr>
+                        <tr>
+                            <td style=" padding: 8px;"><strong>Unvan</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;"><strong>Unvan</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                        </tr>
+                        <tr>
+                            <td style=" padding: 8px;"><strong>Telefon No</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;"><strong>Telefon No</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                        </tr>
+                        <tr>
+                            <td style=" padding: 8px;"><strong>Faks No</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;"><strong>Faks No</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                        </tr>
+                        <tr>
+                            <td style=" padding: 8px;"><strong>E-Mail</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;"><strong>E-Mail</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                        </tr>
+                        <tr>
+                            <td style=" padding: 8px;"><strong>İmza</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                            <td style=" padding: 8px;"><strong>İmza</strong></td>
+                            <td style=" padding: 8px;"><strong>:</strong></td>
+                            <td style=" padding: 8px;"></td>
+                        </tr>
+                    </table>
+                    <p style="text-align: justify; margin: 20px 0; padding-left: 20px;">Taraflar, bu Anlaşma kapsamında
+                        değişimi yapılacak bilgileri kendi kuruluşunda teslim almaya yetkili olan şahsı diğer Tarafa
+                        yazılı ihbarda bulunmak suretiyle değiştirme hak ve yetkisine sahip olacaktır. Yukarıda isimleri
+                        belirtilen yetkililer arasında değişimi yapılacak Gizli Bilgi, posta/kurye sistemi, herhangi bir
+                        yazılı ya da basılı doküman, elektronik ortam, örnek, model olarak veya Tarafların bu Anlaşma
+                        süresince tercih edeceği başka bir yöntemle aktarılabilecektir.</p>
+
+                </li>
+                <li style="margin-bottom: 15px;">Taraflar;
+                    <ol type="a" style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 10px;">Gizli Bilgi'yi sadece Proje amaçları için ve diğer Tarafça
+                            açıklanma amacına uygun olarak kullanmayı,</li>
+                        <li style="margin-bottom: 10px;">Gizli Bilgi'yi konuyla ilgili olmaları şartıyla "Bilmesi
+                            Gereken" prensibine göre kendi personeline bu Anlaşma şartlarına uymalarını sağlamak sureti
+                            ile vermeyi,</li>
+                        <li style="margin-bottom: 10px;">Gizli Bilgi'yi, Gizli Bilgi'yi veren tarafın onayı olmadan
+                            hissedarları, bağlı şirketleri ve yan kuruluşları dahil olmak üzere üçüncü şahıslara
+                            açıklamamayı,</li>
+                        <li style="margin-bottom: 10px;">Bu Anlaşmanın amaçlarının yerine getirilmesi için gerekli olan
+                            haller dışında, Gizli Bilgi'yi tamamen veya kısmen herhangi bir şekilde kopyalamamayı veya
+                            çoğaltmamayı; eğer diğer Tarafın yazılı onayı ile tamamen veya kısmen kopyalamış veya
+                            çoğaltmışsa, kopyalanmış veya çoğaltılmış nüshaların üzerinde orijinal metnin üzerinde
+                            bulunanlara eşdeğer kısıtlayıcı bir ibarenin olmasını,</li>
+                        <li style="margin-bottom: 10px;">Diğer Tarafa ait Gizli Bilgi'yi ihtiva eden veya kullanan ya da
+                            Gizli Bilgi'den istifade eden cihazları doğrudan veya dolaylı yoldan imal etmemeyi,
+                            yurtiçinde veya yurtdışında satmamayı veya başkasına imal ettirmemeyi,</li>
+                        <li style="margin-bottom: 10px;">Bu Anlaşma hükümlerine uygun olarak, Gizli Bilgi'nin
+                            aktarıldığı kuruluş, alt yüklenici ya da diğer üçüncü taraflar da Gizli Bilgi'nin saklanması
+                            ve açıklanması ile ilgili olarak aynı sınırlamalara bağlı olacağını ve bu koşulun sağlanması
+                            sorumluluğunun Gizli Bilgi'yi alan Taraf'a ait olacağını,</li>
+                    </ol>
+                    <p style="margin: 15px 0; padding-left: 20px;">kabul ve taahhüt eder.</p>
+
+                </li>
+                <li style="margin-bottom: 15px;">Eğer Taraflarca açıklanan Gizli Bilgi,
+                    <ol type="a" style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 10px;">Alındıkları tarihte, bilgiyi alan Tarafça biliniyorsa ve bu
+                            durum yeterli belge(ler) ile kanıtlanabiliyorsa veya</li>
+                        <li style="margin-bottom: 10px;">Gizli Bilgi'yi alan Tarafın bu bilgilerden haberdar olmayan
+                            personelince bağımsız olarak geliştirilmişse ve bu durum yeterli belge(ler) ile
+                            kanıtlanabiliyorsa veya</li>
+                        <li style="margin-bottom: 10px;">Kamu tarafından o sırada biliniyorsa veya alan Tarafın hiçbir
+                            kusuru olmaksızın kamuya daha sonra bildirilmişse veya</li>
+                        <li style="margin-bottom: 10px;">Benzer kısıtlamalar olmaksızın ve bu Anlaşmayı ihlal
+                            etmeksizin, üçüncü bir şahıstan, üçüncü şahsın Gizli Bilgi'sini ifşa etmeme yükümlülüğü
+                            altında olmadığına ilişkin gerekli tüm araştırma ve incelemelerin yerine getirilmesini
+                            müteakip, kanuni bir şekilde alınmışlarsa ve bu durum yeterli belge(ler) ile
+                            kanıtlanabiliyorsa veya</li>
+                        <li style="margin-bottom: 10px;">Gizli Bilgi'yi alan Tarafın, Hükümetine ve/veya kanuni
+                            görevlerini ifa etmekte olan kendi ülkelerinin devlet memurlarına veya kurumlarına veya
+                            yargı makamlarına kanunlar çerçevesi içinde açıklanması gerekli ise, Gizli Bilgi'yi veren
+                            Tarafı önceden yazılı olarak bilgilendirmek ve Gizli Bilgi'yi alan Tarafın talebi üzerine,
+                            bu gibi bir ifşayı tartışmak ve en uygun alternatif koruma çözümü bulmak üzere işbirliğinde
+                            bulunmak suretiyle veya yayınlanmaları veya kullanılmaları açıklayan Tarafın yazılı izni ile
+                            onaylanmışsa alan Taraf için Madde 4 kapsamındaki kısıtlamalar geçerli olmayacaktır.</li>
+                    </ol>
+                </li>
+                <li style="margin-bottom: 15px;">Alan Taraf Gizli Bilgi'yi, en az kendisine ait olan ve aynı derecede
+                    önemli Gizli Bilgi'yi korumak için sarf ettiği itinayı gösterecektir.</li>
+
+                <li style="margin-bottom: 15px;">Taraflar, bu Anlaşma kapsamında ve özellikle bu Anlaşmaya göre elde
+                    edilen Gizli Bilgi'nin korunmasına ilişkin yükümlülüklerinden herhangi birini ihlal etmesi durumunda
+                    ihlal eden Taraf, meydana gelebilecek zarar ve ziyanı karşılamakla yükümlü olacaktır. Ayrıca;
+                    <ol type="a" style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 10px;">Bu bilgilerin açıklandığının veya kullanıldığının ortaya
+                            çıkması halinde alan Taraf daha başka açıklama yapılmasını veya kullanımı önlemek için
+                            gayret sarf edecektir.</li>
+                        <li style="margin-bottom: 10px;">Alan Taraf açıklayan Tarafa o sıradaki mevcut şartları derhal
+                            bildirecek ve açıklayan Tarafça talep edilen tüm düzeltici önlemleri uygulamaya koyacaktır.
+                        </li>
+                    </ol>
+                </li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşma kapsamında açıklanan Gizli Bilgilerde bulunan herhangi bir
+                    hata ya da eksiklik nedeniyle veya bu bilgilerin kullanılması sonucu, kullanan Tarafın cihaz, araç,
+                    gereçlerinde, personelinde ve/veya üçüncü şahıslarda meydana gelebilecek zarar ve hasar dolayısı ile
+                    açıklayan Taraf sorumlu tutulmayacaktır.</li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşmada yer alan hiçbir hüküm herhangi bir fikri ve/veya sınaî
+                    mülkiyet hakkına ilişkin olarak açıkça veya zımnen herhangi bir hakkın verildiği şeklinde
+                    yorumlanmayacaktır.</li>
+                <li style="margin-bottom: 15px;">Bu Anlaşma, Tarafların yazılı mutabakatı ile uzatılmadığı takdirde,
+                    Taraflarca imzalandığı tarihten itibaren 5 (Beş) yıl süre ile yürürlükte kalacaktır. Ancak,
+                    Taraflardan her biri diğer Tarafa 30 (Otuz) takvim günü önceden yazılı ihbarda bulunarak bu
+                    Anlaşmayı sona erme tarihinden önce feshedebilir.</li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşma burada belirtildiği üzere feshedildiği veya sona erdiği
+                    takdirde, Taraflar diğer Tarafa ait Gizli Bilgilerin kullanımına derhal son verecek, açıklayan
+                    Tarafa ait olan ve diğer Tarafın elinde bulunan tüm Gizli Bilgiler ve belgelerin kopyaları,
+                    açıklayan Tarafın talebi halinde iade edilecek veya açıklayan Tarafın belirteceği şekilde imha
+                    edilecektir ve imha edildiğine dair belge ibraz edilecektir.</li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşmanın feshedilmesi veya sona ermesi, sona erme veya fesih
+                    tarihinden önce alınmış bilgilerin korunmasıyla ilgili olarak madde 4 ve 5'de yer alan Taraflara
+                    yüklenen yükümlülükleri ortadan kaldırmayacaktır.</li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşma; burada açıklanan hükümler haricinde, Taraflara herhangi bir
+                    hak ve yükümlülük getirmez, ayrıca; Tarafların ortak girişim, ortaklık veya resmi mahiyette başka
+                    bir işin kurulmasını amaçladığı, birlikte çalışacakları veya gelecekte başka bir sözleşme yapılacağı
+                    şeklinde yorumlanamaz.</li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşma Tarafların aynı veya benzer konularda üçüncü şahıslarla
+                    benzer anlaşmalar yapmalarına engel teşkil etmez.</li>
+
+                <li style="margin-bottom: 15px;">Taraflar, bu Anlaşma kapsamında gerçekleştireceği çalışmalar için
+                    yapması gerekebilecek harcamaları diğer Taraftan talep etmemeyi kabul eder. Bu Anlaşma kapsamında
+                    herhangi bir faaliyet için ödeme talep edilirse, şart ve koşulları Tarafların mutabakatı ile ayrı
+                    bir sözleşme ile belirlenebilir.</li>
+
+                <li style="margin-bottom: 15px;">Bicinet tarafından maliyet veya teklif alabilmek için gönderilen teknik
+                    resim veya doküman üçüncü bir şahıs ile paylaşılamaz.</li>
+
+                <li style="margin-bottom: 15px;">Bu Anlaşmanın yorum ve icrasından doğabilecek anlaşmazlıklar karşılıklı
+                    müzakereler yolu ile çözülmeye çalışılacak, çözülemeyen bütün anlaşmazlıklarda T.C. kanunları
+                    uygulanacak olup, anlaşmazlıklara Ankara Mahkemeleri ve İcra Daireleri bakmaya yetkili olacaktır.
+                </li>
+
+                <li style="margin-bottom: 15px;">Hakları Bicinet'e ait olup, üretim yapılması maksadıyla karşı firmaya
+                    Bicinet tarafından teknik veri setleri sağlanan ürün ve teknik verileri ticari vb. faaliyetler
+                    kapsamında herhangi bir fuar veya tanıtım organizasyonunda sergilenemez.</li>
+
+                <li style="margin-bottom: 15px;">Yukarıdaki Maddeler Taraflar arasındaki Anlaşmanın tümünü teşkil
+                    etmekte olup, bu Anlaşmanın konusuna ilişkin olarak daha önce sözlü veya yazılı olarak yapılmış olan
+                    her türlü anlaşmanın, taahhüdün, mutabakatın yerine geçer. Bu Anlaşmada değişiklik ancak Tarafların
+                    yazılı mutabakatı ile yapılabilir ve değişiklik ancak tarafların yetkili temsilcilerinin imzası ile
+                    yürürlüğe girer.</li>
+            </ol>
+            <p style="text-align: justify; margin: 30px 0 20px 0;">Yukarıdaki hususları teyiden, bu Anlaşma Tarafların
+                yetkililerince / / tarihinde, on dokuz (19) Madde ve iki (2) nüsha olarak imzalanmış ve yürürlüğe
+                girmiştir.</p>
+            <table style="width: 100%; border-collapse: collapse; margin: 30px 0;">
+                <tr>
+                    <td style=" padding: 8px; " colspan="3"><strong>~kurum_shortname~</strong></td>
+                    <td style=" padding: 8px; " colspan="3"><strong>Karşı Kısa Ad</strong></td>
+
+                </tr>
+                <tr>
+                    <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
+                    <td style=" padding: 8px;width: 2%; "><strong>:</strong></td>
+                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                    <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
+                    <td style=" padding: 8px;width: 2%; ">:</td>
+                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                </tr>
+                <tr>
+                    <td style=" padding: 8px;"><strong>Unvan</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                    <td style=" padding: 8px;"><strong>Unvan</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                </tr>
+                <tr>
+                    <td style=" padding: 8px;"><strong>İmza</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;"></td>
+                    <td style=" padding: 8px;"><strong>İmza</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;"></td>
+                </tr>
+            </table>
+             <table style="width: 100%; border-collapse: collapse; margin: 50px 0;">
+                <tr>
+                    <td style=" padding: 8px; " colspan="3"><strong>~kurum_shortname~</strong></td>
+                    <td style=" padding: 8px; " colspan="3"><strong>Karşı Kısa Ad</strong></td>
+                </tr>
+                <tr>
+                    <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
+                    <td style=" padding: 8px;width: 2%; "><strong>:</strong></td>
+                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                    <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
+                    <td style=" padding: 8px;width: 2%; ">:</td>
+                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                </tr>
+                <tr>
+                    <td style=" padding: 8px;"><strong>Unvan</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                    <td style=" padding: 8px;"><strong>Unvan</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                </tr>
+                <tr>
+                    <td style=" padding: 8px;"><strong>İmza</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;"></td>
+                    <td style=" padding: 8px;"><strong>İmza</strong></td>
+                    <td style=" padding: 8px;"><strong>:</strong></td>
+                    <td style=" padding: 8px;"></td>
+                </tr>
+            </table>
+
+            <!-- <div style="position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 10pt; color: #666;">Sayfa 1</div> -->
+        </div>
+    </div>`;

@@ -93,7 +93,7 @@ const GroupSection: React.FC<GroupSectionProps> = ({
     const filteredItemTree: ItemTree[] = useMemo(() => {
         if (!showOnlyCompleted || !statusColumn) return itemTree;
         const isDone = (node: ItemTree) => {
-            const val = node.itemValues?.find(v => v.columnId === statusColumn.id)?.value;
+            const val = node.itemValue?.find(v => v.columnId === statusColumn.id)?.value;
             const s = val?.toLowerCase() || '';
             return s === 'tamamlandı' || s === 'done' || s === 'bitti';
         };

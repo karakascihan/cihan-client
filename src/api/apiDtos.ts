@@ -375,6 +375,7 @@ export interface Contracts {
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     purchaseOrdersId: number | undefined;
+    sozlesmeTipi: number | undefined;
     priceOffer: PriceOffer;
     purchaseOrders: PurchaseOrders;
 }
@@ -396,6 +397,7 @@ export interface ContractsDto {
     aciklama: string | undefined;
     priceOfferId: number | undefined;
     purchaseOrdersId: number | undefined;
+    sozlesmeTipi: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     id: number;
@@ -418,6 +420,7 @@ export interface ContractsDtoForInsertion {
     aciklama: string | undefined;
     priceOfferId: number | undefined;
     purchaseOrdersId: number | undefined;
+    sozlesmeTipi: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
     isActive: boolean | undefined;
@@ -440,6 +443,7 @@ export interface ContractsDtoForUpdate {
     aciklama: string | undefined;
     priceOfferId: number | undefined;
     purchaseOrdersId: number | undefined;
+    sozlesmeTipi: number | undefined;
     sozlesmeBaslangicTarihi: DateOnly;
     sozlesmeBitisTarihi: DateOnly;
 }
@@ -862,7 +866,7 @@ export interface ItemDto {
     id: number;
     groupId: number;
     parentItemId: number | undefined;
-    itemValues: ItemValueDto[] | undefined;
+    itemValue: ItemValueDto[] | undefined;
 }
 
 export interface ItemTreeDto {
@@ -871,7 +875,7 @@ export interface ItemTreeDto {
     groupId: number;
     order: number;
     parentItemId: number | undefined;
-    itemValues: ItemValueDto[] | undefined;
+    itemValue: ItemValueDto[] | undefined;
     inverseParentItem: ItemTreeDto[] | undefined;
 }
 
@@ -1845,12 +1849,14 @@ export interface Services {
     userId: number | undefined;
     createdAt: Date | undefined;
     updatedAt: Date | undefined;
+    title: string | undefined;
     user: Users;
 }
 
 export interface ServicesDtoForInsertion {
     name: string | undefined;
     endPoint: string | undefined;
+    title: string | undefined;
     userId: number | undefined;
     createdAt: Date | undefined;
 }
@@ -1858,10 +1864,25 @@ export interface ServicesDtoForInsertion {
 export interface ServicesDtoForUpdate {
     name: string | undefined;
     endPoint: string | undefined;
+    title: string | undefined;
     userId: number | undefined;
     id: number;
     trackChanges: boolean | undefined;
     updatedAt: Date | undefined;
+}
+
+export enum SozlesmeTipi {
+    NDA = 0,
+    HizmetSozlesmesi = 1,
+    TedarikSozlesmesi = 2,
+    Diger = 3,
+}
+
+export interface SozlesmeTipiApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: SozlesmeTipi;
+    isSuccess: boolean;
 }
 
 export interface StaffLeaveDtoForInsertion {
@@ -2122,6 +2143,19 @@ export interface UserPermission {
     user: Users;
 }
 
+export interface UserPermissionDto {
+    id: number;
+    userId: number | undefined;
+    user: Users;
+    serviceName: string | undefined;
+    title: string | undefined;
+    canRead: boolean;
+    canWrite: boolean;
+    canDelete: boolean;
+    createdAt: Date | undefined;
+    updatedAt: Date | undefined;
+}
+
 export interface UserPermissionDtoForInsertion {
     userId: number | undefined;
     user: Users;
@@ -2142,6 +2176,13 @@ export interface UserPermissionDtoForUpdate {
     id: number;
     trackChanges: boolean | undefined;
     updatedAt: Date | undefined;
+}
+
+export interface UserPermissionDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: UserPermissionDto[] | undefined;
+    isSuccess: boolean;
 }
 
 export interface Users {

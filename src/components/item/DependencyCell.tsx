@@ -265,7 +265,7 @@ const DependencyCell: React.FC<DependencyCellProps> = ({ item, column }) => {
   const [isPopoverOpen, setPopoverOpen] = useState(false);
   const cellRef = useRef<HTMLDivElement>(null);
 
-  const currentValue = item.itemValues.find(v => v.columnId === column.id)?.value || '';
+  const currentValue = item.itemValue.find(v => v.columnId === column.id)?.value || '';
   const allItemIds = useMemo(() => new Set(allItems.map(i => i.id)), [allItems]);
 
   const dependencyLinks = useMemo((): DependencyLink[] => {

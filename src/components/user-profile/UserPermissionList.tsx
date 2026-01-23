@@ -1,12 +1,12 @@
 import { URL } from "@/api";
-import { UserPermission, UserPermissionDtoForInsertion, UserPermissionDtoForUpdate } from "@/api/apiDtos";
+import { UserPermission, UserPermissionDto, UserPermissionDtoForInsertion, UserPermissionDtoForUpdate } from "@/api/apiDtos";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { Loader } from "lucide-react";
 import React, { useState } from "react";
 
 const UserPermissionList = ({ userId }: { userId: number }) => {
   const { data: permissions, loading, refetch } =
-    useApiRequest<UserPermission>(
+    useApiRequest<UserPermissionDto>(
       URL + "/UserPermission/GetByUserId/" + userId,
       { method: "GET" }
     );
@@ -14,7 +14,7 @@ const UserPermissionList = ({ userId }: { userId: number }) => {
   const [updatingId, setUpdatingId] = useState<number | null>(null);
 
   const updatePermission = async (
-    permission: UserPermission,
+    permission: UserPermissionDto,
     field: "canRead" | "canWrite" | "canDelete",
     value: boolean
   ) => {
@@ -61,7 +61,7 @@ const UserPermissionList = ({ userId }: { userId: number }) => {
           <tr>
             
             <th className="px-4 py-3 text-left text-sm font-semibold">
-              Servis
+              Yetki Adı
             </th>
             <th className="px-4 py-3 text-center text-sm font-semibold">
               Okuma
@@ -73,7 +73,7 @@ const UserPermissionList = ({ userId }: { userId: number }) => {
               Silme
             </th>
             <th className="px-4 py-3 text-left text-sm font-semibold">
-              Güncelleme
+              Son Değiştirme Tarihi
             </th>
           </tr>
         </thead>
@@ -92,7 +92,7 @@ const UserPermissionList = ({ userId }: { userId: number }) => {
              
 
               <td className="px-4 py-3 text-sm">
-                {permission.serviceName}
+                {permission.title}
               </td>
 
               <CheckboxCell

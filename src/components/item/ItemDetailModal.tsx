@@ -232,7 +232,7 @@ interface ItemDetailModalProps {
     group: Group | null;
     columns: ColumnDto[];
     boardName: string;
-    allItems: Item[];
+    allItems?: Item[];
 }
 
 const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
@@ -312,7 +312,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
     const detailFields = useMemo(() => {
         return columns.map(col => {
-            const value = item.itemValues.find(v => v.columnId === col.id)?.value || '';
+            const value = item.itemValue.find(v => v.columnId === col.id)?.value || '';
             return {
                 id: col.id,
                 label: col.title,
@@ -320,7 +320,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                 type: col.type
             };
         });
-    }, [columns, item.itemValues]);
+    }, [columns, item.itemValue]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="" size="7xl">
@@ -565,7 +565,7 @@ const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-gray-800">Görev Belgeleri</h3>
                                 {columns.filter(col => col.type === ColumnType.Document).map(docColumn => {
-                                    const docValue = item.itemValues.find(v => v.columnId === docColumn.id)?.value || '';
+                                    const docValue = item.itemValue.find(v => v.columnId === docColumn.id)?.value || '';
                                     return (
                                         <div key={docColumn.id} className="p-4 border border-gray-200 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
                                             <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">{docColumn.title}</p>

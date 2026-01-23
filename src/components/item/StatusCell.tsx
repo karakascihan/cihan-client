@@ -20,7 +20,7 @@ const StatusCell: React.FC<StatusCellProps> = ({ item, column }) => {
     const [isPopoverOpen, setPopoverOpen] = useState(false);
     const cellRef = useRef<HTMLDivElement>(null);
 
-    const currentValue = item.itemValues.find(v => v.columnId === column.id)?.value || 'Belirsiz';
+    const currentValue = item.itemValue.find(v => v.columnId === column.id)?.value || 'Belirsiz';
     const currentOption = STATUS_OPTIONS.find(opt => opt.text === currentValue) || STATUS_OPTIONS[4];
 
     const handleStatusChange = (newStatus: string) => {

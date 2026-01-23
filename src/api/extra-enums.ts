@@ -1,6 +1,6 @@
 // Auto-generated from Swagger x-enumDescriptions
 
-import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SurveyType } from "./apiDtos";
+import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType } from "./apiDtos";
 
 // Auto-generated from Swagger x-enumDescriptions
 
@@ -91,6 +91,13 @@ export const PriceOfferStateDescriptions: Record<PriceOfferState, string> = {
 export const QuestionTypeDescriptions: Record<QuestionType, string> = {
   [QuestionType.Text]: "Text",
   [QuestionType.MultipleChoice]: "MultipleChoice",
+};
+
+export const SozlesmeTipiDescriptions: Record<SozlesmeTipi, string> = {
+  [SozlesmeTipi.NDA]: "NDA",
+  [SozlesmeTipi.HizmetSozlesmesi]: "HizmetSozlesmesi",
+  [SozlesmeTipi.TedarikSozlesmesi]: "TedarikSozlesmesi",
+  [SozlesmeTipi.Diger]: "Diger",
 };
 
 export const SurveyTypeDescriptions: Record<SurveyType, string> = {

@@ -24,7 +24,7 @@ const TimelineCell: React.FC<TimelineCellProps> = ({ item, column }) => {
     const [isPopoverOpen, setPopoverOpen] = useState(false);
 
     // Redux'tan gelen ham string değer (Örn: "2023-10-01/2023-10-05")
-    const currentValue = item.itemValues.find(v => v.columnId === column.id)?.value || '';
+    const currentValue = item.itemValue.find(v => v.columnId === column.id)?.value || '';
 
     // --- 1. MEMO: Tarih ve İlerleme Hesaplamaları ---
     const { savedStartDate, savedEndDate, progressPercent, displayLabel, savedDuration, statusColor } = useMemo(() => {

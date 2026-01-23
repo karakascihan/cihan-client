@@ -170,7 +170,7 @@ const GanttRightPanel: React.FC<GanttRightPanelProps> = ({
         }
         else if (labelById !== null && labelById > 0) {
           const labelColumn = columns.find(c => c.id === labelById);
-          const labelValue = item.itemValues.find(v => v.columnId === labelById)?.value || "";
+          const labelValue = item.itemValue.find(v => v.columnId === labelById)?.value || "";
 
           if (labelColumn && labelValue) {
             switch (labelColumn.type) {
@@ -202,7 +202,7 @@ const GanttRightPanel: React.FC<GanttRightPanelProps> = ({
 
         let colorClass = STATUS_COLORS.Belirsiz;
         if (colorByColumnId !== null) {
-          const colorValue = item.itemValues.find(v => v.columnId === colorByColumnId)?.value;
+          const colorValue = item.itemValue.find(v => v.columnId === colorByColumnId)?.value;
           if (colorValue && STATUS_COLORS[colorValue]) {
             colorClass = STATUS_COLORS[colorValue];
           }
@@ -227,7 +227,7 @@ const GanttRightPanel: React.FC<GanttRightPanelProps> = ({
 
         // 1. NORMAL BARLAR
         activeTimelineIds.forEach((timelineId) => {
-          const timelineValue = item.itemValues.find(v => v.columnId === timelineId)?.value;
+          const timelineValue = item.itemValue.find(v => v.columnId === timelineId)?.value;
 
           if (timelineValue) {
             const [startStr, endStr] = timelineValue.split('/');
@@ -275,7 +275,7 @@ const GanttRightPanel: React.FC<GanttRightPanelProps> = ({
 
         // 2. BASELINE HESAPLAMA (YENİ)
         if (activeBaselineId) {
-          const baselineValue = item.itemValues.find(v => v.columnId === activeBaselineId)?.value;
+          const baselineValue = item.itemValue.find(v => v.columnId === activeBaselineId)?.value;
           if (baselineValue) {
             const [bStartStr, bEndStr] = baselineValue.split('/');
             if (bStartStr && bEndStr) {
@@ -310,7 +310,7 @@ const GanttRightPanel: React.FC<GanttRightPanelProps> = ({
         }
 
         if (dependencyColumnId) {
-          const depValue = item.itemValues.find(v => v.columnId === dependencyColumnId)?.value;
+          const depValue = item.itemValue.find(v => v.columnId === dependencyColumnId)?.value;
           if (depValue) {
             try {
               const parsedDeps = JSON.parse(depValue) as DependencyLink[];
@@ -395,7 +395,7 @@ const GanttRightPanel: React.FC<GanttRightPanelProps> = ({
     visibleItems.forEach(item => {
       let validBarCount = 0;
       activeTimelineIds.forEach(id => {
-        const timelineValue = item.itemValues.find(v => v.columnId === id)?.value;
+        const timelineValue = item.itemValue.find(v => v.columnId === id)?.value;
         if (timelineValue) {
           const [startStr, endStr] = timelineValue.split('/');
           if (startStr && endStr) {

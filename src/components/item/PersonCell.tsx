@@ -105,7 +105,7 @@ const PersonCell: React.FC<PersonCellProps> = ({ item, column, align = 'center' 
     const allUsers = useSelector<RootState>(x=>x.user.data)
 
     // Mevcut JSON değerini al (örn: '[1, 3]')
-    const currentValue = item.itemValues.find(v => v.columnId === column.id)?.value || '[]';
+    const currentValue = item.itemValue.find(v => v.columnId === column.id)?.value || '[]';
 
     // JSON'u parse et ve ID dizisini al (useMemo ile)
     const selectedUserIds = useMemo((): number[] => {

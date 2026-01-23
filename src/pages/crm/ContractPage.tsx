@@ -1,4 +1,4 @@
-import { ContractsDto, ContractsDtoForInsertion, PurchaseOrders } from "@/api/apiDtos";
+import {  ContractsDto, ContractsDtoForInsertion, PurchaseOrders, SozlesmeTipi } from "@/api/apiDtos";
 import { FieldDefinition, GenericForm } from "@/components/GenericForm";
 import { Column, SmartTable } from "@/components/SmartTable";
 import { useConfirm } from "@/context/ConfirmContext";
@@ -12,7 +12,7 @@ import { FileRecordPage } from "./FileRecordPage";
 import { useModal } from "@/context/ModalContext";
 import { FaEye, FaFile, FaRProject, FaShower, FaUpload } from "react-icons/fa6";
 import { useLoading } from "@/context/LoadingContext";
-import { contractTemplate1 } from "@/price-offer-templates/contractTemplates";
+import { contractTemplate1, nda_contract_template } from "@/price-offer-templates/contractTemplates";
 import { Editor } from "@tinymce/tinymce-react";
 import { fetchCustomers } from "@/store/slices/customerSlice";
 import { fetchPriceOffers } from "@/store/slices/priceOfferSlice";
@@ -27,10 +27,11 @@ import enterpriseSlice, {
   fetchEnterprises,
 } from "@/store/slices/enterpriseSlice";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
-import AddBoardForm from "@/components/board/AddBoardForm";
+import AddBoardForm, { ProjectType } from "@/components/board/AddBoardForm";
 import { useNavigate } from "react-router-dom";
+import { EnumSelect } from "@/components/EnumSelect";
 
- const ContractPage = () => {
+ const ContractPage = ({sozlesmeTipi}:{sozlesmeTipi?: SozlesmeTipi}) => {
   const confirm = useConfirm();
   const sidebar = useSidebar();
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ import { useNavigate } from "react-router-dom";
   //     })
   // }, []);
   const { data: contracts, refetch } = useApiRequest<ContractsDto[]>(
-    URL + "/contracts/getall",
+    URL + "/contracts/getall"+(sozlesmeTipi !== undefined ? `?sozlesmeTipi=${sozlesmeTipi}` : ""),
     {
       method: "GET",
       skip: false,
@@ -239,6 +240,165 @@ import { useNavigate } from "react-router-dom";
     setEditorData(filledTemplate);
     setShowPreview(contract.id!);
   };
+  const showTemplateNDA = async (contract: ContractsDto) => {
+
+    let filledTemplate = nda_contract_template;
+    filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
+    filledTemplate = filledTemplate.replaceAll(
+      "~sirket~",
+      contract.sirket || ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~kurum_shortname~",
+      enterpriseState.items.find((en) => en.enterpriseName === contract.kurum)
+        .shortName || "" + " "
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~sozlesme_adi~",
+      contract.sozlesmeAdi || ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~sozlesme_no~",
+      contract.sozlesmeNo || ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~sozlesme_tarihi~",
+      (contract.sozlesmeTarihi as unknown as string) || ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~sozlesmeBitisTarihi~",
+      (contract.sozlesmeBitisTarihi as unknown as string) ?? ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~sozlesmeBaslangicTarihi~",
+      (contract.sozlesmeBaslangicTarihi as unknown as string) ?? ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~kurum_adres~",
+      enterpriseState.items.find((en) => en.enterpriseName === contract.kurum)
+        ?.address || ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~sirket_adres~",
+      customersState.data.find((en) => en.firma === contract.sirket)?.adres ||
+      ""
+    );
+    filledTemplate = filledTemplate.replaceAll(
+      "~sirket_vergi_no~",
+      customersState.data.find((en) => en.firma === contract.sirket)
+        ?.vergiNumarasi || ""
+    );
+    let toplamFiyat = 0;
+
+    if (contract.priceOfferId) {
+      {
+        let fiyatSatirlarHtml = ``;
+        const priceoffers = await dispatch(fetchPriceOffers() as any).unwrap();
+        const priceoffer = priceoffers.find(
+          (po) => po.id == contract.priceOfferId
+        );
+        filledTemplate = filledTemplate.replaceAll(
+          "~toplam_fiyat~",
+          (priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi) || ""
+        );
+        priceoffer.priceOfferLine?.forEach((line, index) => {
+          toplamFiyat += Number(line.toplamFiyat ?? 0);
+          let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""
+            }</td>`;
+          fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
+        });
+        let genelToplam = `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi}</td>
+           </tr>`;
+        fiyatSatirlarHtml += genelToplam;
+        filledTemplate = filledTemplate.replaceAll(
+          "~kapsam_satirlari~",
+          fiyatSatirlarHtml
+        );
+      }
+    }
+    else if (contract.purchaseOrdersId) {
+      let siparisSatirlariHtml = ``;
+      let satirToplam = 0;
+
+
+      const po = await refetchOrders(URL + "/PurchaseOrder/" + contract.purchaseOrdersId, { method: "GET" });
+      console.log("PO RESULT KEYS:", Object.keys(po.result ?? {}));
+      console.log("PO RESULT:", po.result);
+      console.log("PO LINES:", po.result?.purchaseOrderLine);
+      let poLines = po.result?.purchaseOrderLine || [];
+
+
+
+      let calculatedTotal = 0;
+
+      poLines.forEach((line, index) => {
+        satirToplam =
+          line.miktar && line.birimFiyat
+            ? Number(
+              line.miktar *
+              line.birimFiyat *
+              (1 - (line.indirimOraniYuzde || 0) / 100)
+            )
+            : 0;
+
+        let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${satirToplam ?? ""
+          }</td>`;
+
+        siparisSatirlariHtml += `<tr>${siparisSatir}</tr>`;
+      });
+
+
+
+      const paraBirimi = poLines?.[0]?.paraBirimi ?? "";
+
+      const finalTotal = po?.result.toplamTutar ?? 0;
+
+      filledTemplate = filledTemplate.replaceAll(
+        "~toplam_fiyat~",
+        finalTotal ? `${finalTotal} ${paraBirimi}` : ""
+      );
+
+      siparisSatirlariHtml += `
+        <tr>
+          <td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
+          <td colspan="5" style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">
+            ${finalTotal ? `${finalTotal} ${paraBirimi}` : ""}
+          </td>
+        </tr>
+      `;
+
+      filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", siparisSatirlariHtml);
+
+      console.log("CalculatedTotal vs DB:", calculatedTotal, po?.result.toplamTutar);
+    }
+    else {
+      filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", "");
+      filledTemplate = filledTemplate.replaceAll("~toplam_fiyat~", "");
+    }
+    setEditorData(filledTemplate);
+    setShowPreview(contract.id!);
+  };
   const editorRef = useRef(null);
   const { openModal } = useModal();
   const columns: Column<ContractsDto>[] = [
@@ -248,12 +408,14 @@ import { useNavigate } from "react-router-dom";
       accessor: "kurum",
       filterable: true,
       sortable: true,
+         summaryType: "count",
     },
     {
       header: "Şirket",
       accessor: "sirket",
       filterable: true,
       sortable: true,
+   
     },
     {
       header: "Sözleşme Tarihi",
@@ -266,6 +428,7 @@ import { useNavigate } from "react-router-dom";
       accessor: "sozlesmeNo",
       filterable: true,
       sortable: true,
+      
     },
     {
       header: "Sözleşme Adı",
@@ -349,7 +512,8 @@ import { useNavigate } from "react-router-dom";
           </button>
           <button
             onClick={() => {
-              showTemplate1(row);
+             if(row.sozlesmeTipi=== SozlesmeTipi.NDA) showTemplateNDA(row)
+               else showTemplate1(row)
             }}
             className="
                     inline-flex items-center 
@@ -370,7 +534,7 @@ import { useNavigate } from "react-router-dom";
                   close: (result: any) => void
                 ): React.ReactNode {
                   return (
-                    <AddBoardForm onClose={function (boardId: number): void {
+                    <AddBoardForm projectType={ProjectType.ERP} onClose={function (boardId: number): void {
                       if (boardId != -1) {
                         close(null);
                         navigate("/proje/" + boardId)
@@ -453,7 +617,21 @@ import { useNavigate } from "react-router-dom";
         colspan: 12,
         group: "Genel",
         required: true,
-        defaultValue: contractDtoForInsertion?.sirket || "",
+        defaultValue: contractDtoForInsertion?.sirket ?? "",
+      },
+        {
+        name: "sozlesmeTipi",
+        label: "Sözleşme Tipi",
+        type: "select",
+        options:  Object.values(SozlesmeTipi)
+  .filter(v => typeof v === "number")
+  .map(v => ({
+    label: SozlesmeTipi[v],
+    value: v
+  })),
+        colspan: 12,
+        group: "Genel",
+        defaultValue: contractDtoForInsertion?.sozlesmeTipi ?? "",
       },
       {
         name: "sozlesmeTarihi",
@@ -470,8 +648,9 @@ import { useNavigate } from "react-router-dom";
         type: "text",
         colspan: 12,
         group: "Genel",
-        required: true,
         defaultValue: contractDtoForInsertion?.sozlesmeNo || "",
+        hidden: contractDtoForInsertion ? false : true,
+        readOnly:true
       },
       {
         name: "sozlesmeAdi",
@@ -630,6 +809,7 @@ import { useNavigate } from "react-router-dom";
         newRecordVoid={newRecordVoid}
         scrollHeight="calc(100vh - 200px)"
         enablePagination={false}
+        
       ></SmartTable>
       {showPreview !== 0 && (
         <Editor

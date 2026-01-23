@@ -56,7 +56,7 @@ export const useGanttDragResize = ({
         const statusColumn = columns.find(c => c.type === ColumnType.Status);
         if (!statusColumn) return false;
 
-        const val = item.itemValues.find(v => v.columnId === statusColumn.id)?.value;
+        const val = item.itemValue.find(v => v.columnId === statusColumn.id)?.value;
         // Buraya kendi "Tamamlandı" statü metinlerini ekleyebilirsin
         const completedStatuses = ['Tamamlandı', 'Done', 'Bitti', 'Completed'];
         
@@ -64,7 +64,7 @@ export const useGanttDragResize = ({
     };
 
     const getDatesFromItem = (item: Item, timelineColumnId: number): { startDate: Date, endDate: Date } | null => {
-        const value = item.itemValues.find(v => v.columnId === timelineColumnId)?.value;
+        const value = item.itemValue.find(v => v.columnId === timelineColumnId)?.value;
         if (!value) return null;
         try {
             const [startStr, endStr] = value.split('/');

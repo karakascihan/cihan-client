@@ -47,7 +47,7 @@ export const checkDependencyViolations = (
     // 1. ÖNCÜLLERİ KONTROL ET (Taşınan Görev = Ardıl/Successor)
     // =================================================================
 
-    const movedItemDependencies = movedItem.itemValues.find(iv => iv.columnId === dependencyColumnId)?.value;
+    const movedItemDependencies = movedItem.itemValue.find(iv => iv.columnId === dependencyColumnId)?.value;
     if (movedItemDependencies) {
         let dependencies: DependencyLink[];
         try { dependencies = JSON.parse(movedItemDependencies); } catch { dependencies = []; }
@@ -56,7 +56,7 @@ export const checkDependencyViolations = (
             const predecessor = itemMap.get(link.id);
             if (!predecessor) continue;
 
-            const timelineValue = predecessor.itemValues.find(v => v.columnId === timelineColumnId)?.value;
+            const timelineValue = predecessor.itemValue.find(v => v.columnId === timelineColumnId)?.value;
             if (!timelineValue) continue;
 
             const [predStartStr, predEndStr] = timelineValue.split('/');
@@ -116,7 +116,7 @@ export const checkDependencyViolations = (
     for (const successor of allItems) {
         if (successor.id === updatedTask.itemId) continue;
 
-        const links = successor.itemValues.find(v => v.columnId === dependencyColumnId)?.value;
+        const links = successor.itemValue.find(v => v.columnId === dependencyColumnId)?.value;
         if (!links) continue;
 
         let dependencies: DependencyLink[];
@@ -127,7 +127,7 @@ export const checkDependencyViolations = (
             if (link.id !== updatedTask.itemId) continue;
 
             // Ardılın (successor) tarihlerini al
-            const timelineValue = successor.itemValues.find(v => v.columnId === timelineColumnId)?.value;
+            const timelineValue = successor.itemValue.find(v => v.columnId === timelineColumnId)?.value;
             if (!timelineValue) continue;
 
             const [succStartStr, succEndStr] = timelineValue.split('/');
@@ -219,7 +219,7 @@ export const calculateCascadingChanges = (
     const rootItem = allItems.find(i => i.id === rootItemId);
     if (!rootItem) return [];
 
-    const rootVal = rootItem.itemValues.find(v => v.columnId === timelineColumnId)?.value;
+    const rootVal = rootItem.itemValue.find(v => v.columnId === timelineColumnId)?.value;
     if (!rootVal) return [];
     const [rStartStr, rEndStr] = rootVal.split('/');
     const rootOldStart = parseISO(rStartStr);
@@ -243,7 +243,7 @@ export const calculateCascadingChanges = (
         // Bu göreve bağlı ardılları bul
         const successors = allItems.filter(item => {
             if (item.id === current.id) return false;
-            const depVal = item.itemValues.find(v => v.columnId === dependencyColumnId)?.value;
+            const depVal = item.itemValue.find(v => v.columnId === dependencyColumnId)?.value;
             if (!depVal) return false;
             try {
                 const links: DependencyLink[] = JSON.parse(depVal);
@@ -255,7 +255,7 @@ export const calculateCascadingChanges = (
             if (processedItems.has(successor.id)) continue;
 
             // Ardılın MEVCUT (Eski) tarihlerini al
-            const timelineVal = successor.itemValues.find(v => v.columnId === timelineColumnId)?.value;
+            const timelineVal = successor.itemValue.find(v => v.columnId === timelineColumnId)?.value;
             if (!timelineVal) continue;
 
             const [succOldStartStr, succOldEndStr] = timelineVal.split('/');
@@ -265,7 +265,7 @@ export const calculateCascadingChanges = (
             const duration = differenceInCalendarDays(succOldEnd, succOldStart);
 
             // Bağımlılık tipini bul
-            const depVal = successor.itemValues.find(v => v.columnId === dependencyColumnId)?.value;
+            const depVal = successor.itemValue.find(v => v.columnId === dependencyColumnId)?.value;
             const links: DependencyLink[] = JSON.parse(depVal!);
             const linkToCurrent = links.find(l => l.id === current.id);
 
@@ -371,7 +371,7 @@ export const calculateCriticalPath = (
     // 1) NODE OLUŞTURMA
     for (const item of items) {
         // ... (Senin kodundaki parse işlemleri aynı) ...
-        const tVal = item.itemValues.find(v => v.columnId === timelineColumnId)?.value;
+        const tVal = item.itemValue.find(v => v.columnId === timelineColumnId)?.value;
         if (!tVal) continue;
 
         let startStr, endStr;
@@ -408,7 +408,7 @@ export const calculateCriticalPath = (
     // 2) BAĞIMLILIKLAR
     for (const item of items) {
         // ... (Senin kodundaki link işlemleri aynı) ...
-        const dVal = item.itemValues.find(v => v.columnId === dependencyColumnId)?.value;
+        const dVal = item.itemValue.find(v => v.columnId === dependencyColumnId)?.value;
         if (!dVal) continue;
         try {
             const links: DependencyLink[] = JSON.parse(dVal);

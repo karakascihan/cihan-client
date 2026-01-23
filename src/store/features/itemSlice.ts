@@ -17,7 +17,7 @@ export interface Item {
     id: number;
     name: string;
     groupId: number;
-    itemValues: ItemValue[]; 
+    itemValue: ItemValue[]; 
     order: number;
     parentItemId: number | null;
 }
@@ -73,13 +73,13 @@ function updateItemValueInTreeMap(
             const node = stack.pop()!;
 
             if (node.id === itemId) {
-                if (!node.itemValues) node.itemValues = [];
+                if (!node.itemValue) node.itemValue = [];
 
-                const idx = node.itemValues.findIndex(iv => iv.columnId === columnId);
+                const idx = node.itemValue.findIndex(iv => iv.columnId === columnId);
                 if (idx > -1) {
-                    node.itemValues[idx] = value;
+                    node.itemValue[idx] = value;
                 } else {
-                    node.itemValues.push(value);
+                    node.itemValue.push(value);
                 }
                 stack.length = 0;
                 break;
@@ -547,9 +547,9 @@ const itemSlice = createSlice({
                 for (const g in s.itemsByGroup) {
                     const item = s.itemsByGroup[g].find((i) => i.id === v.itemId);
                     if (item) {
-                        const idx = item.itemValues.findIndex((iv) => iv.columnId === v.columnId);
-                        if (idx > -1) item.itemValues[idx] = v;
-                        else item.itemValues.push(v);
+                        const idx = item.itemValue.findIndex((iv) => iv.columnId === v.columnId);
+                        if (idx > -1) item.itemValue[idx] = v;
+                        else item.itemValue.push(v);
                         break;
                     }
                 }
@@ -570,9 +570,9 @@ const itemSlice = createSlice({
                     for (const groupId in state.itemsByGroup) {
                         const item = state.itemsByGroup[groupId].find(i => i.id === u.itemId);
                         if (item) {
-                            const idx = item.itemValues.findIndex(iv => iv.columnId === u.columnId);
-                            if (idx > -1) item.itemValues[idx].value = u.value;
-                            else item.itemValues.push({ id: 0, itemId: u.itemId, columnId: u.columnId, value: u.value });
+                            const idx = item.itemValue.findIndex(iv => iv.columnId === u.columnId);
+                            if (idx > -1) item.itemValue[idx].value = u.value;
+                            else item.itemValue.push({ id: 0, itemId: u.itemId, columnId: u.columnId, value: u.value });
                             break;
                         }
                     }

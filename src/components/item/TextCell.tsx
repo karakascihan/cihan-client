@@ -12,7 +12,7 @@ const TextCell: React.FC<TextCellProps> = ({ item, column }) => {
     const dispatch = useAppDispatch();
     const [isEditing, setIsEditing] = useState(false);
     
-    const value = item.itemValues.find(v => v.columnId === column.id)?.value || '';
+    const value = item.itemValue.find(v => v.columnId === column.id)?.value || '';
     const [editingValue, setEditingValue] = useState(value);
 
     const handleUpdate = () => {

@@ -15,7 +15,7 @@ const AddViewMenu: React.FC<AddViewMenuProps> = ({ onSelectViewType }) => {
     const viewOptions: { type: BoardViewTabInfo['type']; name: string; icon: React.ReactElement }[] = [
         { type: 'table', name: 'Tablo', icon: <FiGrid /> },
         { type: 'gantt', name: 'Gantt', icon: <FiBarChart /> },
-        { type: 'calendar', name: 'Takvim', icon: <FiCalendar /> },
+        // { type: 'calendar', name: 'Takvim', icon: <FiCalendar /> },
 
         // Gelecekte buraya Kanban, Takvim vb. eklenebilir
     ];

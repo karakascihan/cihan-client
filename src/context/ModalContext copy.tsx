@@ -22,7 +22,7 @@ interface ModalContextProps {
 
 const ModalContext = createContext<ModalContextProps | undefined>(undefined);
 
-export const useModal = () => {
+export const useModal2 = () => {
   const ctx = useContext(ModalContext);
   if (!ctx) {
     throw new Error("useModal must be used within a ModalProvider");

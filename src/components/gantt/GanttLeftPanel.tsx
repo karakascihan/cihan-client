@@ -114,7 +114,7 @@ const GanttLeftPanel: React.FC<GanttLeftPanelProps> = ({
                                     // Item’a ait dolu timeline kolonlarını topluyoruz
                                     const validTimelineColumns = activeTimelineIds
                                         .map(id => timelineColumnsById.get(id))
-                                        .filter((col): col is ColumnDto => !!col && !!item.itemValues.find(v => v.columnId === col.id)?.value);
+                                        .filter((col): col is ColumnDto => !!col && !!item.itemValue.find(v => v.columnId === col.id)?.value);
 
                                     const rowCount = Math.max(1, validTimelineColumns.length);
 

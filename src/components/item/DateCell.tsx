@@ -14,7 +14,7 @@ interface DateCellProps {
 
 const DateCell: React.FC<DateCellProps> = ({ item, column }) => {
     const dispatch = useAppDispatch();
-    const currentValue = item.itemValues.find(v => v.columnId === column.id)?.value;
+    const currentValue = item.itemValue.find(v => v.columnId === column.id)?.value;
     
     // "YYYY-MM-DD" string'ini yerel saat diliminde gece yarısı olarak yorumlar.
     let selectedDate: Date | null = null;

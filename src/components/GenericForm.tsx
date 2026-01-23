@@ -198,7 +198,7 @@ export const GenericForm: React.FC<GenericFormProps> = ({
           {(options && options.length>0)&& options.map((opt, index) => (
             <option
               key={name + "-" + opt.value + "-" + index}
-              value={opt.value}
+              value={String(opt.value)}
             >
               {opt.label}
             </option>

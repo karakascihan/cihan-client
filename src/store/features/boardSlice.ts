@@ -27,11 +27,12 @@ interface UpdateBoardArgs {
 }
 export const updateBoard = createAsyncThunk<BoardDto, UpdateBoardArgs>(
     'boards/updateBoard',
-    async ({ boardId, boardData }, { rejectWithValue }) => {
+    async ({ boardId, boardData }, { rejectWithValue, getState }) => {
+        const state = getState() as RootState;
         try {
             const response = await fetch(`${URL}/board/${boardId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
                 body: JSON.stringify(boardData),
             });
             if (!response.ok) {

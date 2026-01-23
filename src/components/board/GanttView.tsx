@@ -87,7 +87,7 @@ const GanttView: React.FC<GanttViewProps> = ({
         if (!primaryTimelineId || allItems.length === 0) return { minDate: null, maxDate: null };
         let minDate: Date | null = null, maxDate: Date | null = null;
         for (const item of allItems) {
-            const val = item.itemValues.find(v => v.columnId === primaryTimelineId)?.value;
+            const val = item.itemValue.find(v => v.columnId === primaryTimelineId)?.value;
             if (val) {
                 const [startStr, endStr] = val.split('/');
                 if (startStr && endStr) {
@@ -164,7 +164,7 @@ const GanttView: React.FC<GanttViewProps> = ({
                     order: index
                 }));
                 processedItems = allItems.map(item => {
-                    const itemValue = item.itemValues.find(v => v.columnId === groupByColumnId)?.value;
+                    const itemValue = item.itemValue.find(v => v.columnId === groupByColumnId)?.value;
                     const config = STATUS_CONFIG_MAP.get(itemValue || '') || DEFAULT_STATUS_CONFIG;
                     return { ...item, groupId: config.id };
                 });

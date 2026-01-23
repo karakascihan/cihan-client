@@ -63,7 +63,7 @@ export const calculateStatusChangeEffects = (
 
         children.forEach(child => {
             // Çocuğun mevcut statüsünü bul
-            const currentChildStatus = child.itemValues.find(v => v.columnId === statusColumn.id)?.value || '';
+            const currentChildStatus = child.itemValue.find(v => v.columnId === statusColumn.id)?.value || '';
 
             // Eğer çocuk zaten tamamlanmadıysa, güncelle
             if (!isStatusCompleted(currentChildStatus)) {
@@ -97,13 +97,13 @@ export const calculateStatusChangeEffects = (
                 if (sibling.id === itemId) {
                     return isNewStatusCompleted;
                 }
-                const sStatus = sibling.itemValues.find(v => v.columnId === statusColumn.id)?.value || '';
+                const sStatus = sibling.itemValue.find(v => v.columnId === statusColumn.id)?.value || '';
                 return isStatusCompleted(sStatus);
             });
 
             if (allSiblingsCompleted) {
                 // Ebeveyn zaten tamamlandı değilse güncelle
-                const parentStatus = parent.itemValues.find(v => v.columnId === statusColumn.id)?.value || '';
+                const parentStatus = parent.itemValue.find(v => v.columnId === statusColumn.id)?.value || '';
                 if (!isStatusCompleted(parentStatus)) {
                     updates.push({
                         itemId: parent.id,
@@ -134,7 +134,7 @@ export const calculateStatusChangeEffects = (
         if (dependencyColumn) {
             items.forEach(otherItem => {
                 if (otherItem.id === itemId) return;
-                const depVal = otherItem.itemValues.find(v => v.columnId === dependencyColumn.id)?.value;
+                const depVal = otherItem.itemValue.find(v => v.columnId === dependencyColumn.id)?.value;
 
                 if (depVal) {
                     try {
@@ -142,7 +142,7 @@ export const calculateStatusChangeEffects = (
                         const isDependent = links.some(l => l.id === itemId);
 
                         if (isDependent) {
-                            const currentStatusVal = otherItem.itemValues.find(v => v.columnId === statusColumn.id)?.value;
+                            const currentStatusVal = otherItem.itemValue.find(v => v.columnId === statusColumn.id)?.value;
                             // Bloklanmış durumdaysa aç
                             const blockedStatuses = ['Beklemede', 'Takıldı', 'Planlandı', 'Belirsiz'];
                             if (blockedStatuses.includes(currentStatusVal || '')) {
@@ -165,7 +165,7 @@ export const calculateStatusChangeEffects = (
         // --- SENARYO 5: TARİH KAYDIRMA (AUTO-SCHEDULE / EARLY FINISH) ---
         if (timelineColumn && dependencyColumn) {
             const currentItem = items.find(i => i.id === itemId);
-            const timelineVal = currentItem?.itemValues.find(v => v.columnId === timelineColumn.id)?.value;
+            const timelineVal = currentItem?.itemValue.find(v => v.columnId === timelineColumn.id)?.value;
 
             if (timelineVal && currentItem) {
                 const [startStr, endStr] = timelineVal.split('/');

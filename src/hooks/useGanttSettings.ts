@@ -192,7 +192,7 @@ export const useGanttSettings = (
             const updatePromises: Promise<any>[] = [];
 
             items.forEach(item => {
-                const sourceValue = item.itemValues.find(v => v.columnId === sourceColumnId)?.value;
+                const sourceValue = item.itemValue.find(v => v.columnId === sourceColumnId)?.value;
                 if (sourceValue) {
                     updatePromises.push(dispatch(updateItemValue({
                         itemId: item.id,

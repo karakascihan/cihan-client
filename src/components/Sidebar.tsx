@@ -44,7 +44,7 @@ interface MenuItem {
 const menus: MenuItem[] = [
   {
     title: "Anasayfa",
-    icon: <LayoutDashboard />,
+    icon: <LayoutDashboard className="w-4 h-4" />,
     path: "/",
     roles: [-1],
   },
@@ -77,16 +77,21 @@ const menus: MenuItem[] = [
   },
   {
     title: "Proje Yönetimi",
-    icon: <Workflow />,
+    icon: <Workflow className="w-4 h-4" />,
     items: [{
       title: "Proje Takvimi",
       path: "/projetakvimi",
       icon: <FaCalendar />
+    },
+    {
+      title: "Yeni Proje",
+      path: "/proje",
+      icon: <FaProjectDiagram />
     }
     ]
   },
   {
-    title: "CRM", icon: <Orbit />,
+    title: "CRM", icon: <Orbit className="w-4 h-4" />,
   
     items: [
       { title: "Fırsatlar", icon: <Sparkles className="w-4 h-4 text-yellow-300" />, path: "/firsatlar" }
@@ -113,17 +118,17 @@ const menus: MenuItem[] = [
         ]
       }
 
-      , { title: "Takvim", icon: <CalendarClock className="w-4 h-4 text-cyan-100" />, path: "/takvim" }]
+      , ]
 
   },
   {
     title: "Ürün Yönetimi",
-    icon: <PackageSearch />,
+    icon: <PackageSearch  className="w-4 h-4"/>,
     roles: [-1],
     items: [
       {
         title: "Ürün Fiyat Listesi",
-        icon: <FileSpreadsheet />,
+        icon: <FileSpreadsheet className="w-4 h-4" />,
         roles: [-1],
         path: "/urunler",
 
@@ -133,7 +138,7 @@ const menus: MenuItem[] = [
   },
   // {
   //   title: "Kys Dokümanları",
-  //   icon: <FaDochub />,
+  //   icon: <FaDochub className="w-4 h-4" />,
   //   roles: [-1],
   //   items: [
   //         { title: "Tüm Dokümanlar", icon: null, path: "/kysdokumanlar/" },
@@ -257,9 +262,10 @@ const menus: MenuItem[] = [
 
   //   ],
   // },
+  { title: "NDA Sözleşmeler", icon: <FileSignature className="w-4 h-4 text-purple-100" />, path: "/nda" },
   {
     title: "İnsan Kaynakları",
-    icon: <UserCog2 />,
+    icon: <UserCog2 className="w-4 h-4" />,
     roles: [-1],
     items: [
       /* {
@@ -295,7 +301,7 @@ const menus: MenuItem[] = [
            { title: "Diğer Formlar", path: "/formlar/3" },
          ],
        },*/
-      { title: "Personeller", roles: [1, 2, 15], icon: <Users />, path: "/personeller" },/*
+      { title: "Personeller", roles: [1, 2, 15], icon: <Users className="w-4 h-4" />, path: "/personeller" },/*
       { title: "Pasif Personeller",roles: [1,2,15], icon: <FiUserX />, path: "/pasifpersoneller" },
       { title: "Personel Eğitim Durumu",roles: [1,2,15], icon: <FiUsers />, path: "/PersonelEgitim" },
       {
@@ -313,10 +319,11 @@ const menus: MenuItem[] = [
       },*/
     ],
   },
+  { title: "Takvim", icon: <CalendarClock className="w-4 h-4 text-cyan-100" />, path: "/takvim" },
   {
-    title: "Ayarlar", icon: <Settings />,  items: [
-      { title: "Şirketlerim", icon: <Building2 />, path: "/sirketlerim" },
-      { title: "Kullanıcılar", icon: <User2 />, path: "/kullanicilar" }
+    title: "Ayarlar", icon: <Settings className="w-4 h-4" />,  items: [
+      { title: "Şirketlerim", icon: <Building2 className="w-4 h-4" />, path: "/sirketlerim" },
+      { title: "Kullanıcılar", icon: <User2 className="w-4 h-4" />, path: "/kullanicilar" }
 
     ]
   },

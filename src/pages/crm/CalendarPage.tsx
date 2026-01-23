@@ -22,6 +22,8 @@ import {
   ActivityDtoForInsertion,
   ActivityState,
   ActivityType,
+  BoardDto,
+  ColumnDto,
   CustomerDto,
 } from "@/api/apiDtos";
 import { useSidebar } from "@/context/GlobalSidebarContext";
@@ -34,6 +36,17 @@ import tippy from "tippy.js";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { CalendarEvent } from "@/types/commonType";
 import { URL } from "@/api";
+import ItemDetailModal from "@/components/item/ItemDetailModal";
+import { useAppSelector } from "@/store/hooks";
+import { fetchGroupsForBoard, Group, selectAllGroups } from "@/store/features/groupSlice";
+import { fetchItemsForBoard, Item,  selectAllItemsFlat } from "@/store/features/itemSlice";
+import { selectAllColumns } from "@/store/features/columnSlice";
+import { selectSelectedBoard } from "@/store/features/boardSlice";
+import { se } from "date-fns/locale";
+import { all } from "axios";
+import { apiRequest } from "@/services";
+import { Column } from "primereact/column";
+import { bo } from "node_modules/@fullcalendar/core/internal-common";
 //import listPlugin from "@fullcalendar/list";
 
  const CalendarPage = () => {
@@ -76,10 +89,24 @@ import { URL } from "@/api";
       //     }))
     });
   }, []);
-
-  const newRecordVoid = (entityName:string="Activity",id?: number, date?: Date) => {
-    if(entityName!="Activity"){
-      return;
+const [showItemDetailModal,setShowItemDetailModal]=useState(-1);
+const [item,setItem]=useState<Item|undefined>(undefined);
+const [group, setGroup] = useState<Group | undefined>(undefined);
+const [board, setBoard] = useState<BoardDto | undefined>(undefined);
+const [columns, setColumns] = useState<ColumnDto [] | undefined>(undefined);
+  const newRecordVoid =async (entityName:string,id?: number, date?: Date) => {
+    if (entityName=="Item") {
+      setShowItemDetailModal(id);
+     
+        const item =await apiRequest<Item>( "GET" , URL + `/items/${id}/values`);
+        setItem(item);
+        const group =await apiRequest<Group>( "GET" , URL + `/items/${id}/values/${item.groupId}`);
+      setGroup(group);
+        const columns =await apiRequest<ColumnDto []>( "GET" , URL + `/boards/${group.boardId}/columns`);
+      setColumns(columns);
+        const board =await apiRequest<BoardDto>( "GET" , URL + `/board/${group.boardId}`);
+      setBoard(board);
+                return;
     }
     let activityDtoForInsertion: ActivityDtoForInsertion | undefined =
       id && activityState.data.find((x) => x.id == id);
@@ -396,8 +423,10 @@ import { URL } from "@/api";
             })}
             eventDidMount={(info) => {
               tippy(info.el, {
-                content: info.event.extendedProps.subject,
+                  content: `<span style="color:black">${info.event.extendedProps.subject}</span>`,
                 placement: "top",
+                 allowHTML: true,
+               
               });
             }}
             eventClick={(e) => {
@@ -460,6 +489,17 @@ import { URL } from "@/api";
             </div>
           </div>
         </div>
+        {
+          showItemDetailModal !== -1  && item && group &&  columns&& board &&
+          <ItemDetailModal
+            isOpen={showItemDetailModal !== -1}
+            onClose={() => setShowItemDetailModal(-1)}
+            item={item}
+            group={group}
+            columns={columns}
+            boardName={ board?.name || 'Pano'}
+          />
+        }
       </div>
     </div>
   );

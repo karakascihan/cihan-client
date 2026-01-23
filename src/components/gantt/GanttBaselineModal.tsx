@@ -6,13 +6,14 @@ import GanttLeftPanel from './GanttLeftPanel';
 import GanttRightPanel from './GanttRightPanel';
 import GanttSettingsPanel from './GanttSettingsPanel';
 import { selectAllColumns } from '../../store/features/columnSlice';
-import { type Group, type Item } from '../../types';
 import { isValid, parseISO } from 'date-fns';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { MAX_ZOOM_INDEX } from '../common/constants';
 import { usePanelSync } from '../../hooks/usePanelSync';
 import { useGanttTimeline } from '../../hooks/useGanttTimeline';
 import { useGanttScroll } from '../../hooks/useGanttScroll';
+import { Group } from '@/store/features/groupSlice';
+import { Item } from '@/store/features/itemSlice';
 
 interface GanttBaselineModalProps {
     isOpen: boolean;
@@ -103,7 +104,7 @@ const GanttBaselineModal: React.FC<GanttBaselineModalProps> = ({
         if (!primaryTimelineId || items.length === 0) return { minDate: null, maxDate: null };
         let minDate: Date | null = null, maxDate: Date | null = null;
         for (const item of items) {
-            const val = item.itemValues.find(v => v.columnId === primaryTimelineId)?.value;
+            const val = item.itemValue.find(v => v.columnId === primaryTimelineId)?.value;
             if (val) {
                 const [startStr, endStr] = val.split('/');
                 if (startStr && endStr) {

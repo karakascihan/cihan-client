@@ -1,5 +1,6 @@
 import { JSX } from "react";
 import * as Pages from "./pages";
+import { SozlesmeTipi } from "@/api/apiDtos";
 
 export type AppRoute = {
   path: string;
@@ -35,6 +36,7 @@ export const routes: AppRoute[] = [
     isPrivate: true,
   },
   { path: "/sozlesmeler", element: <Pages.ContractPage />, isPrivate: true },
+  { path: "/nda", element: <Pages.ContractPage sozlesmeTipi={SozlesmeTipi.NDA} />, isPrivate: true },
   { path: "/siparisler", element: <Pages.PurchaseOrderPage />, isPrivate: true },
   {
     path: "/yenisiparis",
@@ -55,7 +57,7 @@ export const routes: AppRoute[] = [
   { path: "/kullanicilar", element: <Pages.UsersPage />, isPrivate: true },
 
   // Project
-  { path: "/proje/:boardId", element: <Pages.BoardView />, isPrivate: true },
+  { path: "/proje/:boardId?", element: <Pages.BoardView />, isPrivate: true },
   { path: "/projetakvimi", element: <Pages.BoardPage />, isPrivate: true },
   {
     path: "/projetakipraporlari",

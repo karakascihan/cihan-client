@@ -18,8 +18,13 @@ interface BoardFormData {
 
 interface AddBoardFormProps {
   onClose: (boardId:number) => void;
+  projectType?:ProjectType
 }
-
+export enum ProjectType {
+  ERP = 'ERP',
+  CRM = 'CRM',
+  HRM = 'HRM',
+}
 /* =======================
    PROJE ŞABLON DATASI
 ======================= */
@@ -92,7 +97,7 @@ const projectTemplate = [
   },
 ];
 
-const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose }) => {
+const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose,projectType }) => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit, formState: { errors, isSubmitting } } =
     useForm<BoardFormData>();
@@ -113,7 +118,7 @@ const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose }) => {
       ).unwrap();
 
       /* ===== Kolonlar ===== */
-     
+        if(projectType === ProjectType.ERP){
         dispatch(createColumn({
           boardId,
           columnData: { title: 'Başlangıç-Bitiş', type: ColumnType.Timeline },
@@ -134,7 +139,6 @@ const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose }) => {
           boardId,
           columnData: { title: 'Dosya', type: ColumnType.Document },
         })).unwrap();
-     
 
       /* ===== Gruplar & Itemlar ===== */
       for (const group of projectTemplate) {
@@ -161,6 +165,7 @@ const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose }) => {
               ).unwrap()
             )
         } 
+      }
       }
 
       onClose(boardId);
