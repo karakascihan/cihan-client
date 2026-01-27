@@ -2983,6 +2983,177 @@
         }
       }
     },
+    "/api/financal-transaction/collection": {
+      "post": {
+        "tags": [
+          "FinancalTransaction"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/financal-transaction/payment": {
+      "post": {
+        "tags": [
+          "FinancalTransaction"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityTypeIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityTypeIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntityTypeIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/financal-transaction/transfer": {
+      "post": {
+        "tags": [
+          "FinancalTransaction"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferDto"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionTypeIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionTypeIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionTypeIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/financal-transaction/getall": {
+      "get": {
+        "tags": [
+          "FinancalTransaction"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancalTransactionDtoIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancalTransactionDtoIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancalTransactionDtoIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/boards/{boardId}/groups": {
       "get": {
         "tags": [
@@ -7079,6 +7250,53 @@
         }
       }
     },
+    "/api/User/update/{userID}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/User/Delete/{userId}": {
       "delete": {
         "tags": [
@@ -7370,8 +7588,8 @@
           "documentType": {
             "maxLength": 20,
             "minLength": 0,
-            "type": "string",
-            "nullable": true
+            "type": "integer",
+            "format": "int32"
           },
           "documentId": {
             "type": "integer",
@@ -8431,6 +8649,32 @@
         },
         "additionalProperties": false
       },
+      "CollectionDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ColumnDto": {
         "type": "object",
         "properties": {
@@ -8586,6 +8830,12 @@
           },
           "vergiNumarasi": {
             "maxLength": 15,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "firmaKisaAd": {
+            "maxLength": 50,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -9684,6 +9934,12 @@
             "type": "string",
             "nullable": true
           },
+          "firmaKisaAd": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "format": "int32"
@@ -9785,6 +10041,12 @@
             "type": "string",
             "nullable": true
           },
+          "firmaKisaAd": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "contacts": {
             "type": "array",
             "items": {
@@ -9874,6 +10136,12 @@
           },
           "vergiNumarasi": {
             "maxLength": 15,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "firmaKisaAd": {
+            "maxLength": 50,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -10685,6 +10953,49 @@
         },
         "additionalProperties": false
       },
+      "EntityType": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32",
+        "x-enumNames": [
+          "Account",
+          "Cash",
+          "Bank"
+        ],
+        "x-enumDescriptions": [
+          "Cari Hesap",
+          "Kasa Hesabı",
+          "Banka Hesabı"
+        ]
+      },
+      "EntityTypeIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityType"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "FileRecord": {
         "type": "object",
         "properties": {
@@ -10884,13 +11195,15 @@
           "transactionType": {
             "maxLength": 100,
             "minLength": 0,
-            "type": "string",
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "sourceType": {
             "maxLength": 20,
             "minLength": 0,
-            "type": "string",
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "sourceId": {
@@ -10900,7 +11213,8 @@
           "targetType": {
             "maxLength": 20,
             "minLength": 0,
-            "type": "string",
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "targetId": {
@@ -10921,6 +11235,98 @@
           },
           "createdByNavigation": {
             "$ref": "#/components/schemas/Users"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinancalTransactionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "transactionType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sourceType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "sourceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sourceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetType": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "targetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetName": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "createtAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinancalTransactionDtoIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FinancalTransactionDto"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -11836,6 +12242,32 @@
           },
           "isActive": {
             "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentDto": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sourceType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sourceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -15971,6 +16403,79 @@
         },
         "additionalProperties": false
       },
+      "TransactionType": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32",
+        "x-enumNames": [
+          "Collection",
+          "Payment",
+          "Virman"
+        ],
+        "x-enumDescriptions": [
+          "Tahsilat",
+          "Ödeme",
+          "Virman"
+        ]
+      },
+      "TransactionTypeIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TransactionType"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TransferDto": {
+        "type": "object",
+        "properties": {
+          "sourceType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sourceId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UpdateBoardDto": {
         "required": [
           "name"
@@ -16173,7 +16678,6 @@
           "firstName",
           "lastName",
           "rolId",
-          "rolName",
           "userName"
         ],
         "type": "object",
@@ -16195,8 +16699,105 @@
             "type": "string"
           },
           "rolName": {
+            "type": "string",
+            "nullable": true
+          },
+          "rolId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "email": {
             "minLength": 1,
             "type": "string"
+          },
+          "tckno": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber2": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "departmentID": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "departureDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserDtoForUpdate": {
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "rolId",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "file": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "lastName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "userName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "rolName": {
+            "type": "string",
+            "nullable": true
           },
           "rolId": {
             "type": "integer",

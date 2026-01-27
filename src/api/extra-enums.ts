@@ -1,6 +1,6 @@
 // Auto-generated from Swagger x-enumDescriptions
 
-import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType } from "./apiDtos";
+import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, EntityType, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType, TransactionType } from "./apiDtos";
 
 // Auto-generated from Swagger x-enumDescriptions
 
@@ -47,6 +47,12 @@ export const DayOfWeekDescriptions: Record<DayOfWeek, string> = {
   [DayOfWeek.Thursday]: "Thursday",
   [DayOfWeek.Friday]: "Friday",
   [DayOfWeek.Saturday]: "Saturday",
+};
+
+export const EntityTypeDescriptions: Record<EntityType, string> = {
+  [EntityType.Account]: "Cari Hesap",
+  [EntityType.Cash]: "Kasa Hesabı",
+  [EntityType.Bank]: "Banka Hesabı",
 };
 
 export const OperationTypeDescriptions: Record<OperationType, string> = {
@@ -106,5 +112,11 @@ export const SurveyTypeDescriptions: Record<SurveyType, string> = {
   [SurveyType.yetkinlik]: "yetkinlik",
   [SurveyType.diger]: "diger",
   [SurveyType.personel]: "personel",
+};
+
+export const TransactionTypeDescriptions: Record<TransactionType, string> = {
+  [TransactionType.Collection]: "Tahsilat",
+  [TransactionType.Payment]: "Ödeme",
+  [TransactionType.Virman]: "Virman",
 };
 

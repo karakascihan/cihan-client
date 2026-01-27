@@ -100,6 +100,11 @@ export const routes: AppRoute[] = [
     element: <Pages.BankAccountPage />,
     isPrivate: true,
   },
+    {
+    path: "/muhasebe-fisleri",
+    element: <Pages.AccounterVoucherPage />,
+    isPrivate: true,
+  },
 
   // Settings
   { path: "/sirketlerim", element: <Pages.EnterprisePage />, isPrivate: true },

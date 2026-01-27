@@ -43,6 +43,12 @@ import { useDispatch, useSelector } from "react-redux";
       filterable: true,
       sortable: true,
     },
+     {
+      header: "Müşteri Kısa Adı",
+      accessor: "firmaKisaAd",
+      filterable: true,
+      sortable: true,
+    },
     {
       header: "Yetkili",
       accessor: "yetkili",
@@ -140,6 +146,15 @@ import { useDispatch, useSelector } from "react-redux";
         group: "Genel",
         required: true,
         defaultValue: customerDtoForInsertion?.firma || "",
+      },
+        {
+        name: "firmaKisaAd",
+        label: "Şirket Kısa Adı",
+        type: "text",
+        colspan: 12,
+        group: "Genel",
+        required: true,
+        defaultValue: customerDtoForInsertion?.firmaKisaAd || "",
       },
       {
         name: "sirketTuru",

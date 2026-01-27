@@ -85,6 +85,9 @@ export const CashAccountPage = lazyWithPreload(
 export const BankAccountPage = lazyWithPreload(
   () => import("../pages/account/BankAccountPage")
 );
+export const AccounterVoucherPage = lazyWithPreload(
+  () => import("../pages/account/AccountingVoucherPage")
+);
 
 // Settings
 export const EnterprisePage = lazyWithPreload(
@@ -98,3 +101,4 @@ export const Settings = lazyWithPreload(
 export const SignIn = lazyWithPreload(
   () => import("../pages/authentication/SignIn")
 );
+

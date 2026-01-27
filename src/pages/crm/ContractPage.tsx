@@ -4,7 +4,7 @@ import { Column, SmartTable } from "@/components/SmartTable";
 import { useConfirm } from "@/context/ConfirmContext";
 import { useSidebar } from "@/context/GlobalSidebarContext";
 import { contractSlice, productsSlice, RootState } from "@/store/store";
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { set } from "react-hook-form";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,7 +85,6 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
         dispatch(fetchpersonels({ onlyNames: false, isActive: true }) as any);
     }
   }, []);
-
   const showTemplate1 = async (contract: ContractsDto) => {
 
     let filledTemplate = contractTemplate1;
@@ -246,8 +245,19 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
     setShowPreview(contract.id!);
   };
   const showTemplateNDA = async (contract: ContractsDto) => {
-
-    let filledTemplate = nda_contract_template_en;
+     let filledTemplate = "";
+      const isConfirmed = await confirm({
+                    title: "Seçim işlemi",
+                    message: "Gizililik sözleşmesi için hangi dili kullanmak istersiniz?",
+                    confirmText: "Türkçe",
+                    cancelText: "İngilizce",
+                  });
+                  if (isConfirmed) {
+                      filledTemplate = nda_contract_template;
+                  }
+                  else
+                     filledTemplate = nda_contract_template_en;
+    
     filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
     filledTemplate = filledTemplate.replaceAll(
       "~sirket~",
@@ -292,6 +302,11 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
       "~sirket_vergi_no~",
       customersState.data.find((en) => en.firma === contract.sirket)
         ?.vergiNumarasi || ""
+    );
+     filledTemplate = filledTemplate.replaceAll(
+      "~firmaKisaAd~",
+      customersState.data.find((en) => en.firma === contract.sirket)
+        ?.firmaKisaAd ?? ""
     );
     let imzalayanPersonel = employeesState.items.find((en) => en.id === contract.personelId);
    
@@ -433,14 +448,14 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
   const columns: Column<ContractsDto>[] = [
     { header: "#", accessor: "__index" },
     {
-      header: "Kurum Adı",
+      header: "Kendi Şirketimiz",
       accessor: "kurum",
       filterable: true,
       sortable: true,
          summaryType: "count",
     },
     {
-      header: "Şirket",
+      header: "Karşı Şirket",
       accessor: "sirket",
       filterable: true,
       sortable: true,
@@ -452,6 +467,19 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
       filterable: true,
       sortable: true,
     },
+      {
+      header: "Sözleşme Tipi",
+      accessor: "sozlesmeTipi",
+      filterable: true,
+      filterType: "select",
+      sortable: true,
+      body: (row: ContractsDto) => (
+        <span>{SozlesmeTipi[row.sozlesmeTipi]}</span>
+      ),
+      filterOptions: Object.values(SozlesmeTipi)
+        .filter((v) => typeof v === "number")
+        .map((v) => ({ label: SozlesmeTipi[v], value: v })),
+    },
     {
       header: "Sözleşme No",
       accessor: "sozlesmeNo",
@@ -462,36 +490,6 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
     {
       header: "Sözleşme Adı",
       accessor: "sozlesmeAdi",
-      filterable: true,
-      sortable: true,
-    },
-    {
-      header: "NSN Kodu",
-      accessor: "nsnKodu",
-      filterable: true,
-      sortable: true,
-    },
-    {
-      header: "Ürün Adı",
-      accessor: "urunAdi",
-      filterable: true,
-      sortable: true,
-    },
-    {
-      header: "Adet",
-      accessor: "adet",
-      filterable: true,
-      sortable: true,
-    },
-    {
-      header: "Birim Fiyat",
-      accessor: "birimFiyat",
-      filterable: true,
-      sortable: true,
-    },
-    {
-      header: "Tutar",
-      accessor: "tutar",
       filterable: true,
       sortable: true,
     },
@@ -541,7 +539,7 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
           </button>
           <button
             onClick={() => {
-             if(row.sozlesmeTipi=== SozlesmeTipi.NDA) showTemplateNDA(row)
+             if(row.sozlesmeTipi=== SozlesmeTipi.NDA)  showTemplateNDA(row)
                else showTemplate1(row)
             }}
             className="
@@ -737,15 +735,16 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
       {
         name: "purchaseOrderId",
         label: "Sipariş Numarası",
-        type: "text",
+        type: "select",
+        options:
+          poList?.map((po) => ({
+            label: po.siparisNo,
+            value: po.id,
+          })) || [],
         colspan: 12,
         group: "Genel",
         readOnly: true,
-        defaultValue:
-          poList.find(
-            po => po.id === contractDtoForInsertion?.purchaseOrdersId
-          )?.siparisNo
-          ?? `Sipariş #${contractDtoForInsertion?.purchaseOrdersId ?? ""}`,
+        defaultValue: contractDtoForInsertion?.purchaseOrdersId || "",
       },
 
 

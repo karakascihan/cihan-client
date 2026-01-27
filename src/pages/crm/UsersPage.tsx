@@ -17,6 +17,8 @@ import { Roles, Users } from "@/api/apiDtos";
 import { AddUserPage } from "./AddUserPage";
 import { UserPermissionForm } from "@/components/user-profile/UserPermissionForm";
 import UserPermissionList from "@/components/user-profile/UserPermissionList";
+import { toDateInputValue } from "@/components/CRM/UserForm";
+import React from "react";
 
 
  const UsersPage = () => {
@@ -29,12 +31,11 @@ import UserPermissionList from "@/components/user-profile/UserPermissionList";
         URL + "/User/GetAllFull",
         { method: "GET", skip: false, deps: [] }
     );
-    const { data: roles, refetch: refetchRoles } = useApiRequest<Roles>(
+    const { data: roles, refetch } = useApiRequest<Roles>(
         URL + "/roles/GetAll",
         { method: "GET", skip: false, deps: [] }
     );
 
-    console.log("users:", users);
     const getAllUsers = (): Partial<Users>[] => {
         if (!users) return [];
         return users.map(user => ({
@@ -73,7 +74,67 @@ import UserPermissionList from "@/components/user-profile/UserPermissionList";
             },
         }
     );
+    
+    
+    
+    
+        const roleOptions = React.useMemo(() => {
+            return [
+                ...(roles ?? []).map((r: any) => ({
+                    label: r.rol_Yetki_Adi ?? r.Rol_Yetki_Adi ?? "-",
+                    value: String(r.id ?? r.Id ?? ""),
+                })),
+            ];
+        }, [roles]);
+    const UpdateUser = (form: Users) => {
+     openModal({
+            title: "Kullanıcı Düzenle",
+            maximizable: true,
+            style: { width: "70vw" },
+            content: (close) => (
+                <GenericForm fields={ [{ name: "firstName", label: "Ad", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).name ?? "" },
+            { name: "lastName", label: "Soyad", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).surname ?? "" },
 
+
+            { name: "tckno", label: "TCKNO", type: "text", colspan: 3, group: "Genel", defaultValue: (form as any).tckno ?? "" },
+
+            {
+                name: "gender", label: "Cinsiyet", type: "select", colspan: 3, group: "Genel", defaultValue: (form as any).gender ?? "", options: [
+                    { label: "Kadın", value: "kadin" },
+                    { label: "Erkek", value: "erkek" },
+                    { label: "Diğer", value: "diger" },
+                ]
+            },
+            {
+                name: "rolId",
+                label: "Rol",
+                type: "select",
+                colspan: 3,
+                group: "Genel",
+                defaultValue: (form as any).rolId ?? "",
+                options: roleOptions,
+                required: true,
+            },
+            { name: "userName", label: "Kullanıcı Adı", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).userName ?? "" },
+
+            // --- İletişim ---
+            { name: "phoneNumber", label: "Telefon 1", type: "text", colspan: 4, group: "İletişim", defaultValue: (form as any).phone1 ?? "" },
+            { name: "phoneNumber2", label: "Telefon 2", type: "text", colspan: 4, group: "İletişim", defaultValue: (form as any).phone2 ?? "" },
+            { name: "email", label: "Email", type: "text", required: true, colspan: 4, group: "İletişim", defaultValue: (form as any).email ?? "" },
+            { name: "address", label: "Adres", type: "textarea", colspan: 12, group: "İletişim", defaultValue: (form as any).address ?? "" },
+
+            // --- İş Bilgileri ---
+            { name: "title", label: "Ünvan", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).title ?? "" },
+            { name: "department", label: "Departman", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).department ?? "" },
+            { name: "startDate", label: "Başlangıç Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).startDate) },
+            { name: "departureDate", label: "Ayrılış Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).departureDate) },
+
+        ]} onSubmit={function (data: any): void {
+                   refetch(URL+ "/user/update/"+form.id, { method:"PUT", body:data}).then(x=> {refetchUsers();close(null)});
+                } } />
+            ),
+        });
+    }
     const [menu, setMenu] = useState<{ id: number; top: number; left: number } | null>(null);
 
     useEffect(() => {
@@ -195,14 +256,7 @@ import UserPermissionList from "@/components/user-profile/UserPermissionList";
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                openModal({
-                                    title: "Kullanıcı Düzenle",
-                                    maximizable: true,
-                                    style: { width: "70vw" },
-                                    content: (close) => (
-                                        <div> </div>
-                                    ),
-                                });
+                               UpdateUser(row);   
                             }}
                             className="
                     inline-flex items-center justify-center
@@ -396,7 +450,6 @@ import UserPermissionList from "@/components/user-profile/UserPermissionList";
                     columns={columns}
                     rowIdAccessor={"id"}
                     frozenColumns={[{ name: "id", right: true }]}
-                    isExport={true}
                     newRecordVoid={() => {
                         openModal({
                             title: "",
@@ -410,7 +463,6 @@ import UserPermissionList from "@/components/user-profile/UserPermissionList";
                             ),
                         });
                     }}
-
                     scrollHeight="calc(100vh - 200px)"
                     enablePagination={false}
                 ></SmartTable>

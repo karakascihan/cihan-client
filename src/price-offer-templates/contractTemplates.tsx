@@ -705,7 +705,7 @@ export const contractTemplate1 = `<div
                 <strong>~sirket_adres~</strong>
                 adresinde yerleşik ve Türkiye Cumhuriyeti yasaları uyarınca kurulmuş
                 <strong>~sirket~</strong> (bundan böyle
-                <strong>"ŞİRKET KISA AD"</strong> olarak anılacaktır) arasında (her ikisi de tek tek "Taraf" veya
+                <strong>"~firmaKisaAd~"</strong> olarak anılacaktır) arasında (her ikisi de tek tek "Taraf" veya
                 birlikte "Taraflar" olarak anılacaktır) akdedilen,
             </p>
 
@@ -933,7 +933,7 @@ export const contractTemplate1 = `<div
             <table style="width: 100%; border-collapse: collapse; margin: 30px 0;">
                 <tr>
                     <td style=" padding: 8px; " colspan="3"><strong>~kurum_shortname~</strong></td>
-                    <td style=" padding: 8px; " colspan="3"><strong>Karşı Kısa Ad</strong></td>
+                    <td style=" padding: 8px; " colspan="3"><strong>~firmaKisaAd~</strong></td>
 
                 </tr>
                 <tr>
@@ -942,7 +942,7 @@ export const contractTemplate1 = `<div
                     <td style=" padding: 8px;width: 33%;">~personelAdi~ ~personelSoyadi~</td>
                     <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
                     <td style=" padding: 8px;width: 2%; ">:</td>
-                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                    <td style=" padding: 8px;width: 33%;"></td>
                 </tr>
                 <tr>
                     <td style=" padding: 8px;"><strong>Unvan</strong></td>
@@ -950,7 +950,7 @@ export const contractTemplate1 = `<div
                     <td style=" padding: 8px;">~personelGorevi~</td>
                     <td style=" padding: 8px;"><strong>Unvan</strong></td>
                     <td style=" padding: 8px;"><strong>:</strong></td>
-                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                    <td style=" padding: 8px;"></td>
                 </tr>
                 <tr>
                     <td style=" padding: 8px;"><strong>İmza</strong></td>
@@ -964,23 +964,23 @@ export const contractTemplate1 = `<div
              <table style="width: 100%; border-collapse: collapse; margin: 50px 0;">
                 <tr>
                     <td style=" padding: 8px; " colspan="3"><strong>~kurum_shortname~</strong></td>
-                    <td style=" padding: 8px; " colspan="3"><strong>Karşı Kısa Ad</strong></td>
+                    <td style=" padding: 8px; " colspan="3"><strong>~firmaKisaAd~</strong></td>
                 </tr>
                 <tr>
                     <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
                     <td style=" padding: 8px;width: 2%; "><strong>:</strong></td>
-                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                    <td style=" padding: 8px;width: 33%;"></td>
                     <td style=" padding: 8px;width: 15%;"><strong>İsim</strong></td>
                     <td style=" padding: 8px;width: 2%; ">:</td>
-                    <td style=" padding: 8px;width: 33%;">Sami DOĞAN</td>
+                    <td style=" padding: 8px;width: 33%;"></td>
                 </tr>
                 <tr>
                     <td style=" padding: 8px;"><strong>Unvan</strong></td>
                     <td style=" padding: 8px;"><strong>:</strong></td>
-                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                    <td style=" padding: 8px;"></td>
                     <td style=" padding: 8px;"><strong>Unvan</strong></td>
                     <td style=" padding: 8px;"><strong>:</strong></td>
-                    <td style=" padding: 8px;">Genel Müdür Yardımcısı</td>
+                    <td style=" padding: 8px;"></td>
                 </tr>
                 <tr>
                     <td style=" padding: 8px;"><strong>İmza</strong></td>

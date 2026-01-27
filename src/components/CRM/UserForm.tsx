@@ -18,7 +18,7 @@ type Props<T extends UserDtoForInsertion | UserDtoForUpdate> = {
 
 
 
-const toDateInputValue = (v: any) => {
+export const toDateInputValue = (v: any) => {
     if (!v) return "";
     if (typeof v === "string") return v.slice(0, 10);
     if (v instanceof Date && !isNaN(v.getTime())) return v.toISOString().slice(0, 10);

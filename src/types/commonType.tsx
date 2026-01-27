@@ -195,3 +195,5 @@ export interface CalendarEvent {
     createdBy: number | null;
     createdAt: string | null;
 }
+
+

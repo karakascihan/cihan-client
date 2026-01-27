@@ -50,8 +50,6 @@ export const AddUserPage = ({ onClose, onSuccess }: Props) => {
                 ...currentForm,
             };
 
-            console.log("GİDEN PAYLOAD:", payload);
-
             await apiRequest("POST", URL + "/User/Create", payload);
             alert("Kullanıcı başarıyla eklendi!");
             if (onSuccess) await onSuccess();

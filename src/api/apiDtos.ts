@@ -12,7 +12,7 @@
 export interface AccountTransaction {
     id: number;
     accountId: number;
-    documentType: string | undefined;
+    documentType: number;
     documentId: number | undefined;
     debit: number;
     credit: number;
@@ -299,6 +299,14 @@ export interface CashAccountDtoIEnumerableApiResponse {
     isSuccess: boolean;
 }
 
+export interface CollectionDto {
+    accountId: number;
+    targetType: number;
+    targetId: number;
+    amount: number;
+    description: string | undefined;
+}
+
 export interface ColumnDto {
     id: number;
     title: string | undefined;
@@ -337,6 +345,7 @@ export interface Company {
     sirketTuru: number | undefined;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
+    firmaKisaAd: string | undefined;
     accountTransaction: AccountTransaction[] | undefined;
     opportunity: Opportunity[] | undefined;
     purchaseOrders: PurchaseOrders[] | undefined;
@@ -592,6 +601,7 @@ export interface CustomerDto {
     sirketTuru: CustomerType;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
+    firmaKisaAd: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
     onayDurumu: string | undefined;
@@ -613,6 +623,7 @@ export interface CustomerDtoForInsertion {
     sirketTuru: CustomerType;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
+    firmaKisaAd: string | undefined;
     contacts: CustomerContactDto[] | undefined;
 }
 
@@ -632,6 +643,7 @@ export interface CustomerDtoForUpdate {
     sirketTuru: CustomerType;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
+    firmaKisaAd: string | undefined;
     id: number;
     contacts: CustomerContactDto[] | undefined;
 }
@@ -812,6 +824,19 @@ export interface EnterpriseDtoIEnumerableApiResponse {
     isSuccess: boolean;
 }
 
+export enum EntityType {
+    Account = 1,
+    Cash = 2,
+    Bank = 3,
+}
+
+export interface EntityTypeIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: EntityType[] | undefined;
+    isSuccess: boolean;
+}
+
 export interface FileRecord {
     id: number;
     fileName: string | undefined;
@@ -858,15 +883,39 @@ export interface FinancalTransaction {
     id: number;
     description: string | undefined;
     transactionDate: Date | undefined;
-    transactionType: string | undefined;
-    sourceType: string | undefined;
+    transactionType: number | undefined;
+    sourceType: number | undefined;
     sourceId: number;
-    targetType: string | undefined;
+    targetType: number | undefined;
     targetId: number;
     amount: number;
     createtAt: Date;
     createdBy: number;
     createdByNavigation: Users;
+}
+
+export interface FinancalTransactionDto {
+    id: number;
+    description: string | undefined;
+    transactionDate: Date | undefined;
+    transactionType: number | undefined;
+    sourceType: number | undefined;
+    sourceId: number;
+    sourceName: string | undefined;
+    targetType: number | undefined;
+    targetId: number;
+    targetName: string | undefined;
+    amount: number;
+    createtAt: Date;
+    createdBy: number;
+    userName: string | undefined;
+}
+
+export interface FinancalTransactionDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: FinancalTransactionDto[] | undefined;
+    isSuccess: boolean;
 }
 
 export interface GroupDto {
@@ -1086,6 +1135,14 @@ export interface OvertimeDtoForInsertion {
     kullanici: string | undefined;
     tar: DateOnly;
     isActive: boolean | undefined;
+}
+
+export interface PaymentDto {
+    accountId: number;
+    sourceType: number;
+    sourceId: number;
+    amount: number;
+    description: string | undefined;
 }
 
 export interface Personel {
@@ -2065,6 +2122,28 @@ export interface TokenDto {
     refreshToken: string | undefined;
 }
 
+export enum TransactionType {
+    Collection = 1,
+    Payment = 2,
+    Virman = 3,
+}
+
+export interface TransactionTypeIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: TransactionType[] | undefined;
+    isSuccess: boolean;
+}
+
+export interface TransferDto {
+    sourceType: number;
+    sourceId: number;
+    targetType: number;
+    targetId: number;
+    amount: number;
+    description: string | undefined;
+}
+
 export interface UpdateBoardDto {
     name: string;
     description: string | undefined;
@@ -2124,7 +2203,30 @@ export interface UserDtoForInsertion {
     firstName: string;
     lastName: string;
     userName: string;
-    rolName: string;
+    rolName: string | undefined;
+    rolId: number;
+    email: string;
+    tckno: string | undefined;
+    phoneNumber: string | undefined;
+    phoneNumber2: string | undefined;
+    address: string | undefined;
+    department: string | undefined;
+    departmentID: number | undefined;
+    title: string | undefined;
+    birthday: Date | undefined;
+    startDate: Date | undefined;
+    departureDate: Date | undefined;
+    gender: string | undefined;
+    isActive: boolean | undefined;
+    password: string | undefined;
+}
+
+export interface UserDtoForUpdate {
+    file: string | undefined;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    rolName: string | undefined;
     rolId: number;
     email: string;
     tckno: string | undefined;
