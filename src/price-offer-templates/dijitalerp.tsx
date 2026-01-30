@@ -3398,3 +3398,427 @@ garanti süresi sonrasında, yüz yüze veya uzaktan çağrı sistemi ile <stron
         </div>
     </div>
 `
+export const DigitestPriceOfferTemplate=`<div
+        style="font-family: Arial, Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.2; color: #000; max-width: 900px; margin: 0 auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;color:darkblue;">
+            <thead>
+                <tr>
+                    <th style="padding: 12px; text-align: center;  font-size: 16px;">
+                        <strong>ERTT GÜÇ İŞLEM ELEKTRONİK SAN. VE TİC. A.Ş.</strong>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 12px;  text-align: center; font-weight: bold;">
+                        LETTER of PROPOSAL
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; ">
+                        <span style="text-decoration: underline;">PROPOSAL NUMBER:~teklifBelgeNo~</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; ">
+                        <p style="margin: 0 0 10px 0;">
+                            <span style="text-decoration: underline;">SUBJECT OF PROPOSAL</span>: ERTT's Close-in Weapon
+                            Systems (CIWS)
+                        </p>
+                        <p style="margin: 0;">
+                            <span style="text-decoration: underline;">CUSTOMER</span>: ~firmaAdi~
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; ">
+                        <span style="text-decoration: underline;">OFFERED to</span>: ~firmaYetkili~
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px; ">
+                        <p style="margin: 0 0 8px 0;">
+                            <span style="text-decoration: underline;">DATE</span>: ~teklifTarihi~
+                        </p>
+                        <p style="margin: 0 0 8px 0;">
+                            VALIDITY PERIOD: ~teklifGecerlilikGunu~ Days
+                        </p>
+                        <p style="margin: 0;">
+                            <span style="text-decoration: underline;">AUTHORIZED REPRESENTATIVE</span>: ~teklifOnay~ –
+                            Deputy General Manager
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+                <tr>
+                    <th style=" padding: 12px; text-align: left; ;">
+                        <p style="margin: 0; font-weight: bold;">PREPARED by: ~hazirlayan~</p>
+                        <p style="margin: 5px 0 0 0;">~teklifTarihi~</p>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+        <!-- Table of Contents -->
+        <h1 style="font-size: 20px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">TABLE of CONTENTS</h1>
+        <p style="margin: 8px 0;"><strong>1. COMPARISON TABLE : ERTT's SADIK 7.62MM X 51 and DILLON AERO M134D
+                MINIGUN</strong></p>
+        <p style="margin: 8px 0;"><strong>2. ERTT's SADIK 7.62 MM X 51 SPARE PARTS LIST</strong> ></p>
+        <p style="margin: 8px 0;"><strong>3. A COMPARISON CHART: ERTT'S 20 MM X 102 CLOSE-IN WEAPON SYSTEM VS.
+                RHEINMETALL'S OERLIKON 35 MM DEFENCE SYSTEM</strong></p>
+        <p style="margin: 8px 0;"><strong>4. ERTT'S YURT 12.7MM X 99 3-BARREL GATLING GUN</strong> </p>
+        <p style="margin: 8px 0;"><strong>5. ERTT'S PRSAL TURRET RCWS (CONFIGURABLE WITH SADIK AND YURT)</strong> </p>
+        <p style="margin: 8px 0;"><strong>6. ERTT's PRSAL CLOSE-IN WEAPON SYSTEMS (CONFIGURABLE WITH SADIK AND YURT):
+                ONE-AXLE PLATFORM and TWO-AXLE PLATFORM with COMMAND CONTROL (SHELTER), GENERATOR and RADAR</strong></p>
+        <p style="margin: 8px 0;"><strong>8. QUOTATION TABLE</strong> </p>
+        <p style="margin: 8px 0;"><strong>10. COMMERCIAL TERMS</strong></p>
+        <!-- Letter Body -->
+        <div style="margin: 30px 0;">
+            <p style="margin: 8px 0;"><strong>Date</strong>: ~teklifTarihi~</p>
+            <p style="margin: 8px 0;"><strong>Subject</strong>: ERTT's Close-in Weapon Systems (CIWS)</p>
+            <p style="margin: 8px 0;">Dear ~firmaYetkili~;</p>
+            <p style="margin: 8px 0;">We would like to thank you for your interest in our company.</p>
+            <p style="margin: 8px 0;">We are pleased to submit, for your kind consideration, our price offer including
+                the technical specifications of our product solutions prepared in line with your request.</p>
+            <p style="margin: 8px 0;">We hope that our proposal will meet your approval and wish you success in your
+                work.</p>
+            <p style="margin: 8px 0;">Sincerely,</p>
+            <p style="margin: 8px 0;">On Behalf of</p>
+            <p style="margin: 8px 0;">ERTT GÜÇ İŞLEM ELEKTRONİK SAN. VE TİC. A.Ş.<br>
+                <br>
+                ~teklifOnay~<br>
+                Deputy General Manager
+            </p>
+        </div>
+        <!-- Section 1: Comparison Table -->
+        <div style="margin-top:30px;break-inside: avoid;">
+            <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">1. COMPARISON TABLE :
+                ERTT's SADIK 7.62MM X 51 and DILLON AERO M134D MINIGUN</h1>
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: 1px solid #000;">
+                <thead>
+                    <tr>
+                        <th colspan="2"
+                            style="background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            WEAPON SPECIFICATIONS
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td
+                            style="width: 50%; padding: 12px; border: 1px solid #000; text-align: center; vertical-align: top;">
+                            <p style="margin: 0 0 10px 0; font-weight: bold;">SADIK</p>
+                            <img src="~BASE_URL~/priceoffer/image001.png" />
+                        </td>
+                        <td
+                            style="width: 50%; padding: 12px; border: 1px solid #000; text-align: center; vertical-align: top;">
+                            <p style="margin: 0 0 10px 0; font-weight: bold;">M134D Minigun</p>
+                            <img src="~BASE_URL~/priceoffer/image002.png" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">7.62mm x 51 (NATO) 6-Barrel Gatling Gun</td>
+                        <td style="padding: 12px; border: 1px solid #000;">7.62mm x 51 (NATO) 6-Barrel Gatling Gun</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">Rate of Fire: Two levels; low and high 1500
+                            and 3000 RPM (Additionally, it can be adjusted according to the user's request)</td>
+                        <td style="padding: 12px; border: 1px solid #000;">Rate of Fire: 3000 RPM</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">Ammunition Capacity: 3000</td>
+                        <td style="padding: 12px; border: 1px solid #000;">Ammunition Capacity: 3000</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">Muzzle Velocity: 850 m/s</td>
+                        <td style="padding: 12px; border: 1px solid #000;">Muzzle Velocity: 853 m/s</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">Effective Range: Up to 1000 mt</td>
+                        <td style="padding: 12px; border: 1px solid #000;">Effective Range: Up to 1000 mt</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">Weight: 33 Kg</td>
+                        <td style="padding: 12px; border: 1px solid #000;">Weight: 30 Kg</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">Compatibility with optical sights</td>
+                        <td style="padding: 12px; border: 1px solid #000;">Compatibility with optical sights</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">Adaptability for sea, land and air
+                            operations.</td>
+                        <td style="padding: 12px; border: 1px solid #000;">Adaptability for sea, land and air
+                            operations.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <img width="900" src="~BASE_URL~/priceoffer/image003.png" />
+        <div style="margin-top:30px;break-inside: avoid;">
+            <!-- Section 2: Spare Parts List -->
+            <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">2. ERTT's SADIK 7.62 MM
+                X 51 SPARE PARTS LIST</h1>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: 1px solid #000;">
+                <thead>
+                    <tr>
+                        <th
+                            style="width: 33.33%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            BARREL</th>
+                        <th
+                            style="width: 33.33%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            BARREL CLAMP</th>
+                        <th
+                            style="width: 33.33%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            FIRING PINS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">BODY
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            FEEDING MECHANISM</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">MOTOR
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">MOTOR
+                            CABLE SET</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            SELONOID</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">GRIP
+                            HANDLE</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            ELECTRONIC BOX</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            FLEXIBLE AMMUNITION CHUTE</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            AMMUNITION BOX</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            BATTERY</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            BATTERY CABLE SET</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            BATTERY CHARGING UNIT</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">POWER
+                            CABLE</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">
+                            CARRYING CASE</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">TOOL
+                            KIT</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:30px;">
+            <!-- Section 3 -->
+            <div style="break-inside: avoid;">
+
+                <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">3. A COMPARISON
+                    CHART: ERTT'S 20 MM X 102 CLOSE-IN WEAPON SYSTEM VS. RHEINMETALL'S OERLIKON 35 MM DEFENCE SYSTEM
+                </h1>
+                <img style="margin-top:30px;" width="900" src="~BASE_URL~/priceoffer/image004.png" />
+            </div>
+
+            <img style="break-inside: avoid;margin-top:30px;" width="900" src="~BASE_URL~/priceoffer/image005.png" />
+            <img style="break-inside: avoid;margin-top:30px;" width="900" src="~BASE_URL~/priceoffer/image006.png" />
+            <img style="break-inside: avoid;margin-top:30px;" width="900" src="~BASE_URL~/priceoffer/image007.png" />
+        </div>
+        <div style="margin-top:30px;">
+            <!-- Section 4 -->
+            <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">4. ERTT'S YURT 12.7MM X
+                99 3-BARREL GATLING GUN</h1>
+            <img width="900" style="break-inside: avoid;margin-top:30px;" src="~BASE_URL~/priceoffer/image008.png" />
+            <img width="900" src="~BASE_URL~/priceoffer/image009.png" style="break-inside: avoid;margin-top:30px;" />
+        </div>
+        <div style="margin-top:30px;">
+            <!-- Section 5 -->
+            <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">5. ERTT'S PRSAL TURRET
+                RCWS (CONFIGURABLE WITH SADIK AND YURT)</h1>
+            <img width="900" style="break-inside: avoid;margin-top:30px;" src="~BASE_URL~/priceoffer/image010.png" />
+            <img width="900" style="break-inside: avoid;margin-top:30px;" src="~BASE_URL~/priceoffer/image011.png" />
+        </div>
+        <div style="margin-top:30px;">
+            <!-- Section 6 -->
+            <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">6. ERTT's PRSAL CLOSE-IN
+                WEAPON SYSTEMS (CONFIGURABLE WITH SADIK AND YURT): ONE-AXLE PLATFORM and TWO-AXLE PLATFORM with COMMAND
+                CONTROL (SHELTER), GENERATOR and RADAR</h1>
+            <img width="900" style="break-inside: avoid;margin-top:30px;" src="~BASE_URL~/priceoffer/image012.png" />
+            <img width="900" style="break-inside: avoid;margin-top:30px;" src="~BASE_URL~/priceoffer/image013.png" />
+            <img width="900" style="break-inside: avoid;margin-top:30px;" src="~BASE_URL~/priceoffer/image014.png" />
+            <img width="900" style="break-inside: avoid;margin-top:30px;" src="~BASE_URL~/priceoffer/image015.png" />
+        </div>
+        <div style="margin-top:30px;">
+            <!-- Section 8: Quotation Table -->
+            <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">8. QUOTATION TABLE</h1>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; border: 1px solid #000;">
+                <thead>
+                    <tr>
+                        <th
+                            style="width: 40%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            PRODUCT DESCRIPTION</th>
+                        <th
+                            style="width: 9%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            MIN PCS QTY</th>
+                        <th
+                            style="width: 17%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            UNIT PRICE<br>USD</th>
+                        <th
+                            style="width: 18%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            TOTAL PRICE<br>USD</th>
+                        <th
+                            style="width: 14%; background-color: #d9d9d9; padding: 12px; text-align: center; border: 1px solid #000; font-weight: bold;">
+                            DELIVERY TIME</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ~fiyatSatirlar~
+                    <!-- <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            YURT 12.7mm x 99 3-Barrel Gatling Gun
+                            <p style="margin: 5px 0 0 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image017.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            RTHKL 20mm x 102 6-Barrel Gatling Gun
+                            <p style="margin: 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image018.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            PRSAL TURRET Remote Controlled Stabilized Weapon System with Console; Weapon is not included
+                            Option 1: SADIK 6-Barrel 7.62mm x 51
+                            <p style="margin: 5px 0 0 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image019.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            PRSAL TURRET Remote Controlled Stabilized Weapon System with Console; Weapon is not included
+                            Option 2: YURT 3-Barrel 12.7mm x 99
+                            <p style="margin: 5px 0 0 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image020.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            PRSAL ANTI DRONE SYSTEM
+                            Gatling Armed with mobile capabilities; weapons are not included<br>
+                            Option 1: SADIK 6-Barrel 7.62mm x 51<br>
+                            Radar is optional.
+                            <p style="margin: 5px 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image021.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            PRSAL ANTI DRONE SYSTEM<br>
+                            Gatling Armed with mobile capabilities; weapons are not included
+                            Option 1: YURT 3-Barrel 12.7mm x 99<br>
+                            Radar is optional.
+                            <p style="margin: 5px 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image022.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            PRSAL ANTI DRONE SYSTEM with Shelter, Radar, and Generator; weapons are not included
+                            Option 1: SADIK 6-Barrel 7.62mm x 51
+                            <p style="margin: 5px 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image023.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            PRSAL ANTI DRONE SYSTEM with Shelter, Radar, and Generator; weapons are not included
+                            Option 2: YURT 3-Barrel 12.7mm x 99
+                            <p style="margin: 5px 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image024.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; border: 1px solid #000;">
+                            Close-in Weapon System (CIWS) with RTHKL 20mm x 102
+                            <p style="margin: 5px 0 0 0; font-style: italic; color: #666;"><img width="200" height="100"
+                                    src="~BASE_URL~/priceoffer/image025.png" /></p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">1</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;"></td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+        <div style="margin-top:30px;">
+            <!-- Section 10: Commercial Terms -->
+            <h1 style="font-size: 18px; font-weight: bold; margin: 30px 0 15px 0; color: #000;">10. COMMERCIAL TERMS
+            </h1>
+
+            <ol style="line-height: 1.8; padding-left: 25px;">
+                <li style="margin-bottom: 10px;">The final price for the aforementioned products the final price will be
+                    included later with the Purchase Order and it will be paid in <strong>USD</strong>.</li>
+                <li style="margin-bottom: 10px;">The products are offered on an <strong>Ex Works (EXW)</strong> basis.
+                </li>
+                <li style="margin-bottom: 10px;">Payment terms: 50% in advance and 50% upon factory delivery of the
+                    products.</li>
+                <li style="margin-bottom: 10px;">Lead time begins upon receipt of the advance payment.</li>
+                <li style="margin-bottom: 10px;">The sale is subject to the approval of the End-User Certificate by both
+                    the Turkish Ministry of Defense (MOD) and MOD of the End-User's country.</li>
+                <li style="margin-bottom: 10px;">Logistics and customs expenses shall be borne by the buyer.</li>
+                <li style="margin-bottom: 10px;">Warranty period: 12 months.</li>
+                <li style="margin-bottom: 10px;">Training: A 3-day program (covering usage, installation and
+                    maintenance) at ERTT's facility in FDFDF, DFDF.</li>
+                <li style="margin-bottom: 10px;">Documentation provided with the products: A set of technical manual
+                    (user, maintenance, and training)</li>
+                <li style="margin-bottom: 10px;">Offer Validity : 30 days.</li>
+            </ol>
+
+        </div>
+    </div>`;

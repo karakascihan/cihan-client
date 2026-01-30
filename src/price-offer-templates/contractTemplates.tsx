@@ -1041,7 +1041,7 @@ export const contractTemplate1 = `<div
 
         <h1 style="text-align: center; font-size: 14pt; font-weight: bold; margin: 30px 0;">NON-DISCLOSURE AGREEMENT<br>(NDA)</h1>
 
-        <p style="text-align: justify; margin: 20px 0;">This Agreement is made and entered into between <strong>~kurum~</strong>, located at <strong>~kurum_adres~</strong>, established under the laws of the REPUBLIC of TURKIYE (hereinafter referred to as <strong>"~kurum_shortname~"</strong>) and <strong>.~sirket~</strong> located at <strong>~sirket_adres~</strong> (hereinafter referred to as <strong>"ŞİRKET KISA AD"</strong>) (each individually referred to as a "<strong>Party</strong>" and collectively as the "<strong>Parties</strong>").</p>
+        <p style="text-align: justify; margin: 20px 0;">This Agreement is made and entered into between <strong>~kurum~</strong>, located at <strong>~kurum_adres~</strong>, established under the laws of the REPUBLIC of TURKIYE (hereinafter referred to as <strong>"~kurum_shortname~"</strong>) and <strong>.~sirket~</strong> located at <strong>~sirket_adres~</strong> (hereinafter referred to as <strong>"~firmaKisaAd~"</strong>) (each individually referred to as a "<strong>Party</strong>" and collectively as the "<strong>Parties</strong>").</p>
 
         <h3 style="font-size: 12pt; font-weight: bold; margin: 20px 0;">This Agreement hereby:</h3>
 

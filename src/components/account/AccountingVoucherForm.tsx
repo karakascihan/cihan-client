@@ -6,6 +6,7 @@ import {
   CollectionDto,
   CustomerDto,
   EntityType,
+  FinancalTransactionDto,
   TransactionType,
 } from "@/api/apiDtos";
 import { useApiRequest } from "@/hooks/useApiRequest";
@@ -13,11 +14,16 @@ import { URL } from "@/api";
 import { GlobalLoader } from "@/context/LoadingContext";
 import { useDispatch } from "react-redux";
 import { setNotification } from "@/store/slices/notificationSlice";
+import { tr } from "date-fns/locale";
+import { toDateInputValue } from "../CRM/UserForm";
+import { toInputDate } from "@/utils/commonUtils";
 
 export const AccountingVoucherForm = ({
+  transaction,
   transactionType,
   onClose,
 }: {
+  transaction?:FinancalTransactionDto
   transactionType: TransactionType;
   onClose(data: any);
 }) => {
@@ -43,6 +49,7 @@ export const AccountingVoucherForm = ({
   const getFields = () => {
     let fields: FieldDefinition[] = [];
     if (cashAccountsLoading || loadingBanks || accountLoading) return [];
+    if(!transaction)
     switch (transactionType) {
       case TransactionType.Collection:
         fields.push({
@@ -276,12 +283,14 @@ export const AccountingVoucherForm = ({
       default:
         break;
     }
+  
     fields.push({
       name: "amount",
       label: "Tutar",
       type: "number",
       required: true,
       colspan: 6,
+      defaultValue:transaction?.amount ?? 0
     });
     fields.push({
       name: "transactionDate",
@@ -289,12 +298,14 @@ export const AccountingVoucherForm = ({
       type: "date",
       required: true,
       colspan: 6,
+      defaultValue:transaction ? toInputDate(transaction.transactionDate as any):null
     });
     fields.push({
       name: "description",
       label: "Açıklama",
       type: "textarea",
       colspan: 12,
+     defaultValue:transaction?.description 
     });
 
     return fields;
@@ -314,6 +325,13 @@ export const AccountingVoucherForm = ({
            duration:10000
         }));
       return; // Form gönderimini durdur
+    }
+    if (transaction) {
+      refetchAccount(URL + "/financal-transaction/update/" + transaction.id, {
+          method: "PUT",
+          body: data,
+        }).then((c) => onClose(null));
+        return;
     }
         refetchAccount(URL + "/financal-transaction/" + TransactionType[transactionType], {
           method: "POST",

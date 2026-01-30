@@ -279,6 +279,23 @@ export const GenericForm: React.FC<GenericFormProps> = ({
         toolbar:
           "undo redo | blocks | bold italic underline | forecolor backcolor | " +
           "link image media | alignleft aligncenter alignright | bullist numlist | table | preview code | fullscreen",
+           images_dataimg_filter: (img) => true,
+          images_upload_handler: (blobInfo, success, failure) => {
+            try {
+              // blobInfo içerisinden base64 alıyoruz
+            const reader = new FileReader();
+            reader.readAsDataURL(blobInfo.blob());
+            reader.onload = () => {
+              // success(reader.result as string); // base64 string TinyMCE’ye veriliyor
+            };
+            reader.onerror = (err) => {
+              // failure("Base64 yüklenemedi: " + err);
+            };
+            } catch (error) {
+              console.log(error);
+            }
+            
+          },
         content_style:
           "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
       }}

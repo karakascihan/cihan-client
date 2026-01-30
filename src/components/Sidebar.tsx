@@ -268,7 +268,14 @@ const menus: MenuItem[] = [
 
   //   ],
   // },
-  { title: "NDA Sözleşmeler", icon: <FileSignature className="w-4 h-4 text-purple-100" />, path: "/nda" },
+  { title: "NDA Sözleşmeler", icon: <FileSignature className="w-4 h-4 text-purple-100" />, items:[
+    {
+      title: "İngilizce NDA", path:"/nda-en"
+    },
+    {
+      title: "Türkçe NDA", path:"/nda"
+    }
+  ] },
   {
     title: "İnsan Kaynakları",
     icon: <UserCog2 className="w-4 h-4" />,

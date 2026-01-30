@@ -187,7 +187,7 @@ import { useDispatch, useSelector } from "react-redux";
         group: "Genel",
         required: true,
         defaultValue: customerDtoForInsertion?.telefon || "",
-        pattern: /^[0-9]{10}$/,
+        // pattern: /^[0-9]{10}$/,
       },
       {
         name: "vergiNumarasi",

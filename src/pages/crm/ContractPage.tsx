@@ -31,6 +31,8 @@ import AddBoardForm, { ProjectType } from "@/components/board/AddBoardForm";
 import { useNavigate } from "react-router-dom";
 import { EnumSelect } from "@/components/EnumSelect";
 import { fetchpersonels } from "@/store/slices/personalSlice";
+import { getEnumOptions } from "@/utils/commonUtilsCompnent";
+import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
 
  const ContractPage = ({sozlesmeTipi}:{sozlesmeTipi?: SozlesmeTipi}) => {
   const confirm = useConfirm();
@@ -246,13 +248,13 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
   };
   const showTemplateNDA = async (contract: ContractsDto) => {
      let filledTemplate = "";
-      const isConfirmed = await confirm({
-                    title: "Seçim işlemi",
-                    message: "Gizililik sözleşmesi için hangi dili kullanmak istersiniz?",
-                    confirmText: "Türkçe",
-                    cancelText: "İngilizce",
-                  });
-                  if (isConfirmed) {
+      // const isConfirmed = await confirm({
+      //               title: "Seçim işlemi",
+      //               message: "Gizililik sözleşmesi için hangi dili kullanmak istersiniz?",
+      //               confirmText: "Türkçe",
+      //               cancelText: "İngilizce",
+      //             });
+                  if (contract.sozlesmeTipi=== SozlesmeTipi.NDA) {
                       filledTemplate = nda_contract_template;
                   }
                   else
@@ -474,11 +476,9 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
       filterType: "select",
       sortable: true,
       body: (row: ContractsDto) => (
-        <span>{SozlesmeTipi[row.sozlesmeTipi]}</span>
+        <span>{SozlesmeTipiDescriptions[row.sozlesmeTipi]}</span>
       ),
-      filterOptions: Object.values(SozlesmeTipi)
-        .filter((v) => typeof v === "number")
-        .map((v) => ({ label: SozlesmeTipi[v], value: v })),
+      filterOptions: getEnumOptions<SozlesmeTipi>(SozlesmeTipiDescriptions),
     },
     {
       header: "Sözleşme No",
@@ -539,7 +539,7 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
           </button>
           <button
             onClick={() => {
-             if(row.sozlesmeTipi=== SozlesmeTipi.NDA)  showTemplateNDA(row)
+             if(row.sozlesmeTipi=== SozlesmeTipi.NDA || row.sozlesmeTipi === SozlesmeTipi.NDA_EN)  showTemplateNDA(row)
                else showTemplate1(row)
             }}
             className="
@@ -650,15 +650,11 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
         name: "sozlesmeTipi",
         label: "Sözleşme Tipi",
         type: "select",
-        options:  Object.values(SozlesmeTipi)
-  .filter(v => typeof v === "number")
-  .map(v => ({
-    label: SozlesmeTipi[v],
-    value: v
-  })),
+        options: getEnumOptions<SozlesmeTipi>(SozlesmeTipiDescriptions),
         colspan: 12,
         group: "Genel",
-        defaultValue: contractDtoForInsertion?.sozlesmeTipi ?? "",
+        defaultValue: contractDtoForInsertion? contractDtoForInsertion.sozlesmeTipi : sozlesmeTipi ,
+         disabled:sozlesmeTipi ? true:false
       },
       {
         name: "sozlesmeTarihi",
@@ -731,6 +727,7 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
         group: "Genel",
         disabled: contractDtoForInsertion?.id ? true : false,
         defaultValue: contractDtoForInsertion?.priceOfferId || "",
+        hidden: (sozlesmeTipi=== SozlesmeTipi.NDA || sozlesmeTipi=== SozlesmeTipi.NDA_EN)
       },
       {
         name: "purchaseOrderId",
@@ -745,6 +742,7 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
         group: "Genel",
         readOnly: true,
         defaultValue: contractDtoForInsertion?.purchaseOrdersId || "",
+         hidden: (sozlesmeTipi=== SozlesmeTipi.NDA || sozlesmeTipi=== SozlesmeTipi.NDA_EN)
       },
 
 

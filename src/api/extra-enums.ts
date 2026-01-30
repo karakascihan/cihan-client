@@ -100,10 +100,11 @@ export const QuestionTypeDescriptions: Record<QuestionType, string> = {
 };
 
 export const SozlesmeTipiDescriptions: Record<SozlesmeTipi, string> = {
-  [SozlesmeTipi.NDA]: "NDA",
-  [SozlesmeTipi.HizmetSozlesmesi]: "HizmetSozlesmesi",
-  [SozlesmeTipi.TedarikSozlesmesi]: "TedarikSozlesmesi",
-  [SozlesmeTipi.Diger]: "Diger",
+  [SozlesmeTipi.NDA_EN]: "NDA İngilizce",
+  [SozlesmeTipi.NDA]: "NDA Türkçe",
+  [SozlesmeTipi.SiparisSozlesmesi]: "Sipariş Sözlşemesi",
+  [SozlesmeTipi.TedarikSozlesmesi]: "Tedarik Sözlşemesi",
+  [SozlesmeTipi.Diger]: "Diğer",
 };
 
 export const SurveyTypeDescriptions: Record<SurveyType, string> = {

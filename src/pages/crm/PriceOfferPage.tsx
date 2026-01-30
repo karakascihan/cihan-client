@@ -16,7 +16,7 @@ import {
   fetchPriceOffers,
   updatePriceOffer,
 } from "@/store/slices/priceOfferSlice";
-import store, { AppDispatch, RootState } from "@/store/store";
+import store, { AppDispatch, productsSlice, RootState } from "@/store/store";
 import { formatDateForInput } from "@/utils/commonUtils";
 import { ReactNode, use, useEffect, useState } from "react";
 import { FaAdversal, FaPencilAlt, FaTrash } from "react-icons/fa";
@@ -32,7 +32,7 @@ import { MdSend, MdTempleHindu } from "react-icons/md";
 import { EmailSender } from "@/components/mail/EmailSender";
 import { OpportunityState, fetchOpportunities } from "@/store/slices/opportunitySlice";
 import { selectPriceOffersWithCustomerWithOpportunity } from "@/store/selectors/opportunitySelector";
-import { dijitalerp_price_offer_template, dijitalerp_price_offer_template2, dijitalerp_price_offer_template3, TarihFormatiDonustur } from "@/price-offer-templates/dijitalerp";
+import { DigitestPriceOfferTemplate, dijitalerp_price_offer_template, dijitalerp_price_offer_template2, dijitalerp_price_offer_template3, TarihFormatiDonustur } from "@/price-offer-templates/dijitalerp";
 import { URL } from "@/api";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
 import { useLoading } from "@/context/LoadingContext";
@@ -58,24 +58,24 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
   const customerState = useSelector(
     (state: RootState) => state.customer as CustomerState
   );
-
   const opportunities = useSelector(
     (state: RootState) => state.opportunity as OpportunityState
   );
-
-  // Opportunities sadece boşsa yüklenir
+    const productState = useSelector(
+    (state: RootState) => state.products );
   useEffect(() => {
     if (opportunities.data.length === 0) {
       dispatch(fetchOpportunities());
     }
-  }, []);
-
-  // Customers sadece boşsa yüklenir
-  useEffect(() => {
-    if (customerState.data.length === 0) {
+      if (customerState.data.length === 0) {
       dispatch(fetchCustomers());
     }
+     if (productState.items.length === 0) {
+       dispatch(productsSlice.actions.fetchAll());
+    }
+     dispatch(fetchEnterprises());
   }, []);
+
   useEffect(() => {
     dispatch(fetchPriceOffers());
   }, [dispatch]);
@@ -723,8 +723,8 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
       content: (close) => {
 
         let firma = customerState.data.find(x => x.id === priceoffer.firma_Id);
-        let onayPersonel = personels.items.find(x => x.id == priceoffer.teklifOnay);
-        let teklifMetni = dijitalerp_price_offer_template3.replaceAll("~teklifBelgeNo~", priceoffer.teklifBelgeNo);
+        let onayPersonel = personels.items.find(x => x.id == (priceoffer.teklifOnay as any));
+        let teklifMetni = DigitestPriceOfferTemplate.replaceAll("~teklifBelgeNo~", priceoffer.teklifBelgeNo);
         teklifMetni = teklifMetni.replaceAll("~teklifTarihi~", TarihFormatiDonustur(priceoffer.teklifTarihi.toString()));
         teklifMetni = teklifMetni.replaceAll("~firmaAdi~", firma.firma);
         teklifMetni = teklifMetni.replaceAll("~firmaYetkili~", firma.yetkili);
@@ -733,27 +733,19 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
         teklifMetni = teklifMetni.replaceAll("~teklifOnayGorev~", onayPersonel.personelGorevi ?? "");
         teklifMetni = teklifMetni.replaceAll("~telefon~", onayPersonel.telefonNo ?? "");
         teklifMetni = teklifMetni.replaceAll("~ePosta~", onayPersonel.ePosta ?? "");
-
         const teklifTarihi = new Date(priceoffer.teklifTarihi);
-
         const teklifGecerlilikTarihi = new Date(priceoffer.teklifGecerlilikTarihi);
         const gunFarkiTeklif = Math.ceil((teklifGecerlilikTarihi.getTime() - teklifTarihi.getTime()) / (1000 * 60 * 60 * 24));
-
-
         if (gunFarkiTeklif > 0) {
           teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", gunFarkiTeklif + " gün");
         }
         else {
           teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikSuresi~", "5 gün");
-
         }
         teklifMetni = teklifMetni.replaceAll("~BASE_URL~", URL.replace("api", ""));
-
         const gunFarkiTeslim = Math.ceil(
           (new Date(priceoffer.teslimTarihi?.toString().replace(/-/g, "/")).getTime() - teklifTarihi.getTime()) / (1000 * 60 * 60 * 24)
         );
-
-
         if (gunFarkiTeslim > 0) {
           teklifMetni = teklifMetni.replaceAll("~teslimSuresi~", gunFarkiTeslim.toString() + " gün");
         }
@@ -761,7 +753,10 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
           teklifMetni = teklifMetni.replaceAll("~teslimSuresi~", "belirlenen süre");
         }
         let fiyatSatirlarHtml = ``;
-        priceoffer.priceOfferLine?.forEach((line, index) => {
+        let firma2= enterpriseState.items[0];
+        if(firma2.enterpriseName.startsWith("DİJİTAL ERP"))
+        {
+          priceoffer.priceOfferLine?.forEach((line, index) => {
           let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""}</td>
@@ -769,9 +764,7 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""}</td>`;
           fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
-
         });
-
         if (priceoffer.belgeIndirimOraniYuzde > 0) {
           fiyatSatirlarHtml += `<tr><td style="padding: 10px 12px;font-size: 15px; font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Ara Toplam</td>
                        <td colspan=5 style="text-align:center; font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + (priceoffer.toplamTutar * priceoffer.belgeIndirimOraniYuzde / 100)}</td>
@@ -780,10 +773,29 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
                        <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar * priceoffer.belgeIndirimOraniYuzde / 100}</td>
            ></tr>`;
         }
-
         fiyatSatirlarHtml += `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
-                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi}</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0]?.paraBirimi}</td>
            ></tr>`;
+        }
+        else
+        {
+         priceoffer.priceOfferLine?.forEach((line, index) => {
+          let productImg=productState.items?.filter(p=>p.productName == line.malzemeAdi)[0]?.pictures ?? "";
+         let fiyatSatir = `  
+                        <td style="padding: 12px; border: 1px solid #000;">
+                           ${line.malzemeAdi}
+                            <p style="margin: 0; font-style: italic; color: #666;">
+                            ${productImg?`<img width="200" height="100"src="data:image/jpeg;base64,${productImg}" />`:null}</p>
+                        </td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center; font-weight: bold;">${line.miktar ?? 1}</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;">${line.birimFiyat ?? ""}</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;">${line.toplamFiyat ?? ""}</td>
+                        <td style="padding: 12px; border: 1px solid #000; text-align: center;">${line.teslimTarih ?? ""}</td>
+                   `;
+          fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
+        });
+        }
+       
         teklifMetni = teklifMetni.replaceAll("~fiyatSatirlar~", fiyatSatirlarHtml);
 
         let opsiyonSatirlarHtml = ``;
@@ -831,6 +843,7 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
       }
     })
   };
+  
 
 
   const navigate = useNavigate();

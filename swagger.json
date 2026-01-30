@@ -3072,7 +3072,7 @@
         }
       }
     },
-    "/api/financal-transaction/transfer": {
+    "/api/financal-transaction/virman": {
       "post": {
         "tags": [
           "FinancalTransaction"
@@ -3150,6 +3150,76 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/financal-transaction/delete/{id}": {
+      "delete": {
+        "tags": [
+          "FinancalTransaction"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/financal-transaction/update/{id}": {
+      "put": {
+        "tags": [
+          "FinancalTransaction"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancalTransactionDtoForUpdate"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancalTransactionDtoForUpdate"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancalTransactionDtoForUpdate"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinancalTransactionDtoForUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
@@ -8671,6 +8741,10 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -11181,6 +11255,12 @@
             "type": "integer",
             "format": "int32"
           },
+          "transactionNo": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "description": {
             "maxLength": 500,
             "minLength": 0,
@@ -11246,6 +11326,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "transactionNo": {
+            "type": "string",
+            "nullable": true
+          },
           "description": {
             "maxLength": 500,
             "minLength": 0,
@@ -11303,6 +11387,25 @@
           "userName": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FinancalTransactionDtoForUpdate": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -12269,6 +12372,10 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -15703,6 +15810,7 @@
       },
       "SozlesmeTipi": {
         "enum": [
+          0,
           1,
           2,
           3,
@@ -15711,16 +15819,18 @@
         "type": "integer",
         "format": "int32",
         "x-enumNames": [
+          "NDA_EN",
           "NDA",
-          "HizmetSozlesmesi",
+          "SiparisSozlesmesi",
           "TedarikSozlesmesi",
           "Diger"
         ],
         "x-enumDescriptions": [
-          "NDA",
-          "HizmetSozlesmesi",
-          "TedarikSozlesmesi",
-          "Diger"
+          "NDA İngilizce",
+          "NDA Türkçe",
+          "Sipariş Sözlşemesi",
+          "Tedarik Sözlşemesi",
+          "Diğer"
         ]
       },
       "SozlesmeTipiApiResponse": {
@@ -16472,6 +16582,10 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

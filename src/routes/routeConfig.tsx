@@ -37,6 +37,7 @@ export const routes: AppRoute[] = [
   },
   { path: "/sozlesmeler", element: <Pages.ContractPage />, isPrivate: true },
   { path: "/nda", element: <Pages.ContractPage sozlesmeTipi={SozlesmeTipi.NDA} />, isPrivate: true },
+  { path: "/nda-en", element: <Pages.ContractPage sozlesmeTipi={SozlesmeTipi.NDA_EN} />, isPrivate: true },
   { path: "/siparisler", element: <Pages.PurchaseOrderPage />, isPrivate: true },
   {
     path: "/yenisiparis",

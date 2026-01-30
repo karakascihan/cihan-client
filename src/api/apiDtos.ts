@@ -305,6 +305,7 @@ export interface CollectionDto {
     targetId: number;
     amount: number;
     description: string | undefined;
+    transactionDate: Date;
 }
 
 export interface ColumnDto {
@@ -881,6 +882,7 @@ export interface FileRecordDtoIEnumerableApiResponse {
 
 export interface FinancalTransaction {
     id: number;
+    transactionNo: string | undefined;
     description: string | undefined;
     transactionDate: Date | undefined;
     transactionType: number | undefined;
@@ -896,6 +898,7 @@ export interface FinancalTransaction {
 
 export interface FinancalTransactionDto {
     id: number;
+    transactionNo: string | undefined;
     description: string | undefined;
     transactionDate: Date | undefined;
     transactionType: number | undefined;
@@ -909,6 +912,12 @@ export interface FinancalTransactionDto {
     createtAt: Date;
     createdBy: number;
     userName: string | undefined;
+}
+
+export interface FinancalTransactionDtoForUpdate {
+    description: string | undefined;
+    transactionDate: Date | undefined;
+    amount: number;
 }
 
 export interface FinancalTransactionDtoIEnumerableApiResponse {
@@ -1143,6 +1152,7 @@ export interface PaymentDto {
     sourceId: number;
     amount: number;
     description: string | undefined;
+    transactionDate: Date;
 }
 
 export interface Personel {
@@ -1945,8 +1955,9 @@ export interface ServicesDtoForUpdate {
 }
 
 export enum SozlesmeTipi {
+    NDA_EN = 0,
     NDA = 1,
-    HizmetSozlesmesi = 2,
+    SiparisSozlesmesi = 2,
     TedarikSozlesmesi = 3,
     Diger = 4,
 }
@@ -2142,6 +2153,7 @@ export interface TransferDto {
     targetId: number;
     amount: number;
     description: string | undefined;
+    transactionDate: Date;
 }
 
 export interface UpdateBoardDto {
