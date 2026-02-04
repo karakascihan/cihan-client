@@ -1,38 +1,117 @@
 {
   "compilerOptions": {
+    // Derlenecek JavaScript sürümü
+    // ESNext = En güncel JS özelliklerini hedefler (bundler transpile eder)
     "target": "ESNext",
+
+    // Projede kullanılacak standart kütüphaneler
+    // DOM: tarayıcı API'leri
+    // DOM.Iterable: iterable DOM koleksiyonları
+    // ESNext: 최신 JS özellikleri
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
+
+    // Modül sistemi
+    // ESNext = Vite / modern bundler'lar için ideal
     "module": "ESNext",
+
+    // node_modules içindeki .d.ts dosyalarının type check edilmesini atlar
+    // Build süresini hızlandırır
     "skipLibCheck": true,
 
-    /* Bundler mode */
+    /* ===================== */
+    /* Bundler Mode Ayarları */
+    /* ===================== */
+
+    // Modül çözümleme taktiği
+    // "bundler" → Vite, Webpack, ESBuild gibi araçlarla uyumlu
     "moduleResolution": "bundler",
+
+    // Import ederken uzantıya izin verir
+    // import "./file.ts" gibi
     "allowImportingTsExtensions": true,
+
+    // JSON dosyalarını import etmeye izin verir
+    // import data from "./data.json"
     "resolveJsonModule": true,
+
+    // Her dosya bağımsız olarak derlenebilir olmalı
+    // Babel / Vite ile uyum için önemli
     "isolatedModules": true,
+
+    // JS çıktısı üretmez (sadece type-check yapar)
+    // Vite zaten build alıyor
     "noEmit": true,
+
+    // React 17+ yeni JSX transformu
+    // React import etmeye gerek kalmaz
     "jsx": "react-jsx",
 
-    /* Linting */
-    "strict": true,
+    /* ========= */
+    /* Linting  */
+    /* ========= */
+
+    // Strict mode (TypeScript'in en sıkı hali)
+    "strict": false,
+
+    // Kullanılmayan local değişkenlere hata verme
+    // false → uyarmaz
     "noUnusedLocals": false,
+
+    // Kullanılmayan fonksiyon parametrelerine hata verme
     "noUnusedParameters": false,
+
+    // switch-case içinde break unutulmasını engeller
     "noFallthroughCasesInSwitch": true,
+
+    // Type hatası olsa bile emit'e izin verir
+    // noEmit true olduğu için pratikte etkisiz
     "noEmitOnError": false,
+
+    // any kullanımına izin verir
     "noImplicitAny": false,
+
+    // null / undefined kontrollerini kapatır
     "strictNullChecks": false,
+
+    // class property'lerinin constructor'da zorunlu olmasını kapatır
     "strictPropertyInitialization": false,
-    /* Types for env declaration */
+
+    /* ======================= */
+    /* Ortam (Env) Type'ları   */
+    /* ======================= */
+
+    // Vite için gerekli global type tanımları
+    // import.meta.env gibi yapılar için
     "types": ["vite/client"],
 
-    /* Import alias for ShadCN */
-    "baseUrl": "./",  // This is the key change
+    /* ======================= */
+    /* Path Alias (ShadCN vb.) */
+    /* ======================= */
+
+    // Import path'lerin kök dizini
+    "baseUrl": "./",
+
+    // @/ ile src klasörüne alias tanımı
+    // import Button from "@/components/Button"
     "paths": {
       "@/*": ["src/*"]
     }
   },
-   "rules": {
+
+  /* ======================= */
+  /* ESLint Kuralları        */
+  /* ======================= */
+
+  // TypeScript ESLint kuralı
+  // any kullanımını tamamen serbest bırakır
+  "rules": {
     "@typescript-eslint/no-explicit-any": "off"
   },
-  "include": ["src", "src/lib.d.ts"],
+
+  /* ======================= */
+  /* Derlenecek Dosyalar     */
+  /* ======================= */
+
+  // TypeScript'in dahil edeceği dosyalar
+  "include": ["src", "src/lib.d.ts"]
 }

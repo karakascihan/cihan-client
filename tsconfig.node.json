@@ -1,10 +1,26 @@
 {
   "compilerOptions": {
+    // Bu proje diğer TypeScript projeleri tarafından referans alınabilir
+    // Project references / incremental build için gerekli
     "composite": true,
+
+    // node_modules içindeki .d.ts dosyalarının type check edilmesini atlar
+    // Build süresini hızlandırır
     "skipLibCheck": true,
+
+    // Modül sistemi
+    // ESNext → Modern bundler ve ES module uyumlu
     "module": "ESNext",
+
+    // Modül çözümleme stratejisi
+    // "bundler" → Vite / Webpack gibi bundler’larla uyumlu
     "moduleResolution": "bundler",
+
+    // Default export olmayan modülleri import ederken hata vermez
+    // import React from "react"; gibi kullanımda sorun çıkmaz
     "allowSyntheticDefaultImports": true
   },
-  "include": ["vite.config.ts"]
+
+  /* Derlemeye dahil edilecek dosyalar */
+  "include": ["vite.config.ts"] // Sadece Vite konfigürasyon dosyası
 }

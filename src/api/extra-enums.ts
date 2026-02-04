@@ -1,6 +1,6 @@
 // Auto-generated from Swagger x-enumDescriptions
 
-import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, EntityType, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType, TransactionType } from "./apiDtos";
+import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, EntityType, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType, TemplateType, TransactionType } from "./apiDtos";
 
 // Auto-generated from Swagger x-enumDescriptions
 
@@ -113,6 +113,14 @@ export const SurveyTypeDescriptions: Record<SurveyType, string> = {
   [SurveyType.yetkinlik]: "yetkinlik",
   [SurveyType.diger]: "diger",
   [SurveyType.personel]: "personel",
+};
+
+export const TemplateTypeDescriptions: Record<TemplateType, string> = {
+  [TemplateType.PriceOffer]: "Fiyat Teklifi",
+  [TemplateType.Nda]: "Gizlilik Sözleşmesi",
+  [TemplateType.NdaEn]: "Gizlilik Sözleşmesi İngilizce",
+  [TemplateType.OrderContract]: "Sipariş Sözleşmesi",
+  [TemplateType.Other]: "Diğer",
 };
 
 export const TransactionTypeDescriptions: Record<TransactionType, string> = {

@@ -29,7 +29,7 @@ export const fetchCustomers = createAsyncThunk<CustomerDto[]>(
       const state = getState() as RootState;
       const response = await apiRequest<ApiResponseClient<CustomerDto[]>>(
         "GET",
-        URL + "/customer/getall",
+        URL + "/customer/getall?tip=0",
         { Authorization: "Bearer " + state.login.accessToken }
       );
       dispatch(

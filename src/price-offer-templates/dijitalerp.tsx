@@ -3161,7 +3161,7 @@ alınarak arttırılacaktır.</li>
             </tr>
         </thead>
 <tbody>
-  ~fiyatSatirlar~
+   <tr data-placeholder='fiyatSatirlar'><td colspan='5'>~fiyatSatirlar~</td></tr>
 </tbody>
 
     </table>
@@ -3683,7 +3683,7 @@ export const DigitestPriceOfferTemplate=`<div
                     </tr>
                 </thead>
                 <tbody>
-                    ~fiyatSatirlar~
+                   <tr data-placeholder='fiyatSatirlar'><td colspan='5'>~fiyatSatirlar~</td></tr>
                     <!-- <tr>
                         <td style="padding: 12px; border: 1px solid #000;">
                             YURT 12.7mm x 99 3-Barrel Gatling Gun

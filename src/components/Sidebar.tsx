@@ -15,7 +15,7 @@ import {
 import { useUI } from "../context/UIContext";
 import { useSelector } from "react-redux";
 import icon from "../images/logo/favicon.ico";
-import { FaBuilding, FaCalendar, FaCashRegister, FaFileCirclePlus, FaFileContract, FaMoneyBill, FaMoneyBillTransfer, FaWarehouse } from "react-icons/fa6";
+import { FaBuilding, FaCalendar, FaCashRegister, FaFileCirclePlus, FaFileContract, FaMoneyBill, FaMoneyBillTransfer, FaSupple, FaWarehouse } from "react-icons/fa6";
 import {
   FaBoxes,
   FaCoins,
@@ -268,6 +268,14 @@ const menus: MenuItem[] = [
 
   //   ],
   // },
+  
+    {
+    title: "Satınalma Yönetimi", icon: <Settings className="w-4 h-4" />,  items: [
+      { title: "Tedarikçiler", icon: <FaSupple className="w-4 h-4" />, path: "/tedarikciler" },
+
+
+    ]
+  },
   { title: "NDA Sözleşmeler", icon: <FileSignature className="w-4 h-4 text-purple-100" />, items:[
     {
       title: "İngilizce NDA", path:"/nda-en"
@@ -336,10 +344,12 @@ const menus: MenuItem[] = [
   {
     title: "Ayarlar", icon: <Settings className="w-4 h-4" />,  items: [
       { title: "Şirketlerim", icon: <Building2 className="w-4 h-4" />, path: "/sirketlerim" },
-      { title: "Kullanıcılar", icon: <User2 className="w-4 h-4" />, path: "/kullanicilar" }
+      { title: "Kullanıcılar", icon: <User2 className="w-4 h-4" />, path: "/kullanicilar" },
+  { title: "Şablonlar", icon: <CalendarClock className="w-4 h-4 text-cyan-100" />, path: "/sablonlar" },
+
 
     ]
-  },
+  }
 ];
 
 

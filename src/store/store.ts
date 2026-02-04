@@ -45,7 +45,7 @@ const rootReducer = combineReducers({
   opportunity: opportunitySliceReducer,
   customer: customerReducer,
   activity: activityReducer,
-    user: userReducer,
+  user: userReducer,
   priceOffer : priceOfferReducer,
   personel : personelReducer,
   systemLog : systemLogReducer,

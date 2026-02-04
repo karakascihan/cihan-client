@@ -26,6 +26,7 @@ export const routes: AppRoute[] = [
     isPrivate: true,
   },
   { path: "/musteriler", element: <Pages.CustomerPage />, isPrivate: true },
+  { path: "/tedarikciler", element: <Pages.SupplierPage />, isPrivate: true },
   { path: "/teklifler", element: <Pages.PriceOfferPage />, isPrivate: true },
   {
     path: "/yeniteklif/:opportunityId?",
@@ -50,6 +51,7 @@ export const routes: AppRoute[] = [
     isPrivate: true,
   },
   { path: "/takvim", element: <Pages.CalendarPage />, isPrivate: true },
+  { path: "/sablonlar", element: <Pages.TemplatePage  />, isPrivate: true },
   {
     path: "/aktiviteler",
     element: <Pages.ActivityPage title="Aktiviteler" />,

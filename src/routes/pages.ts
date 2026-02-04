@@ -23,6 +23,9 @@ export const OpportunityPageDetail = lazyWithPreload(
 export const CustomerPage = lazyWithPreload(
   () => import("../pages/crm/CustomerPage")
 );
+export const SupplierPage = lazyWithPreload(
+  () => import("../pages/crm/SupplierPage")
+);
 export const ActivityPage = lazyWithPreload(
   () => import("../pages/crm/ActivityPage")
 );
@@ -49,6 +52,9 @@ export const UpdatePurchaseOrderPage = lazyWithPreload(
 );
 export const UsersPage = lazyWithPreload(
   () => import("../pages/crm/UsersPage")
+);
+export const TemplatePage = lazyWithPreload(
+  () => import("../pages/crm/TemplatePage")
 );
 
 // Project

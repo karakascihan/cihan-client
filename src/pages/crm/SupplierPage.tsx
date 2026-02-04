@@ -1,3 +1,4 @@
+import { URL } from "@/api";
 import {
   CustomerDto,
   CustomerDtoForInsertion,
@@ -6,35 +7,18 @@ import {
 import { CustomerTypeDescriptions } from "@/api/extra-enums";
 import {
   FieldDefinition,
-  FieldType,
   GenericForm,
 } from "@/components/GenericForm";
 import { Column, SmartTable } from "@/components/SmartTable";
 import { useConfirm } from "@/context/ConfirmContext";
 import { useSidebar } from "@/context/GlobalSidebarContext";
-import {
-  addCustomer,
-  CustomerState,
-  deleteCustomer,
-  fetchCustomers,
-  updateCustomer,
-} from "@/store/slices/customerSlice";
-import { RootState } from "@/store/store";
-import { group } from "console";
-import { use, useEffect } from "react";
+import { useApiRequest } from "@/hooks/useApiRequest";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
 
- const CustomerPage = () => {
-  const { data, loading, error } = useSelector(
-    (state: RootState) => state.customer
-  );
+ const SupplierPage = () => {
   const confirm = useConfirm();
   const sidebar = useSidebar();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchCustomers() );
-  }, [dispatch]);
+  const {data,refetch} = useApiRequest<CustomerDto>(URL+"/customer/getall?tip="+CustomerType.Tedarikci,{method:"GET"});
   const columns: Column<CustomerDto>[] = [
     { header: "#", accessor: "__index" },
     {
@@ -116,7 +100,7 @@ import { useDispatch, useSelector } from "react-redux";
                 cancelText: "Vazgeç",
               });
               if (isConfirmed) {
-                dispatch(deleteCustomer(row.id!));
+                refetch(URL+"/customer/delete/"+row.id,{method:"delete",body:data,notification:{success:"Tedarikçi başarılı şekilde silindi."}});
               }
             }}
             className="
@@ -135,9 +119,7 @@ import { useDispatch, useSelector } from "react-redux";
       accessor: "id",
     },
   ];
-  const formElements: FieldDefinition[] = (
-    customerDtoForInsertion: CustomerDtoForInsertion
-  ) => {
+  const formElements = ( customerDtoForInsertion: CustomerDtoForInsertion) => {
     let fields: FieldDefinition[] = [
       {
         name: "firma",
@@ -393,13 +375,14 @@ import { useDispatch, useSelector } from "react-redux";
     sidebar.openSidebar(
       <GenericForm
         fields={formElements(customer)}
-        onSubmit={function (data: CustomerDtoForInsertion): void {
+        onSubmit={function (data: CustomerDtoForInsertion & { id: number }): void {
           if (customer && customer.id) {
             data.id = customer.id;
             data.contacts = data.contacts?? [];
-            dispatch(updateCustomer(data));
+            refetch(URL+"/customer/update",{method:"put",body:data,notification:{success:"Tedarikçi başarılı şekilde güncellendi."}});
             sidebar.closeSidebar();
-          } else dispatch(addCustomer(data));
+          } else  refetch(URL+"/customer/create",{method:"post",body:data,notification:{success:"Tedarikçi başarılı şekilde kaydedildi."}});
+
           sidebar.closeSidebar();
         }}
       />,
@@ -410,7 +393,7 @@ import { useDispatch, useSelector } from "react-redux";
   };
   return (
     <div className="card">
-      <h2 className="text-xl text-center font-bold mb-2">Müşteriler</h2>
+      <h2 className="text-xl text-center font-bold mb-2">Tedarikçiler</h2>
       <SmartTable
         data={data ?? []}
         columns={columns}
@@ -424,4 +407,4 @@ import { useDispatch, useSelector } from "react-redux";
     </div>
   );
 };
-export default CustomerPage;
+export default SupplierPage;

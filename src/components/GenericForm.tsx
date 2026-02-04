@@ -276,9 +276,13 @@ export const GenericForm: React.FC<GenericFormProps> = ({
           "preview", "quickbars", "searchreplace",
           "table", "visualblocks", "wordcount",
         ],
+        valid_elements: '*[*]',
         toolbar:
           "undo redo | blocks | bold italic underline | forecolor backcolor | " +
           "link image media | alignleft aligncenter alignright | bullist numlist | table | preview code | fullscreen",
+            automatic_uploads: false,
+    images_reuse_filename: true,
+    paste_data_images: true,
            images_dataimg_filter: (img) => true,
           images_upload_handler: (blobInfo, success, failure) => {
             try {

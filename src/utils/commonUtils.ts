@@ -133,9 +133,7 @@ export function getExtensionFromMimeType(mimeType: string): string | undefined {
 
   return extensionMap[mimeType.trim().toLowerCase()];
 }
-export function getEnumKeyByValue<T>(enumObj: T, value: number | string): string | undefined {
-  return (Object.keys(enumObj) as Array<keyof T>).find(key => enumObj[key] === value);
-}
+
 export function toJsonPatch<T extends object>(obj: Partial<T>) {
   return Object.entries(obj).map(([key, value]) => ({
     op: "replace",
@@ -225,4 +223,11 @@ export function toInputDate(dateStr:string) {
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
+}
+export function getEnumKeyByValue<
+  T extends Record<string, string>
+>(enumObj: T, value: string): keyof T | undefined {
+  return (Object.keys(enumObj) as Array<keyof T>).find(
+    (key) => enumObj[key] === value
+  );
 }

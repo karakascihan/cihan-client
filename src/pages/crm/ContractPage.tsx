@@ -1,4 +1,11 @@
-import {  ContractsDto, ContractsDtoForInsertion, PurchaseOrders, SozlesmeTipi } from "@/api/apiDtos";
+import {
+  ContractsDto,
+  ContractsDtoForInsertion,
+  PurchaseOrders,
+  SozlesmeTipi,
+  TemplateDto,
+  TemplateType,
+} from "@/api/apiDtos";
 import { FieldDefinition, GenericForm } from "@/components/GenericForm";
 import { Column, SmartTable } from "@/components/SmartTable";
 import { useConfirm } from "@/context/ConfirmContext";
@@ -12,29 +19,29 @@ import { FileRecordPage } from "./FileRecordPage";
 import { useModal } from "@/context/ModalContext";
 import { FaEye, FaFile, FaRProject, FaShower, FaUpload } from "react-icons/fa6";
 import { useLoading } from "@/context/LoadingContext";
-import { contractTemplate1, nda_contract_template, nda_contract_template_en } from "@/price-offer-templates/contractTemplates";
+import {
+  contractTemplate1,
+  nda_contract_template,
+  nda_contract_template_en,
+} from "@/price-offer-templates/contractTemplates";
 import { Editor } from "@tinymce/tinymce-react";
 import { fetchCustomers } from "@/store/slices/customerSlice";
 import { fetchPriceOffers } from "@/store/slices/priceOfferSlice";
-import { apiRequest } from "@/services/apiRequestService";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { URL } from "@/api";
-import axios, { AxiosHeaders } from "axios";
-
-import type { AxiosRequestHeaders } from "axios";
-
-import enterpriseSlice, {
+import  {
   fetchEnterprises,
 } from "@/store/slices/enterpriseSlice";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
 import AddBoardForm, { ProjectType } from "@/components/board/AddBoardForm";
 import { useNavigate } from "react-router-dom";
-import { EnumSelect } from "@/components/EnumSelect";
 import { fetchpersonels } from "@/store/slices/personalSlice";
 import { getEnumOptions } from "@/utils/commonUtilsCompnent";
 import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
+import { toInputDate } from "@/utils/commonUtils";
+import TemplatePage from "./TemplatePage";
 
- const ContractPage = ({sozlesmeTipi}:{sozlesmeTipi?: SozlesmeTipi}) => {
+const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
   const confirm = useConfirm();
   const sidebar = useSidebar();
   const dispatch = useDispatch();
@@ -47,28 +54,29 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
   const [showPreview, setShowPreview] = useState(0);
   const [editorData, setEditorData] = useState(contractTemplate1);
   const loginState = useSelector((state: RootState) => state.login);
-  const { data: purchaseOrders, refetch: refetchOrders } = useApiRequest<PurchaseOrders>(
-    URL + "/PurchaseOrder/GetAll", {
-    method: "GET",
-    skip: false,
-    deps: [],
-  }
-  );
+  const { data: purchaseOrders, refetch: refetchOrders } =
+    useApiRequest<PurchaseOrders>(URL + "/PurchaseOrder/GetAll", {
+      method: "GET",
+      skip: false,
+      deps: [],
+    });
   const poList = Array.isArray(purchaseOrders) ? purchaseOrders : [];
+  const { openModal } = useModal();
 
   // useEffect(() => {
   //   apiRequest<ContractsDto []>('GET','/contracts/getall',{ Authorization: `Bearer ${loginState.accessToken}` }).then(res=>{
   //     })
   // }, []);
   const { data: contracts, refetch } = useApiRequest<ContractsDto[]>(
-    URL + "/contracts/getall"+(sozlesmeTipi !== undefined ? `?sozlesmeTipi=${sozlesmeTipi}` : ""),
+    URL +
+      "/contracts/getall" +
+      (sozlesmeTipi !== undefined ? `?sozlesmeTipi=${sozlesmeTipi}` : ""),
     {
       method: "GET",
       skip: false,
       deps: [],
-    }
+    },
   );
-
 
   useEffect(() => {
     if (productsState.items.length === 0) {
@@ -84,56 +92,83 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
       dispatch(fetchPriceOffers() as any);
     }
     if (employeesState.items.length === 0) {
-        dispatch(fetchpersonels({ onlyNames: false, isActive: true }) as any);
+      dispatch(fetchpersonels({ onlyNames: false, isActive: true }) as any);
     }
   }, []);
   const showTemplate1 = async (contract: ContractsDto) => {
-
-    let filledTemplate = contractTemplate1;
+   const modalResult= await openModal({
+      title: "Şablon Seçim Ekranı",
+      maximizable: true,
+      maximized: false,
+      content: (close) => {
+        return (
+          <TemplatePage
+            isPage={false}
+            type={ contract.sozlesmeTipi == SozlesmeTipi.NDA ?  TemplateType.Nda.toString() :
+                  contract.sozlesmeTipi == SozlesmeTipi.NDA_EN ?  TemplateType.NdaEn.toString() :TemplateType.Nda.toString()
+             }
+            onSelect={async function (temp: TemplateDto): Promise<void> {
+              if (temp) {
+                const result = refetch(URL + "/template/get/" + temp.id, {
+                  method: "GET",
+                });
+                if ((await result).isSuccess) {
+                  let row = (await result).result;
+                  if (row) temp.htmlContent = row.htmlContent;
+                }
+                close(temp.htmlContent);
+              }
+            }}
+          />
+        );
+      },
+    });
+  if(!modalResult) return;
+    let filledTemplate = modalResult;
     filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
     filledTemplate = filledTemplate.replaceAll(
       "~sirket~",
-      contract.sirket || ""
+      contract.sirket || "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~kurum_shortname~",
       enterpriseState.items.find((en) => en.enterpriseName === contract.kurum)
-        .shortName || "" + " "
+        ?.shortName || "" + " ",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sozlesme_adi~",
-      contract.sozlesmeAdi || ""
+      contract.sozlesmeAdi || "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sozlesme_no~",
-      contract.sozlesmeNo || ""
+      contract.sozlesmeNo || "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sozlesme_tarihi~",
-      (contract.sozlesmeTarihi as unknown as string) || ""
+      (contract.sozlesmeTarihi as unknown as string) || "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sozlesmeBitisTarihi~",
-      (contract.sozlesmeBitisTarihi as unknown as string) ?? ""
+      (contract.sozlesmeBitisTarihi as unknown as string) ?? "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sozlesmeBaslangicTarihi~",
-      (contract.sozlesmeBaslangicTarihi as unknown as string) ?? ""
+      (contract.sozlesmeBaslangicTarihi as unknown as string) ?? "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~kurum_adres~",
       enterpriseState.items.find((en) => en.enterpriseName === contract.kurum)
-        ?.address || ""
+        ?.address || "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sirket_adres~",
       customersState.data.find((en) => en.firma === contract.sirket)?.adres ||
-      ""
+        "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sirket_vergi_no~",
       customersState.data.find((en) => en.firma === contract.sirket)
-        ?.vergiNumarasi || ""
+        ?.vergiNumarasi || "",
     );
     let toplamFiyat = 0;
 
@@ -142,26 +177,34 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         let fiyatSatirlarHtml = ``;
         const priceoffers = await dispatch(fetchPriceOffers() as any).unwrap();
         const priceoffer = priceoffers.find(
-          (po) => po.id == contract.priceOfferId
+          (po) => po.id == contract.priceOfferId,
         );
         filledTemplate = filledTemplate.replaceAll(
           "~toplam_fiyat~",
-          (priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi) || ""
+          priceoffer.toplamTutar +
+            " " +
+            priceoffer.priceOfferLine[0].paraBirimi || "",
         );
         priceoffer.priceOfferLine?.forEach((line, index) => {
           toplamFiyat += Number(line.toplamFiyat ?? 0);
-          let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""
-            }</td>`;
+          let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+            line.malzemeAdi
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.miktar ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.birimi ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.paraBirimi ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.birimFiyat ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.toplamFiyat ?? ""
+                       }</td>`;
           fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
         });
         let genelToplam = `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
@@ -170,22 +213,18 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         fiyatSatirlarHtml += genelToplam;
         filledTemplate = filledTemplate.replaceAll(
           "~kapsam_satirlari~",
-          fiyatSatirlarHtml
+          fiyatSatirlarHtml,
         );
       }
-    }
-    else if (contract.purchaseOrdersId) {
+    } else if (contract.purchaseOrdersId) {
       let siparisSatirlariHtml = ``;
       let satirToplam = 0;
 
-
-      const po = await refetchOrders(URL + "/PurchaseOrder/" + contract.purchaseOrdersId, { method: "GET" });
-      console.log("PO RESULT KEYS:", Object.keys(po.result ?? {}));
-      console.log("PO RESULT:", po.result);
-      console.log("PO LINES:", po.result?.purchaseOrderLine);
+      const po = await refetchOrders(
+        URL + "/PurchaseOrder/" + contract.purchaseOrdersId,
+        { method: "GET" },
+      );
       let poLines = po.result?.purchaseOrderLine || [];
-
-
 
       let calculatedTotal = 0;
 
@@ -193,29 +232,33 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         satirToplam =
           line.miktar && line.birimFiyat
             ? Number(
-              line.miktar *
-              line.birimFiyat *
-              (1 - (line.indirimOraniYuzde || 0) / 100)
-            )
+                line.miktar *
+                  line.birimFiyat *
+                  (1 - (line.indirimOraniYuzde || 0) / 100),
+              )
             : 0;
 
-        let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${satirToplam ?? ""
-          }</td>`;
+        let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+          line.malzemeAdi
+        }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.miktar ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.birimi ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.paraBirimi ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         line.birimFiyat ?? ""
+                       }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
+                         satirToplam ?? ""
+                       }</td>`;
 
         siparisSatirlariHtml += `<tr>${siparisSatir}</tr>`;
       });
-
-
 
       const paraBirimi = poLines?.[0]?.paraBirimi ?? "";
 
@@ -223,7 +266,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
 
       filledTemplate = filledTemplate.replaceAll(
         "~toplam_fiyat~",
-        finalTotal ? `${finalTotal} ${paraBirimi}` : ""
+        finalTotal ? `${finalTotal} ${paraBirimi}` : "",
       );
 
       siparisSatirlariHtml += `
@@ -235,210 +278,17 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         </tr>
       `;
 
-      filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", siparisSatirlariHtml);
-
-      console.log("CalculatedTotal vs DB:", calculatedTotal, po?.result.toplamTutar);
-    }
-    else {
-      filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", "");
-      filledTemplate = filledTemplate.replaceAll("~toplam_fiyat~", "");
-    }
-    setEditorData(filledTemplate);
-    setShowPreview(contract.id!);
-  };
-  const showTemplateNDA = async (contract: ContractsDto) => {
-     let filledTemplate = "";
-      // const isConfirmed = await confirm({
-      //               title: "Seçim işlemi",
-      //               message: "Gizililik sözleşmesi için hangi dili kullanmak istersiniz?",
-      //               confirmText: "Türkçe",
-      //               cancelText: "İngilizce",
-      //             });
-                  if (contract.sozlesmeTipi=== SozlesmeTipi.NDA) {
-                      filledTemplate = nda_contract_template;
-                  }
-                  else
-                     filledTemplate = nda_contract_template_en;
-    
-    filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
-    filledTemplate = filledTemplate.replaceAll(
-      "~sirket~",
-      contract.sirket || ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~kurum_shortname~",
-      enterpriseState.items.find((en) => en.enterpriseName === contract.kurum)
-        .shortName || "" + " "
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~sozlesme_adi~",
-      contract.sozlesmeAdi || ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~sozlesme_no~",
-      contract.sozlesmeNo || ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~sozlesme_tarihi~",
-      (contract.sozlesmeTarihi as unknown as string) || ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~sozlesmeBitisTarihi~",
-      (contract.sozlesmeBitisTarihi as unknown as string) ?? ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~sozlesmeBaslangicTarihi~",
-      (contract.sozlesmeBaslangicTarihi as unknown as string) ?? ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~kurum_adres~",
-      enterpriseState.items.find((en) => en.enterpriseName === contract.kurum)
-        ?.address || ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~sirket_adres~",
-      customersState.data.find((en) => en.firma === contract.sirket)?.adres ||
-      ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~sirket_vergi_no~",
-      customersState.data.find((en) => en.firma === contract.sirket)
-        ?.vergiNumarasi || ""
-    );
-     filledTemplate = filledTemplate.replaceAll(
-      "~firmaKisaAd~",
-      customersState.data.find((en) => en.firma === contract.sirket)
-        ?.firmaKisaAd ?? ""
-    );
-    let imzalayanPersonel = employeesState.items.find((en) => en.id === contract.personelId);
-   
-        filledTemplate = filledTemplate.replaceAll(
-      "~personelAdi~",
-      imzalayanPersonel?.personelAdi ?? ""
-    );
-    filledTemplate = filledTemplate.replaceAll(
-      "~personelSoyadi~",
-      imzalayanPersonel?.personelSoyadi ?? ""
-    );
-     filledTemplate = filledTemplate.replaceAll(
-      "~personelGorevi~",
-      imzalayanPersonel?.personelGorevi ?? ""
-    );
       filledTemplate = filledTemplate.replaceAll(
-      "~telefonNo~",
-      imzalayanPersonel?.telefonNo ?? ""
-    );
-        filledTemplate = filledTemplate.replaceAll(
-      "~ePosta~",
-      imzalayanPersonel?.ePosta ?? ""
-    );
-    
-    
-    let toplamFiyat = 0;
-
-    if (contract.priceOfferId) {
-      {
-        let fiyatSatirlarHtml = ``;
-        const priceoffers = await dispatch(fetchPriceOffers() as any).unwrap();
-        const priceoffer = priceoffers.find(
-          (po) => po.id == contract.priceOfferId
-        );
-        filledTemplate = filledTemplate.replaceAll(
-          "~toplam_fiyat~",
-          (priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi) || ""
-        );
-        priceoffer.priceOfferLine?.forEach((line, index) => {
-          toplamFiyat += Number(line.toplamFiyat ?? 0);
-          let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
-            }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""
-            }</td>`;
-          fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
-        });
-        let genelToplam = `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
-                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0].paraBirimi}</td>
-           </tr>`;
-        fiyatSatirlarHtml += genelToplam;
-        filledTemplate = filledTemplate.replaceAll(
-          "~kapsam_satirlari~",
-          fiyatSatirlarHtml
-        );
-      }
-    }
-    else if (contract.purchaseOrdersId) {
-      let siparisSatirlariHtml = ``;
-      let satirToplam = 0;
-
-
-      const po = await refetchOrders(URL + "/PurchaseOrder/" + contract.purchaseOrdersId, { method: "GET" });
-      console.log("PO RESULT KEYS:", Object.keys(po.result ?? {}));
-      console.log("PO RESULT:", po.result);
-      console.log("PO LINES:", po.result?.purchaseOrderLine);
-      let poLines = po.result?.purchaseOrderLine || [];
-
-
-
-      let calculatedTotal = 0;
-
-      poLines.forEach((line, index) => {
-        satirToplam =
-          line.miktar && line.birimFiyat
-            ? Number(
-              line.miktar *
-              line.birimFiyat *
-              (1 - (line.indirimOraniYuzde || 0) / 100)
-            )
-            : 0;
-
-        let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${satirToplam ?? ""
-          }</td>`;
-
-        siparisSatirlariHtml += `<tr>${siparisSatir}</tr>`;
-      });
-
-
-
-      const paraBirimi = poLines?.[0]?.paraBirimi ?? "";
-
-      const finalTotal = po?.result.toplamTutar ?? 0;
-
-      filledTemplate = filledTemplate.replaceAll(
-        "~toplam_fiyat~",
-        finalTotal ? `${finalTotal} ${paraBirimi}` : ""
+        "~kapsam_satirlari~",
+        siparisSatirlariHtml,
       );
 
-      siparisSatirlariHtml += `
-        <tr>
-          <td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
-          <td colspan="5" style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">
-            ${finalTotal ? `${finalTotal} ${paraBirimi}` : ""}
-          </td>
-        </tr>
-      `;
-
-      filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", siparisSatirlariHtml);
-
-      console.log("CalculatedTotal vs DB:", calculatedTotal, po?.result.toplamTutar);
-    }
-    else {
+      console.log(
+        "CalculatedTotal vs DB:",
+        calculatedTotal,
+        po?.result.toplamTutar,
+      );
+    } else {
       filledTemplate = filledTemplate.replaceAll("~kapsam_satirlari~", "");
       filledTemplate = filledTemplate.replaceAll("~toplam_fiyat~", "");
     }
@@ -446,7 +296,6 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
     setShowPreview(contract.id!);
   };
   const editorRef = useRef(null);
-  const { openModal } = useModal();
   const columns: Column<ContractsDto>[] = [
     { header: "#", accessor: "__index" },
     {
@@ -454,14 +303,13 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
       accessor: "kurum",
       filterable: true,
       sortable: true,
-         summaryType: "count",
+      summaryType: "count",
     },
     {
       header: "Karşı Şirket",
       accessor: "sirket",
       filterable: true,
       sortable: true,
-   
     },
     {
       header: "Sözleşme Tarihi",
@@ -469,7 +317,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
       filterable: true,
       sortable: true,
     },
-      {
+    {
       header: "Sözleşme Tipi",
       accessor: "sozlesmeTipi",
       filterable: true,
@@ -485,7 +333,6 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
       accessor: "sozlesmeNo",
       filterable: true,
       sortable: true,
-      
     },
     {
       header: "Sözleşme Adı",
@@ -538,9 +385,10 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
             <FaTrash title="Sözleşmeyi Sil" />
           </button>
           <button
-            onClick={() => {
-             if(row.sozlesmeTipi=== SozlesmeTipi.NDA || row.sozlesmeTipi === SozlesmeTipi.NDA_EN)  showTemplateNDA(row)
-               else showTemplate1(row)
+            onClick={async () => {
+              
+             await  showTemplate1(row);
+             refetch();
             }}
             className="
                     inline-flex items-center 
@@ -558,15 +406,18 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
               openModal({
                 title: "Proje Uygulama Takimi Oluşturma",
                 content: function (
-                  close: (result: any) => void
+                  close: (result: any) => void,
                 ): React.ReactNode {
                   return (
-                    <AddBoardForm projectType={ProjectType.ERP} onClose={function (boardId: number): void {
-                      if (boardId != -1) {
-                        close(null);
-                        navigate("/proje/" + boardId)
-                      }
-                    }} />
+                    <AddBoardForm
+                      projectType={ProjectType.ERP}
+                      onClose={function (boardId: number): void {
+                        if (boardId != -1) {
+                          close(null);
+                          navigate("/proje/" + boardId);
+                        }
+                      }}
+                    />
                   );
                 },
               });
@@ -594,7 +445,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
               openModal({
                 title: "Sözleşme Dosyaları",
                 content: function (
-                  close: (result: any) => void
+                  close: (result: any) => void,
                 ): React.ReactNode {
                   return (
                     <FileRecordPage
@@ -615,7 +466,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
     },
   ];
   const formElements = (
-    contractDtoForInsertion: ContractsDtoForInsertion
+    contractDtoForInsertion: ContractsDtoForInsertion,
   ): FieldDefinition[] => {
     let fields: FieldDefinition[] = [
       {
@@ -646,15 +497,17 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         required: true,
         defaultValue: contractDtoForInsertion?.sirket ?? "",
       },
-        {
+      {
         name: "sozlesmeTipi",
         label: "Sözleşme Tipi",
         type: "select",
         options: getEnumOptions<SozlesmeTipi>(SozlesmeTipiDescriptions),
         colspan: 12,
         group: "Genel",
-        defaultValue: contractDtoForInsertion? contractDtoForInsertion.sozlesmeTipi : sozlesmeTipi ,
-         disabled:sozlesmeTipi ? true:false
+        defaultValue: contractDtoForInsertion
+          ? contractDtoForInsertion.sozlesmeTipi
+          : sozlesmeTipi,
+        disabled: sozlesmeTipi ? true : false,
       },
       {
         name: "sozlesmeTarihi",
@@ -662,8 +515,9 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         type: "date",
         colspan: 12,
         group: "Genel",
-
-        defaultValue: contractDtoForInsertion?.sozlesmeTarihi || "",
+        defaultValue:
+          contractDtoForInsertion?.sozlesmeTarihi ??
+          toInputDate(new Date().toString()),
       },
       {
         name: "sozlesmeNo",
@@ -673,7 +527,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         group: "Genel",
         defaultValue: contractDtoForInsertion?.sozlesmeNo || "",
         hidden: contractDtoForInsertion ? false : true,
-        readOnly:true
+        readOnly: true,
       },
       {
         name: "sozlesmeAdi",
@@ -691,7 +545,9 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         colspan: 12,
         group: "Genel",
 
-        defaultValue: contractDtoForInsertion?.sozlesmeBaslangicTarihi || "",
+        defaultValue:
+          contractDtoForInsertion?.sozlesmeBaslangicTarihi ??
+          toInputDate(new Date().toString()),
       },
       {
         name: "sozlesmeBitisTarihi",
@@ -699,7 +555,13 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         type: "date",
         colspan: 12,
         group: "Genel",
-        defaultValue: contractDtoForInsertion?.sozlesmeBitisTarihi || "",
+        defaultValue:
+          contractDtoForInsertion?.sozlesmeBitisTarihi ??
+          toInputDate(
+            new Date(
+              new Date().setFullYear(new Date().getFullYear() + 5),
+            ).toString(),
+          ),
       },
       {
         name: "personelId",
@@ -707,7 +569,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         type: "select",
         options:
           employeesState.items?.map((employee) => ({
-            label: employee.personelAdi+" "+employee.personelSoyadi,
+            label: employee.personelAdi + " " + employee.personelSoyadi,
             value: employee.id,
           })) || [],
         colspan: 12,
@@ -727,7 +589,9 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         group: "Genel",
         disabled: contractDtoForInsertion?.id ? true : false,
         defaultValue: contractDtoForInsertion?.priceOfferId || "",
-        hidden: (sozlesmeTipi=== SozlesmeTipi.NDA || sozlesmeTipi=== SozlesmeTipi.NDA_EN)
+        hidden:
+          sozlesmeTipi === SozlesmeTipi.NDA ||
+          sozlesmeTipi === SozlesmeTipi.NDA_EN,
       },
       {
         name: "purchaseOrderId",
@@ -742,10 +606,10 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         group: "Genel",
         readOnly: true,
         defaultValue: contractDtoForInsertion?.purchaseOrdersId || "",
-         hidden: (sozlesmeTipi=== SozlesmeTipi.NDA || sozlesmeTipi=== SozlesmeTipi.NDA_EN)
+        hidden:
+          sozlesmeTipi === SozlesmeTipi.NDA ||
+          sozlesmeTipi === SozlesmeTipi.NDA_EN,
       },
-
-
 
       {
         name: "urunAdi",
@@ -762,7 +626,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         onChangeEffect(value, formValues, setFields, setValue) {
           if (value) {
             let product = productsState.items?.find(
-              (p) => p.productName === value
+              (p) => p.productName === value,
             );
             if (product) {
               setValue("nsnKodu", product.barkod || "");
@@ -833,7 +697,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
       />,
       "right",
       "w-120 h-full",
-      contract ? "Sözleşme Düzenle" : "Yeni Sözleşme Ekle"
+      contract ? "Sözleşme Düzenle" : "Yeni Sözleşme Ekle",
     );
   };
   const { setLoading } = useLoading();
@@ -848,7 +712,6 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
         newRecordVoid={newRecordVoid}
         scrollHeight="calc(100vh - 200px)"
         enablePagination={false}
-        
       ></SmartTable>
       {showPreview !== 0 && (
         <Editor
@@ -925,7 +788,7 @@ import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
                       relatedEntityName: "Contract",
                       relatedEntityId: showPreview,
                       type: 5,
-                    })
+                    }),
                   ).unwrap();
                   setLoading(false);
                   setShowPreview(0);

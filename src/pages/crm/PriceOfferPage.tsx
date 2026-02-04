@@ -1,4 +1,4 @@
-import { ContractsDto, ContractsDtoForInsertion, MailSendDto, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState, PurchaseOrderDto, PurchaseOrderDtoForInsertion } from "@/api/apiDtos";
+import { ContractsDto, ContractsDtoForInsertion, MailSendDto, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState, PurchaseOrderDto, PurchaseOrderDtoForInsertion, TemplateDto, TemplateType } from "@/api/apiDtos";
 import OfferPdf from "@/components/CRM/OfferPdf";
 import { PriceOfferComponent } from "@/components/CRM/PriceOfferComponent";
 import {
@@ -17,7 +17,7 @@ import {
   updatePriceOffer,
 } from "@/store/slices/priceOfferSlice";
 import store, { AppDispatch, productsSlice, RootState } from "@/store/store";
-import { formatDateForInput } from "@/utils/commonUtils";
+import { formatDateForInput, getEnumKeyByValue } from "@/utils/commonUtils";
 import { ReactNode, use, useEffect, useState } from "react";
 import { FaAdversal, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -43,6 +43,7 @@ import { AddPurchaseOrderFromOfferPage } from "./AddPurchaseOrderFromOfferPage";
 import { ApiResponseClient } from "@/types/apiResponse";
 import { apiRequest } from "@/services";
 import PriceOfferAddPage from "./PriceOfferAddPage";
+import TemplatePage from "./TemplatePage";
  const PriceOfferPage = ({
   opportunityId,
 }: {
@@ -716,15 +717,27 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
   const { setLoading } = useLoading();
   const showTemplate1 = (priceoffer: PriceOfferDto) => {
     openModal({
+      title: "Şablon Seçim Ekranı",
+      maximizable: true,
+      maximized: false,
+      content:  (close) => { 
+        return (<TemplatePage isPage={false} type={TemplateType.PriceOffer.toString()} onSelect={async function (temp: TemplateDto): Promise<void> {
+          if(temp)
+          {
+              const result = refetch(URL + "/template/get/"+temp.id, { method: "GET" });
+      if ((await result).isSuccess) {
+       let row = (await result).result;
+       if(row) temp.htmlContent=row.htmlContent;
+      }
+            close(temp);
+    openModal({
       title: "Teklif Şablonu",
       maximizable: true,
       maximized: true,
-
       content: (close) => {
-
         let firma = customerState.data.find(x => x.id === priceoffer.firma_Id);
         let onayPersonel = personels.items.find(x => x.id == (priceoffer.teklifOnay as any));
-        let teklifMetni = DigitestPriceOfferTemplate.replaceAll("~teklifBelgeNo~", priceoffer.teklifBelgeNo);
+        let teklifMetni = temp.htmlContent.replaceAll("~teklifBelgeNo~", priceoffer.teklifBelgeNo);
         teklifMetni = teklifMetni.replaceAll("~teklifTarihi~", TarihFormatiDonustur(priceoffer.teklifTarihi.toString()));
         teklifMetni = teklifMetni.replaceAll("~firmaAdi~", firma.firma);
         teklifMetni = teklifMetni.replaceAll("~firmaYetkili~", firma.yetkili);
@@ -796,7 +809,7 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
         });
         }
        
-        teklifMetni = teklifMetni.replaceAll("~fiyatSatirlar~", fiyatSatirlarHtml);
+        teklifMetni = teklifMetni.replaceAll("<tr>\n<td colspan=\"5\">~fiyatSatirlar~</td>\n</tr>", fiyatSatirlarHtml);
 
         let opsiyonSatirlarHtml = ``;
         priceoffer.priceOfferLine?.forEach((line, index) => {
@@ -810,7 +823,7 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
           opsiyonSatirlarHtml += `<tr>${opsiyonSatir}</tr>`;
 
         });
-        teklifMetni = teklifMetni.replaceAll("~opsiyonSatirlar~", opsiyonSatirlarHtml);
+        teklifMetni = teklifMetni.replaceAll("<tr>\n<td colspan=\"5\">~opsiyonSatirlar~</td>\n</tr>", opsiyonSatirlarHtml);
 
 
         return <GenericForm
@@ -842,10 +855,10 @@ import PriceOfferAddPage from "./PriceOfferAddPage";
 
       }
     })
+  }
+        } }/>);
+      }})
   };
-  
-
-
   const navigate = useNavigate();
   return (
     <div className="card">

@@ -2126,6 +2126,57 @@ export interface SystemLogDtoIEnumerableApiResponse {
     isSuccess: boolean;
 }
 
+export interface TemplateDto {
+    id: number;
+    type: string | undefined;
+    name: string | undefined;
+    htmlContent: string | undefined;
+    isDefault: boolean;
+    createdAt: Date;
+}
+
+export interface TemplateDtoApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: TemplateDto;
+    isSuccess: boolean;
+}
+
+export interface TemplateDtoForInsertion {
+    type: string | undefined;
+    name: string | undefined;
+    htmlContent: string | undefined;
+    isDefault: boolean;
+}
+
+export interface TemplateDtoForUpdate {
+    name: string | undefined;
+    htmlContent: string | undefined;
+    isDefault: boolean;
+}
+
+export interface TemplateDtoIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: TemplateDto[] | undefined;
+    isSuccess: boolean;
+}
+
+export enum TemplateType {
+    PriceOffer = 0,
+    Nda = 1,
+    NdaEn = 2,
+    OrderContract = 3,
+    Other = 4,
+}
+
+export interface TemplateTypeApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: TemplateType;
+    isSuccess: boolean;
+}
+
 export interface TokenDto {
     user: Users;
     role: number;
