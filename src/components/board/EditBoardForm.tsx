@@ -33,7 +33,7 @@ const EditBoardForm: React.FC<EditBoardFormProps> = ({ board, onClose }) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Pano Adı</label>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Proje Adı</label>
                 <input
                     id="name"
                     {...register('name', { required: 'Pano adı zorunludur' })}

@@ -1,6 +1,8 @@
 import { JSX } from "react";
 import * as Pages from "./pages";
-import { SozlesmeTipi } from "@/api/apiDtos";
+import { CompanyStatus, SozlesmeTipi } from "@/api/apiDtos";
+import { TabsUI } from "@/layouts/TabsUI";
+import Dashboard from "@/pages/Dashboard";
 
 export type AppRoute = {
   path: string;
@@ -9,7 +11,7 @@ export type AppRoute = {
 };
 
 export const routes: AppRoute[] = [
-  { path: "/", element: <Pages.CrmDashboard />, isPrivate: true },
+  { path: "/", element: <Dashboard />, isPrivate: true },
 
   // Personel
   {
@@ -25,7 +27,10 @@ export const routes: AppRoute[] = [
     element: <Pages.OpportunityPageDetail />,
     isPrivate: true,
   },
-  { path: "/musteriler", element: <Pages.CustomerPage />, isPrivate: true },
+  { path: "/musteriler",  element: <Pages.CustomerPage durumu={undefined}  />, isPrivate: true },
+  { path: "/potansiyel-musteriler",  element: <Pages.CustomerPage durumu={CompanyStatus.Potential}  />, isPrivate: true },
+  { path: "/teklif-verilen-musteriler",  element: <Pages.CustomerPage durumu={CompanyStatus.Quoted}  />, isPrivate: true },
+  { path: "/aktif-musteriler",  element: <Pages.CustomerPage durumu={CompanyStatus.Active}  />, isPrivate: true },
   { path: "/tedarikciler", element: <Pages.SupplierPage />, isPrivate: true },
   { path: "/teklifler", element: <Pages.PriceOfferPage />, isPrivate: true },
   {
@@ -51,7 +56,7 @@ export const routes: AppRoute[] = [
     isPrivate: true,
   },
   { path: "/takvim", element: <Pages.CalendarPage />, isPrivate: true },
-  { path: "/sablonlar", element: <Pages.TemplatePage  />, isPrivate: true },
+  { path: "/sablonlar", element: <Pages.TemplatePage isPage={true}  />, isPrivate: true },
   {
     path: "/aktiviteler",
     element: <Pages.ActivityPage title="Aktiviteler" />,

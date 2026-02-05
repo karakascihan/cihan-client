@@ -13,8 +13,8 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
       <div className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${
           collapsed ? "md:ml-16" : "md:ml-64"
         }`}>
-        <Header />
-        <main className="flex-1 p-4">
+        {/* <Header /> */}
+        <main className="flex-1 p-2">
            {children}
         </main>
         {/* <footer className="p-4 text-center text-lg text-gray-600 ">

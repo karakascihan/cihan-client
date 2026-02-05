@@ -54,6 +54,7 @@ import { setSelectedBoard } from '@/store/features/boardSlice';
 import { fetchUsers } from '@/store/slices/userSlice';
 import { useModal } from '@/context/ModalContext';
 import AddBoardForm from './AddBoardForm';
+import { useTabs } from '@/context/TabsContext';
 
 const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -64,17 +65,19 @@ const dropAnimation: DropAnimation = {
 // AYAR: Her 40px sağa çekiş 1 seviye derinlik demektir.
 export const INDENT_STEP = 40; 
 
-const BoardView: React.FC = () => {
+const BoardView = ({boardId}:{boardId?:number}) => {
+    const {openTab}= useTabs();
     const dispatch = useAppDispatch();
-    const { boardId } = useParams();
+    // const { boardId } = useParams();
     const { openModal } = useModal();
     const navigate = useNavigate();
-    
+    const [pageCheck,setPageCheck]=useState(false);
        const { selectedBoardId } = useAppSelector(s => s.boards);
     useEffect(() => {
         if(boardId)
       dispatch(setSelectedBoard(Number(boardId)))
     else {
+      if(pageCheck) return;
         openModal({
                 title: "Proje Uygulama Takimi Oluşturma",
                 content: function (
@@ -84,7 +87,14 @@ const BoardView: React.FC = () => {
                     <AddBoardForm projectType={undefined} onClose={function (boardId: number): void {
                       if (boardId != -1) {
                         close(null);
-                        navigate("/proje/" + boardId)
+                        // openTab({
+                        //           id: "/proje",
+                        //           title: "Proje",
+                        //           component: <BoardView boardId={boardId} />
+                        //         });
+                        dispatch(setSelectedBoard(Number(boardId)));
+                        setPageCheck(true);
+                        // navigate("/proje/" + boardId)
                       }
                     }} />
                   );

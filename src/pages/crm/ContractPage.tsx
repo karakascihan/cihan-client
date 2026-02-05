@@ -40,6 +40,8 @@ import { getEnumOptions } from "@/utils/commonUtilsCompnent";
 import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
 import { toInputDate } from "@/utils/commonUtils";
 import TemplatePage from "./TemplatePage";
+import { BoardView } from "@/routes/pages";
+import { useTabs } from "@/context/TabsContext";
 
 const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
   const confirm = useConfirm();
@@ -62,6 +64,7 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
     });
   const poList = Array.isArray(purchaseOrders) ? purchaseOrders : [];
   const { openModal } = useModal();
+  const {openTab} =useTabs();
 
   // useEffect(() => {
   //   apiRequest<ContractsDto []>('GET','/contracts/getall',{ Authorization: `Bearer ${loginState.accessToken}` }).then(res=>{
@@ -401,6 +404,8 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
           >
             <FaEye title="Göster" />
           </button>
+          {
+            row.sozlesmeTipi === SozlesmeTipi.SiparisSozlesmesi &&
           <button
             onClick={() => {
               openModal({
@@ -414,6 +419,11 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
                       onClose={function (boardId: number): void {
                         if (boardId != -1) {
                           close(null);
+                                  openTab({
+                                  id: "/proje",
+                                  title: "Proje",
+                                  component: <BoardView boardId={boardId} />
+                                });
                           navigate("/proje/" + boardId);
                         }
                       }}
@@ -433,6 +443,8 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
           >
             <FaRProject title="Proje Takvimi Oluştur" />
           </button>
+          }
+
           <button
             className="
                     inline-flex items-center 
@@ -691,7 +703,7 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
             });
             sidebar.closeSidebar();
           } else
-            refetch(URL + "/contracts/create", { method: "post", body: data });
+            refetch(URL + "/contracts/create", { method: "POST", body: data });
           sidebar.closeSidebar();
         }}
       />,

@@ -144,9 +144,8 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
         label: "Şirket Tipi",
         type: "select",
         options: [
-          { label: "Müşteri", value: "0" },
           { label: "Tedarikçi", value: "1" },
-          { label: "Diğer", value: "2" },
+          { label: "Müşteri-Tedarikçi", value: "2" },
         ],
         colspan: 12,
         group: "Genel",
@@ -379,9 +378,9 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
           if (customer && customer.id) {
             data.id = customer.id;
             data.contacts = data.contacts?? [];
-            refetch(URL+"/customer/update",{method:"put",body:data,notification:{success:"Tedarikçi başarılı şekilde güncellendi."}});
+            refetch(URL+"/customer/update",{method:"put",body:data,notification:{success:"Tedarikçi başarılı şekilde güncellendi."}}).then(x=>refetch(URL+"/customer/getall?tip="+CustomerType.Tedarikci,{method:"GET"}));
             sidebar.closeSidebar();
-          } else  refetch(URL+"/customer/create",{method:"post",body:data,notification:{success:"Tedarikçi başarılı şekilde kaydedildi."}});
+          } else  refetch(URL+"/customer/create",{method:"post",body:data,notification:{success:"Tedarikçi başarılı şekilde kaydedildi."}}).then(x=>refetch(URL+"/customer/getall?tip="+CustomerType.Tedarikci,{method:"GET"}));
 
           sidebar.closeSidebar();
         }}
@@ -400,7 +399,7 @@ import { FaPencilAlt, FaTrash } from "react-icons/fa";
         rowIdAccessor={"id"}
         frozenColumns={[{ name: "id", right: true }]}
         isExport={true}
-        newRecordVoid={newRecordVoid}
+        newRecordVoid={(row)=>{newRecordVoid(row)}}
         scrollHeight="calc(100vh - 200px)"
         enablePagination={false}
       ></SmartTable>

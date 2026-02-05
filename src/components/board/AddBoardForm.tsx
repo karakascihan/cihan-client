@@ -178,7 +178,7 @@ const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose,projectType }) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium">Pano Adı</label>
+        <label className="block text-sm font-medium">Proje Adı</label>
         <input
           {...register('name', { required: 'Pano adı zorunludur' })}
           className="mt-1 w-full rounded border px-3 py-2"

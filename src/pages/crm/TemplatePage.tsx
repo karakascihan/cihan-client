@@ -10,7 +10,7 @@ import { getEnumOptions } from "@/utils/commonUtilsCompnent";
 import { ReactNode } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 
-export default function TemplatePage  ({isPage=true,type,onSelect}:{isPage:boolean,type?:string,onSelect:(temp:TemplateDto)=>void})  {
+export default function TemplatePage  ({isPage=true,type,onSelect}:{isPage:boolean,type?:string,onSelect?:(temp:TemplateDto)=>void})  {
   const {
     data: templates,
     loading,

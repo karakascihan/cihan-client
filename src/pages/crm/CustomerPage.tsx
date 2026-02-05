@@ -1,9 +1,10 @@
 import {
+  CompanyStatus,
   CustomerDto,
   CustomerDtoForInsertion,
   CustomerType,
 } from "@/api/apiDtos";
-import { CustomerTypeDescriptions } from "@/api/extra-enums";
+import { CompanyStatusDescriptions, CustomerTypeDescriptions } from "@/api/extra-enums";
 import {
   FieldDefinition,
   FieldType,
@@ -20,12 +21,13 @@ import {
   updateCustomer,
 } from "@/store/slices/customerSlice";
 import { RootState } from "@/store/store";
+import { getEnumOptions } from "@/utils/commonUtilsCompnent";
 import { group } from "console";
 import { use, useEffect } from "react";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
- const CustomerPage = () => {
+ const CustomerPage = ({durumu}:{durumu?:CompanyStatus}) => {
   const { data, loading, error } = useSelector(
     (state: RootState) => state.customer
   );
@@ -135,7 +137,7 @@ import { useDispatch, useSelector } from "react-redux";
       accessor: "id",
     },
   ];
-  const formElements: FieldDefinition[] = (
+  const formElements = (
     customerDtoForInsertion: CustomerDtoForInsertion
   ) => {
     let fields: FieldDefinition[] = [
@@ -146,7 +148,7 @@ import { useDispatch, useSelector } from "react-redux";
         colspan: 12,
         group: "Genel",
         required: true,
-        defaultValue: customerDtoForInsertion?.firma || "",
+        defaultValue: customerDtoForInsertion?.firma ?? "",
       },
         {
         name: "firmaKisaAd",
@@ -155,7 +157,7 @@ import { useDispatch, useSelector } from "react-redux";
         colspan: 12,
         group: "Genel",
         required: true,
-        defaultValue: customerDtoForInsertion?.firmaKisaAd || "",
+        defaultValue: customerDtoForInsertion?.firmaKisaAd ?? "",
       },
       {
         name: "sirketTuru",
@@ -163,13 +165,22 @@ import { useDispatch, useSelector } from "react-redux";
         type: "select",
         options: [
           { label: "Müşteri", value: "0" },
-          { label: "Tedarikçi", value: "1" },
-          { label: "Diğer", value: "2" },
+          { label: "Müşteri-Tedarikçi", value: "2" },
         ],
         colspan: 12,
         group: "Genel",
         required: true,
-        defaultValue: customerDtoForInsertion?.sirketTuru || "0",
+        defaultValue: customerDtoForInsertion?.sirketTuru ??  null,
+      },
+         {
+        name: "durumu",
+        label: "Durumu",
+        type: "select",
+        options:getEnumOptions<CompanyStatus>(CompanyStatusDescriptions),
+        colspan: 12,
+        group: "Genel",
+        required: true,
+        defaultValue: customerDtoForInsertion?.durumu ?? null,
       },
       {
         name: "yetkili",
@@ -412,7 +423,7 @@ import { useDispatch, useSelector } from "react-redux";
     <div className="card">
       <h2 className="text-xl text-center font-bold mb-2">Müşteriler</h2>
       <SmartTable
-        data={data ?? []}
+        data= {durumu != undefined ? data?.filter(x=>(x.durumu==durumu)):data ?? []}
         columns={columns}
         rowIdAccessor={"id"}
         frozenColumns={[{ name: "id", right: true }]}

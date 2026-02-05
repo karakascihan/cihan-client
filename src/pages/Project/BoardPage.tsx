@@ -11,12 +11,16 @@ import { useConfirm } from "@/context/ConfirmContext";
 import { deleteBoard, fetchBoards } from "@/store/features/boardSlice";
 import { useNavigate } from "react-router-dom";
 import { FiArrowUpRight } from "react-icons/fi";
+import { useTabs } from "@/context/TabsContext";
+import { BoardView } from "@/routes/pages";
 
 export default function BoardPage(
 ) {
   const boards = useSelector<RootState, BoardDto[]>((x) => x.boards.items);
   const dispatch = useDispatch<AppDispatch>();
   const { openModal } = useModal();
+  const {openTab} = useTabs();
+
   const navigate=useNavigate();
 const confirm=useConfirm();
   useEffect(() => {
@@ -46,7 +50,13 @@ const confirm=useConfirm();
               <div className="flex flex-row">
                  <button
                             onClick={() => {
-                             navigate("/proje/"+row.id)
+                              
+                             navigate("/proje/"+row.id);
+                             openTab({
+         id: "/proje",
+          title: "Proje",
+          component: <BoardView boardId={row.id} />
+        });
                             }}
                             className="
                                     inline-flex items-center 
@@ -84,14 +94,17 @@ const confirm=useConfirm();
     
     return sendData;
   };
- 
   return (
     <div className="card">
       <h2 className="text-xl text-center font-bold mb-2">Proje Takvimi</h2>
       <SmartTable
         data={boards ?? []}
         enablePagination={false}
-       onDoubleClick={(row)=>  navigate("/proje/"+row.id)}
+        onDoubleClick={(row)=> {navigate("/proje/"+row.id);openTab({
+         id: "/proje",
+          title: "Proje",
+          component: <BoardView boardId={row.id} />
+        }); }}
         scrollHeight={ "calc(100vh - 200px)"
         }
         // newRecordVoid={()=>navigate("/proje")}

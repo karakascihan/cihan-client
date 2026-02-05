@@ -62,7 +62,7 @@ export const Avatar: React.FC<AvatarProps> = ({
       {name && (
         <span
           className={`
-            hidden md:inline text-sm font-medium text-gray-700
+            hidden md:inline text-sm font-medium text-white
             ${nameClassName ?? ""}
           `}
         >

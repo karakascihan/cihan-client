@@ -29,7 +29,7 @@ const BoardInfoPopover: React.FC = () => {
                 <div className="flex items-center">
                     <button onClick={()=>{
                        openModal({
-                           title: 'Proje düzenle',
+                           title: 'Proje Düzenleme Ekranı',
                            content: function (close: (result: any) => void): React.ReactNode {
                                return <EditBoardForm
                                    board={selectedBoard}
@@ -49,7 +49,7 @@ const BoardInfoPopover: React.FC = () => {
             <div className="border-b border-border-color-soft"></div>
 
             {/* Pano Bilgisi */}
-            <div className="space-y-3">
+            {/* <div className="space-y-3">
                 <InfoRow label="Pano Türü">
                     <BsKanban /> <span>Ana</span>
                 </InfoRow>
@@ -63,7 +63,7 @@ const BoardInfoPopover: React.FC = () => {
                 <InfoRow label="Bildirimler">
                     <FiBell /> <span>Her şey</span>
                 </InfoRow>
-            </div>
+            </div> */}
         </div>
     );
 };

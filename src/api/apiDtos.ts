@@ -344,6 +344,7 @@ export interface Company {
     onayDurumu: string | undefined;
     isActive: boolean | undefined;
     sirketTuru: number | undefined;
+    durumu: number | undefined;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     firmaKisaAd: string | undefined;
@@ -362,6 +363,15 @@ export interface CompanyPerson {
     isActive: boolean | undefined;
     activity: Activity[] | undefined;
     opportunity: Opportunity[] | undefined;
+}
+
+export enum CompanyStatus {
+    Potential = 0,
+    Quoted = 1,
+    Active = 2,
+    Risky = 3,
+    OnHold = 4,
+    Closed = 5,
 }
 
 export interface Contracts {
@@ -600,6 +610,7 @@ export interface CustomerDto {
     sektor: string | undefined;
     referans: string | undefined;
     sirketTuru: CustomerType;
+    durumu: CompanyStatus;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     firmaKisaAd: string | undefined;
@@ -622,6 +633,7 @@ export interface CustomerDtoForInsertion {
     sektor: string | undefined;
     referans: string | undefined;
     sirketTuru: CustomerType;
+    durumu: CompanyStatus;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     firmaKisaAd: string | undefined;
@@ -642,6 +654,7 @@ export interface CustomerDtoForUpdate {
     sektor: string | undefined;
     referans: string | undefined;
     sirketTuru: CustomerType;
+    durumu: CompanyStatus;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     firmaKisaAd: string | undefined;
@@ -659,7 +672,7 @@ export interface CustomerDtoIEnumerableApiResponse {
 export enum CustomerType {
     Musteri = 0,
     Tedarikci = 1,
-    Diger = 2,
+    Musteri_Tedarikci = 2,
 }
 
 export interface DateOnly {

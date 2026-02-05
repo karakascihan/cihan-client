@@ -1,6 +1,6 @@
 // Auto-generated from Swagger x-enumDescriptions
 
-import { ActivityState, ActivityType, ColumnType, CustomerType, DayOfWeek, EntityType, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType, TemplateType, TransactionType } from "./apiDtos";
+import { ActivityState, ActivityType, ColumnType, CompanyStatus, CustomerType, DayOfWeek, EntityType, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType, TemplateType, TransactionType } from "./apiDtos";
 
 // Auto-generated from Swagger x-enumDescriptions
 
@@ -33,10 +33,19 @@ export const ColumnTypeDescriptions: Record<ColumnType, string> = {
   [ColumnType.Dependency]: "Dependency",
 };
 
+export const CompanyStatusDescriptions: Record<CompanyStatus, string> = {
+  [CompanyStatus.Potential]: "Potansiyel",
+  [CompanyStatus.Quoted]: "Teklif",
+  [CompanyStatus.Active]: "Aktif",
+  [CompanyStatus.Risky]: "Riskli",
+  [CompanyStatus.OnHold]: "Askıda",
+  [CompanyStatus.Closed]: "Kapalı",
+};
+
 export const CustomerTypeDescriptions: Record<CustomerType, string> = {
   [CustomerType.Musteri]: "Müşteri",
   [CustomerType.Tedarikci]: "Tedarikçi",
-  [CustomerType.Diger]: "Diğer",
+  [CustomerType.Musteri_Tedarikci]: "Müşteri ve Tedarikçi",
 };
 
 export const DayOfWeekDescriptions: Record<DayOfWeek, string> = {

@@ -4,6 +4,7 @@ import {AppSidebar} from "./../components/AppSidebar";
 import { SidebarProvider2, useSidebar2 } from "@/context/SidebarContext2";
 import AppHeader2 from "./AppHeader2";
 import AppSidebar2 from "@/components/AppSidebar2";
+import { TabsUI } from "./TabsUI";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar2();
@@ -21,7 +22,8 @@ const LayoutContent: React.FC = () => {
       >
         <AppHeader2 />
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
-          <Outlet />
+          {/* <Outlet /> */}
+          <TabsUI/>
         </div>
       </div>
     </div>

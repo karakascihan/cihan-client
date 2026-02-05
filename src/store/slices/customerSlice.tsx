@@ -119,8 +119,8 @@ export const updateCustomer = createAsyncThunk<
       dispatch(
         setNotification({
           title: response?.message ?? "Başlık",
-          duration:500000,
-          message:response.result,
+          duration:5000,
+          message:" ",
           type:
             response.statusCode === 4
               ? "error"

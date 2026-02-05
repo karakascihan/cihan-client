@@ -2162,6 +2162,16 @@
         "tags": [
           "Customer"
         ],
+        "parameters": [
+          {
+            "name": "tip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -7183,7 +7193,7 @@
         }
       }
     },
-    "/create": {
+    "/api/template/create": {
       "post": {
         "tags": [
           "Template"
@@ -9074,6 +9084,11 @@
             "format": "int32",
             "nullable": true
           },
+          "durumu": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "ulkeAdi": {
             "maxLength": 100,
             "minLength": 0,
@@ -9172,6 +9187,34 @@
           }
         },
         "additionalProperties": false
+      },
+      "CompanyStatus": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "type": "integer",
+        "format": "int32",
+        "x-enumNames": [
+          "Potential",
+          "Quoted",
+          "Active",
+          "Risky",
+          "OnHold",
+          "Closed"
+        ],
+        "x-enumDescriptions": [
+          "Potansiyel",
+          "Teklif",
+          "Aktif",
+          "Riskli",
+          "Askıda",
+          "Kapalı"
+        ]
       },
       "Contracts": {
         "type": "object",
@@ -10174,6 +10217,9 @@
           "sirketTuru": {
             "$ref": "#/components/schemas/CustomerType"
           },
+          "durumu": {
+            "$ref": "#/components/schemas/CompanyStatus"
+          },
           "ulkeAdi": {
             "maxLength": 100,
             "minLength": 0,
@@ -10281,6 +10327,9 @@
           "sirketTuru": {
             "$ref": "#/components/schemas/CustomerType"
           },
+          "durumu": {
+            "$ref": "#/components/schemas/CompanyStatus"
+          },
           "ulkeAdi": {
             "maxLength": 100,
             "minLength": 0,
@@ -10380,6 +10429,9 @@
           "sirketTuru": {
             "$ref": "#/components/schemas/CustomerType"
           },
+          "durumu": {
+            "$ref": "#/components/schemas/CompanyStatus"
+          },
           "ulkeAdi": {
             "maxLength": 100,
             "minLength": 0,
@@ -10447,12 +10499,12 @@
         "x-enumNames": [
           "Musteri",
           "Tedarikci",
-          "Diger"
+          "Musteri_Tedarikci"
         ],
         "x-enumDescriptions": [
           "Müşteri",
           "Tedarikçi",
-          "Diğer"
+          "Müşteri ve Tedarikçi"
         ]
       },
       "DateOnly": {

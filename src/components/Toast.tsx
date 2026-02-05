@@ -54,8 +54,8 @@ export const Toast: React.FC<ToastProps> = ({
 
   return (
     <div
-      className={`${bg} ${border} ${text} fixed top-4 left-1/2 -translate-x-1/2 z-[1120] border-l-4 px-4 py-3 rounded-xl shadow-md flex items-start gap-3 opacity-90`}
-      // className={`${bg} ${border} ${text} fixed top-4 rigt-4 -translate-x-1/2 z-[1120] border-l-4 px-4 py-3 rounded-xl shadow-md flex items-start gap-3 opacity-90`}
+      // className={`${bg} ${border} ${text} fixed top-4 left-1/2 -translate-x-1/2 z-[1120] border-l-4 px-4 py-3 rounded-xl shadow-md flex items-start gap-3 opacity-90`}
+       className={`${bg} ${border} ${text}   fixed top-4 right-4  z-[1120] border-l-4 px-4 py-3 rounded-xl shadow-md flex items-start gap-3 opacity-90`}
     >
       {icon}
       <div className="flex-1">
