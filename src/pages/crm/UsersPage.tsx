@@ -115,7 +115,7 @@ import React from "react";
                 options: roleOptions,
                 required: true,
             },
-            { name: "userName", label: "Kullanıcı Adı", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).userName ?? "" },
+            { name: "userName", label: "Kullanıcı Adı", type: "text", required: true, colspan: 3, group: "Genel", defaultValue: (form as any).userName ?? "" },
 
             // --- İletişim ---
             { name: "phoneNumber", label: "Telefon 1", type: "text", colspan: 4, group: "İletişim", defaultValue: (form as any).phone1 ?? "" },

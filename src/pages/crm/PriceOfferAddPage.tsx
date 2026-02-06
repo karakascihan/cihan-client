@@ -47,14 +47,16 @@ export const paraBirimleri = ["TRY", "USD", "EUR"];
 
 interface PriceOfferAddPageProps {
   offer: PriceOfferDto;
+  opportunityId?:number;
 }
 
  const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
   offer,
+  opportunityId
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { opportunityId } = useParams();
+  // const { opportunityId } = useParams();
   const isFirstLoad = useRef(true);
   const { openModal } = useModal();
 const [manualTotal, setManualTotal] = React.useState(offer?true:false);
@@ -696,7 +698,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
         >
           Teklifi Kaydet
         </button>
-        {offer && (
+        {offer &&  (
           <button
             onClick={handleSubmit((data) => onSubmit(data, true))}
             type="button"

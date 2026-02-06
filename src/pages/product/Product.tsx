@@ -11,6 +11,7 @@ import React, { useEffect } from 'react'
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { fileToBase64 } from '@/utils/commonUtils';
+import { useConfirm } from '@/context/ConfirmContext';
 
 const Product = () => {
 
@@ -326,7 +327,7 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
         });
     }
     
-
+const confirm =useConfirm();
     return (
       <div className="flex flex-row">
           { <button
@@ -345,7 +346,17 @@ function mapToInsertionDto(p: Products): ProductsDtoForInsertion {
           </button> }
           <button
             title="Sil"
-            onClick={() => dispatch(productsSlice.actions.deleteItem(rowData.id) as any)}
+            onClick={async () => {
+                  const isConfirmed = await confirm({
+                                                        title: "Silme işlemi",
+                                                        message: "Ürünü silmek istediğinize emin misiniz?",
+                                                        confirmText: "Evet",
+                                                        cancelText: "Vazgeç",
+                                                      });
+                                                      if (isConfirmed) {
+                                                         dispatch(productsSlice.actions.deleteItem(rowData.id) as any)
+                                                    }}}
+              
             className="
         inline-flex items-center 
         px-4 py-2 

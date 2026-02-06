@@ -203,7 +203,7 @@ const GanttBaselineModal: React.FC<GanttBaselineModalProps> = ({
                 </div>
 
                 <div className="flex-1 flex w-full relative overflow-hidden">
-                    <div className={`flex-1 h-full flex w-full relative transition-all duration-300 ${isSettingsOpen ? 'max-w-[calc(100%-400px)]' : 'max-w-full'}`}>
+                    <div className={`flex-1 h-full flex w-full relative transition-all duration-300 ${isSettingsOpen ? 'max-w-[calc(100%-0px)]' : 'max-w-full'}`}>
                         <div className={`flex-shrink-0 transition-all duration-300 ease-in-out overflow-hidden ${isLeftPanelOpen ? 'w-[420px]' : 'w-0'} relative`}>
                             <div
                                 className="w-[426px] h-full overflow-y-hidden overflow-x-hidden border-r"

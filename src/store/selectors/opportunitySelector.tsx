@@ -43,7 +43,7 @@ export const selectActivitiesWithCustomerWithOpportunity = createSelector(
 export const selectPriceOffersWithCustomerWithOpportunity = createSelector(
   [(state: RootState) => state.opportunity.data,(state: RootState) => state.customer.data,(state: RootState) => state.user.data,(state: RootState) => state.personel.items,(state: RootState) => state.priceOffer.data],
   (opportunities, customers,users,personels,priceoffers) => {
-    return  priceoffers.map((priceoffer :PriceOfferDto) => {
+    return  priceoffers?.map((priceoffer :PriceOfferDto) => {
       const customer = customers.find((c:CustomerDto) => c.id === priceoffer.firma_Id);
       const opportunity = opportunities.find((c:OpportunityDto) => c.id === priceoffer.opportunityId);
       const yetkili = customer?.contacts.find(cp=>cp.id===opportunity?.customerContactPersonId);

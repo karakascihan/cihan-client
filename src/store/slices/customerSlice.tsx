@@ -44,6 +44,7 @@ export const fetchCustomers = createAsyncThunk<CustomerDto[]>(
               : "warning",
         })
       );
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
       return response.result;
     } catch (error) {
       const errorMessage =

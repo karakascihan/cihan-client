@@ -62,7 +62,7 @@ export default function CrmDashboard() {
   const getCompanyValueData = (opps: OpportunityDto[]) => {
     const map = new Map<string, number>();
 
-    opps.forEach((opp) => {
+    opps?.forEach((opp) => {
       if (opp.opportunityStage !== OpportunityStage.Won) return;
       if (!opp.customerName) return;
 

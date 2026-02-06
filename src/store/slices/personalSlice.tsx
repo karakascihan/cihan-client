@@ -42,6 +42,7 @@ export const fetchpersonels = createAsyncThunk<PersonelDto[],{onlyNames:boolean,
               : "warning",
         })
       );
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
       return response.result;
     } catch (error) {
       const errorMessage =
@@ -80,7 +81,7 @@ export const createPersonel = createAsyncThunk<
       message: response.message ?? "",
       type: "success",
     }));
-
+ if(!response.isSuccess)   return rejectWithValue(response?.message);
     return response.result;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -119,7 +120,7 @@ export const updatePersonel = createAsyncThunk<
       message: response.message ?? "",
       type: "success",
     }));
-
+ if(!response.isSuccess)   return rejectWithValue(response?.message);
     return response.result;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -156,7 +157,7 @@ export const deletePersonel = createAsyncThunk<
       message: response.message ?? "",
       type: "success"
     }));
-
+ if(!response.isSuccess)   return rejectWithValue(response?.message);
     return id;
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

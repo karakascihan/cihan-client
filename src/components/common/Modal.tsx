@@ -42,7 +42,7 @@ const Modal: React.FC<ModalProps> = ({
     return (
         <div 
             className="fixed inset-0 bg-black/50   z-50 flex justify-center items-center p-4"
-            onClick={onClose} 
+            // onClick={onClose} 
         >
             <div 
                 className={`bg-white rounded-lg shadow-xl w-full ${sizeClass} relative flex flex-col overflow-hidden`} // <-- 'overflow-hidden' BURAYA TAŞINDI

@@ -136,9 +136,9 @@ const GanttToolbar: React.FC<GanttToolbarProps> = ({
                 </button>
 
                 {/* Opsiyonel: Diğer Seçenekler Menüsü hala kalabilir */}
-                <button type="button" className={iconButtonBase} title="Diğer Seçenekler">
+                {/* <button type="button" className={iconButtonBase} title="Diğer Seçenekler">
                     <FiMoreHorizontal className="w-5 h-5" />
-                </button>
+                </button> */}
                 {/* --------------------------------------------- */}
             </div>
         </div>

@@ -11,6 +11,7 @@ import {
   FiUserPlus,
   FiTable,
   FiUserX,
+  FiMenu,
 } from "react-icons/fi";
 import { useUI } from "../context/UIContext";
 import { useSelector } from "react-redux";
@@ -117,12 +118,13 @@ export const Sidebar: React.FC = () => {
     collapsed,
     toggleCollapsed,
     toggleMenu,
+    toggleSidebar,
     openMenus,
   } = useUI();
   const sidebarRef = useRef<HTMLDivElement>(null);
   // const [openMenus, setOpenMenus] = useState<string[]>([]);
   const user = useSelector((state: RootState) => state.login.user);
-  const { openTab,tabs } = useTabs();
+  const { openTab, tabs } = useTabs();
   const { openModal } = useModal();
 
   const handleClickOutside = (e: MouseEvent) => {
@@ -203,7 +205,7 @@ export const Sidebar: React.FC = () => {
           icon: <FaProjectDiagram />,
           element: <BoardView />,
           onClick: () => {
-            if(tabs.find(x=>x.id=="/proje")) return;
+            if (tabs.find((x) => x.id == "/proje")) return;
             openModal({
               title: "Proje Uygulama Takvimi Oluşturma",
               content: function (
@@ -685,17 +687,17 @@ export const Sidebar: React.FC = () => {
             collapsed ? "w-16" : "w-64"
           }`}
       >
-         <button
-        onClick={toggleCollapsed}
-        className="absolute top-8 -translate-y-1/2 -right-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-50 border-2 border-white"
-        aria-label={collapsed ? "Genişlet" : "Daralt"}
-      >
-        {collapsed ? (
-          <ChevronRight className="w-4 h-4" />
-        ) : (
-          <ChevronLeft className="w-4 h-4" />
-        )}
-      </button>
+        <button
+          onClick={toggleCollapsed}
+          className="absolute hidden sm:block top-8 -translate-y-1/2 -right-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-full p-1.5 shadow-lg transition-all duration-200 hover:scale-110 z-50 border-2 border-white"
+          aria-label={collapsed ? "Genişlet" : "Daralt"}
+        >
+          {collapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
+        </button>
         {/* Logo */}
         <div className="flex items-center justify-center px-4 py-3  ">
           <NavLink to="/">
@@ -711,13 +713,11 @@ export const Sidebar: React.FC = () => {
         <div className="flex-1 overflow-y-auto py-4 px-2">
           <MenuList items={menus} />
         </div>
-        {
-          !collapsed &&
-        <div className=" py-2 px-4">
-          <UserMenu user={userData} />
-        </div>
-        }
-
+        {!collapsed && (
+          <div className=" py-2 px-4">
+            <UserMenu user={userData} />
+          </div>
+        )}
       </div>
     </div>
   );

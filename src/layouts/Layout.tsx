@@ -3,13 +3,17 @@ import { Sidebar } from "../components/Sidebar";
 import { Header } from "../components/Header";
 import { useUI } from "../context/UIContext";
 import { useLoading } from "@/context/LoadingContext";
+import { FiMenu } from "react-icons/fi";
 
 export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { collapsed } = useUI();
+    const { collapsed,toggleSidebar } = useUI();
   const {loading} = useLoading();
   return (
     <div className="card">
       <Sidebar />
+      <button className="md:hidden mt-2 ml-2" onClick={toggleSidebar}>
+                <FiMenu size={24} />
+              </button>
       <div className={`flex flex-col flex-1 min-h-screen transition-all duration-300 ${
           collapsed ? "md:ml-16" : "md:ml-64"
         }`}>

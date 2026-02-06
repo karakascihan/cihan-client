@@ -44,6 +44,8 @@ export const fetchPriceOffers = createAsyncThunk<PriceOfferDto[]>(
               : "warning",
         })
       );
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
+
       return response.result;
     } catch (error) {
       const errorMessage =
@@ -77,13 +79,14 @@ export const addPriceOffer = createAsyncThunk<
       dispatch(
         setNotification({
           title: response?.message ?? "",
-          message: response.result ?? " ",
+          message: " ",
           type:
             response.statusCode === 0
               ? "success"
               : "error",
         })
       );
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
       return response.result;
     } catch (error) {
       const errorMessage =
@@ -126,6 +129,8 @@ export const updatePriceOffer = createAsyncThunk<
               : "warning",
         })
       );
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
+
       return response.result;
     } catch (error) {
       const errorMessage =
@@ -174,6 +179,7 @@ export const patchPriceOffer = createAsyncThunk<
               : "warning",
         })
       );
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
 
       return response.result;
     } catch (error) {
@@ -213,6 +219,8 @@ export const deletePriceOffer = createAsyncThunk<number, number>(
               : "warning",
         })
       );
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
+
       return id;
     } catch (error) {
       const errorMessage =

@@ -55,17 +55,17 @@ export function createGenericSlice<T extends { id: number | string }>(
       // dispatch(setLoading(false));
       dispatch(
         setNotification({
-          title: "Başarılı",
+          title: response.isSuccess ?"Başarılı":"Hata",
           message: response?.message ?? "",
           type:
-            response.statusCode === 500
+            response.statusCode !== 200
               ? "error"
               : response.isSuccess
               ? "success"
               : "warning",
         })
       );
-
+ if(!response.isSuccess)   return rejectWithValue(response?.message);
       return response.result;
     } catch (error: any) {
       dispatch(
@@ -109,13 +109,14 @@ export function createGenericSlice<T extends { id: number | string }>(
             title: response?.message ?? "",
             message: " ",
             type:
-              response.statusCode === 500
+              response.statusCode !== 200
                 ? "error"
                 : response.isSuccess
                 ? "success"
                 : "warning",
           })
         );
+         if(!response.isSuccess)   return rejectWithValue(response?.message);
         return response.result;
       } catch (error: any) {
         dispatch(
@@ -125,6 +126,7 @@ export function createGenericSlice<T extends { id: number | string }>(
             type: "error",
           })
         );
+
         return rejectWithValue(error);
       }
     }
@@ -135,6 +137,7 @@ export function createGenericSlice<T extends { id: number | string }>(
     async (item, { rejectWithValue }) => {
       try {
         const response = await axios.put<T>(`${baseUrl}/${item.id}`, item);
+         if(!response.isSuccess)   return rejectWithValue(response?.message);
         return response.data;
       } catch {
         return rejectWithValue("Güncelleme hatası");
@@ -150,6 +153,7 @@ export function createGenericSlice<T extends { id: number | string }>(
   >(`${name}/delete`, async (id, { rejectWithValue }) => {
     try {
       await axios.delete(`${baseUrl}/${id}`);
+       if(!response.isSuccess)   return rejectWithValue(response?.message);
       return id;
     } catch {
       return rejectWithValue("Silme hatası");
@@ -171,13 +175,14 @@ export function createGenericSlice<T extends { id: number | string }>(
             title: response?.message ?? "",
             message: " ",
             type:
-              response.statusCode === 500
+              response.statusCode !== 200
                 ? "error"
                 : response.isSuccess
                 ? "success"
                 : "warning",
           })
         );
+         if(!response.isSuccess)   return rejectWithValue(response?.message);
         return id;
       } catch (error: any) {
         dispatch(

@@ -239,7 +239,7 @@ const GroupSection: React.FC<GroupSectionProps> = ({
                         <span className="text-xs font-medium text-gray-400">({totalVisibleItems} Görev)</span>
                     </div>
                     <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity space-x-1">
-                        <button onClick={() => setEditModalOpen(true)} className="p-1.5 text-gray-500 hover:text-blue-600"><FiEdit size={14} /></button>
+                        <button onClick={() =>  setEditModalOpen(true)} className="p-1.5 text-gray-500 hover:text-blue-600"><FiEdit size={14} /></button>
                         <button onClick={() => { if (selectedBoardId && window.confirm(`"${group.title}" silinsin mi?`)) dispatch(deleteGroup({ boardId: selectedBoardId, groupId: group.id })); }} className="p-1.5 text-gray-500 hover:text-red-600"><FiTrash2 size={14} /></button>
                     </div>
                 </div>
@@ -255,7 +255,7 @@ const GroupSection: React.FC<GroupSectionProps> = ({
                                 ))}
                             </SortableContext>
                             <div className="sticky right-0 z-20 bg-gray-50 border-l border-gray-200 flex justify-center items-center h-10">
-                                <button onClick={() => setColumnModalOpen(true)} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-500"><FiPlus size={16} /></button>
+                                <button  onClick={() => setColumnModalOpen(true)} className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-500"><FiPlus title='Yeni Sütun Ekle'   size={16} /></button>
                             </div>
                         </div>
 

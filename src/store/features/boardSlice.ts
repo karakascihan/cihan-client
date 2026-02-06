@@ -71,7 +71,9 @@ export const fetchBoards = createAsyncThunk<BoardDto[]>(
         if (!response.ok) {
             throw new Error('Server responded with an error!');
         }
+
         const data: BoardDto[] = await response.json();
+        if(data.isSuccess == false)  throw new Error(data.message);
         return data;
     }
 );
@@ -91,6 +93,7 @@ export const createBoard = createAsyncThunk<BoardDto, { name: string; descriptio
             throw new Error('Server responded with an error!');
         }
         const createdBoard: BoardDto = await response.json();
+         if(data.isSuccess == false)  throw new Error(data.message);
         return createdBoard;
     }
 );

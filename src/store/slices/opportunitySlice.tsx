@@ -42,13 +42,14 @@ export const fetchOpportunities = createAsyncThunk<OpportunityDto[]>(
           title: response?.message ?? "",
           message: " ",
           type:
-            response.statusCode !== 0
+            response.statusCode !== 200
               ? "error"
               : response.isSuccess
               ? "success"
               : "warning",
         })
       );
+      if(!response.isSuccess)   return rejectWithValue(response?.message);
       return response.result;
     } catch (error) {
       const errorMessage =

@@ -23,7 +23,6 @@ import React, { ReactNode, use, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { paraBirimleri } from "./PriceOfferAddPage";
 import { useModal } from "@/context/ModalContext";
-import { OpportunityPageDetail } from "./OpportunityPageDetail";
 import { useNavigate } from "react-router-dom";
 import { FaList, FaTrash } from "react-icons/fa6";
 import { FaPencilAlt, FaThLarge } from "react-icons/fa";
@@ -31,6 +30,8 @@ import { SmartTable } from "@/components/SmartTable";
   import { useConfirm } from "@/context/ConfirmContext";
 import { selectOpportunitiesWithCustomer } from "@/store/selectors/opportunitySelector";
 import { fetchUsers } from "@/store/slices/userSlice";
+import { useTabs } from "@/context/TabsContext";
+import { OpportunityPageDetail } from "@/routes/pages";
 
 enum ListType {
   card,
@@ -249,6 +250,7 @@ export const OpportunityPage = () => {
 //     })
 // }
 const navigate=useNavigate();
+const {openTab} =useTabs();
   const clickTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const handleClick = (opp:OpportunityDto) => {
@@ -264,6 +266,11 @@ const navigate=useNavigate();
     if (clickTimeout.current) {
       clearTimeout(clickTimeout.current); // Tek tık iptal
     }
+    openTab({
+      id: "/firsatdetay/"+opp.id,
+      title: opp.title,
+      component: <OpportunityPageDetail id={opp.id}  />
+    });
      navigate("/firsatdetay/"+opp.id)
   };
   return (

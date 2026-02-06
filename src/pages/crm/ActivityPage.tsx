@@ -269,7 +269,6 @@ import { selectActivitiesWithCustomerWithOpportunity } from "@/store/selectors/o
       type: "textarea",
       colspan: 12,
       group: "Genel",
-      required: true,
       defaultValue: activityDtoForInsertion?.notes,
     },
     {

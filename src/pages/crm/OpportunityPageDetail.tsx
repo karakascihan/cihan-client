@@ -31,14 +31,14 @@ import { addFileRecord, fetchFileRecords } from "@/store/slices/fileRecordSlice"
 import { FileRecordPage } from "./FileRecordPage";
 import { fetchpersonels } from "@/store/slices/personalSlice";
 
- const OpportunityPageDetail: React.FC = () => {
+ const OpportunityPageDetail: React.FC = ({id}:{id?:number}) => {
   const [activeTab, setActiveTab] = useState<
     "details" | "activities" | "notes" | "files" | "priceoffers"
   >("details");
  
   const [opportunity, setOpportunity] = useState<OpportunityDto>();
   const dispatch = useDispatch<AppDispatch>();
-  const {id} = useParams();
+  // const {id} = useParams();
   const opportunityState = useSelector((state: RootState) => state.opportunity);
   const systemLogState = useSelector((state: RootState) => state.systemLog);
   const loginState = useSelector((state: RootState) => state.login);

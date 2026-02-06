@@ -44,6 +44,7 @@ import { ApiResponseClient } from "@/types/apiResponse";
 import { apiRequest } from "@/services";
 import PriceOfferAddPage from "./PriceOfferAddPage";
 import TemplatePage from "./TemplatePage";
+import { useTabs } from "@/context/TabsContext";
  const PriceOfferPage = ({
   opportunityId,
 }: {
@@ -860,6 +861,7 @@ import TemplatePage from "./TemplatePage";
       }})
   };
   const navigate = useNavigate();
+  const {openTab}=useTabs();
   return (
     <div className="card">
       <h2 className="text-xl text-center font-bold mb-2">Teklifler</h2>
@@ -873,11 +875,15 @@ import TemplatePage from "./TemplatePage";
         rowIdAccessor={"id"}
         frozenColumns={[{ name: "id", right: true }]}
         isExport={true}
-        newRecordVoid={() =>
-          navigate(
-            "/yeniteklif/" + (opportunityId && opportunityId?.toString())
-          )
-        }
+        newRecordVoid={() =>  {  openTab({
+           id: "/yeniteklif/" + (opportunityId && opportunityId?.toString()),
+           title: "Yeni Teklif",
+           component:<PriceOfferAddPage offer={undefined} opportunityId={opportunityId}/>
+         });
+          navigate("/yeniteklif/" + (opportunityId && opportunityId?.toString())); 
+               }
+              }
+               
         scrollHeight="calc(100vh - 200px)"
         enablePagination={false}
       ></SmartTable>

@@ -159,7 +159,7 @@ export default function TemplatePage  ({isPage=true,type,onSelect}:{isPage:boole
        {isPage ? <h2 className="text-xl text-center font-bold mb-2">Şablonlar</h2> :""}
       </div>
       <SmartTable
-        data={loading ? [] : templates}
+        data={loading ? [] : templates || []}
         onDoubleClick={(row)=>onSelect(row)}
         columns={getColumns()}
         rowIdAccessor={"id"}
