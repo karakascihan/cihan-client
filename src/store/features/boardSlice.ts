@@ -12,7 +12,6 @@ interface BoardState {
     selectedBoardId: number | null;
 }
 
-// Başlangıç state'ini bu tiple oluşturuyoruz
 const initialState: BoardState = {
     items: [],
     status: 'idle',
@@ -53,10 +52,12 @@ export const deleteBoard = createAsyncThunk<number, DeleteBoardArgs>(
     'boards/deleteBoard',
     async ({ boardId },{getState}) => {
         const state = getState() as RootState;
-        await fetch(`${URL}/board/${boardId}`, { 
+       const response= await fetch(`${URL}/board/${boardId}`, { 
             method: 'DELETE',
             headers: { authorization: `Bearer ${state.login.accessToken}` }
         });
+          const data: BoardDto[] = await response.json();
+        if(data.isSuccess == false)  throw new Error(data.message);
         return boardId; // Reducer'a silinen panonun ID'sini döndür
     }
 );
@@ -93,7 +94,7 @@ export const createBoard = createAsyncThunk<BoardDto, { name: string; descriptio
             throw new Error('Server responded with an error!');
         }
         const createdBoard: BoardDto = await response.json();
-         if(data.isSuccess == false)  throw new Error(data.message);
+         if(createdBoard.isSuccess == false)  throw new Error(createdBoard.message);
         return createdBoard;
     }
 );

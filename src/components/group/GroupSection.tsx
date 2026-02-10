@@ -59,14 +59,15 @@ interface GroupSectionProps {
     isOverlay?: boolean;
     dragOverItemId: number | null;
     projectedDepth: number;
+    selectedBoardId:number;
 }
 
 const GroupSection: React.FC<GroupSectionProps> = ({
     group, isCollapsed, onToggleCollapse, isOverlay,
-    dragOverItemId, projectedDepth
+    dragOverItemId, projectedDepth,selectedBoardId
 }) => {
     const dispatch = useAppDispatch();
-    const { selectedBoardId } = useAppSelector(s => s.boards);
+    // const { selectedBoardId } = useAppSelector(s => s.boards);
     const columns = useAppSelector(s => s.columns.items);
     const showOnlyCompleted = useAppSelector(selectShowOnlyCompleted);
     

@@ -730,7 +730,7 @@ import { useTabs } from "@/context/TabsContext";
        let row = (await result).result;
        if(row) temp.htmlContent=row.htmlContent;
       }
-            close(temp);
+    close(temp);
     openModal({
       title: "Teklif Şablonu",
       maximizable: true,
@@ -741,6 +741,8 @@ import { useTabs } from "@/context/TabsContext";
         let teklifMetni = temp.htmlContent.replaceAll("~teklifBelgeNo~", priceoffer.teklifBelgeNo);
         teklifMetni = teklifMetni.replaceAll("~teklifTarihi~", TarihFormatiDonustur(priceoffer.teklifTarihi.toString()));
         teklifMetni = teklifMetni.replaceAll("~firmaAdi~", firma.firma);
+        teklifMetni = teklifMetni.replaceAll("~firmaTelefon~", firma.telefon);
+        teklifMetni = teklifMetni.replaceAll("~firmaEmail~", firma.email);
         teklifMetni = teklifMetni.replaceAll("~firmaYetkili~", firma.yetkili);
         teklifMetni = teklifMetni.replaceAll("~teklifGecerlilikTarihi~", TarihFormatiDonustur(priceoffer.teklifGecerlilikTarihi.toString()));
         teklifMetni = teklifMetni.replaceAll("~teklifOnay~", (onayPersonel.personelAdi ?? "") + " " + (onayPersonel.personelSoyadi ?? ""));
@@ -767,6 +769,7 @@ import { useTabs } from "@/context/TabsContext";
           teklifMetni = teklifMetni.replaceAll("~teslimSuresi~", "belirlenen süre");
         }
         let fiyatSatirlarHtml = ``;
+        let teknikOzelliklerHtml = ``;
         let firma2= enterpriseState.items[0];
         if(firma2.enterpriseName.startsWith("DİJİTAL ERP"))
         {
@@ -794,6 +797,7 @@ import { useTabs } from "@/context/TabsContext";
         else
         {
          priceoffer.priceOfferLine?.forEach((line, index) => {
+          let product=productState.items?.filter(p=>p.productName == line.malzemeAdi)[0];
           let productImg=productState.items?.filter(p=>p.productName == line.malzemeAdi)[0]?.pictures ?? "";
          let fiyatSatir = `  
                         <td style="padding: 12px; border: 1px solid #000;">
@@ -806,7 +810,36 @@ import { useTabs } from "@/context/TabsContext";
                         <td style="padding: 12px; border: 1px solid #000; text-align: center;">${line.toplamFiyat ?? ""}</td>
                         <td style="padding: 12px; border: 1px solid #000; text-align: center;">${line.teslimTarih ?? ""}</td>
                    `;
-          fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
+                    let fiyatSatir2 = `  
+                        <td>${line.malzemeAdi}</td>
+                        <td>${line.miktar ?? 1}</td>
+                        <td>${line.birimFiyat ?? ""}</td>
+                        <td>${line.toplamFiyat ?? ""}</td>
+                        <td>${line.teslimTarih ?? ""}</td>
+                   `;
+
+          let tekOzellik = `
+          <div style="border: 1px solid #ccc; margin-bottom: 15px;padding:5px;">
+                      <table  width="100%" cellpadding="8" cellspacing="0">
+                        <tr>
+                          <td width="120">
+                           ${productImg?` <img src="data:image/jpeg;base64,${productImg}" style="width:500px;" />`:null}
+                          </td>
+                          <td>
+                            <h3 style="margin:0 0 5px 0;">${line.malzemeAdi}</h3>
+                            <p style="margin:0; font-size:12px;">
+                              MODEL NO: ${product.productCode} 
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                        ${product.notes}
+                        </div>
+                            `;
+
+          teknikOzelliklerHtml+=tekOzellik;
+          // fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
+          fiyatSatirlarHtml += `<tr>${fiyatSatir2}</tr>`;
         });
         }
        
@@ -825,6 +858,7 @@ import { useTabs } from "@/context/TabsContext";
 
         });
         teklifMetni = teklifMetni.replaceAll("<tr>\n<td colspan=\"5\">~opsiyonSatirlar~</td>\n</tr>", opsiyonSatirlarHtml);
+        teklifMetni = teklifMetni.replaceAll("~products_notes~", teknikOzelliklerHtml);
 
 
         return <GenericForm

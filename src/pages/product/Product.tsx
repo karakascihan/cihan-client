@@ -44,9 +44,10 @@ const fields: FieldDefinition[] = [
        {
            name: 'notes',
            label: 'Notlar',
-           type: 'text',
+           type: 'editor',
            required: false,
-           group:"Detay Bilgiler"
+           colspan:12,
+           group:"Teknik Özellikler"
 
        },
        {

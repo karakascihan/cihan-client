@@ -19,7 +19,7 @@ export default function BoardPage(
   const boards = useSelector<RootState, BoardDto[]>((x) => x.boards.items);
   const dispatch = useDispatch<AppDispatch>();
   const { openModal } = useModal();
-  const {openTab} = useTabs();
+  const {openTab,tabs} = useTabs();
 
   const navigate=useNavigate();
 const confirm=useConfirm();
@@ -50,7 +50,7 @@ const confirm=useConfirm();
               <div className="flex flex-row">
                  <button
                             onClick={() => {
-                              
+                               if (tabs.find((x) => x.id == "/proje")) return;
                              navigate("/proje/"+row.id);
                              openTab({
          id: "/proje",
@@ -100,7 +100,7 @@ const confirm=useConfirm();
       <SmartTable
         data={boards ?? []}
         enablePagination={false}
-        onDoubleClick={(row)=> {navigate("/proje/"+row.id);openTab({
+        onDoubleClick={(row)=> { if (tabs.find((x) => x.id == "/proje")) return; navigate("/proje/"+row.id);openTab({
          id: "/proje",
           title: "Proje",
           component: <BoardView boardId={row.id} />

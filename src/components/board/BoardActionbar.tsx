@@ -10,9 +10,9 @@ import ActionButton from '../common/ActionButton';
 import { FiPlus, FiSearch, FiUser, FiFilter, FiBarChart2, FiEyeOff, FiGrid, FiMoreHorizontal, FiCheckCircle } from 'react-icons/fi';
 import { getRandomColor } from '../../utils/colors';
 
-const BoardActionbar: React.FC = () => {
+const BoardActionbar: React.FC = ({selectedBoardId}:{selectedBoardId?:number}) => {
     const dispatch = useAppDispatch();
-    const { selectedBoardId } = useAppSelector((state) => state.boards);
+    // const { selectedBoardId } = useAppSelector((state) => state.boards);
     
     // YENİ: State'i Redux'tan oku
     const showOnlyCompleted = useAppSelector(selectShowOnlyCompleted);

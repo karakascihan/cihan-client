@@ -10,6 +10,7 @@ import { createItem } from '../../store/features/itemSlice';
 import { createColumn } from '@/store/features/columnSlice';
 import { ColumnType } from '@/api/apiDtos';
 import { getRandomColor } from '../../utils/colors';
+import { setNotification } from '@/store/slices/notificationSlice';
 
 interface BoardFormData {
   name: string;
@@ -170,6 +171,11 @@ const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose,projectType }) => {
 
       onClose(boardId);
     } catch (error) {
+      dispatch(setNotification({
+        title: 'Hata',
+        message: error.message,
+        type:"error"
+      }));
       console.error('Board oluşturulurken hata:', error);
       onClose(-1);
     }

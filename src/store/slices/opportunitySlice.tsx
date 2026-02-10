@@ -2,9 +2,6 @@ import { ApiResponseClient } from "@/types/apiResponse";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { setNotification } from "./notificationSlice";
 import {
-  STAFFLEAVE_CREATE,
-  STAFFLEAVE_DELETE,
-  STAFFLEAVE_GETALL,
   URL,
 } from "@/api";
 import { apiRequest } from "@/services/apiRequestService";

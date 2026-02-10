@@ -1,6 +1,5 @@
 import {
   BankAccountDto,
-  FinancalTransaction,
   FinancalTransactionDto,
   TransactionType,
 } from "@/api/apiDtos";
@@ -49,10 +48,6 @@ const AccountingVoucherList = ({
         );
       },
     });
-  };
-  const formOnClose = () => {
-    console.log("Form kapandı, listeyi yenile!");
-    // Burada listeyi fetch veya state update edebilirsin
   };
   return (
     <SmartTable
