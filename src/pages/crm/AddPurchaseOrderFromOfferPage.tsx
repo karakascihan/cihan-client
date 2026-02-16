@@ -3,7 +3,7 @@ import { apiRequest } from "@/services";
 import { URL } from "@/api";
 import { ApiResponseClient } from "@/types/apiResponse";
 import { DateOnly, PurchaseOrderDtoForInsertion } from "@/api/apiDtos";
-import { PurchaseOrderForm } from "@/components/CRM/PurchaseOrderForm";
+import { PurchaseOrderForm } from "@/components/crm/PurchaseOrderForm";
 
 type Props = {
     initialOrder: PurchaseOrderDtoForInsertion;

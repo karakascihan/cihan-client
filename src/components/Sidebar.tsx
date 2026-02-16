@@ -69,7 +69,7 @@ import {
 } from "lucide-react";
 import { CalendarDays } from "lucide-react";
 import { URL } from "@/api";
-import Dashboard from "@/pages/Dashboard";
+import Dashboard from "@/pages/dashboard/Dashboard";
 import {
   AccounterVoucherPage,
   ActivityPage,
@@ -86,13 +86,14 @@ import {
   PriceOfferAddPage,
   PriceOfferPage,
   Product,
+  ProjectPage,
   PurchaseOrderPage,
   SupplierPage,
   TemplatePage,
   UsersPage,
 } from "@/routes/pages";
 import { useTabs } from "@/context/TabsContext";
-import CrmDashboard from "@/pages/crm/CrmDashboardPage";
+import CrmDashboard from "@/pages/dashboard/CrmDashboardPage";
 import BoardPage from "@/pages/project/BoardPage";
 import AccountingVoucherPage from "@/pages/account/AccountingVoucherPage";
 import { it } from "date-fns/locale";
@@ -100,6 +101,11 @@ import { useModal } from "@/context/ModalContext";
 import AddBoardForm from "./board/AddBoardForm";
 import { CompanyStatus, SozlesmeTipi } from "@/api/apiDtos";
 import { UserMenu } from "./UserMenu";
+import SurveyList from "@/pages/survey/SurveyList";
+import SurveyCreate from "@/pages/survey/SurveyCreate";
+import { SurveyAnswerList } from "@/pages/survey/SurveyAnswerList";
+import EducationList from "@/pages/education/EducationList";
+import DocumentList from "@/pages/kys-document/DocumentList";
 
 interface MenuItem {
   title: string;
@@ -109,6 +115,13 @@ interface MenuItem {
   items?: MenuItem[];
   element?: React.ReactNode;
   onClick?: () => boolean;
+  modes?: AppModeEnum[];
+}
+
+export enum AppModeEnum {
+  full = "full",
+  crm = "crm",
+  supplier = "supplier"
 }
 
 export const Sidebar: React.FC = () => {
@@ -126,7 +139,7 @@ export const Sidebar: React.FC = () => {
   const user = useSelector((state: RootState) => state.login.user);
   const { openTab, tabs } = useTabs();
   const { openModal } = useModal();
-
+  const appMode = import.meta.env.VITE_APP_MODE as AppModeEnum;
   const handleClickOutside = (e: MouseEvent) => {
     if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
       closeSidebar();
@@ -152,6 +165,7 @@ export const Sidebar: React.FC = () => {
       path: "/",
       roles: [-1],
       element: <CrmDashboard />,
+
     },
     // {
     //   title: "Proje Yönetimi",
@@ -192,6 +206,8 @@ export const Sidebar: React.FC = () => {
     {
       title: "Proje Yönetimi",
       icon: <Workflow className="w-4 h-4" />,
+      modes: [AppModeEnum.supplier],
+
       items: [
         {
           title: "Proje Takvimi",
@@ -232,11 +248,20 @@ export const Sidebar: React.FC = () => {
             return false;
           },
         },
+        {
+          title: "Projeler",
+          path: "/projeler",
+          icon: <FaProjectDiagram />,
+          element: <ProjectPage isPage={true} />,
+          modes: [AppModeEnum.supplier]
+        },
       ],
     },
     {
       title: "CRM",
       icon: <Orbit className="w-4 h-4" />,
+      modes: [AppModeEnum.supplier],
+
 
       items: [
         {
@@ -276,20 +301,27 @@ export const Sidebar: React.FC = () => {
           icon: <Zap className="w-4 h-4 text-pink-300" />,
           path: "/aktiviteler",
           element: <ActivityPage />,
+          modes: [AppModeEnum.full],
+
         },
         {
           title: "Teklif Yönetimi",
           icon: <DollarSign className="w-4 h-4 text-green-300" />,
+          modes: [AppModeEnum.supplier],
           items: [
             {
               title: "Teklif Listesi",
               path: "/teklifler",
               element: <PriceOfferPage />,
+              modes: [AppModeEnum.supplier],
+
             },
             {
               title: "Yeni Teklif",
               path: "/yeniteklif",
               element: <PriceOfferAddPage offer={undefined} />,
+              modes: [AppModeEnum.supplier],
+
             },
           ],
         },
@@ -331,132 +363,148 @@ export const Sidebar: React.FC = () => {
         },
       ],
     },
-    // {
-    //   title: "Kys Dokümanları",
-    //   icon: <FaDochub className="w-4 h-4" />,
-    //   roles: [-1],
-    //   items: [
-    //         { title: "Tüm Dokümanlar", icon: null, path: "/kysdokumanlar/" },
-    //     { title: "Süreçler", icon: null, path: "/kysdokumanlar/1" },
-    //     { title: "Prosedürler", icon: null, path: "/kysdokumanlar/2" },
-    //     {
-    //       title: "Talimatlar",
-    //       icon: null,
-    //       items: [
-    //         { title: "Depo T.", icon: null, path: "/kysdokumanlar/3.1" },
-    //         {
-    //           title: "Doküman Yönetimi T.",
-    //           icon: null,
-    //           path: "/kysdokumanlar/3.2",
-    //         },
-    //         {
-    //           title: "Ekipman ve Alt Yapı Süreci T.",
-    //           icon: null,
-    //           path: "/kysdokumanlar/3.3",
-    //         },
-    //         {
-    //           title: "İnsan Kaynakları T.",
-    //           icon: null,
-    //           path: "/kysdokumanlar/3.4",
-    //         },
-    //         {
-    //           title: "Kalite Güvence T.",
-    //           icon: null,
-    //           path: "/kysdokumanlar/3.5",
-    //         },
-    //         {
-    //           title: "Proje Yönetimi T.",
-    //           icon: null,
-    //           path: "/kysdokumanlar/3.6",
-    //         },
-    //         { title: "Satınalma T.", icon: null, path: "/kysdokumanlar/3.7" },
-    //         { title: "Tasarım T.", icon: null, path: "/kysdokumanlar/3.8" },
-    //         { title: "Üretim T.", icon: null, path: "/kysdokumanlar/3.9" },
-    //         {
-    //           title: "Yönetim Temsilcisi T.",
-    //           icon: null,
-    //           path: "/kysdokumanlar/3.10",
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       title: "Formlar",
-    //       icon: null,
+    {
+      title: "Kys Dokümanları",
+      icon: <FaDochub className="w-4 h-4" />,
+      roles: [-1],
+      items: [
+        { title: "Tüm Dokümanlar", icon: null, path: "/kysdokumanlar/", element: <DocumentList /> },
+        { title: "Süreçler", icon: null, path: "/kysdokumanlar/1", element: <DocumentList type="1" /> },
+        { title: "Prosedürler", icon: null, path: "/kysdokumanlar/2", element: <DocumentList type="2" /> },
+        {
+          title: "Talimatlar",
+          icon: null,
+          items: [
+            { title: "Depo T.", icon: null, path: "/kysdokumanlar/3.1", element: <DocumentList type="3.1" /> },
+            {
+              title: "Doküman Yönetimi T.",
+              icon: null,
+              path: "/kysdokumanlar/3.2",
+              element: <DocumentList type="3.2" />
+            },
+            {
+              title: "Ekipman ve Alt Yapı Süreci T.",
+              icon: null,
+              path: "/kysdokumanlar/3.3",
+              element: <DocumentList type="3.3" />
+            },
+            {
+              title: "İnsan Kaynakları T.",
+              icon: null,
+              path: "/kysdokumanlar/3.4",
+              element: <DocumentList type="3.4" />
+            },
+            {
+              title: "Kalite Güvence T.",
+              icon: null,
+              path: "/kysdokumanlar/3.5",
+              element: <DocumentList type="3.5" />
+            },
+            {
+              title: "Proje Yönetimi T.",
+              icon: null,
+              path: "/kysdokumanlar/3.6",
+              element: <DocumentList type="3.6" />
+            },
+            { title: "Satınalma T.", icon: null, path: "/kysdokumanlar/3.7", element: <DocumentList type="3.7" /> },
+            { title: "Tasarım T.", icon: null, path: "/kysdokumanlar/3.8", element: <DocumentList type="3.8" /> },
+            { title: "Üretim T.", icon: null, path: "/kysdokumanlar/3.9", element: <DocumentList type="3.9" /> },
+            {
+              title: "Yönetim Temsilcisi T.",
+              icon: null,
+              path: "/kysdokumanlar/3.10",
+              element: <DocumentList type="3.10" />
+            },
+          ],
+        },
+        {
+          title: "Formlar",
+          icon: null,
 
-    //       items: [
-    //         { title: "Depo Sevkiyat F.", icon: null, path: "/kysdokumanlar/4.1" },
-    //         {
-    //           title: "Düzeltici Faaliyet R.",
-    //           path: "/kysdokumanlar/4.2",
-    //           icon: null,
-    //         },
-    //         {
-    //           title: "Ekipman ve Alt Yapı F.",
-    //           icon: null,
-    //           items: [
-    //             {
-    //               title: "Tezgah Bakım Cetveli",
-    //               icon: null,
-    //               items: [
-    //                 {
-    //                   title: "Günlük Bakım Cetveli",
-    //                   icon: null,
-    //                   path: "/kysdokumanlar/4.3.1",
-    //                 },
-    //                 {
-    //                   title: "Haftalık Bakım Cetveli",
-    //                   icon: null,
-    //                   path: "/kysdokumanlar/4.3.2",
-    //                 },
-    //                 {
-    //                   title: "Aylık Bakım Cetveli",
-    //                   icon: null,
-    //                   path: "/kysdokumanlar/4.3.3",
-    //                 },
-    //                 {
-    //                   title: "Yıllık Bakım Cetveli",
-    //                   icon: null,
-    //                   path: "/kysdokumanlar/4.3.3",
-    //                 },
-    //               ],
-    //             },
-    //             {
-    //               title: "Ekipman ve Alt Yapı F.",
-    //               icon: null,
-    //               path: "/kysdokumanlar/4.3",
-    //             },
-    //           ],
-    //         },
-    //         {
-    //           title: "İnsan Kaynakları Süreci F.",
-    //           path: "/kysdokumanlar/4.4",
-    //           icon: null,
-    //         },
-    //         {
-    //           title: "İş Geliştirme ve Yönetim Süreci F.",
-    //           path: "/kysdokumanlar/4.5",
-    //           icon: null,
-    //         },
-    //         {
-    //           title: "Kalite Güvence F.",
-    //           path: "/kysdokumanlar/4.6",
-    //           icon: null,
-    //         },
-    //         {
-    //           title: "Proje Yönetimi ve Planlama F.",
-    //           path: "/kysdokumanlar/4.7",
-    //           icon: null,
-    //         },
-    //       ],
-    //     },
-    //     { title: "Listeler", icon: null, path: "/kysdokumanlar/5" },
-    //     { title: "Planlar", icon: null, path: "/kysdokumanlar/6" },
-    //     { title: "Etiketler", icon: null, path: "/kysdokumanlar/7" },
-    //     { title: "Şemalar", icon: null, path: "/kysdokumanlar/8" },
-    //     { title: "Politikalar", icon: null, path: "/kysdokumanlar/9" },
+          items: [
+            { title: "Depo Sevkiyat F.", icon: null, path: "/kysdokumanlar/4.1", element: <DocumentList type="4.1" /> },
+            {
+              title: "Düzeltici Faaliyet R.",
+              path: "/kysdokumanlar/4.2",
+              icon: null,
+              element: <DocumentList type="4.2" />
+            },
+            {
+              title: "Ekipman ve Alt Yapı F.",
+              icon: null,
+              items: [
+                {
+                  title: "Tezgah Bakım Cetveli",
+                  icon: null,
+                  items: [
+                    {
+                      title: "Günlük Bakım Cetveli",
+                      icon: null,
+                      path: "/kysdokumanlar/4.3.1",
+                      element: <DocumentList type="4.3.1" />
+                    },
+                    {
+                      title: "Haftalık Bakım Cetveli",
+                      icon: null,
+                      path: "/kysdokumanlar/4.3.2",
+                      element: <DocumentList type="4.3.2" />
+                    },
+                    {
+                      title: "Aylık Bakım Cetveli",
+                      icon: null,
+                      path: "/kysdokumanlar/4.3.3",
+                      element: <DocumentList type="4.3.3" />
+                    },
+                    {
+                      title: "Yıllık Bakım Cetveli",
+                      icon: null,
+                      path: "/kysdokumanlar/4.3.3",
+                      element: <DocumentList type="4.3.3" />
+                    },
+                  ],
+                },
+                {
+                  title: "Ekipman ve Alt Yapı F.",
+                  icon: null,
+                  path: "/kysdokumanlar/4.3",
+                  element: <DocumentList type="4.3" />
+                },
+              ],
+            },
+            {
+              title: "İnsan Kaynakları Süreci F.",
+              path: "/kysdokumanlar/4.4",
+              icon: null,
+              element: <DocumentList type="4.4" />
+            },
+            {
+              title: "İş Geliştirme ve Yönetim Süreci F.",
+              path: "/kysdokumanlar/4.5",
+              icon: null,
+              element: <DocumentList type="4.5" />
+            },
+            {
+              title: "Kalite Güvence F.",
+              path: "/kysdokumanlar/4.6",
+              icon: null,
+              element: <DocumentList type="4.6" />
+            },
+            {
+              title: "Proje Yönetimi ve Planlama F.",
+              path: "/kysdokumanlar/4.7",
+              icon: null,
+              element: <DocumentList type="4.7" />
+            },
+          ],
+        },
+        { title: "Listeler", icon: null, path: "/kysdokumanlar/5", element: <DocumentList type="5" /> },
+        { title: "Planlar", icon: null, path: "/kysdokumanlar/6", element: <DocumentList type="6" /> },
+        { title: "Etiketler", icon: null, path: "/kysdokumanlar/7", element: <DocumentList type="7" /> },
+        { title: "Şemalar", icon: null, path: "/kysdokumanlar/8", element: <DocumentList type="8" /> },
+        { title: "Politikalar", icon: null, path: "/kysdokumanlar/9", element: <DocumentList type="9" /> },
 
-    //   ],
-    // },
+      ],
+    },
 
     {
       title: "Satınalma Yönetimi",
@@ -491,39 +539,39 @@ export const Sidebar: React.FC = () => {
       icon: <UserCog2 className="w-4 h-4" />,
       roles: [-1],
       items: [
-        /* {
-         title: "Eğitim",
-         icon: <FaPencilAlt />,
-         roles: [-1],
-         items: [
-           { title: "Eğitimler", path: "/egitimler" },
-           { title: "Eğitim Değerlendirme Sonuçları",roles: [1,2,15], path: "/form/sonuc/0" },
-           { title: "Personel Değerlendirme Sonuçları",roles: [1,2,15], path: "/form/sonuc/4" },
-         ],
-       },
-       { title: "Yeni Form", roles: [1,2,4,9,15],icon: <FcSurvey />, path: "/form/olustur" },
-       {
-         title: "Form Sonuçları",
-         icon: <FcFile />,
-         items: [
-           { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1" },
-           { title: "Yetkinlik Değerlendirme Sonuçları", path: "/form/sonuc/2" },
-           { title: "Diğer Form Sonuçları", path: "/form/sonuc/3" },
-         ],
-         roles: [1,2,4,9]
-       },
-       {
-         title: "Formlar",
-         icon: <FiTable />,
-               roles: [1,2,15],
-         items: [
-           { title: "Eğitim Değerlendirme Formları", path: "/formlar/0" },
-           { title: "Tedarikçi Değerlendirme Formları", path: "/formlar/1" },
-           { title: "Yetkinlik Değerlendirme Formları", path: "/formlar/2" },
-           { title: "Personel Değerlendirme Formları", path: "/formlar/4" },
-           { title: "Diğer Formlar", path: "/formlar/3" },
-         ],
-       },*/
+        {
+          title: "Eğitim",
+          icon: <FaPencilAlt />,
+          roles: [-1],
+          items: [
+            { title: "Eğitimler", path: "/egitimler", element: <EducationList /> },
+            { title: "Eğitim Değerlendirme Sonuçları", roles: [1, 2, 15], path: "/form/sonuc/0", element: <SurveyAnswerList type="0" /> },
+            { title: "Personel Değerlendirme Sonuçları", roles: [1, 2, 15], path: "/form/sonuc/4", element: <SurveyAnswerList type="4" /> },
+          ],
+        },
+        { title: "Yeni Form", roles: [1, 2, 4, 9, 15], icon: <FcSurvey />, path: "/form/olustur", element: <SurveyCreate /> },
+        {
+          title: "Form Sonuçları",
+          icon: <FcFile />,
+          items: [
+            { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1", element: <SurveyAnswerList type="1" /> },
+            { title: "Yetkinlik Değerlendirme Sonuçları", path: "/form/sonuc/2", element: <SurveyAnswerList type="2" /> },
+            { title: "Diğer Form Sonuçları", path: "/form/sonuc/3", element: <SurveyAnswerList type="3" /> },
+          ],
+          roles: [1, 2, 4, 9]
+        },
+        {
+          title: "Formlar",
+          icon: <FiTable />,
+          roles: [1, 2, 15],
+          items: [
+            { title: "Eğitim Değerlendirme Formları", path: "/formlar/0", element: <SurveyList type="0" /> },
+            { title: "Tedarikçi Değerlendirme Formları", path: "/formlar/1", element: <SurveyList type="1" /> },
+            { title: "Yetkinlik Değerlendirme Formları", path: "/formlar/2", element: <SurveyList type="2" /> },
+            { title: "Personel Değerlendirme Formları", path: "/formlar/4", element: <SurveyList type="4" /> },
+            { title: "Diğer Formlar", path: "/formlar/3", element: <SurveyList type="3" /> },
+          ],
+        },
         {
           title: "Personeller",
           roles: [1, 2, 15],
@@ -586,12 +634,19 @@ export const Sidebar: React.FC = () => {
     return (
       <div>
         {items
-          .filter(
-            (m) =>
-              m.roles?.includes(user?.rolId) ||
-              m.roles?.includes(-1) ||
-              !m.roles,
-          )
+          .filter((m) => {
+            const roleOk =
+              !m.roles ||
+              m.roles.includes(-1) ||
+              m.roles.includes(user?.rolId);
+
+            const modeOk =
+              appMode === AppModeEnum.full
+                ? true
+                : m.modes?.includes(appMode);
+
+            return roleOk && modeOk;
+          })
           .map((item) => (
             <div
               key={item.title}
@@ -680,11 +735,9 @@ export const Sidebar: React.FC = () => {
       )}
       <div
         ref={sidebarRef}
-        className={`fixed top-0 left-0 h-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 text-white shadow-2xl transform md:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }
-          transition-transform duration-300 z-50 flex flex-col ${
-            collapsed ? "w-16" : "w-64"
+        className={`fixed top-0 left-0 h-full bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 text-white shadow-2xl transform md:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }
+          transition-transform duration-300 z-50 flex flex-col ${collapsed ? "w-16" : "w-64"
           }`}
       >
         <button

@@ -21,7 +21,7 @@ import {
   updateCustomer,
 } from "@/store/slices/customerSlice";
 import { RootState } from "@/store/store";
-import { getEnumOptions } from "@/utils/commonUtilsCompnent";
+import { getEnumOptions } from "@/utils/commonUtilsComponent";
 import { group } from "console";
 import { use, useEffect } from "react";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";

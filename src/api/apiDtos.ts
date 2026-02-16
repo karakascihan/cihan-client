@@ -344,10 +344,10 @@ export interface Company {
     onayDurumu: string | undefined;
     isActive: boolean | undefined;
     sirketTuru: number | undefined;
-    durumu: number | undefined;
     ulkeAdi: string | undefined;
     vergiNumarasi: string | undefined;
     firmaKisaAd: string | undefined;
+    durumu: number | undefined;
     accountTransaction: AccountTransaction[] | undefined;
     opportunity: Opportunity[] | undefined;
     purchaseOrders: PurchaseOrders[] | undefined;
@@ -895,7 +895,6 @@ export interface FileRecordDtoIEnumerableApiResponse {
 
 export interface FinancalTransaction {
     id: number;
-    transactionNo: string | undefined;
     description: string | undefined;
     transactionDate: Date | undefined;
     transactionType: number | undefined;
@@ -906,6 +905,7 @@ export interface FinancalTransaction {
     amount: number;
     createtAt: Date;
     createdBy: number;
+    transactionNo: string | undefined;
     createdByNavigation: Users;
 }
 
@@ -1671,6 +1671,24 @@ export interface ProjectReportDtoForInsertion {
     dosyalar: ProjectFiles[] | undefined;
 }
 
+export interface Projects {
+    id: number;
+    projeNo: string | undefined;
+    projeAdi: string | undefined;
+    dgtNo: string | undefined;
+    nsnKodu: string | undefined;
+    turu: string | undefined;
+    miktar: number | undefined;
+    yedekMiktar: number | undefined;
+    baslangicZamani: string | undefined;
+    bitisZamani: string | undefined;
+    toplamSure: string | undefined;
+    aciklama: string | undefined;
+    sorumluPersonel: string | undefined;
+    durum: string | undefined;
+    isActive: boolean | undefined;
+}
+
 export interface ProjectsDtoForInsertion {
     id: number;
     projeNo: string | undefined;
@@ -1687,6 +1705,13 @@ export interface ProjectsDtoForInsertion {
     sorumluPersonel: string | undefined;
     durum: string | undefined;
     isActive: boolean | undefined;
+}
+
+export interface ProjectsIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: Projects[] | undefined;
+    isSuccess: boolean;
 }
 
 export interface PurchaseOrderDto {
@@ -2294,6 +2319,7 @@ export interface UserDtoForInsertion {
     departureDate: Date | undefined;
     gender: string | undefined;
     isActive: boolean | undefined;
+    companyId: number | undefined;
     password: string | undefined;
 }
 
@@ -2317,6 +2343,7 @@ export interface UserDtoForUpdate {
     departureDate: Date | undefined;
     gender: string | undefined;
     isActive: boolean | undefined;
+    companyId: number | undefined;
     password: string | undefined;
 }
 
@@ -2399,6 +2426,7 @@ export interface Users {
     cinsiyet: string | undefined;
     personel_Id: number | undefined;
     isActive: boolean | undefined;
+    companyId: number | undefined;
     activityAssignedToUser: Activity[] | undefined;
     activityCreatedByUser: Activity[] | undefined;
     bankAccountCreatedByNavigation: BankAccount[] | undefined;

@@ -36,7 +36,7 @@ import { addFileRecord } from "@/store/slices/fileRecordSlice";
 import AddBoardForm, { ProjectType } from "@/components/board/AddBoardForm";
 import { useNavigate } from "react-router-dom";
 import { fetchpersonels } from "@/store/slices/personalSlice";
-import { getEnumOptions } from "@/utils/commonUtilsCompnent";
+import { getEnumOptions } from "@/utils/commonUtilsComponent";
 import { SozlesmeTipiDescriptions } from "@/api/extra-enums";
 import { toInputDate } from "@/utils/commonUtils";
 import TemplatePage from "./TemplatePage";

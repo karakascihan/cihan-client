@@ -13,15 +13,15 @@ import { setNotification } from "@/store/slices/notificationSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { FaColonSign, FaFile, FaKey } from "react-icons/fa6";
-import { Roles, Users } from "@/api/apiDtos";
+import { CustomerDto, Roles, Users } from "@/api/apiDtos";
 import { AddUserPage } from "./AddUserPage";
 import { UserPermissionForm } from "@/components/user-profile/UserPermissionForm";
 import UserPermissionList from "@/components/user-profile/UserPermissionList";
-import { toDateInputValue } from "@/components/CRM/UserForm";
+import { toDateInputValue } from "@/components/crm/UserForm";
 import React from "react";
 
 
- const UsersPage = () => {
+const UsersPage = () => {
     const navigate = useNavigate();
     const { openModal } = useModal();
 
@@ -33,6 +33,10 @@ import React from "react";
     );
     const { data: roles, refetch } = useApiRequest<Roles>(
         URL + "/roles/GetAll",
+        { method: "GET", skip: false, deps: [] }
+    );
+    const { data: companies, refetch: refetchCompanies } = useApiRequest<CustomerDto>(
+        URL + "/customer/getall",
         { method: "GET", skip: false, deps: [] }
     );
 
@@ -74,64 +78,70 @@ import React from "react";
             },
         }
     );
-    
-    
-    
-    
-        const roleOptions = React.useMemo(() => {
-            return [
-                ...(roles ?? []).map((r: any) => ({
-                    label: r.rol_Yetki_Adi ?? r.Rol_Yetki_Adi ?? "-",
-                    value: String(r.id ?? r.Id ?? ""),
-                })),
-            ];
-        }, [roles]);
+
+
+
+
+    const roleOptions = React.useMemo(() => {
+        return [
+            ...(roles ?? []).map((r: any) => ({
+                label: r.rol_Yetki_Adi ?? r.Rol_Yetki_Adi ?? "-",
+                value: String(r.id ?? r.Id ?? ""),
+            })),
+        ];
+    }, [roles]);
     const UpdateUser = (form: Users) => {
-     openModal({
+        openModal({
             title: "Kullanıcı Düzenle",
             maximizable: true,
             style: { width: "70vw" },
             content: (close) => (
-                <GenericForm fields={ [{ name: "firstName", label: "Ad", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).name ?? "" },
-            { name: "lastName", label: "Soyad", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).surname ?? "" },
+                <GenericForm fields={[{ name: "firstName", label: "Ad", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).name ?? "" },
+                { name: "lastName", label: "Soyad", type: "text", required: true, colspan: 6, group: "Genel", defaultValue: (form as any).surname ?? "" },
 
 
-            { name: "tckno", label: "TCKNO", type: "text", colspan: 3, group: "Genel", defaultValue: (form as any).tckno ?? "" },
+                { name: "tckno", label: "TCKNO", type: "text", colspan: 3, group: "Genel", defaultValue: (form as any).tckno ?? "" },
 
-            {
-                name: "gender", label: "Cinsiyet", type: "select", colspan: 3, group: "Genel", defaultValue: (form as any).gender ?? "", options: [
-                    { label: "Kadın", value: "kadin" },
-                    { label: "Erkek", value: "erkek" },
-                    { label: "Diğer", value: "diger" },
-                ]
-            },
-            {
-                name: "rolId",
-                label: "Rol",
-                type: "select",
-                colspan: 3,
-                group: "Genel",
-                defaultValue: (form as any).rolId ?? "",
-                options: roleOptions,
-                required: true,
-            },
-            { name: "userName", label: "Kullanıcı Adı", type: "text", required: true, colspan: 3, group: "Genel", defaultValue: (form as any).userName ?? "" },
+                {
+                    name: "gender", label: "Cinsiyet", type: "select", colspan: 3, group: "Genel", defaultValue: (form as any).gender ?? "", options: [
+                        { label: "Kadın", value: "kadin" },
+                        { label: "Erkek", value: "erkek" },
+                        { label: "Diğer", value: "diger" },
+                    ]
+                },
+                {
+                    name: "rolId",
+                    label: "Rol",
+                    type: "select",
+                    colspan: 3,
+                    group: "Genel",
+                    defaultValue: (form as any).rolId ?? "",
+                    options: roleOptions,
+                    required: true,
+                },
+                {
+                    name: "companyId", label: "Firma", type: "select", colspan: 3, group: "Genel", defaultValue: (form as any).companyId ?? "", options: companies?.map((c: CustomerDto) => ({
+                        label: c.firma,
+                        value: String(c.id),
+                    })) ?? []
+                },
+                { name: "userName", label: "Kullanıcı Adı", type: "text", required: true, colspan: 3, group: "Genel", defaultValue: (form as any).userName ?? "" },
 
-            // --- İletişim ---
-            { name: "phoneNumber", label: "Telefon 1", type: "text", colspan: 4, group: "İletişim", defaultValue: (form as any).phone1 ?? "" },
-            { name: "phoneNumber2", label: "Telefon 2", type: "text", colspan: 4, group: "İletişim", defaultValue: (form as any).phone2 ?? "" },
-            { name: "email", label: "Email", type: "text", required: true, colspan: 4, group: "İletişim", defaultValue: (form as any).email ?? "" },
-            { name: "address", label: "Adres", type: "textarea", colspan: 12, group: "İletişim", defaultValue: (form as any).address ?? "" },
+                // --- İletişim ---
+                { name: "phoneNumber", label: "Telefon 1", type: "text", colspan: 4, group: "İletişim", defaultValue: (form as any).phone1 ?? "" },
+                { name: "phoneNumber2", label: "Telefon 2", type: "text", colspan: 4, group: "İletişim", defaultValue: (form as any).phone2 ?? "" },
+                { name: "email", label: "Email", type: "text", required: true, colspan: 4, group: "İletişim", defaultValue: (form as any).email ?? "" },
+                { name: "address", label: "Adres", type: "textarea", colspan: 12, group: "İletişim", defaultValue: (form as any).address ?? "" },
 
-            // --- İş Bilgileri ---
-            { name: "title", label: "Ünvan", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).title ?? "" },
-            { name: "department", label: "Departman", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).department ?? "" },
-            { name: "startDate", label: "Başlangıç Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).startDate) },
-            { name: "departureDate", label: "Ayrılış Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).departureDate) },
+                // --- İş Bilgileri ---
+                { name: "title", label: "Ünvan", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).title ?? "" },
+                { name: "department", label: "Departman", type: "text", colspan: 6, group: "İş Bilgileri", defaultValue: (form as any).department ?? "" },
+                { name: "startDate", label: "Başlangıç Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).startDate) },
+                { name: "departureDate", label: "Ayrılış Tarihi", type: "date", colspan: 6, group: "İş Bilgileri", defaultValue: toDateInputValue((form as any).departureDate) },
 
-        ]} onSubmit={function (data: any): void {
-                   refetch(URL+ "/user/update/"+form.id, { method:"PUT", body:data}).then(x=> {refetchUsers();close(null)});
-                } } />
+                ]} onSubmit={function (data: any): void {
+                    refetch(URL + "/user/update/" + form.id, { method: "PUT", body: data }).then(x => { refetchUsers(); close(null) });
+                }} />
             ),
         });
     }
@@ -234,7 +244,7 @@ import React from "react";
                     ? String(row.departureDate).substring(0, 10).split("-").reverse().join(".")
                     : "",
         },
-       
+
         {
             header: "Cinsiyet",
             accessor: "cinsiyet",
@@ -256,7 +266,7 @@ import React from "react";
                             onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                               UpdateUser(row);   
+                                UpdateUser(row);
                             }}
                             className="
                     inline-flex items-center justify-center
@@ -289,9 +299,9 @@ import React from "react";
                         <button
                             onClick={(e) => {
                                 e.preventDefault();
-                                e.stopPropagation(); 
+                                e.stopPropagation();
                                 openModal({
-                                    title: "Kullanıcı Yetkilendir ("+row.name+ " "+row.surname+")",
+                                    title: "Kullanıcı Yetkilendir (" + row.name + " " + row.surname + ")",
                                     maximizable: true,
                                     style: { width: "50vw" },
                                     content: (close) => (
@@ -452,7 +462,7 @@ import React from "react";
                     frozenColumns={[{ name: "id", right: true }]}
                     newRecordVoid={() => {
                         openModal({
-                            title: "",
+                            title: "Kullanıcı Ekle",
                             maximizable: true,
                             style: { width: "50vw" },
                             content: (close) => (

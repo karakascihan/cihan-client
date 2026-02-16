@@ -15,7 +15,7 @@ import { GlobalLoader } from "@/context/LoadingContext";
 import { useDispatch } from "react-redux";
 import { setNotification } from "@/store/slices/notificationSlice";
 import { tr } from "date-fns/locale";
-import { toDateInputValue } from "../CRM/UserForm";
+import { toDateInputValue } from "../crm/UserForm";
 import { toInputDate } from "@/utils/commonUtils";
 
 export const AccountingVoucherForm = ({

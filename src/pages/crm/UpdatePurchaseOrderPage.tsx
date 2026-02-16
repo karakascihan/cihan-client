@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, use } from "react";
 import { apiRequest } from "@/services";
 import { URL } from "@/api";
-import { PurchaseOrderForm } from "@/components/CRM/PurchaseOrderForm";
+import { PurchaseOrderForm } from "@/components/crm/PurchaseOrderForm";
 import { PurchaseOrderDtoForUpdate } from "@/api/apiDtos";
 import { ApiResponseClient } from "@/types/apiResponse";
 

@@ -1,6 +1,6 @@
 import { ActivityState, ActivityType, OpportunityStage } from "@/api/apiDtos";
 
-export const  parseToJsDate = (input:string) :Date=> {
+export const parseToJsDate = (input: string): Date => {
   // 7 basamaklı nanosaniye kısmını milisaniyeye düşür
   const match = input.match(/^(.+\.\d{3})/);
   const iso = match ? match[1] : input;
@@ -169,9 +169,9 @@ export const handleDownloadPDF = async () => {
   const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
   pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-  pdf.save(`Teklif_${offer.teklifBelgeNo || "Belge"}.pdf`);
+  pdf.save(`Teklif_${"Belge"}.pdf`);
 };
-  // Tarih formatı
+// Tarih formatı
 export const formatDateForCalendar = (date: string | Date) => {
   const d = new Date(date);
   const tzOffset = d.getTimezoneOffset() * 60000;
@@ -181,26 +181,26 @@ export const formatDateForCalendar = (date: string | Date) => {
   return localISOTime;
 };
 
-export const Normalize2 = (str:any) =>
+export const Normalize2 = (str: any) =>
   String(str)
     .toLocaleLowerCase("tr")
-   // .toLowerCase()
-    // .normalize("NFKD")
-    // .replace(/[\u0300-\u036f]/g, "");
-export const Normalize = (str:any) =>
+// .toLowerCase()
+// .normalize("NFKD")
+// .replace(/[\u0300-\u036f]/g, "");
+export const Normalize = (str: any) =>
   (str || "")
     .trim()
     .toLocaleLowerCase("tr")
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "");
 
-export const convertFileToBase64 = async  (file:File)=> {
-    return await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(",")[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-    });
+export const convertFileToBase64 = async (file: File) => {
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 export function fileToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -217,12 +217,16 @@ export function fileToBase64(file) {
     reader.readAsDataURL(file);
   });
 }
-export function toInputDate(dateStr:string) {
-  let date= new Date(dateStr);
+export function toInputDate(dateStr: string) {
+  try {
+    let date = new Date(dateStr);
     const yyyy = date.getFullYear();
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
+  } catch (error) {
+    return new Date().toISOString().slice(0, 10);
+  }
 }
 export function getEnumKeyByValue<
   T extends Record<string, string>

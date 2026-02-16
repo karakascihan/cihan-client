@@ -5797,6 +5797,35 @@
         }
       }
     },
+    "/api/projects/getall": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsIEnumerableApiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/projects/create": {
       "post": {
         "tags": [
@@ -5826,18 +5855,6 @@
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/projects/getall": {
-      "get": {
-        "tags": [
-          "Projects"
-        ],
         "responses": {
           "200": {
             "description": "Success"
@@ -7844,8 +7861,6 @@
             "format": "int32"
           },
           "documentType": {
-            "maxLength": 20,
-            "minLength": 0,
             "type": "integer",
             "format": "int32"
           },
@@ -9084,11 +9099,6 @@
             "format": "int32",
             "nullable": true
           },
-          "durumu": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "ulkeAdi": {
             "maxLength": 100,
             "minLength": 0,
@@ -9105,6 +9115,11 @@
             "maxLength": 50,
             "minLength": 0,
             "type": "string",
+            "nullable": true
+          },
+          "durumu": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "accountTransaction": {
@@ -11485,12 +11500,6 @@
             "type": "integer",
             "format": "int32"
           },
-          "transactionNo": {
-            "maxLength": 20,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
           "description": {
             "maxLength": 500,
             "minLength": 0,
@@ -11503,15 +11512,11 @@
             "nullable": true
           },
           "transactionType": {
-            "maxLength": 100,
-            "minLength": 0,
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
           "sourceType": {
-            "maxLength": 20,
-            "minLength": 0,
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -11521,8 +11526,6 @@
             "format": "int32"
           },
           "targetType": {
-            "maxLength": 20,
-            "minLength": 0,
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -11542,6 +11545,12 @@
           "createdBy": {
             "type": "integer",
             "format": "int32"
+          },
+          "transactionNo": {
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           },
           "createdByNavigation": {
             "$ref": "#/components/schemas/Users"
@@ -14343,8 +14352,6 @@
             "nullable": true
           },
           "notes": {
-            "maxLength": 250,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -14525,8 +14532,6 @@
             "nullable": true
           },
           "notes": {
-            "maxLength": 250,
-            "minLength": 0,
             "type": "string",
             "nullable": true
           },
@@ -14834,6 +14839,94 @@
         },
         "additionalProperties": false
       },
+      "Projects": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "projeNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "projeAdi": {
+            "maxLength": 250,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "dgtNo": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "nsnKodu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "turu": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "miktar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "yedekMiktar": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "baslangicZamani": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "bitisZamani": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "toplamSure": {
+            "maxLength": 10,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "aciklama": {
+            "type": "string",
+            "nullable": true
+          },
+          "sorumluPersonel": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "durum": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ProjectsDtoForInsertion": {
         "type": "object",
         "properties": {
@@ -14918,6 +15011,30 @@
           "isActive": {
             "type": "boolean",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectsIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Projects"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -17262,6 +17379,11 @@
             "type": "boolean",
             "nullable": true
           },
+          "companyId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "password": {
             "type": "string",
             "nullable": true
@@ -17357,6 +17479,11 @@
           },
           "isActive": {
             "type": "boolean",
+            "nullable": true
+          },
+          "companyId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "password": {
@@ -17670,6 +17797,11 @@
           },
           "isActive": {
             "type": "boolean",
+            "nullable": true
+          },
+          "companyId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "activityAssignedToUser": {

@@ -33,10 +33,10 @@ export interface SurveyAnswerList {
   pesonelEducationPlanAdi: string | null;
 }
 
-export const SurveyAnswerList = () => {
+export const SurveyAnswerList = ({ type }: { type?: string }) => {
   const [surveys, setSurveys] = useState<SurveyAnswerList[]>([]);
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows | SurveyAnswerList[]>([]);
-  const { type } = useParams<{ type: string }>();
+  // const { type } = useParams<{ type: string }>();
 
   const headerTemplate = (data: SurveyAnswerList, options: any, groupData: SurveyAnswerList[]) => {
     return (
@@ -59,15 +59,15 @@ export const SurveyAnswerList = () => {
       </React.Fragment>
     );
   };
-  const token=useSelector<RootState>(x=>x.login.accessToken);
+  const token = useSelector<RootState>(x => x.login.accessToken);
   useEffect(() => {
-    apiRequest<ApiResponseClient<SurveyAnswerList[]>>("GET", SURVEY_GETALLSURVEYANSWERS+"/"+type,{Authorization:"Bearer "+token})
-    // SurveyGetAllAnswersService(type)
+    apiRequest<ApiResponseClient<SurveyAnswerList[]>>("GET", SURVEY_GETALLSURVEYANSWERS + "/" + type, { Authorization: "Bearer " + token })
+      // SurveyGetAllAnswersService(type)
       .then(x => {
         (x.result as any[]).forEach(element => {
           element.surveyCreateDate = parseToJsDate(element.surveyCreateDate.toString());
           element.responseDate = parseToJsDate(element.responseDate.toString());
-          
+
         });
         setSurveys(x.result)
       })
@@ -79,14 +79,14 @@ export const SurveyAnswerList = () => {
     setFilters({ ...filters, [field]: value });
   };
 
-  let grouped:Record<string, SurveyAnswerList[]>={};
+  let grouped: Record<string, SurveyAnswerList[]> = {};
   if (type === "0") {
-    grouped = surveys.filter(x=>x.pesonelEducationPlanId).reduce((acc, curr) => {
-      
-        if (!acc[curr.pesonelEducationPlanAdi]) {
-          acc[curr.pesonelEducationPlanAdi] = [];
-        }
-        acc[curr.pesonelEducationPlanAdi].push(curr);
+    grouped = surveys.filter(x => x.pesonelEducationPlanId).reduce((acc, curr) => {
+
+      if (!acc[curr.pesonelEducationPlanAdi]) {
+        acc[curr.pesonelEducationPlanAdi] = [];
+      }
+      acc[curr.pesonelEducationPlanAdi].push(curr);
       return acc;
 
     }, {} as Record<number, SurveyAnswerList[]>);
@@ -137,7 +137,7 @@ export const SurveyAnswerList = () => {
 
   return (
     <div className="card" >
-      <h2 className="text-2xl text-center font-bold  mb-1">{type == "0"? "Eğitim Değerlendirme Formları":"Form Listesi"}</h2>
+      <h2 className="text-2xl text-center font-bold  mb-1">{type == "0" ? "Eğitim Değerlendirme Formları" : "Form Listesi"}</h2>
       <Accordion multiple activeIndex={null} >
         {
           Object.entries(grouped).map(([title, answers], key) => (

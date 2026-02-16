@@ -47,7 +47,11 @@ import { getMimeType } from "@/utils/commonUtils";
       setPersonels(data.result);
     });
   }, []);
-  const openReportModal = (record?: ProjectReport) => {
+  const OpenModal_ = (
+    record: ProjectReport,
+    data: Projects,
+    data1: Products
+  ) => {
     openModal({
       maximizable: true,
       title:
@@ -55,13 +59,407 @@ import { getMimeType } from "@/utils/commonUtils";
         (record?.id ? "Düzenleme" : "Giriş") +
         " Ekranı",
       content(close) {
+        let fields: FieldDefinition[] = [
+          {
+            type: "text",
+            name: "id",
+            label: "id",
+            hidden: true,
+            defaultValue: record?.id ?? 0,
+            group: "Genel",
+          },
+          {
+            type: "text",
+            name: "kullanici",
+            label: "Kullanıcı",
+            hidden: true,
+            defaultValue: record?.kullanici,
+            group: "Genel",
+          },
+          {
+            onChangeEffect: (value) => {
+              if (value) {
+                let changeProject = (data as Projects[]).filter(
+                  (x) => x.projeAdi == value
+                );
+                if (changeProject && changeProject.length > 0) {
+                  return { projeNo: changeProject[0].projeNo ?? "" };
+                }
+              }
+              return {};
+            },
+            defaultValue: record?.projeAdi,
+            type: "select",
+            name: "projeAdi",
+            label: "Proje Adı",
+            required: true,
+            options: (data as Projects[])?.map<FieldOption>((x) => ({
+              label: x.projeAdi ?? "",
+              value: x.projeAdi ?? "",
+            })),
+            group: "Genel",
+          },
+          {
+            defaultValue: record?.projeNo,
+            type: "text",
+            name: "projeNo",
+            label: "Proje No",
+            disabled: true,
+            group: "Genel",
+          },
+          {
+            defaultValue: record?.parcaAdi,
+            type: "text",
+            name: "parcaAdi",
+            label: "Malzeme/Parça Adı",
+            disabled: true,
+            onThreeDotsClick: [
+              (setValue) => {
+                openModal({
+                  title: "Parça Seçimi",
+                  content(close) {
+                    return (
+                      <SmartTable
+                       
+                        pageSize={10}
+                        enablePagination={true}
+                        data={data1}
+                        columns={[
+                          { header: "#", accessor: "__index" },
+                          {
+                            header: "Ürün Kodu",
+                            filterable: true,
+                            accessor: "productCode",
+                          },
+                          {
+                            header: "Ürün Adı",
+                            filterable: true,
+                            accessor: "productName",
+                          },
+                        ]}
+                        rowIdAccessor={"id"}
+                        onDoubleClick={(item) => {
+                          // Modal kapat
+                           close(item);
+                          // Form değerini güncelle
+                          setValue("parcaKodu", item.productCode);
+                          setValue("parcaAdi", item.productName);
+
+                        }}
+                      />
+                    );
+                  },
+                });
+              },
+            ],
+            group: "Genel",
+          },
+          {
+            defaultValue: record?.parcaKodu,
+            type: "text",
+            name: "parcaKodu",
+            label: "Parça Kodu",
+            group: "Genel",
+            readOnly:true
+          },
+          {
+            defaultValue: record?.revizyon,
+            type: "text",
+            name: "revizyon",
+            label: "Revizyon No",
+            group: "Genel",
+          },
+          {
+            defaultValue: toIsoDateString(record?.tarih),
+            type: "date",
+            name: "tarih",
+            label: "Tarih",
+            group: "Genel",
+          },
+          {
+            defaultValue: record?.raporNo,
+            type: "text",
+            name: "raporNo",
+            label: "Rapor No",
+            group: "Genel",
+          },
+          {
+            defaultValue: record?.aciklama,
+            type: "textarea",
+            name: "aciklama",
+            label: "Açıklama",
+            group: "Açıklama",
+            colspan:12
+          },
+          {
+            defaultValue: record?.hazirlayan,
+            type: "select",
+            name: "hazirlayan",
+            label: "Hazırlayan",
+            options: personels.filter(x=>x.isActive===true).map<FieldOption>((x) => ({
+              label: x.personelAdi + " " + x.personelSoyadi,
+              value: x.personelAdi + " " + x.personelSoyadi,
+            })),
+            group: "Genel",
+          },
+          {
+            defaultValue: record?.onaylayan,
+            type: "select",
+            name: "onaylayan",
+            label: "Onaylayan",
+            group: "Genel",
+            options: personels.filter(x=>x.isActive===true).map<FieldOption>((x) => ({
+              label: x.personelAdi + " " + x.personelSoyadi,
+              value: x.personelAdi + " " + x.personelSoyadi,
+            })),
+          },
+          {
+            defaultValue:record? record?.isActive:true,
+            type: "checkbox",
+            name: "isActive",
+            label: "Aktif",
+            group: "Genel",
+          },
+          
+        ];
+          record?.dosyalar?.forEach((file, index) => {
+            fields.push({
+               readOnly: true,
+              type: "text",
+              name: `dosyalar[${index}].dosyaAdi`,
+              label: index + 1 + ".Dosya",
+              defaultValue: file.dosyaAdi,
+              colspan:12,
+              group: "Dosyalar",
+              clickIcon: [
+                //  <FaUpload color="green" title="Dosya Yükle" />,
+                    <FaFileAlt title="Önizleme" />,
+                    <FaTrash color="red" title="Sil" />,
+              ],
+              onThreeDotsClick: [
+                // (setValue) => {
+                //   var input = document.createElement("input");
+                //   input.type = "file";
+                //   input.accept = ".pdf,image/*"; // PDF ve resim dosyaları için
+                //   input.onchange = async (event) => {
+                //     const fileList = (event.target as HTMLInputElement).files;
+                //     if (fileList && fileList.length > 0) {
+                //       const file = fileList[0];
+                //       file.arrayBuffer().then((buffer) => {
+                //         const bytes = btoa(
+                //           new Uint8Array(buffer).reduce(
+                //             (acc, byte) => acc + String.fromCharCode(byte),
+                //             ""
+                //           )
+                //         );
+                //         setValue(`dosyalar[${index}].bytes`, bytes);
+                //         setValue(
+                //           `dosyalar[${index}].uzantisi`,
+                //           "." + file.name.split(".").pop().toUpperCase() || ""
+                //         );
+                //         setValue(
+                //           `dosyalar[${index}].dosyaAdi`,
+                //           file.name.split(".")[0].toUpperCase() || ""
+                //         );
+                //       });
+                //     }
+                //   };
+                //   input.click();
+                // },
+                (setValue, allValues) => {
+                  const fileUrl = `data:${getMimeType(
+                    allValues.dosyalar[index].uzantisi
+                      ?.replace(".", "")
+                      .toLowerCase()
+                  )};base64,${allValues.dosyalar[index].bytes}`;
+                  let title = allValues.dosyalar[index].dosyaAdi;
+                  openModal({
+                    title: title,
+                    maximized: true,
+                    content: function (
+                      close: (result: any) => void
+                    ): ReactNode {
+                      return (
+                        <iframe
+                          src={fileUrl}
+                          width="100%"
+                          height="100%"
+                          style={{ border: "none" }}
+                          title="PDF Viewer"
+                        />
+                      );
+                    },
+                  });
+                },
+                (setValue, allValues, setFields) => {
+                  setValue(`dosyalar[${index}].dosyaAdi`, "");
+                 setFields&& setFields((prev) =>
+                    prev.filter((x) => x.name != `dosyalar[${index}].dosyaAdi`)
+                  );
+                },
+              ],
+            });
+            fields.push({
+              type: "text",
+              name: `dosyalar[${index}].bytes`,
+              label: "Dosya Adı",
+              defaultValue: file.bytes,
+              group: "Dosyalar",
+              hidden: true,
+            });
+            fields.push({
+              type: "text",
+              name: `dosyalar[${index}].projectReport_Id`,
+              label: "Dosya Adı",
+              defaultValue: file.projectReport_Id,
+              group: "Dosyalar",
+              hidden: true,
+            });
+            fields.push({
+              type: "text",
+              name: `dosyalar[${index}].uzantisi`,
+              label: "Dosya Uzantısı",
+              defaultValue: file.uzantisi,
+              group: "Dosyalar",
+              hidden: true,
+            });
+          });
+        if(record) {
+          fields.push({
+            defaultValue: null,
+            type: "button",
+            name: "btn",
+            label: "Yeni Dosya Ekle",
+            group: "Dosyalar",
+            onClick(setFields, setValue, allValues) {
+              
+              let input = document.createElement("input");
+              input.type = "file";
+              input.accept = ".pdf,image/*"; // PDF ve resim dosyaları için
+              input.onchange = async (event) => {
+                let index = allValues?.dosyalar ? allValues.dosyalar.length : 0;
+              setFields((prev) => [
+                ...prev,
+                {
+                  readOnly: true,
+                  type: "text",
+                  name: `dosyalar[${index}].dosyaAdi`,
+                  label: index + 1 + ".Dosya",
+                  defaultValue: "",
+                  colspan:12,
+                  group: "Dosyalar",
+                  clickIcon: [
+                    // <FaUpload color="green" title="Dosya Yükle" />,
+                    <FaFileAlt title="Önizleme" />,
+                    <FaTrash color="red" title="Sil" />,
+                  ],
+                  onThreeDotsClick: [
+                    // (setValue) => {
+                    //   let input = document.createElement("input");
+                    //   input.type = "file";
+                    //   input.accept = ".pdf,image/*"; // PDF ve resim dosyaları için
+                    //   input.onchange = async (event) => {
+                    //     const fileList = (event.target as HTMLInputElement)
+                    //       .files;
+                    //     if (fileList && fileList.length > 0) {
+                    //       const file = fileList[0];
+                    //       file.arrayBuffer().then((buffer) => {
+                    //         const bytes = btoa(
+                    //           new Uint8Array(buffer).reduce(
+                    //             (acc, byte) => acc + String.fromCharCode(byte),
+                    //             ""
+                    //           )
+                    //         );
+                    //         setValue(`dosyalar[${index}].bytes`, bytes);
+                    //         setValue(
+                    //           `dosyalar[${index}].uzantisi`,
+                    //           "." + file.name.split(".").pop().toUpperCase() ||
+                    //             ""
+                    //         );
+                    //         setValue(
+                    //           `dosyalar[${index}].dosyaAdi`,
+                    //           file.name.split(".")[0].toUpperCase() || ""
+                    //         );
+                    //       });
+                    //     }
+                    //   };
+                    //   input.click();
+                    // },
+                    (setValue, allValues) => {
+                      const fileUrl = `data:${getMimeType(
+                        allValues.dosyalar[index].uzantisi
+                          ?.replace(".", "")
+                          .toLowerCase()
+                      )};base64,${allValues.dosyalar[index].bytes}`;
+                      let title = allValues.dosyalar[index].dosyaAdi;
+                      openModal({
+                        title: title,
+                        maximized: true,
+                        content: function (
+                          close: (result: any) => void
+                        ): ReactNode {
+                          return (
+                            <iframe
+                              src={fileUrl}
+                              width="100%"
+                              height="100%"
+                              style={{ border: "none" }}
+                              title="PDF Viewer"
+                            />
+                          );
+                        },
+                      });
+                    },
+                      (setValue, allValues, setFields) => {
+                  setValue(`dosyalar[${index}].dosyaAdi`, "");
+                 setFields&& setFields((prev) =>
+                    prev.filter((x) => x.name != `dosyalar[${index}].dosyaAdi`)
+                  );
+                },
+                  ],
+                },
+              ]);
+                const fileList = (event.target as HTMLInputElement).files;
+                if (fileList && fileList.length > 0) {
+                  const file = fileList[0];
+                  file.arrayBuffer().then((buffer) => {
+                    const bytes = btoa(
+                      new Uint8Array(buffer).reduce(
+                        (acc, byte) => acc + String.fromCharCode(byte),
+                        ""
+                      )
+                    );
+                    setValue(`dosyalar[${index}].bytes`, bytes);
+                    setValue(
+                      `dosyalar[${index}].uzantisi`,
+                      "." + file.name.split(".").pop().toUpperCase() || ""
+                    );
+                    setValue(
+                      `dosyalar[${index}].dosyaAdi`,
+                      file.name.split(".")[0].toUpperCase() || ""
+                    );
+                  });
+                } else {
+                  setFields((prev) =>
+                    prev.filter((x) => x.name != `dosyalar[${index}].dosyaAdi`)
+                  );
+                }
+              };
+              input.click();
+            },
+          },);
+        }
         return (
-          <ProjectReportForm
-            record={record}
-            projects={projects_}
-            products={products_}
-            personels={personels}
-            onClose={close}
+          <GenericForm
+            fields={fields}
+            onSubmit={function (data: ProjectReport): void {
+              data.tarih = fromIsoDateString(data.tarih);
+              data.dosyalar = data.dosyalar?.filter(
+                (x) => x.dosyaAdi && x.dosyaAdi !== ""
+              );
+              dispatch(projectReportSlice.actions.createItem(data));
+              close(null);
+            }}
           />
         );
       },

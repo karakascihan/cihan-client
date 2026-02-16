@@ -1,4 +1,4 @@
-import CrmDashboard from '@/pages/crm/CrmDashboardPage';
+import CrmDashboard from '@/pages/dashboard/CrmDashboardPage';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface Tab {
@@ -19,9 +19,9 @@ const TabsContext = createContext<TabsContextType | undefined>(undefined);
 
 export const TabsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [tabs, setTabs] = useState<Tab[]>([{
-    id: null,
-    title: "Dashboard",
-    component: <CrmDashboard/>
+    id: "/",
+    title: "Anasayfa",
+    component: <CrmDashboard />
   }]);
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
 
@@ -34,7 +34,7 @@ export const TabsProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const closeTab = (id: string) => {
-    if(tabs.length==1)return;
+    if (tabs.length == 1) return;
     setTabs(prev => prev.filter(t => t.id !== id));
     if (activeTabId === id) {
       const remaining = tabs.filter(t => t.id !== id);
@@ -43,7 +43,7 @@ export const TabsProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <TabsContext.Provider value={{ tabs, activeTabId, openTab, closeTab, setActiveTabId }}>   
+    <TabsContext.Provider value={{ tabs, activeTabId, openTab, closeTab, setActiveTabId }}>
       {children}
     </TabsContext.Provider>
   );

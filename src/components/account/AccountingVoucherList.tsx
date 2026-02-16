@@ -9,7 +9,7 @@ import { SmartTable } from "../SmartTable";
 import { URL } from "@/api";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useConfirm } from "@/context/ConfirmContext";
-import { enumToLabel, getEnumOptions } from "@/utils/commonUtilsCompnent";
+import { enumToLabel, getEnumOptions } from "@/utils/commonUtilsComponent";
 import {
   EntityTypeDescriptions,
   TransactionTypeDescriptions,

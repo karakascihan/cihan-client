@@ -6,7 +6,7 @@ import { SmartTable } from "@/components/SmartTable";
 import { useLoading } from "@/context/LoadingContext";
 import { useModal } from "@/context/ModalContext";
 import { useApiRequest } from "@/hooks/useApiRequest";
-import { getEnumOptions } from "@/utils/commonUtilsCompnent";
+import { getEnumOptions } from "@/utils/commonUtilsComponent";
 import { ReactNode } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 

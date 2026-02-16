@@ -2,7 +2,7 @@ import { JSX } from "react";
 import * as Pages from "./pages";
 import { CompanyStatus, SozlesmeTipi } from "@/api/apiDtos";
 import { TabsUI } from "@/layouts/TabsUI";
-import Dashboard from "@/pages/Dashboard";
+import Dashboard from "@/pages/dashboard/Dashboard";
 
 export type AppRoute = {
   path: string;

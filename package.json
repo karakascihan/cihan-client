@@ -5,11 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+     "dev:digitest": "vite --mode digitest",
+  "dev:dijitalerp": "vite --mode dijitalerp",
+  "dev:supplier": "vite --mode supplier",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "build:digitest": "vite build --mode digitest",
-    "build:dijitalerp": "vite build --mode dijitalerp"
+    "build:dijitalerp": "vite build --mode dijitalerp",
+    "build:supplier": "vite build --mode supplier"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -61,6 +65,7 @@
     "@types/date-fns": "^2.5.3",
     "@types/node": "^24.0.15",
     "@types/react": "^19.1.8",
+    "@types/react-beautiful-dnd": "^13.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/react-helmet-async": "^1.0.1",
     "@vitejs/plugin-react": "^4.6.0",

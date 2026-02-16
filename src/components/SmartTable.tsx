@@ -24,12 +24,12 @@ export interface Column<T> {
   body?: (value: T) => React.ReactNode;
   summaryType?: SummaryType;
   filterType?:
-    | "select"
-    | "text"
-    | "checkbox"
-    | "date"
-    | "id_select"
-    | "date_range";
+  | "select"
+  | "text"
+  | "checkbox"
+  | "date"
+  | "id_select"
+  | "date_range";
   filterOptions?: ColumnFilterOption[];
 }
 
@@ -172,10 +172,10 @@ export function SmartTable<T extends object>({
 
         const filterValue =
           filters[
-            col.filterType === "date_range"
-              ? ((col.accessor as string) + "_start" ||
-                  (col.accessor as string) + "_end")
-              : (col.accessor as string)
+          col.filterType === "date_range"
+            ? ((col.accessor as string) + "_start" ||
+              (col.accessor as string) + "_end")
+            : (col.accessor as string)
           ];
 
         if (!filterValue) return true;
@@ -238,11 +238,11 @@ export function SmartTable<T extends object>({
 
   const groupedSortedData = groupBy
     ? sortedData.reduce((acc, item) => {
-        const key = String(item[groupBy as keyof T] ?? "Diğer");
-        if (!acc[key]) acc[key] = [];
-        acc[key].push(item);
-        return acc;
-      }, {} as Record<string, T[]>)
+      const key = String(item[groupBy as keyof T] ?? "Diğer");
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, {} as Record<string, T[]>)
     : { All: sortedData };
 
   const pagedData = useMemo(() => {
@@ -372,26 +372,19 @@ export function SmartTable<T extends object>({
 
   return (
     <div className="p-4">
+
       <div
         className="
-          w-full overflow-x-auto overflow-y-auto
-          rounded-xl border border-slate-200
-          bg-white
-          shadow-sm
+          sticky top-0 z-30
+          mb-3 flex flex-wrap items-center justify-between gap-3
+          rounded-lg border border-slate-200 bg-white/70 backdrop-blur
+          px-3 py-2 shadow-sm
         "
-        style={{ maxHeight: scrollHeight }}
       >
-        <div
-          className="
-            mb-3 flex flex-wrap items-center justify-between gap-3
-            rounded-lg border border-slate-200 bg-white/70 backdrop-blur
-            px-3 py-2 shadow-sm
-          "
-        >
-          {newRecordVoid && (
-            <button
-              onClick={() => newRecordVoid()}
-              className="
+        {newRecordVoid && (
+          <button
+            onClick={() => newRecordVoid()}
+            className="
                 inline-flex items-center justify-center gap-1.5
                 h-8 px-3
                 text-md font-semibold
@@ -407,16 +400,16 @@ export function SmartTable<T extends object>({
                 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:ring-offset-1
                 active:translate-y-0 active:shadow-sm
               "
-            >
-              <span className="text-md leading-none">＋</span>
-              Yeni Kayıt
-            </button>
-          )}
+          >
+            <span className="text-md leading-none">＋</span>
+            Yeni Kayıt
+          </button>
+        )}
 
-          {isExport && (
-            <button
-              onClick={exportToExcel}
-              className="
+        {isExport && (
+          <button
+            onClick={exportToExcel}
+            className="
                 group
                 inline-flex items-center gap-1.5
                 h-8 px-3
@@ -434,21 +427,31 @@ export function SmartTable<T extends object>({
                 focus:outline-none focus:ring-2 focus:ring-slate-400/60 focus:ring-offset-1
                 active:translate-y-0 active:shadow-sm
               "
-            >
-              Excel Export
-              <Download
-                className="
+          >
+            Excel Export
+            <Download
+              className="
                   ml-1
                   w-3.5 h-3.5
                   text-slate-200/90
                   transition-transform duration-200 ease-out
                   group-hover:translate-y-[1px]
                 "
-                strokeWidth={2.4}
-              />
-            </button>
-          )}
-        </div>
+              strokeWidth={2.4}
+            />
+          </button>
+        )}
+      </div>
+
+      <div
+        className="
+          w-full overflow-x-auto overflow-y-auto
+          rounded-xl border border-slate-200
+          bg-white
+          shadow-sm
+        "
+        style={{ maxHeight: scrollHeight }}
+      >
 
         <table
           className={
@@ -462,13 +465,11 @@ export function SmartTable<T extends object>({
                 <th
                   key={String(col.accessor)}
                   style={getStickyStyle(col, frozenColumns, colIndex, "#f3f4f6")}
-                  className={`border-b border-slate-200 px-4 py-2 text-md font-semibold tracking-wide text-slate-700 whitespace-nowrap ${
-                    col.headerClassName ?? ""
-                  } ${
-                    col.sortable
+                  className={`border-b border-slate-200 px-4 py-2 text-md font-semibold tracking-wide text-slate-700 whitespace-nowrap ${col.headerClassName ?? ""
+                    } ${col.sortable
                       ? "cursor-pointer select-none hover:text-slate-900"
                       : ""
-                  }`}
+                    }`}
                   onClick={() => handleSort(col)}
                 >
                   {col.accessor === "__select" ? (

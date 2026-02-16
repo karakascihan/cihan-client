@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "@/services";
 import { URL } from "@/api";
-import { PurchaseOrderForm } from "@/components/CRM/PurchaseOrderForm";
+import { PurchaseOrderForm } from "@/components/crm/PurchaseOrderForm";
 import { useState } from "react";
 import { DateOnly, PurchaseOrderDtoForInsertion } from "@/api/apiDtos";
 

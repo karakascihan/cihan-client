@@ -47,10 +47,10 @@ export const paraBirimleri = ["TRY", "USD", "EUR"];
 
 interface PriceOfferAddPageProps {
   offer: PriceOfferDto;
-  opportunityId?:number;
+  opportunityId?: number;
 }
 
- const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
+const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
   offer,
   opportunityId
 }) => {
@@ -59,8 +59,8 @@ interface PriceOfferAddPageProps {
   // const { opportunityId } = useParams();
   const isFirstLoad = useRef(true);
   const { openModal } = useModal();
-const [manualTotal, setManualTotal] = React.useState(offer?true:false);
-
+  const [manualTotal, setManualTotal] = React.useState(offer ? true : false);
+  const appMode = import.meta.env.VITE_APP_MODE;
   // Redux selectors
   const products = useSelector((state: RootState) => state.products);
   const users = useSelector((state: RootState) => state.user as UserState);
@@ -120,7 +120,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
   const belgeIndirim = watch("belgeIndirimOraniYuzde") || 0;
 
   const subtotal = productLines.reduce(
-    (acc, line) => acc + calcLineTotal(line)+calcLineTotalKdv(line),
+    (acc, line) => acc + calcLineTotal(line) + calcLineTotalKdv(line),
     0
   );
   const belgeIndirimTutari = subtotal * (belgeIndirim / 100);
@@ -139,11 +139,11 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
   //   total = offer.toplamTutar;
   // }
 
- useEffect(() => {
-  if (!manualTotal) {
-    setValue("toplamTutar", total);
-  }
-}, [total, manualTotal, setValue]);
+  useEffect(() => {
+    if (!manualTotal) {
+      setValue("toplamTutar", total);
+    }
+  }, [total, manualTotal, setValue]);
 
 
 
@@ -192,7 +192,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
                 }
               }}
               rowIdAccessor="id"
-              onDoubleClick={() => {}}
+              onDoubleClick={() => { }}
             />
             <button
               onClick={() => close(true)}
@@ -339,7 +339,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
         </td>
         {!isOption && (
           <td className="border p-2 text-right">
-            {(calcLineTotal(line)+calcLineTotalKdv(line)).toLocaleString()}
+            {(calcLineTotal(line) + calcLineTotalKdv(line)).toLocaleString()}
           </td>
         )}
         <td className="border p-2 text-center">
@@ -412,41 +412,47 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium">Müşteri</label>
-            <select
-              {...register("firma_Id")}
-              className="border p-1 rounded w-full"
-            >
-              <option value="">Seçiniz</option>
-              {customerState.data.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.firma}
-                </option>
-              ))}
-            </select>
-          </div>
+          {
+            appMode !== "supplier" &&
+            <>
+              <div>
+                <label className="block text-sm font-medium">Müşteri</label>
+                <select
+                  {...register("firma_Id")}
+                  className="border p-1 rounded w-full"
+                >
+                  <option value="">Seçiniz</option>
+                  {customerState.data.map((customer) => (
+                    <option key={customer.id} value={customer.id}>
+                      {customer.firma}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-          <div>
-            <label className="block text-sm font-medium">Teklif Veren</label>
-            <select
-              {...register("teklifOnay", {
-                required: "Lütfen bir kullanıcı seçiniz.",
-              })}
-              className="border p-1 rounded w-full"
-            >
-              <option value="">Personel Seçiniz</option>
-              {personels.items?.map((person) => (
-                <option key={person.id} value={person.id}>
-                  {`${person.personelAdi} ${person.personelSoyadi}`}
-                </option>
-              ))}
-            </select>
-            {errors.teklifOnay && (
-              <span className="text-red-600">{errors.teklifOnay.message}</span>
-            )}
-          </div>
 
+
+              <div>
+                <label className="block text-sm font-medium">Teklif Veren</label>
+                <select
+                  {...register("teklifOnay", {
+                    required: "Lütfen bir kullanıcı seçiniz.",
+                  })}
+                  className="border p-1 rounded w-full"
+                >
+                  <option value="">Personel Seçiniz</option>
+                  {personels.items?.map((person) => (
+                    <option key={person.id} value={person.id}>
+                      {`${person.personelAdi} ${person.personelSoyadi}`}
+                    </option>
+                  ))}
+                </select>
+                {errors.teklifOnay && (
+                  <span className="text-red-600">{errors.teklifOnay.message}</span>
+                )}
+              </div>
+            </>
+          }
           <div>
             <label className="block text-sm font-medium">
               Teslim Süresi (Gün)
@@ -491,7 +497,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
                     >
                       {
                         PriceOfferStateDescriptions[
-                          PriceOfferState[key as keyof typeof PriceOfferState]
+                        PriceOfferState[key as keyof typeof PriceOfferState]
                         ]
                       }
                     </option>
@@ -580,27 +586,26 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
                 Genel Toplam:
               </td>
               <td className="p-2 border font-bold text-red-700 text-right">
-               
-<input
-    type="number"
-    step="0.01"
-    className={`w-full text-right border rounded p-1 font-bold ${
-      manualTotal ? "text-red-700" : "text-gray-800 bg-gray-100"
-    }`}
-    readOnly={!manualTotal}
-    {...register("toplamTutar", {
-      valueAsNumber: true,
-    })}
-  />
- 
-</td>
-<td> <button
-  type="button"
-  onClick={() => setManualTotal((prev) => !prev)}
-  className="ml-2 px-2 py-1 text-xs rounded border bg-white hover:bg-gray-100"
->
-  {manualTotal ? "Otomatik Hesapla" : " Manuel Gir"}
-</button></td>
+
+                <input
+                  type="number"
+                  step="0.01"
+                  className={`w-full text-right border rounded p-1 font-bold ${manualTotal ? "text-red-700" : "text-gray-800 bg-gray-100"
+                    }`}
+                  readOnly={!manualTotal}
+                  {...register("toplamTutar", {
+                    valueAsNumber: true,
+                  })}
+                />
+
+              </td>
+              <td> <button
+                type="button"
+                onClick={() => setManualTotal((prev) => !prev)}
+                className="ml-2 px-2 py-1 text-xs rounded border bg-white hover:bg-gray-100"
+              >
+                {manualTotal ? "Otomatik Hesapla" : " Manuel Gir"}
+              </button></td>
 
               <td className="border"></td>
             </tr>
@@ -698,7 +703,7 @@ const [manualTotal, setManualTotal] = React.useState(offer?true:false);
         >
           Teklifi Kaydet
         </button>
-        {offer &&  (
+        {offer && (
           <button
             onClick={handleSubmit((data) => onSubmit(data, true))}
             type="button"

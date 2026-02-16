@@ -27,13 +27,14 @@ import { BsThreeDots } from "react-icons/bs";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import MenuButton, { MenuItem } from "@/components/MenuButton";
- const DocumentList = () => {
-  const { type } = useParams<{ type?: string }>();
+const DocumentList = ({ type }: { type?: string }) => {
   const { data, setData } = useApiRequest<KysDocument[]>(
     KYSDOCUMENT_GETALL + (type ? "?type=" + type : "")
   );
   const { refetch } = useApiRequest<KysDocument>(KYSDOCUMENT_UPLOAD, {
     method: "POST",
+    skip: true,
+
   });
   const inputRef = useRef<HTMLInputElement>(null);
   const { openModal } = useModal();
@@ -78,11 +79,11 @@ import MenuButton, { MenuItem } from "@/components/MenuButton";
         group: "Genel",
         defaultValue: document?.documentName,
       },
-       {
+      {
         name: "revisionNumber",
         label: "Revizyon Numarası",
         type: "text",
-        readOnly:true,
+        readOnly: true,
         group: "Genel",
         defaultValue: document?.revisionNumber,
       },
@@ -91,16 +92,16 @@ import MenuButton, { MenuItem } from "@/components/MenuButton";
         label: "Revizyon Tarihi",
         type: "datetime-local",
         required: false,
-         readOnly:true,
+        readOnly: true,
         group: "Genel",
         defaultValue: document?.revisionDate,
       },
-       {
+      {
         name: "revisionDescription",
         label: "Revizyon Açıklaması",
         type: "text",
         required: false,
-         readOnly:true,
+        readOnly: true,
         group: "Genel",
         defaultValue: document?.revisionDescription,
       },
@@ -169,7 +170,7 @@ import MenuButton, { MenuItem } from "@/components/MenuButton";
           method: "GET",
         }).then((c) => setData(c?.result))
       );
-    } else if (e.target.getAttribute("contentType") !== "" ) {
+    } else if (e.target.getAttribute("contentType") !== "") {
       openModal({
         title: "Doküman Revizyonu",
         content: function (close: (result: any) => void): ReactNode {
@@ -212,46 +213,46 @@ import MenuButton, { MenuItem } from "@/components/MenuButton";
       );
     }
   };
-  let roller = [1,2,4,14];
+  let roller = [1, 2, 4, 14];
   const actionBodyTemplate = (rowData: KysDocument) => {
-let buttons: MenuItem[] = [];
+    let buttons: MenuItem[] = [];
     if (roller.includes(user.rolId) && !rowData.isArchive) {
       buttons.push({
         label: "Düzenle",
         onClick: function (): void {
-           UpdateDocument(rowData);
+          UpdateDocument(rowData);
         },
       });
       buttons.push({
         label: "Dosya Yükle",
         onClick: function (): void {
           inputRef.current?.setAttribute("id", rowData.id ?? "");
-                inputRef.current?.setAttribute(
-                  "contentType",
-                  rowData.contentType ?? ""
-                );
-                inputRef.current.click();
+          inputRef.current?.setAttribute(
+            "contentType",
+            rowData.contentType ?? ""
+          );
+          inputRef.current.click();
         },
       });
       buttons.push({
         label: "Dokümanı Sil",
-        onClick: async  () => {
+        onClick: async () => {
           const isConfirmed = await confirm({
-                  title: "Silme işlemi",
-                  message: "Dokümanı silmek istediğinize emin misiniz?",
-                  confirmText: "Evet",
-                  cancelText: "Vazgeç",
-                });
-                if (isConfirmed) {
-                  refetch(KYSDOCUMENT_DELETE + "/" + rowData.id, {
-                    method: "DELETE",
-                  }).then((c) =>
-                    refetch(
-                      KYSDOCUMENT_GETALL + (type ? "?type=" + type : ""),
-                      { method: "GET" }
-                    ).then((c) => setData(c?.result))
-                  );
-                }
+            title: "Silme işlemi",
+            message: "Dokümanı silmek istediğinize emin misiniz?",
+            confirmText: "Evet",
+            cancelText: "Vazgeç",
+          });
+          if (isConfirmed) {
+            refetch(KYSDOCUMENT_DELETE + "/" + rowData.id, {
+              method: "DELETE",
+            }).then((c) =>
+              refetch(
+                KYSDOCUMENT_GETALL + (type ? "?type=" + type : ""),
+                { method: "GET" }
+              ).then((c) => setData(c?.result))
+            );
+          }
         },
       });
     }
@@ -259,70 +260,70 @@ let buttons: MenuItem[] = [];
       label: "Dosya İndir",
       onClick: function (): void {
         {
-            refetch(KYSDOCUMENT_DOWNLOAD + "/" + rowData.id, {
-              method: "GET",
-            }).then((data) => {
-              if (data?.isSuccess) {
-                const fileUrl = `data:${data?.result.contentType};base64,${data?.result.fileContents}`;
-                if (data?.result.contentType == "application/pdf") {
-                  openModal({
-                    title: rowData.documentName,
-                    maximized: true,
-                    content: function (
-                      close: (result: any) => void
-                    ): ReactNode {
-                      return (
-                        <iframe
-                          src={fileUrl}
-                          width="100%"
-                          height="100%"
-                          style={{ border: "none" }}
-                          title="PDF Viewer"
-                        />
-                      );
-                    },
-                  });
-                } else {
-                  const link = document.createElement("a");
+          refetch(KYSDOCUMENT_DOWNLOAD + "/" + rowData.id, {
+            method: "GET",
+          }).then((data) => {
+            if (data?.isSuccess) {
+              const fileUrl = `data:${data?.result.contentType};base64,${data?.result.fileContents}`;
+              if (data?.result.contentType == "application/pdf") {
+                openModal({
+                  title: rowData.documentName,
+                  maximized: true,
+                  content: function (
+                    close: (result: any) => void
+                  ): ReactNode {
+                    return (
+                      <iframe
+                        src={fileUrl}
+                        width="100%"
+                        height="100%"
+                        style={{ border: "none" }}
+                        title="PDF Viewer"
+                      />
+                    );
+                  },
+                });
+              } else {
+                const link = document.createElement("a");
 
-                  link.href = fileUrl;
-                  link.download =
-                    data?.result.fileDownloadName +
-                    "." +
-                    getExtensionFromMimeType(data?.result.contentType);
-                  // link.target="_blank";
-                  // link.rel="noopener noreferrer";
-                  link.click();
-                }
+                link.href = fileUrl;
+                link.download =
+                  data?.result.fileDownloadName +
+                  "." +
+                  getExtensionFromMimeType(data?.result.contentType);
+                // link.target="_blank";
+                // link.rel="noopener noreferrer";
+                link.click();
               }
-            });
-          }
+            }
+          });
+        }
       },
     });
     if (!rowData.isArchive) {
       buttons.push({
         label: "Kullanıcı Dosya Yükle",
         onClick: function (): void {
-           inputRef.current?.setAttribute("id", rowData.id ?? "");
-            inputRef.current?.setAttribute("contentType", "isUserUpload");
-            inputRef.current.click();
+          inputRef.current?.setAttribute("id", rowData.id ?? "");
+          inputRef.current?.setAttribute("contentType", "isUserUpload");
+          inputRef.current.click();
         },
       });
     }
-   
-  return (
-   <>
-    {/* <MenuButton items={buttons} */}
-         {/* /> */}
-      {/* <BsThreeDots size={20} style={{ cursor: 'pointer' }}/> */}
-      <div className="flex flex-row">
-        {(roller.includes(user.rolId) && !rowData.isArchive) && (
-          <>
-            <button
-              onClick={() => {
-                UpdateDocument(rowData);
-              }}
-              className="
+
+    return (
+      <>
+        {/* <MenuButton items={buttons} */}
+        {/* /> */}
+        {/* <BsThreeDots size={20} style={{ cursor: 'pointer' }}/> */}
+        <div className="flex flex-row">
+          {(roller.includes(user.rolId) && !rowData.isArchive) && (
+            <>
+              <button
+                onClick={() => {
+                  UpdateDocument(rowData);
+                }}
+                className="
             inline-flex items-center 
             px-4 py-2 
             bg-yellow-500 hover:bg-yellow-600 
@@ -330,19 +331,19 @@ let buttons: MenuItem[] = [];
             rounded 
             mr-2
           "
-            >
-              <FaPencilAlt title="Düzenle" />
-            </button>
-            <button
-              onClick={() => {
-                inputRef.current?.setAttribute("id", rowData.id ?? "");
-                inputRef.current?.setAttribute(
-                  "contentType",
-                  rowData.contentType ?? ""
-                );
-                inputRef.current.click();
-              }}
-              className="
+              >
+                <FaPencilAlt title="Düzenle" />
+              </button>
+              <button
+                onClick={() => {
+                  inputRef.current?.setAttribute("id", rowData.id ?? "");
+                  inputRef.current?.setAttribute(
+                    "contentType",
+                    rowData.contentType ?? ""
+                  );
+                  inputRef.current.click();
+                }}
+                className="
             inline-flex items-center 
             px-4 py-2 
             bg-green-600 hover:bg-green-700 
@@ -350,29 +351,29 @@ let buttons: MenuItem[] = [];
             rounded
              mr-2
           "
-            >
-              <FaUpload title="Dosya Yükle" />
-            </button>
-            <button
-              onClick={async () => {
-                const isConfirmed = await confirm({
-                  title: "Silme işlemi",
-                  message: "Dokümanı silmek istediğinize emin misiniz?",
-                  confirmText: "Evet",
-                  cancelText: "Vazgeç",
-                });
-                if (isConfirmed) {
-                  refetch(KYSDOCUMENT_DELETE + "/" + rowData.id, {
-                    method: "DELETE",
-                  }).then((c) =>
-                    refetch(
-                      KYSDOCUMENT_GETALL + (type ? "?type=" + type : ""),
-                      { method: "GET" }
-                    ).then((c) => setData(c?.result))
-                  );
-                }
-              }}
-              className="
+              >
+                <FaUpload title="Dosya Yükle" />
+              </button>
+              <button
+                onClick={async () => {
+                  const isConfirmed = await confirm({
+                    title: "Silme işlemi",
+                    message: "Dokümanı silmek istediğinize emin misiniz?",
+                    confirmText: "Evet",
+                    cancelText: "Vazgeç",
+                  });
+                  if (isConfirmed) {
+                    refetch(KYSDOCUMENT_DELETE + "/" + rowData.id, {
+                      method: "DELETE",
+                    }).then((c) =>
+                      refetch(
+                        KYSDOCUMENT_GETALL + (type ? "?type=" + type : ""),
+                        { method: "GET" }
+                      ).then((c) => setData(c?.result))
+                    );
+                  }
+                }}
+                className="
             inline-flex items-center 
             px-4 py-2 
             bg-red-600 hover:bg-red-700 
@@ -380,52 +381,52 @@ let buttons: MenuItem[] = [];
             rounded
              mr-2
           "
-            >
-              <FaTrash title="Dokümanı Sil" />
-            </button>
-          </>
-        )}
-        <button
-          onClick={() => {
-            refetch(KYSDOCUMENT_DOWNLOAD + "/" + rowData.id, {
-              method: "GET",
-            }).then((data) => {
-              if (data?.isSuccess) {
-                const fileUrl = `data:${data?.result.contentType};base64,${data?.result.fileContents}`;
-                if (data?.result.contentType == "application/pdf") {
-                  openModal({
-                    title: rowData.documentName,
-                    maximized: true,
-                    content: function (
-                      close: (result: any) => void
-                    ): ReactNode {
-                      return (
-                        <iframe
-                          src={fileUrl}
-                          width="100%"
-                          height="100%"
-                          style={{ border: "none" }}
-                          title="PDF Viewer"
-                        />
-                      );
-                    },
-                  });
-                } else {
-                  const link = document.createElement("a");
+              >
+                <FaTrash title="Dokümanı Sil" />
+              </button>
+            </>
+          )}
+          <button
+            onClick={() => {
+              refetch(KYSDOCUMENT_DOWNLOAD + "/" + rowData.id, {
+                method: "GET",
+              }).then((data) => {
+                if (data?.isSuccess) {
+                  const fileUrl = `data:${data?.result.contentType};base64,${data?.result.fileContents}`;
+                  if (data?.result.contentType == "application/pdf") {
+                    openModal({
+                      title: rowData.documentName,
+                      maximized: true,
+                      content: function (
+                        close: (result: any) => void
+                      ): ReactNode {
+                        return (
+                          <iframe
+                            src={fileUrl}
+                            width="100%"
+                            height="100%"
+                            style={{ border: "none" }}
+                            title="PDF Viewer"
+                          />
+                        );
+                      },
+                    });
+                  } else {
+                    const link = document.createElement("a");
 
-                  link.href = fileUrl;
-                  link.download =
-                    data?.result.fileDownloadName +
-                    "." +
-                    getExtensionFromMimeType(data?.result.contentType);
-                  // link.target="_blank";
-                  // link.rel="noopener noreferrer";
-                  link.click();
+                    link.href = fileUrl;
+                    link.download =
+                      data?.result.fileDownloadName +
+                      "." +
+                      getExtensionFromMimeType(data?.result.contentType);
+                    // link.target="_blank";
+                    // link.rel="noopener noreferrer";
+                    link.click();
+                  }
                 }
-              }
-            });
-          }}
-          className="
+              });
+            }}
+            className="
             inline-flex items-center 
             px-4 py-2 
             bg-blue-600 hover:bg-blue-700 
@@ -433,17 +434,17 @@ let buttons: MenuItem[] = [];
             rounded
              mr-2
           "
-        >
-          <FaDownload title="Dosya İndir" />
-        </button>
-        {
-          !rowData.isArchive &&  <button
-          onClick={() => {
-            inputRef.current?.setAttribute("id", rowData.id ?? "");
-            inputRef.current?.setAttribute("contentType", "isUserUpload");
-            inputRef.current.click();
-          }}
-          className="
+          >
+            <FaDownload title="Dosya İndir" />
+          </button>
+          {
+            !rowData.isArchive && <button
+              onClick={() => {
+                inputRef.current?.setAttribute("id", rowData.id ?? "");
+                inputRef.current?.setAttribute("contentType", "isUserUpload");
+                inputRef.current.click();
+              }}
+              className="
             inline-flex items-center 
             px-4 py-2 
             bg-gray-600 hover:bg-gray-700 
@@ -451,14 +452,15 @@ let buttons: MenuItem[] = [];
             rounded
              mr-2
           "
-        >
-          <FaUpload title="Kullanıcı Dosya Yükle" />
-        </button>
-        }
-      
-      </div> 
-    </>
-  );}
+            >
+              <FaUpload title="Kullanıcı Dosya Yükle" />
+            </button>
+          }
+
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <input
@@ -469,10 +471,10 @@ let buttons: MenuItem[] = [];
       />
       <SmartTable
         data={data ?? []}
-         frozenColumns={[{name:"id",right:true}]}
+        frozenColumns={[{ name: "id", right: true }]}
         scrollHeight="calc(100vh - 200px)"
         groupBy="documentNo"
-        groupTitle={["documentNo","documentName"]}
+        groupTitle={["documentNo", "documentName"]}
         newRecordVoid={(data?: any) => UpdateDocument(data)}
         enablePagination={false}
         columns={[
@@ -579,7 +581,7 @@ let buttons: MenuItem[] = [];
               />
             ),
           },
-            {
+          {
             accessor: "isUserUploaded",
             header: "Kullanıcı Tarafından Yüklenmiş",
             sortable: true,

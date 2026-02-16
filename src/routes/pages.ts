@@ -2,7 +2,7 @@ import { lazyWithPreload } from "../utils/lazyWithPreload";
 
 // Dashboard
 export const CrmDashboard = lazyWithPreload(
-  () => import("../pages/crm/CrmDashboardPage")
+  () => import("../pages/dashboard/CrmDashboardPage")
 );
 
 // Personel
@@ -66,6 +66,9 @@ export const BoardPage = lazyWithPreload(
 );
 export const ProjectReportList = lazyWithPreload(
   () => import("../pages/project/ProjectReport")
+);
+export const ProjectPage = lazyWithPreload(
+  () => import("../pages/project/ProjectPage")
 );
 
 // Document
