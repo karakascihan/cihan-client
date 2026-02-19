@@ -1,13 +1,14 @@
 import { ApiResponseClient } from "@/types/apiResponse";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { setNotification } from "./notificationSlice";
-import { URL} from "@/api";
+import { URL } from "@/api";
 import { apiRequest } from "@/services/apiRequestService";
 import { RootState } from "../store";
 import {
   PriceOfferDto,
   PriceOfferDtoForInsertion,
   PriceOfferDtoForUpdate,
+  PriceOfferType,
 } from "@/api/apiDtos";
 import { toJsonPatch } from "@/utils/commonUtils";
 
@@ -22,14 +23,14 @@ const initialState: PriceOfferState = {
   loading: false,
   error: null,
 };
-export const fetchPriceOffers = createAsyncThunk<PriceOfferDto[]>(
+export const fetchPriceOffers = createAsyncThunk<PriceOfferDto[], { priceOfferType: PriceOfferType }>(
   "priceoffer/fetchAll",
-  async (newlist, { dispatch, rejectWithValue, getState }) => {
+  async (priceOfferType, { dispatch, rejectWithValue, getState }) => {
     try {
       const state = getState() as RootState;
       const response = await apiRequest<ApiResponseClient<PriceOfferDto[]>>(
         "GET",
-        URL + "/priceoffer/getall",
+        URL + "/priceoffer/getall/" + priceOfferType.priceOfferType,
         { Authorization: "Bearer " + state.login.accessToken }
       );
       dispatch(
@@ -40,11 +41,11 @@ export const fetchPriceOffers = createAsyncThunk<PriceOfferDto[]>(
             response.statusCode !== 0
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
-       if(!response.isSuccess)   return rejectWithValue(response?.message);
+      if (!response.isSuccess) return rejectWithValue(response?.message);
 
       return response.result;
     } catch (error) {
@@ -64,15 +65,15 @@ export const fetchPriceOffers = createAsyncThunk<PriceOfferDto[]>(
 // 📌 Ekleme
 export const addPriceOffer = createAsyncThunk<
   PriceOfferDtoForInsertion,
-  { newLeave: Partial<PriceOfferDtoForUpdate>,isRevision?:boolean }
+  { newLeave: Partial<PriceOfferDtoForUpdate>, isRevision?: boolean }
 >(
   "priceoffer/add",
-  async ({newLeave,isRevision}, { rejectWithValue, dispatch, getState }) => {
+  async ({ newLeave, isRevision }, { rejectWithValue, dispatch, getState }) => {
     try {
       const state = getState() as RootState;
       const response = await apiRequest<ApiResponseClient<PriceOfferDto>>(
         "POST",
-        URL + "/priceoffer/create"+ (isRevision?"?isRevision=true":""),
+        URL + "/priceoffer/create" + (isRevision ? "?isRevision=true" : ""),
         { Authorization: "Bearer " + state.login.accessToken },
         newLeave
       );
@@ -86,7 +87,7 @@ export const addPriceOffer = createAsyncThunk<
               : "error",
         })
       );
-       if(!response.isSuccess)   return rejectWithValue(response?.message);
+      if (!response.isSuccess) return rejectWithValue(response?.message);
       return response.result;
     } catch (error) {
       const errorMessage =
@@ -104,11 +105,11 @@ export const addPriceOffer = createAsyncThunk<
 );
 // 📌 Güncelleme
 export const updatePriceOffer = createAsyncThunk<
-  PriceOfferDtoForUpdate,{ id: number; changes: Partial<PriceOfferDtoForUpdate> }
-  
+  PriceOfferDtoForUpdate, { id: number; changes: Partial<PriceOfferDtoForUpdate> }
+
 >(
   "priceoffer/update",
-  async ( {id,changes}, { rejectWithValue, dispatch, getState }) => {
+  async ({ id, changes }, { rejectWithValue, dispatch, getState }) => {
     try {
       const state = getState() as RootState;
       const response = await apiRequest<ApiResponseClient<PriceOfferDto>>(
@@ -125,11 +126,11 @@ export const updatePriceOffer = createAsyncThunk<
             response.statusCode === 4
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
-       if(!response.isSuccess)   return rejectWithValue(response?.message);
+      if (!response.isSuccess) return rejectWithValue(response?.message);
 
       return response.result;
     } catch (error) {
@@ -153,7 +154,7 @@ export const patchPriceOffer = createAsyncThunk<
   { id: number; changes: Partial<PriceOfferDtoForUpdate> }
 >(
   "priceoffer/patch",
-  async ({id,changes}, { rejectWithValue, dispatch, getState }) => {
+  async ({ id, changes }, { rejectWithValue, dispatch, getState }) => {
     try {
       const state = getState() as RootState;
 
@@ -175,11 +176,11 @@ export const patchPriceOffer = createAsyncThunk<
             response.statusCode !== 0
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
-       if(!response.isSuccess)   return rejectWithValue(response?.message);
+      if (!response.isSuccess) return rejectWithValue(response?.message);
 
       return response.result;
     } catch (error) {
@@ -208,18 +209,18 @@ export const deletePriceOffer = createAsyncThunk<number, number>(
         URL + "/priceoffer/delete" + "/" + id,
         { Authorization: "Bearer " + state.login.accessToken }
       );
-      if(!response.isSuccess) throw new Error(response.result as unknown as string);
+      if (!response.isSuccess) throw new Error(response.result as unknown as string);
       dispatch(
         setNotification({
           title: response?.message ?? "",
-          message:  " ",
+          message: " ",
           type:
-              response.isSuccess
+            response.isSuccess
               ? "success"
               : "warning",
         })
       );
-       if(!response.isSuccess)   return rejectWithValue(response?.message);
+      if (!response.isSuccess) return rejectWithValue(response?.message);
 
       return id;
     } catch (error) {

@@ -285,8 +285,8 @@ export default function CrmDashboard() {
 
   return (
     <PageMeta title="CRM Dashboard" description="CRM Dashboard Sayfası">
-    <div className="grid grid-cols-1 gap-6 p-6">
-      {/* <div className="flex justify-end gap-3 mb-4">
+      <div className="grid grid-cols-1 gap-6 p-6">
+        {/* <div className="flex justify-end gap-3 mb-4">
         <button
           onClick={exportToExcel}
           className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
@@ -302,196 +302,196 @@ export default function CrmDashboard() {
         </button>
       </div>
 */}
-      {/* 🔵 TAB PANEL (Günlük / Aylık) */}
-      <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm">
+        {/* 🔵 TAB PANEL (Günlük / Aylık) */}
+        <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm">
 
-        {/* TAB HEADER */}
-        <div className="flex items-center justify-between mb-4">
+          {/* TAB HEADER */}
+          <div className="flex items-center justify-between mb-4">
 
-          {/*  Tab Buttons  */}
-          <div className="flex items-center gap-4 border-b pb-2">
-            <button
-              onClick={() => setActiveTab("daily")}
-              className={`pb-2 px-2 border-b-2 transition-all ${activeTab === "daily"
-                ? "border-blue-500 text-blue-600 font-semibold"
-                : "border-transparent text-neutral-500 hover:text-neutral-700"
-                }`}
-            >
-              Günlük Analiz
-            </button>
+            {/*  Tab Buttons  */}
+            <div className="flex items-center gap-4 border-b pb-2">
+              <button
+                onClick={() => setActiveTab("daily")}
+                className={`pb-2 px-2 border-b-2 transition-all ${activeTab === "daily"
+                  ? "border-blue-500 text-blue-600 font-semibold"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700"
+                  }`}
+              >
+                Günlük Analiz
+              </button>
 
-            <button
-              onClick={() => setActiveTab("monthly")}
-              className={`pb-2 px-2 border-b-2 transition-all ${activeTab === "monthly"
-                ? "border-blue-500 text-blue-600 font-semibold"
-                : "border-transparent text-neutral-500 hover:text-neutral-700"
-                }`}
-            >
-              Aylık Analiz
-            </button>
+              <button
+                onClick={() => setActiveTab("monthly")}
+                className={`pb-2 px-2 border-b-2 transition-all ${activeTab === "monthly"
+                  ? "border-blue-500 text-blue-600 font-semibold"
+                  : "border-transparent text-neutral-500 hover:text-neutral-700"
+                  }`}
+              >
+                Aylık Analiz
+              </button>
+            </div>
+
+            {/* ---------------- Legend ---------------- */}
+            <div className="flex gap-4 text-sm">
+              <div className="flex items-center gap-1">
+                <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                <span className="text-neutral-700 dark:text-neutral-300">Sipariş</span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                <span className="text-neutral-700 dark:text-neutral-300">Kayıp</span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <span className="w-3 h-3 rounded-full bg-sky-500"></span>
+                <span className="text-neutral-700 dark:text-neutral-300">Devam Ediyor</span>
+              </div>
+            </div>
           </div>
 
-          {/* ---------------- Legend ---------------- */}
-          <div className="flex gap-4 text-sm">
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full bg-green-500"></span>
-              <span className="text-neutral-700 dark:text-neutral-300">Sipariş</span>
-            </div>
+          {/* TAB CONTENT */}
 
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full bg-red-500"></span>
-              <span className="text-neutral-700 dark:text-neutral-300">Kayıp</span>
-            </div>
 
-            <div className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full bg-sky-500"></span>
-              <span className="text-neutral-700 dark:text-neutral-300">Süreçte</span>
+          {/* Günlük Grafik */}
+          {activeTab === "daily" && (
+            <div className="w-full" style={{ height: 420 }}>
+              {dailyData.length === 0 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
+                  <div className="px-4 py-2 rounded-lg bg-pink-100 text-pink-700 text-xs font-medium shadow-sm border border-pink-200 items-center">
+                    📉 Günlük analiz verisi bulunamadı
+                  </div>
+                </div>
+              )}
+              <ResponsiveContainer width="100%" height="100%">
+
+                <LineChart data={safeDailyData}   >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" interval={0} textAnchor="end" />
+                  <YAxis width={75} />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="won" name="Sipariş" stroke="#22c55e" strokeWidth={2} />
+                  <Line type="monotone" dataKey="lost" name="Kayıp" stroke="#ef4444" strokeWidth={2} />
+                  <Line type="monotone" dataKey="progress" name="Devam Ediyor" stroke="#0ea5e9" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-          </div>
+          )}
+
+          {/* Aylık Grafik */}
+          {activeTab === "monthly" && (
+            <div className="w-full" style={{ height: 420 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthlyData}   >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" interval={0} textAnchor="end" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="won" name="Sipariş" fill="#22c55e" minPointSize={3} />
+                  <Bar dataKey="lost" name="Kayıp" fill="#ef4444" minPointSize={3} />
+                  <Bar dataKey="progress" name="Devam Ediyor" fill="#0ea5e9" minPointSize={3} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+
         </div>
 
-        {/* TAB CONTENT */}
+        {/* ŞİRKET BAZLI KIYAS */}
 
+        <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm pr-4" style={{ maxHeight: 450, overflowY: 'auto' }}>
+          <h3 className="text-lg font-semibold text-neutral-800 dark:text-neutral-100 mb-4">
+            Şirket Bazlı Toplam Sözleşme Tutarı
+          </h3>
 
-        {/* Günlük Grafik */}
-        {activeTab === "daily" && (
-          <div className="w-full" style={{ height: 420 }}>
-            {dailyData.length === 0 && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center z-10 pointer-events-none">
-                <div className="px-4 py-2 rounded-lg bg-pink-100 text-pink-700 text-xs font-medium shadow-sm border border-pink-200 items-center">
-                  📉 Günlük analiz verisi bulunamadı
-                </div>
-              </div>
-            )}
-            <ResponsiveContainer width="100%" height="100%">
+          {/* Filtreler */}
+          <div className="flex flex-wrap gap-4 mb-5">
+            {/* Arama */}
+            <input
+              type="text"
+              placeholder="Şirket Ara..."
+              value={companySearch}
+              onChange={(e) => setCompanySearch(e.target.value)}
+              className="px-3 py-2 text-sm rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 w-48"
+            />
 
-              <LineChart data={safeDailyData}   >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" interval={0} textAnchor="end" />
-                <YAxis width={75} />
-                <Tooltip />
-                <Line type="monotone" dataKey="won" stroke="#22c55e" strokeWidth={2} />
-                <Line type="monotone" dataKey="lost" stroke="#ef4444" strokeWidth={2} />
-                <Line type="monotone" dataKey="progress" stroke="#0ea5e9" strokeWidth={2} />
-              </LineChart>
-            </ResponsiveContainer>
+            {/* Min Tutar */}
+            <input
+              type="number"
+              placeholder="Min Tutar"
+              value={minValue}
+              onChange={(e) => setMinValue(e.target.value)}
+              className="px-3 py-2 text-sm rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 w-32"
+            />
+
+            {/* Max Tutar */}
+            <input
+              type="number"
+              placeholder="Max Tutar"
+              value={maxValue}
+              onChange={(e) => setMaxValue(e.target.value)}
+              className="px-3 py-2 text-sm rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 w-32"
+            />
+
+            {/* Multi-select şirket chipleri */}
+            <div className="flex flex-wrap gap-2 max-h-28 overflow-auto">
+              {companyValueData.map((c) => (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => toggleCompanySelection(c.name)}
+                  className={`px-3 py-1 text-xs rounded-full border transition-all ${selectedCompanies.includes(c.name)
+                    ? "bg-pink-200 text-white border-pink-300"
+                    : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700"
+                    }`}
+                >
+                  {c.name}
+                </button>
+              ))}
+            </div>
           </div>
-        )}
 
-        {/* Aylık Grafik */}
-        {activeTab === "monthly" && (
-          <div className="w-full" style={{ height: 420 }}>
+          {/* Grafik */}
+          <div className="w-full" style={{ height: 450 }} >
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyData}   >
+
+              <BarChart data={filteredCompanyValue} layout="vertical" margin={{ left: 60 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" interval={0} textAnchor="end" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="won" fill="#22c55e" minPointSize={3} />
-                <Bar dataKey="lost" fill="#ef4444" minPointSize={3} />
-                <Bar dataKey="progress" fill="#0ea5e9" minPointSize={3} />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  width={140}
+                  className="text-xs"
+                  tick={{ fontSize: 12 }}
+                />
+                <XAxis
+                  type="number"
+                  tickFormatter={(v) =>
+                    Number(v).toLocaleString("tr-TR") + " ₺"
+                  }
+                />
+                <Tooltip
+                  formatter={(v) =>
+                    Number(v).toLocaleString("tr-TR") + " ₺"
+                  }
+                />
+                <Bar
+                  dataKey="totalValue"
+                  fill="#0ea5e9"
+                  radius={[0, 6, 6, 0]}
+                  name="Toplam Sözleşme Tutarı"
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        )}
 
-      </div>
-
-      {/* ŞİRKET BAZLI KIYAS */}
-
-      <div className="bg-white dark:bg-neutral-900 p-5 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm pr-4" style={{ maxHeight: 450, overflowY: 'auto' }}>
-        <h3 className="text-lg font-semibold text-neutral-800 dark:text-neutral-100 mb-4">
-          Şirket Bazlı Toplam Sözleşme Tutarı
-        </h3>
-
-        {/* Filtreler */}
-        <div className="flex flex-wrap gap-4 mb-5">
-          {/* Arama */}
-          <input
-            type="text"
-            placeholder="Şirket Ara..."
-            value={companySearch}
-            onChange={(e) => setCompanySearch(e.target.value)}
-            className="px-3 py-2 text-sm rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 w-48"
-          />
-
-          {/* Min Tutar */}
-          <input
-            type="number"
-            placeholder="Min Tutar"
-            value={minValue}
-            onChange={(e) => setMinValue(e.target.value)}
-            className="px-3 py-2 text-sm rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 w-32"
-          />
-
-          {/* Max Tutar */}
-          <input
-            type="number"
-            placeholder="Max Tutar"
-            value={maxValue}
-            onChange={(e) => setMaxValue(e.target.value)}
-            className="px-3 py-2 text-sm rounded-lg border border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 w-32"
-          />
-
-          {/* Multi-select şirket chipleri */}
-          <div className="flex flex-wrap gap-2 max-h-28 overflow-auto">
-            {companyValueData.map((c) => (
-              <button
-                key={c.name}
-                type="button"
-                onClick={() => toggleCompanySelection(c.name)}
-                className={`px-3 py-1 text-xs rounded-full border transition-all ${selectedCompanies.includes(c.name)
-                  ? "bg-pink-200 text-white border-pink-300"
-                  : "bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border-neutral-300 dark:border-neutral-700"
-                  }`}
-              >
-                {c.name}
-              </button>
-            ))}
-          </div>
+          {filteredCompanyValue.length === 0 && (
+            <p className="text-center text-neutral-500 mt-4">
+              Filtrelere göre sonuç bulunamadı.
+            </p>
+          )}
         </div>
-
-        {/* Grafik */}
-        <div className="w-full" style={{ height: 450 }} >
-          <ResponsiveContainer width="100%" height="100%">
-
-            <BarChart data={filteredCompanyValue} layout="vertical" margin={{ left: 60 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <YAxis
-                dataKey="name"
-                type="category"
-                width={140}
-                className="text-xs"
-                tick={{ fontSize: 12 }}
-              />
-              <XAxis
-                type="number"
-                tickFormatter={(v) =>
-                  Number(v).toLocaleString("tr-TR") + " ₺"
-                }
-              />
-              <Tooltip
-                formatter={(v) =>
-                  Number(v).toLocaleString("tr-TR") + " ₺"
-                }
-              />
-              <Bar
-                dataKey="totalValue"
-                fill="#0ea5e9"
-                radius={[0, 6, 6, 0]}
-                name="Toplam Sözleşme Tutarı"
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {filteredCompanyValue.length === 0 && (
-          <p className="text-center text-neutral-500 mt-4">
-            Filtrelere göre sonuç bulunamadı.
-          </p>
-        )}
       </div>
-    </div>
     </PageMeta>
   );
 }

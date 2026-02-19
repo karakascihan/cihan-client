@@ -15,10 +15,10 @@ import { useSelector } from "react-redux";
 /* ----------------- Main App ----------------- */
 export default function App() {
   const base = import.meta.env.VITE_BASE_NAME || "/";
-const isAuth = useSelector((state: any) => state.login.isLoggedIn);
+  const isAuth = useSelector((state: any) => state.login.isLoggedIn);
   return (
-    <TabsProvider>
-      <BrowserRouter basename={base}>
+    <BrowserRouter basename={base}>
+      <TabsProvider>
         <AuthProvider>
           <ConfirmProvider>
             <UIProvider>
@@ -28,7 +28,7 @@ const isAuth = useSelector((state: any) => state.login.isLoggedIn);
                     <Route path="/giris" element={<SignIn />} />
                     <Route
                       path="/*"
-                      element={ isAuth ?
+                      element={isAuth ?
                         <Layout>
                           <TabsUI />
                         </Layout> : <SignIn />
@@ -41,7 +41,7 @@ const isAuth = useSelector((state: any) => state.login.isLoggedIn);
             </UIProvider>
           </ConfirmProvider>
         </AuthProvider>
-      </BrowserRouter>
-    </TabsProvider>
+      </TabsProvider>
+    </BrowserRouter>
   );
 }

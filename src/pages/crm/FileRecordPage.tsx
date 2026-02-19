@@ -49,17 +49,17 @@ export const FileRecordPage = ({
   title?: string;
   onDoubleClick?: (record: FileRecordDto) => void;
 }) => {
-const {openModal}=useModal();
+  const { openModal } = useModal();
   const dispatch = useDispatch<AppDispatch>();
   const confirm = useConfirm();
   const sidebar = useSidebar();
-const fileRecordState= useSelector<RootState>(state=>state.fileRecord)
-useEffect(() => {
- dispatch(fetchFileRecords({relatedEntityName:relatedEntityName,relatedEntityId:relatedEntityId}))
-}, [])
+  const fileRecordState = useSelector<RootState>(state => state.fileRecord)
+  useEffect(() => {
+    dispatch(fetchFileRecords({ relatedEntityName: relatedEntityName, relatedEntityId: relatedEntityId }))
+  }, [])
   const columns: Column<FileRecordDto>[] = [
     { header: "#", accessor: "__index" },
-      {
+    {
       header: "Dosya Adı",
       accessor: "fileName",
       filterable: true,
@@ -98,28 +98,28 @@ useEffect(() => {
           >
             <FaTrash title="Sil" />
           </button>
-                  <button
-                    onClick={() => {
-                            //                   openModal({
-                            //   title: row.fileName,
-                            //   maximized: true,
-                            //   content: function (
-                            //     close: (result: any) => void
-                            //   ): ReactNode {
-                            //     return (
-                            //       <iframe
-                            //         src={URL+"/"+row.filePath}
-                            //         width="100%"
-                            //         height="100%"
-                            //         style={{ border: "none" }}
-                            //         title="PDF Viewer"
-                            //       />
-                            //     );
-                            //   },
-                            // });
-                            window.open(URL+"/"+row.filePath, '_blank');
-                          }}
-                    className="
+          <button
+            onClick={() => {
+              //                   openModal({
+              //   title: row.fileName,
+              //   maximized: true,
+              //   content: function (
+              //     close: (result: any) => void
+              //   ): ReactNode {
+              //     return (
+              //       <iframe
+              //         src={URL+"/"+row.filePath}
+              //         width="100%"
+              //         height="100%"
+              //         style={{ border: "none" }}
+              //         title="PDF Viewer"
+              //       />
+              //     );
+              //   },
+              // });
+              window.open(URL.replace("/api", "") + "/" + row.filePath, '_blank');
+            }}
+            className="
                       inline-flex items-center 
                       px-4 py-2 
                       bg-blue-600 hover:bg-blue-700 
@@ -127,38 +127,38 @@ useEffect(() => {
                       rounded
                        mr-2
                     "
-                  >
-                    <FaDownload title="Dosya İndir" />
-                  </button>
+          >
+            <FaDownload title="Dosya İndir" />
+          </button>
         </div>
       ),
     },
   ];
 
-const newRecordVoid = () => {
-  const input = document.createElement("input") as HTMLInputElement;
-  input.type = "file";
+  const newRecordVoid = () => {
+    const input = document.createElement("input") as HTMLInputElement;
+    input.type = "file";
 
-  input.addEventListener("change", async (e: Event) => {
-    const target = e.target as HTMLInputElement;
-    const file = target.files?.[0];
+    input.addEventListener("change", async (e: Event) => {
+      const target = e.target as HTMLInputElement;
+      const file = target.files?.[0];
 
-    if (!file) return;
+      if (!file) return;
 
-    // Base model
-    const newFile: FileRecordDtoForInsertion = {
-      relatedEntityId,
-      relatedEntityName,
-      fileName: file.name,
-      contentType: file.type,
-      content: await convertFileToBase64(file), // Base64 string
-    };
+      // Base model
+      const newFile: FileRecordDtoForInsertion = {
+        relatedEntityId,
+        relatedEntityName,
+        fileName: file.name,
+        contentType: file.type,
+        content: await convertFileToBase64(file), // Base64 string
+      };
 
-    dispatch(addFileRecord(newFile));
-  });
+      dispatch(addFileRecord(newFile));
+    });
 
-  input.click();
-};
+    input.click();
+  };
 
   return (
     <div className="card">
@@ -171,7 +171,7 @@ const newRecordVoid = () => {
       <SmartTable
         data={fileRecordState.items ?? []}
         columns={columns}
-        frozenColumns={[ { name:"id",right:true}]}
+        frozenColumns={[{ name: "id", right: true }]}
         rowIdAccessor={"id"}
         newRecordVoid={newRecordVoid}
         scrollHeight="calc(100vh - 200px)"

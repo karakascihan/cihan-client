@@ -10,6 +10,7 @@ import {
 import { Editor } from "@tinymce/tinymce-react";
 import { ProbabilityInput } from "./ProbabilityInput";
 import { colSpanMap } from "@/helper/tailwindHelper";
+import { URL } from "@/api";
 export type FieldType =
   | "text"
   | "number"
@@ -159,16 +160,16 @@ export const GenericForm: React.FC<GenericFormProps> = ({
       minLength:
         minLength !== undefined
           ? {
-              value: minLength,
-              message: `${label} en az ${minLength} karakter olmalıdır.`,
-            }
+            value: minLength,
+            message: `${label} en az ${minLength} karakter olmalıdır.`,
+          }
           : undefined,
       maxLength:
         maxLength !== undefined
           ? {
-              value: maxLength,
-              message: `${label} en fazla ${maxLength} karakter olmalıdır.`,
-            }
+            value: maxLength,
+            message: `${label} en fazla ${maxLength} karakter olmalıdır.`,
+          }
           : undefined,
       min:
         min !== undefined
@@ -256,7 +257,7 @@ export const GenericForm: React.FC<GenericFormProps> = ({
     } else if (type === "editor") {
       inputElement = (
         <Editor
-          tinymceScriptSrc="/tinymce/tinymce.min.js"
+          tinymceScriptSrc={URL.replace("/api", "") + "/tinymce/tinymce.min.js"}
           licenseKey="gpl"
           initialValue={defaultValues[name] || ""}
           onInit={(_evt, editor) => (editorRef.current = editor)}
@@ -409,11 +410,10 @@ export const GenericForm: React.FC<GenericFormProps> = ({
             type="button"
             key={group}
             onClick={() => setActiveTab(group)}
-            className={`px-4 py-2 -mb-[1px] border-b-2 font-medium transition ${
-              activeTab === group && group
+            className={`px-4 py-2 -mb-[1px] border-b-2 font-medium transition ${activeTab === group && group
                 ? "border-blue-600 text-blue-600"
                 : "border-transparent text-gray-500 hover:text-blue-500"
-            }`}
+              }`}
           >
             {group}
             {hasErrorInGroup(group) && (
@@ -424,20 +424,19 @@ export const GenericForm: React.FC<GenericFormProps> = ({
       </div>
 
       {/* Active Group Fields */}
-    <div className="grid grid-cols-12 gap-2">
-  {groups.map((group) => (
-    <div
-      key={group}
-      className={`col-span-12 ${
-        activeTab === group ? "block" : "hidden"
-      }`}
-    >
       <div className="grid grid-cols-12 gap-2">
-        {groupedFields[group]?.filter((f) => f.key !== "btn")}
+        {groups.map((group) => (
+          <div
+            key={group}
+            className={`col-span-12 ${activeTab === group ? "block" : "hidden"
+              }`}
+          >
+            <div className="grid grid-cols-12 gap-2">
+              {groupedFields[group]?.filter((f) => f.key !== "btn")}
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  ))}
-</div>
 
 
       <div className="mt-4 flex justify-between sticky bottom-0 bg-white py-3 border-t z-10">

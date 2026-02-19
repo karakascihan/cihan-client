@@ -31,6 +31,7 @@ export interface Column<T> {
   | "id_select"
   | "date_range";
   filterOptions?: ColumnFilterOption[];
+  hidden?: boolean;
 }
 
 interface IFrozenColumn {
@@ -313,6 +314,7 @@ export function SmartTable<T extends object>({
     const rows = sortedData.map((row, i) => {
       const obj: Record<string, string | number> = {};
       columns.forEach((col) => {
+        if (col.hidden) return;
         if (col.accessor === "__index") obj["#"] = i + 1;
         else if (col.accessor !== "__select")
           obj[col.header] = String(row[col.accessor as keyof T] ?? "");
@@ -331,6 +333,7 @@ export function SmartTable<T extends object>({
       { sum?: number; count?: number; avg?: number; value?: number | string }
     > = {};
     columns.forEach((col) => {
+      if (col.hidden) return;
       const accessor = col.accessor;
       const summaryType = col.summaryType;
       if (!summaryType) return;
@@ -461,7 +464,8 @@ export function SmartTable<T extends object>({
         >
           <thead className="bg-slate-50 sticky top-0 z-20">
             <tr>
-              {columns.map((col, colIndex) => (
+              {columns.filter(col => !col.hidden).map((col, colIndex) => (
+
                 <th
                   key={String(col.accessor)}
                   style={getStickyStyle(col, frozenColumns, colIndex, "#f3f4f6")}
@@ -498,7 +502,7 @@ export function SmartTable<T extends object>({
             </tr>
 
             <tr>
-              {columns.map((col, colIndex) => (
+              {columns.filter(col => !col.hidden).map((col, colIndex) => (
                 <th
                   key={String(col.accessor)}
                   style={getStickyStyle(col, frozenColumns, colIndex, "#f3f4f6")}
@@ -605,7 +609,7 @@ export function SmartTable<T extends object>({
                     hover:bg-slate-100/60
                   "
                 >
-                  {columns.map((col, colIndex) => (
+                  {columns.filter(col => !col.hidden).map((col, colIndex) => (
                     <td
                       key={String(col.accessor)}
                       style={getStickyStyle(
@@ -645,6 +649,7 @@ export function SmartTable<T extends object>({
           <tfoot className="bg-slate-50/80 backdrop-blur font-semibold text-xs text-slate-700 sticky bottom-0 z-10">
             <tr>
               {columns.map((col) => {
+                if (col.hidden) return;
                 const s = (summaryData as any)[col.accessor as any];
                 if (!s || !col.summaryType)
                   return <td key={col.accessor.toString()}></td>;

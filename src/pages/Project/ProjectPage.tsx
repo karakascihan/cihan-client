@@ -1,5 +1,5 @@
 import { URL } from "@/api";
-import { Personel, Projects } from "@/api/apiDtos";
+import { Personel, Projects, ProjeTuru } from "@/api/apiDtos";
 import { GenericForm } from "@/components/GenericForm";
 import { Column, SmartTable } from "@/components/SmartTable";
 import { useConfirm } from "@/context/ConfirmContext";
@@ -14,14 +14,12 @@ import { ReactNode, useEffect } from "react";
 import { FaFile, FaPencilAlt, FaTrash } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { FileRecordPage } from "../crm/FileRecordPage";
+import { getEnumOptions } from "@/utils/commonUtilsComponent";
+import { ProjeTuruDescriptions } from "@/api/extra-enums";
+import { appMode, AppModeEnum } from "@/components/Sidebar";
 
 
-export enum ProjectType {
-  Project = "Project",
-  Offer = "Offer",
-  Contract = "Contract",
-  Other = "Other"
-}
+
 export enum ProjectStatus {
   SiaKapsaminda = "Sia Kapsamında",
   Active = "Aktif",
@@ -41,6 +39,7 @@ export default function ProjectPage({ isPage = true, type, onSelect }: { isPage:
   const dispatch = useDispatch<AppDispatch>();
   const personelData = useSelector((state: RootState) => state.personel);
   const confirm = useConfirm();
+
   useEffect(() => {
     dispatch(fetchpersonels({
       onlyNames: false,
@@ -93,10 +92,14 @@ export default function ProjectPage({ isPage = true, type, onSelect }: { isPage:
               },
               {
                 name: "turu",
-                label: "Proje Türü",
-                type: "text",
+                label: "Proje Türü" + ProjeTuruDescriptions[ProjeTuru.Diskaynak],
+                type: "select",
                 defaultValue: row?.turu ?? "",
-                // options:getEnumOptions(ProjectType,ProjectTypeDescriptions),
+                options: Object.values(ProjeTuru).filter((v) => typeof v === "number").map((status) => ({
+                  value: ProjeTuruDescriptions[status],
+                  label: ProjeTuruDescriptions[status]
+                })),
+
                 colspan: 6
 
               },
@@ -107,7 +110,7 @@ export default function ProjectPage({ isPage = true, type, onSelect }: { isPage:
                 defaultValue: row?.durum ?? "",
                 options: Object.values(ProjectStatus).map((status) => ({
                   value: status,
-                  label: status,
+                  label: status
                 })),
                 colspan: 3
               },
@@ -216,6 +219,7 @@ export default function ProjectPage({ isPage = true, type, onSelect }: { isPage:
       accessor: "projeNo",
       filterable: true,
       sortable: true,
+      summaryType: "count"
     });
     columns.push({
       header: " Proje Adı",
@@ -239,6 +243,11 @@ export default function ProjectPage({ isPage = true, type, onSelect }: { isPage:
       header: "Proje Türü",
       accessor: "turu",
       filterable: true,
+      filterOptions: Object.values(ProjeTuru).filter((v) => typeof v === "number").map((status) => ({
+        value: ProjeTuruDescriptions[status],
+        label: ProjeTuruDescriptions[status]
+      })),
+      filterType: "select",
       sortable: true,
     });
 
@@ -387,7 +396,7 @@ export default function ProjectPage({ isPage = true, type, onSelect }: { isPage:
         rowIdAccessor={"id"}
         frozenColumns={[{ name: "id", right: true }]}
         isExport={isPage}
-        newRecordVoid={isPage ? () => TemplateHandler(undefined) : undefined}
+        newRecordVoid={appMode == AppModeEnum.supplier ? undefined : () => TemplateHandler(undefined)}
         scrollHeight="calc(100vh - 200px)"
         enablePagination={false}
       />

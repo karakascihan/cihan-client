@@ -1,6 +1,6 @@
 // Auto-generated from Swagger x-enumDescriptions
 
-import { ActivityState, ActivityType, ColumnType, CompanyStatus, CustomerType, DayOfWeek, EntityType, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, QuestionType, SozlesmeTipi, SurveyType, TemplateType, TransactionType } from "./apiDtos";
+import { ActivityState, ActivityType, ColumnType, CompanyStatus, CustomerType, DayOfWeek, EntityType, OperationType, OpportunityStage, PersonelEgitimDurumlari, PriceOfferState, PriceOfferType, ProjeTuru, QuestionType, SozlesmeTipi, SurveyType, TemplateType, TransactionType } from "./apiDtos";
 
 // Auto-generated from Swagger x-enumDescriptions
 
@@ -101,6 +101,17 @@ export const PriceOfferStateDescriptions: Record<PriceOfferState, string> = {
   [PriceOfferState.Sended]: "Gönderildi",
   [PriceOfferState.Withdrawn]: "Geri Çekildi",
   [PriceOfferState.Waiting]: "Beklemede",
+};
+
+export const PriceOfferTypeDescriptions: Record<PriceOfferType, string> = {
+  [PriceOfferType.sales]: "Satış Fiyat Teklifi",
+  [PriceOfferType.purchase]: "Satın Alma Fiyat Teklifi",
+};
+
+export const ProjeTuruDescriptions: Record<ProjeTuru, string> = {
+  [ProjeTuru.Ihale]: "İhale",
+  [ProjeTuru.Arge]: "Arge",
+  [ProjeTuru.Diskaynak]: "Dış Kaynak İşler",
 };
 
 export const QuestionTypeDescriptions: Record<QuestionType, string> = {

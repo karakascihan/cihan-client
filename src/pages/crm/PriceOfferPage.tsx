@@ -1,9 +1,7 @@
-import { ContractsDto, ContractsDtoForInsertion, MailSendDto, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState, PurchaseOrderDto, PurchaseOrderDtoForInsertion, TemplateDto, TemplateType } from "@/api/apiDtos";
+import { ContractsDto, ContractsDtoForInsertion, PriceOfferDto, PriceOfferDtoForInsertion, PriceOfferState, PriceOfferType, PurchaseOrderDtoForInsertion, TemplateDto, TemplateType } from "@/api/apiDtos";
 import OfferPdf from "@/components/crm/OfferPdf";
-import { PriceOfferComponent } from "@/components/crm/PriceOfferComponent";
 import {
   FieldDefinition,
-  FieldType,
   GenericForm,
 } from "@/components/GenericForm";
 import { Column, SmartTable } from "@/components/SmartTable";
@@ -45,6 +43,7 @@ import { apiRequest } from "@/services";
 import PriceOfferAddPage from "./PriceOfferAddPage";
 import TemplatePage from "./TemplatePage";
 import { useTabs } from "@/context/TabsContext";
+import { AppModeEnum } from "@/components/Sidebar";
 
 // Extended interface for PriceOfferPage with UI-specific fields
 interface PriceOfferPageDto extends PriceOfferDto {
@@ -56,14 +55,15 @@ interface PriceOfferPageDto extends PriceOfferDto {
   toplamFiyat?: number;
 }
 
-const PriceOfferPage = ({
-  opportunityId,
+const PriceOfferPage = ({ opportunityId, priceOfferType
 }: {
   opportunityId?: number;
+  priceOfferType?: PriceOfferType;
 }) => {
   const { data, loading, error } = useSelector(
     (state: RootState) => state.priceOffer
   );
+  const appMode = import.meta.env.VITE_APP_MODE;
   const confirm = useConfirm();
   const sidebar = useSidebar();
   const dispatch = useDispatch<AppDispatch>();
@@ -90,8 +90,8 @@ const PriceOfferPage = ({
   }, []);
 
   useEffect(() => {
-    dispatch(fetchPriceOffers());
-  }, [dispatch]);
+    dispatch(fetchPriceOffers({ priceOfferType: priceOfferType }));
+  }, [dispatch, priceOfferType]);
   const personels = useSelector((state: RootState) => state.personel);
   useEffect(() => {
     if (personels.items.length === 0) {
@@ -99,13 +99,13 @@ const PriceOfferPage = ({
     }
   }, []);
 
-  const userState = useSelector((state: RootState) => state.user);
-  useEffect(() => {
-    if (userState.data.length === 0) {
-      dispatch(fetchUsers() as any);
-    }
-    dispatch(fetchEnterprises() as any);
-  }, []);
+  // const userState = useSelector((state: RootState) => state.user);
+  // useEffect(() => {
+  //   if (userState?.data?.length === 0) {
+  //     dispatch(fetchUsers() as any);
+  //   }
+  //   dispatch(fetchEnterprises() as any);
+  // }, []);
   const { refetch } = useApiRequest<ContractsDto[]>(URL + "/contracts/getall", { method: "GET", skip: true, deps: [], }
   );
   const enterpriseState = useSelector((state: RootState) => state.enterprise);
@@ -225,8 +225,8 @@ const PriceOfferPage = ({
   //  });
   // };
 
-  const PriceOfferWith = useSelector(selectPriceOffersWithCustomerWithOpportunity);
-
+  // const PriceOfferWith = useSelector(selectPriceOffersWithCustomerWithOpportunity);
+  const PriceOfferWith = useSelector((x: RootState) => x.priceOffer.data);
   const ConvertToOrder = async (row: PriceOfferDto) => {
     try {
       const res = await apiRequest<ApiResponseClient<PriceOfferDto>>(
@@ -240,9 +240,7 @@ const PriceOfferPage = ({
       const offerLines =
         joined?.priceOfferLine?.filter(l => l.opsiyonMu === false) ?? [];
       const firmaId = joined?.firma_Id ?? null;
-      console.log("firmaId:", firmaId);
-      console.log("priceofferwith", PriceOfferWith);
-      console.log("priceofferline", offerLines);
+
       const firma =
         customerState.data.find(c => Number(c.id) === Number(firmaId)) ??
         null;
@@ -297,7 +295,7 @@ const PriceOfferPage = ({
             initialOrder={order}
             onClose={(r) => close(r)}
             onSuccess={async () => {
-              await dispatch(fetchPriceOffers());
+              await dispatch(fetchPriceOffers({ priceOfferType: priceOfferType }));
             }}
           />
         ),
@@ -321,17 +319,18 @@ const PriceOfferPage = ({
     },
     {
       header: "Müşteri",
-      accessor: "firma_Id",
+      accessor: "firmaAdi",
       filterable: true,
       sortable: true,
-      filterType: "id_select",
-      filterOptions: customerState.data
-        ? customerState.data.map((c) => ({ label: c.firma, value: c.id }))
-        : [],
-      body: (row: PriceOfferDto) => {
-        let firma = customerState.data?.find((x) => x.id == row.firma_Id);
-        return <span>{firma?.firma}</span>;
-      },
+      // hidden: appMode === AppModeEnum.supplier,
+      // filterType: "id_select",
+      // filterOptions: customerState.data
+      //   ? customerState.data.map((c) => ({ label: c.firma, value: c.id }))
+      //   : [],
+      // body: (row: PriceOfferDto) => {
+      //   let firma = customerState.data?.find((x) => x.id == row.firma_Id);
+      //   return <span>{firma?.firma}</span>;
+      // },
     },
     {
       header: "Teklif Tarihi",
@@ -347,6 +346,8 @@ const PriceOfferPage = ({
       accessor: "referansNo",
       filterable: true,
       sortable: true,
+      hidden: appMode === AppModeEnum.supplier,
+
       summaryType: "count",
     },
     {
@@ -365,12 +366,16 @@ const PriceOfferPage = ({
       accessor: "customerContact",
       filterable: true,
       sortable: true,
+      hidden: appMode === AppModeEnum.supplier,
+
     },
     {
       header: "Ülke",
       accessor: "ulkeAdi",
       filterable: true,
       sortable: true,
+      hidden: appMode === AppModeEnum.supplier,
+
     },
     {
       header: "Hazırlayan",
@@ -440,19 +445,22 @@ const PriceOfferPage = ({
           >
             <FaPencilAlt title="Düzenle" />
           </button>
-          <button
-            onClick={async () => {
-              const isConfirmed = await confirm({
-                title: "Silme işlemi",
-                message: "Teklifi silmek istediğinize emin misiniz?",
-                confirmText: "Evet",
-                cancelText: "Vazgeç",
-              });
-              if (isConfirmed) {
-                dispatch(deletePriceOffer(row.id!));
-              }
-            }}
-            className="
+          {
+            appMode !== AppModeEnum.supplier &&
+            <>
+              <button
+                onClick={async () => {
+                  const isConfirmed = await confirm({
+                    title: "Silme işlemi",
+                    message: "Teklifi silmek istediğinize emin misiniz?",
+                    confirmText: "Evet",
+                    cancelText: "Vazgeç",
+                  });
+                  if (isConfirmed) {
+                    dispatch(deletePriceOffer(row.id!));
+                  }
+                }}
+                className="
                         inline-flex items-center 
                         px-4 py-2 
                         bg-red-600 hover:bg-red-700 
@@ -460,14 +468,14 @@ const PriceOfferPage = ({
                         rounded
                          mr-2
                       "
-          >
-            <FaTrash title="Dokümanı Sil" />
-          </button>
-          <button
-            onClick={() => {
-              showTemplate1(row);
-            }}
-            className="
+              >
+                <FaTrash title="Dokümanı Sil" />
+              </button>
+              <button
+                onClick={() => {
+                  showTemplate1(row);
+                }}
+                className="
                     inline-flex items-center 
                     px-4 py-2 
                     bg-purple-500 hover:bg-purple-600 
@@ -475,39 +483,39 @@ const PriceOfferPage = ({
                     rounded 
                     mr-2
                   "
-          >
-            <FaEye title="Göster" />
-          </button>
-          <button
-            onClick={() => {
-              let contract: ContractsDtoForInsertion = {
-                isActive: true,
-                kurum: "",
-                sirket: customerState.data?.find(c => c.id === row.firma_Id)?.firma ?? "",
-                sozlesmeTarihi: undefined,
-                sozlesmeNo: "",
-                sozlesmeAdi: "",
-                nsnKodu: "",
-                urunAdi: "",
-                adet: 0,
-                birimFiyat: 0,
-                tutar: 0,
-                teslimGunu: "",
-                teslimTarihi: undefined,
-                durum: "",
-                aciklama: "",
-                priceOfferId: row.id!,
-                sozlesmeBaslangicTarihi: undefined,
-                sozlesmeBitisTarihi: undefined,
-                purchaseOrdersId: undefined,
-                sozlesmeTipi: undefined,
-                personelId: undefined,
-                createdBy: undefined,
-                createdAt: undefined
-              };
-              ConvertToContract(contract);
-            }}
-            className="
+              >
+                <FaEye title="Göster" />
+              </button>
+              <button
+                onClick={() => {
+                  let contract: ContractsDtoForInsertion = {
+                    isActive: true,
+                    kurum: "",
+                    sirket: customerState.data?.find(c => c.id === row.firma_Id)?.firma ?? "",
+                    sozlesmeTarihi: undefined,
+                    sozlesmeNo: "",
+                    sozlesmeAdi: "",
+                    nsnKodu: "",
+                    urunAdi: "",
+                    adet: 0,
+                    birimFiyat: 0,
+                    tutar: 0,
+                    teslimGunu: "",
+                    teslimTarihi: undefined,
+                    durum: "",
+                    aciklama: "",
+                    priceOfferId: row.id!,
+                    sozlesmeBaslangicTarihi: undefined,
+                    sozlesmeBitisTarihi: undefined,
+                    purchaseOrdersId: undefined,
+                    sozlesmeTipi: undefined,
+                    personelId: undefined,
+                    createdBy: undefined,
+                    createdAt: undefined
+                  };
+                  ConvertToContract(contract);
+                }}
+                className="
                     inline-flex items-center 
                     px-4 py-2 
                     bg-sky-500 hover:bg-sky-600 
@@ -515,45 +523,45 @@ const PriceOfferPage = ({
                     rounded 
                     mr-2
                   "
-          >
-            <FaFileContract title="Sözleşme Oluştur" />
-          </button>
-          <button
-            onClick={() => {
-              // const firma = customerState.data.find(c => c.id == row.firma_Id);
-              // let order: PurchaseOrderDtoForInsertion = {
-              //   firmaAdi: firma.firma,
-              //   yetkiliKisi: firma.yetkili,
-              //   siparisTarihi: new Date().toString(),
-              //   teslimTarihi: new Date().toString(),
-              //   aciklama: "",
-              //   durumu: "",
-              //   onayAcikla: "",
-              //   siparisKosullari: "",
-              //   kaliteKosullari: "",
-              //   siparisTipi: "",
-              //   turu: "",
-              //   purchaseOrderLine: []
-              // };
-              // row.priceOfferLine.forEach(line => {
-              //   order.purchaseOrderLine.push({
-              //     malzemeKodu: line.malzemeKodu,
-              //     malzemeAdi: line.malzemeAdi,
-              //     miktar: line.miktar,
-              //     birimi: line.birimi,
-              //     birimFiyat: line.birimFiyat,
-              //     paraBirimi: line.paraBirimi,
-              //     teslimTarih: undefined,
-              //     aciklama: "",
-              //     tamamTarihi: undefined,
-              //     durumu: "",
-              //     stogaAktarildimi: false,
-              //     order_Id: 0
-              //   });
-              // })
-              ConvertToOrder(row);
-            }}
-            className="
+              >
+                <FaFileContract title="Sözleşme Oluştur" />
+              </button>
+              <button
+                onClick={() => {
+                  // const firma = customerState.data.find(c => c.id == row.firma_Id);
+                  // let order: PurchaseOrderDtoForInsertion = {
+                  //   firmaAdi: firma.firma,
+                  //   yetkiliKisi: firma.yetkili,
+                  //   siparisTarihi: new Date().toString(),
+                  //   teslimTarihi: new Date().toString(),
+                  //   aciklama: "",
+                  //   durumu: "",
+                  //   onayAcikla: "",
+                  //   siparisKosullari: "",
+                  //   kaliteKosullari: "",
+                  //   siparisTipi: "",
+                  //   turu: "",
+                  //   purchaseOrderLine: []
+                  // };
+                  // row.priceOfferLine.forEach(line => {
+                  //   order.purchaseOrderLine.push({
+                  //     malzemeKodu: line.malzemeKodu,
+                  //     malzemeAdi: line.malzemeAdi,
+                  //     miktar: line.miktar,
+                  //     birimi: line.birimi,
+                  //     birimFiyat: line.birimFiyat,
+                  //     paraBirimi: line.paraBirimi,
+                  //     teslimTarih: undefined,
+                  //     aciklama: "",
+                  //     tamamTarihi: undefined,
+                  //     durumu: "",
+                  //     stogaAktarildimi: false,
+                  //     order_Id: 0
+                  //   });
+                  // })
+                  ConvertToOrder(row);
+                }}
+                className="
                     inline-flex items-center 
                     px-4 py-2 
                     bg-sky-500 hover:bg-sky-600 
@@ -561,29 +569,14 @@ const PriceOfferPage = ({
                     rounded 
                     mr-2
                   "
-          >
-            <FaFirstOrder title="Sipariş Oluştur" />
-          </button>
-          {/* <button
-            onClick={() => {
-              showTemplate1(row);
-            }}
-            className="
-                    inline-flex items-center 
-                    px-4 py-2 
-                    bg-green-500 hover:bg-gray-600 
-                    text-white 
-                    rounded 
-                    mr-2
-                  "
-          >
-            <MdTempleHindu  title="Şablonu Göster" />
-          </button> */}
-          <button
-            onClick={() => {
-              showMail(row);
-            }}
-            className="
+              >
+                <FaFirstOrder title="Sipariş Oluştur" />
+              </button>
+              <button
+                onClick={() => {
+                  showMail(row);
+                }}
+                className="
                     inline-flex items-center 
                     px-4 py-2 
                     bg-gray-500 hover:bg-gray-600 
@@ -591,9 +584,11 @@ const PriceOfferPage = ({
                     rounded 
                     mr-2
                   "
-          >
-            <MdSend title="Mail Gönder" />
-          </button>
+              >
+                <MdSend title="Mail Gönder" />
+              </button>
+            </>
+          }
         </div>
       ),
       accessor: "id",
@@ -649,7 +644,6 @@ const PriceOfferPage = ({
         type: "text",
         colspan: 12,
         group: "Genel",
-
         defaultValue: priceofferDtoForInsertion?.teklifOnay || "",
       },
     ];
@@ -680,7 +674,7 @@ const PriceOfferPage = ({
       title: "Teklif Detayı",
       maximizable: true,
       style: { width: "85vw" },
-      content: (close) => <PriceOfferAddPage offer={record} />,
+      content: (close) => <PriceOfferAddPage offer={record} priceOfferType={priceoffer.teklifTuru} />,
     });
   };
   const showPreview = (priceoffer: PriceOfferDto) => {
@@ -806,8 +800,8 @@ const PriceOfferPage = ({
                 }
                 else {
                   priceoffer.priceOfferLine?.forEach((line, index) => {
-                    let product = productState.items?.filter(p => p.productName == line.malzemeAdi)[0];
-                    let productImg = productState.items?.filter(p => p.productName == line.malzemeAdi)[0]?.pictures ?? "";
+                    let product = productState.items?.filter(p => p.productName.trim().toLowerCase() == line.malzemeAdi.trim().toLowerCase())[0];
+                    let productImg = productState.items?.filter(p => p.productName.trim().toLowerCase() == line.malzemeAdi.trim().toLowerCase())[0]?.pictures ?? "";
                     let fiyatSatir = `  
                         <td style="padding: 12px; border: 1px solid #000;">
                            ${line.malzemeAdi}
@@ -837,12 +831,12 @@ const PriceOfferPage = ({
                           <td>
                             <h3 style="margin:0 0 5px 0;">${line.malzemeAdi}</h3>
                             <p style="margin:0; font-size:12px;">
-                              MODEL NO: ${product.productCode} 
+                              MODEL NO: ${line?.malzemeKodu ?? ""} 
                             </p>
                           </td>
                         </tr>
                       </table>
-                        ${product.notes}
+                        ${product?.notes ?? ""}
                         </div>
                             `;
 
@@ -912,20 +906,31 @@ const PriceOfferPage = ({
       <SmartTable
         data={
           opportunityId
-            ? PriceOfferWith.filter((x) => x.opportunityId == opportunityId)
-            : PriceOfferWith ?? []
+            ? PriceOfferWith.filter((x) => x.opportunityId == opportunityId && x.teklifTuru == priceOfferType)
+            : PriceOfferWith.filter((x) => x.teklifTuru == priceOfferType) ?? []
         }
         columns={columns}
         rowIdAccessor={"id"}
         frozenColumns={[{ name: "id", right: true }]}
         isExport={true}
         newRecordVoid={() => {
-          openTab({
-            id: "/yeniteklif/" + (opportunityId && opportunityId?.toString()),
-            title: "Yeni Teklif",
-            component: <PriceOfferAddPage offer={undefined} opportunityId={opportunityId} />
-          });
-          navigate("/yeniteklif/" + (opportunityId && opportunityId?.toString()));
+          if (priceOfferType == PriceOfferType.Purchase) {
+            openTab({
+              id: "/satinalma-teklif-yeni",
+              title: "Yeni Satınalma Teklifi",
+              component: <PriceOfferAddPage offer={undefined} opportunityId={opportunityId} priceOfferType={priceOfferType} />
+            });
+            navigate("/satinalma-teklif-yeni/");
+          }
+          else {
+            openTab({
+              id: "/yeniteklif/" + (opportunityId && opportunityId?.toString()),
+              title: "Yeni Teklif",
+              component: <PriceOfferAddPage offer={undefined} opportunityId={opportunityId} priceOfferType={priceOfferType} />
+            });
+            navigate("/yeniteklif/" + (opportunityId && opportunityId?.toString()));
+          }
+
         }
         }
 

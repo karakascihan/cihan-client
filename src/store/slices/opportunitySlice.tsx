@@ -42,11 +42,11 @@ export const fetchOpportunities = createAsyncThunk<OpportunityDto[]>(
             response.statusCode !== 200
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
-      if(!response.isSuccess)   return rejectWithValue(response?.message);
+      if (!response.isSuccess) return rejectWithValue(response?.message);
       return response.result;
     } catch (error) {
       const errorMessage =
@@ -85,8 +85,8 @@ export const addOpportunity = createAsyncThunk<
             response.statusCode === 500
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
       return response.result;
@@ -127,8 +127,8 @@ export const updateOpportunity = createAsyncThunk<
             response.statusCode === 500
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
       return response.result;
@@ -153,7 +153,7 @@ export const patchOpportunity = createAsyncThunk<
   { id: number; changes: Partial<OpportunityDtoForUpdate> }
 >(
   "opportunity/patch",
-  async ({id,changes}, { rejectWithValue, dispatch, getState }) => {
+  async ({ id, changes }, { rejectWithValue, dispatch, getState }) => {
     try {
       const state = getState() as RootState;
 
@@ -172,11 +172,11 @@ export const patchOpportunity = createAsyncThunk<
           title: response?.message ?? "",
           message: " ",
           type:
-            response.statusCode !== 0
+            response.statusCode !== 200
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
 
@@ -212,11 +212,11 @@ export const deleteOpportunity = createAsyncThunk<number, number>(
           title: response?.message ?? "",
           message: " ",
           type:
-            response.statusCode === 500
+            response.statusCode !== 200
               ? "error"
               : response.isSuccess
-              ? "success"
-              : "warning",
+                ? "success"
+                : "warning",
         })
       );
       return id;

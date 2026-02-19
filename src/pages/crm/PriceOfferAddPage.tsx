@@ -8,6 +8,7 @@ import {
   PriceOfferDto,
   PriceOfferLineDto,
   PriceOfferState,
+  PriceOfferType,
   Products,
 } from "@/api/apiDtos";
 import { PriceOfferStateDescriptions } from "@/api/extra-enums";
@@ -48,11 +49,13 @@ export const paraBirimleri = ["TRY", "USD", "EUR"];
 interface PriceOfferAddPageProps {
   offer: PriceOfferDto;
   opportunityId?: number;
+  priceOfferType?: PriceOfferType;
 }
 
 const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
   offer,
-  opportunityId
+  opportunityId,
+  priceOfferType
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -91,24 +94,31 @@ const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
 
   // Veri yükleme useEffect'leri
   useEffect(() => {
+    if (appMode === "supplier") return;
     if (products.items.length === 0) {
       dispatch(productsSlice.actions.fetchAll());
     }
   }, [dispatch, products.items.length]);
 
   useEffect(() => {
+    if (appMode === "supplier") return;
+
     if (users.data.length === 0) {
       dispatch(fetchUsers());
     }
-  }, [dispatch, users.data.length]);
+  }, [dispatch, users?.data?.length]);
 
   useEffect(() => {
+    if (appMode === "supplier") return;
+
     if (personels.items?.length === 0) {
       dispatch(fetchpersonels({ onlyNames: true, isActive: true }));
     }
   }, [dispatch, personels.items?.length]);
 
   useEffect(() => {
+    if (appMode === "supplier") return;
+
     if (customerState.data?.length === 0) {
       dispatch(fetchCustomers());
     }
@@ -226,6 +236,7 @@ const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
   // Form submit
   const onSubmit = async (data: PriceOfferDto, isRevision = false) => {
     data = { ...data, opportunityId: Number(opportunityId) };
+    data = { ...data, teklifTuru: priceOfferType };
     data.priceOfferLine.forEach((line) => {
       line.toplamFiyat = calcLineTotal(line);
     });
@@ -414,26 +425,35 @@ const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
 
           {
             appMode !== "supplier" &&
-            <>
-              <div>
-                <label className="block text-sm font-medium">Müşteri</label>
-                <select
-                  {...register("firma_Id")}
+
+            <div>
+              <label className="block text-sm font-medium">Müşteri</label>
+              <select
+                {...register("firma_Id")}
+                className="border p-1 rounded w-full"
+              >
+                <option value="">Seçiniz</option>
+                {customerState.data.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.firma}
+                  </option>
+                ))}
+              </select>
+            </div>
+          }
+
+
+
+          <div>
+            <label className="block text-sm font-medium">Teklif Veren</label>
+            {
+              appMode === "supplier" ? (
+                <input
+                  type="text"
+                  {...register("teklifOnay")}
                   className="border p-1 rounded w-full"
-                >
-                  <option value="">Seçiniz</option>
-                  {customerState.data.map((customer) => (
-                    <option key={customer.id} value={customer.id}>
-                      {customer.firma}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-
-
-              <div>
-                <label className="block text-sm font-medium">Teklif Veren</label>
+                />
+              ) : (
                 <select
                   {...register("teklifOnay", {
                     required: "Lütfen bir kullanıcı seçiniz.",
@@ -447,12 +467,13 @@ const PriceOfferAddPage: React.FC<PriceOfferAddPageProps> = ({
                     </option>
                   ))}
                 </select>
-                {errors.teklifOnay && (
-                  <span className="text-red-600">{errors.teklifOnay.message}</span>
-                )}
-              </div>
-            </>
-          }
+              )
+            }
+
+            {errors.teklifOnay && (
+              <span className="text-red-600">{errors.teklifOnay.message}</span>
+            )}
+          </div>
           <div>
             <label className="block text-sm font-medium">
               Teslim Süresi (Gün)

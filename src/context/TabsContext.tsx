@@ -23,7 +23,7 @@ export const TabsProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     title: "Anasayfa",
     component: <CrmDashboard />
   }]);
-  const [activeTabId, setActiveTabId] = useState<string | null>(null);
+  const [activeTabId, setActiveTabId] = useState<string | null>("/");
 
   const openTab = (tab: Tab) => {
     setTabs(prev => {

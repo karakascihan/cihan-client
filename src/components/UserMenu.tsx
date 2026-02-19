@@ -30,7 +30,7 @@ export const UserMenu: React.FC<Props> = ({ user }) => {
   return (
     <div className="relative inline-block text-left" ref={menuRef}>
       <Avatar
-        imageUrl={URL+"/user2.png"} 
+        imageUrl={URL.replace("/api", "") + "/user2.png"}
         name={user?.name + " " + user?.surname}
         onClick={() => setIsOpen(!isOpen)}
       />
@@ -43,23 +43,23 @@ export const UserMenu: React.FC<Props> = ({ user }) => {
 
       {/* Dropdown Panel */}
       {isOpen && (
-       <div className="origin-bottom-right absolute left-10 bottom-full mb-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
-  <div className="py-1">
-    <a
-      onClick={() => { navigate("/ayarlar") }}
-      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-    >
-      Ayarlar
-    </a>
+        <div className="origin-bottom-right absolute left-10 bottom-full mb-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+          <div className="py-1">
+            <a
+              onClick={() => { navigate("/ayarlar") }}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              Ayarlar
+            </a>
 
-    <a
-      onClick={() => { dispatch(resetLoginSuccess()); navigate('/giris'); }}
-      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-    >
-      Çıkış Yap
-    </a>
-  </div>
-</div>
+            <a
+              onClick={() => { dispatch(resetLoginSuccess()); navigate('/giris'); }}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+            >
+              Çıkış Yap
+            </a>
+          </div>
+        </div>
 
       )}
     </div>

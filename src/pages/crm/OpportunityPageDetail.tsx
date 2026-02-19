@@ -5,6 +5,7 @@ import {
   FileRecordDto,
   FileRecordDtoForInsertion,
   OpportunityDto,
+  PriceOfferType,
   SystemLogDtoForInsertion,
 } from "@/api/apiDtos";
 import { useModal } from "@/context/ModalContext";
@@ -14,11 +15,11 @@ import { AppDispatch, RootState } from "@/store/store";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { convertFileToBase64, formatDateForInput } from "@/utils/commonUtils";
-import  ActivityPage  from "./ActivityPage";
+import ActivityPage from "./ActivityPage";
 import { useParams } from "react-router-dom";
 import { GenericForm } from "@/components/GenericForm";
 import { addsystemLog, fetchsystemLogs } from "@/store/slices/systemLogSlice";
-import  PriceOfferPage  from "./PriceOfferPage";
+import PriceOfferPage from "./PriceOfferPage";
 import { Column, SmartTable } from "@/components/SmartTable";
 import { ActivityStateDescriptions, ActivityTypeDescriptions } from "@/api/extra-enums";
 import { fetchActivities, updateActivity } from "@/store/slices/activitySlice";
@@ -31,11 +32,11 @@ import { addFileRecord, fetchFileRecords } from "@/store/slices/fileRecordSlice"
 import { FileRecordPage } from "./FileRecordPage";
 import { fetchpersonels } from "@/store/slices/personalSlice";
 
- const OpportunityPageDetail: React.FC = ({id}:{id?:number}) => {
+const OpportunityPageDetail: React.FC = ({ id }: { id?: number }) => {
   const [activeTab, setActiveTab] = useState<
     "details" | "activities" | "notes" | "files" | "priceoffers"
   >("details");
- 
+
   const [opportunity, setOpportunity] = useState<OpportunityDto>();
   const dispatch = useDispatch<AppDispatch>();
   // const {id} = useParams();
@@ -44,11 +45,11 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
   const loginState = useSelector((state: RootState) => state.login);
 
   useEffect(() => {
-   setOpportunity(opportunityState.data.find(op=>op.id==id));
+    setOpportunity(opportunityState.data.find(op => op.id == id));
   }, [id])
   const userState = useSelector((state: RootState) => state.user as UserState);
   useEffect(() => {
-    if ( userState.data.length === 0) {
+    if (userState.data.length === 0) {
       dispatch(fetchUsers());
     }
   }, []);
@@ -57,105 +58,108 @@ import { fetchpersonels } from "@/store/slices/personalSlice";
     (state: RootState) => state.customer as CustomerState
   );
   useEffect(() => {
-    if ( customerState.data.length === 0) {
+    if (customerState.data.length === 0) {
       dispatch(fetchCustomers());
     }
   }, []);
 
-const {openModal} = useModal();
-  const getUser =(id:number)=>{
-     const user = userState.data.find(c=>c.id==id);
-                     return user?.name+" "+user?.surname
+  const { openModal } = useModal();
+  const getUser = (id: number) => {
+    const user = userState.data.find(c => c.id == id);
+    return user?.name + " " + user?.surname
   }
   if (opportunity) {
-    
-  return (
-    <div className="w-full  mx-auto mt-2 bg-white rounded-2xl shadow-lg p-2">
-      {/* Tab Headers */}
-      <div className="flex border-b mb-2">
-        {["details", "activities", "notes", "files","priceoffers"].map((tab) => (
-          <button
-            key={tab}
-            className={`px-6 py-3 -mb-px font-semibold border-b-2 transition ${
-              activeTab === tab
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-blue-600"
-            }`}
-            onClick={() => { if (tab=="notes") {
-              dispatch(fetchsystemLogs( {relatedEntityId: opportunity.id, relatedEntityName: "Opportunity"})); }              
-             setActiveTab(tab as any); }}
-          >
-            {tab === "details"
-              ? "Detaylar"
-              : tab === "activities"
-              ? "Aktiviteler"
-              : tab === "notes"
-              ? "Notlar"
-              : tab === "files"
-              ? "Dosyalar"
-              : tab === "priceoffers"
-              ? "Teklifler"
-              : ""
-            }
-          </button>
-        ))}
-      </div>
 
-      {/* Tab Content */}
-      {activeTab === "details" && (
-        <div className="grid grid-cols-2 gap-4">
-          <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-gray-500 font-semibold">Başlık</p>
-            <p className="text-gray-800">{opportunity.title}</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-gray-500 font-semibold">Müşteri</p>
-            <p className="text-gray-800">{opportunity.customerName}</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-gray-500 font-semibold">Değer</p>
-            <p className="text-gray-800">
-              {opportunity.value?.toLocaleString("en-US", {
-                style: "currency",
-                currency: opportunity.currency || "USD",
-              })}
-            </p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-gray-500 font-semibold">Olasılık</p>
-            <span className="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-sm font-medium">
-              %{opportunity.probability}
-            </span>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-gray-500 font-semibold">Başlangıç Tarihi</p>
-            <p className="text-gray-800">{opportunity.startDate&&new Date(formatDateForInput(opportunity.startDate)).toLocaleDateString()}</p>
-          </div>
-          <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-gray-500 font-semibold">Beklenen Kapanış</p>
-            <p className="text-gray-800">
-              {opportunity.expectedCloseDate&&new Date(formatDateForInput(opportunity.expectedCloseDate)).toLocaleDateString()}
-            </p>
-          </div>
-          <div className="col-span-2 p-4 bg-gray-50 rounded-xl shadow-sm">
-            <p className="text-gray-500 font-semibold">Açıklama</p>
-            <p className="text-gray-800">{opportunity.description}</p>
-          </div>
+    return (
+      <div className="w-full  mx-auto mt-2 bg-white rounded-2xl shadow-lg p-2">
+        {/* Tab Headers */}
+        <div className="flex border-b mb-2">
+          {["details", "activities", "notes", "files", "priceoffers"].map((tab) => (
+            <button
+              key={tab}
+              className={`px-6 py-3 -mb-px font-semibold border-b-2 transition ${activeTab === tab
+                  ? "border-blue-600 text-blue-600"
+                  : "border-transparent text-gray-500 hover:text-blue-600"
+                }`}
+              onClick={() => {
+                if (tab == "notes") {
+                  dispatch(fetchsystemLogs({ relatedEntityId: opportunity.id, relatedEntityName: "Opportunity" }));
+                }
+                setActiveTab(tab as any);
+              }}
+            >
+              {tab === "details"
+                ? "Detaylar"
+                : tab === "activities"
+                  ? "Aktiviteler"
+                  : tab === "notes"
+                    ? "Notlar"
+                    : tab === "files"
+                      ? "Dosyalar"
+                      : tab === "priceoffers"
+                        ? "Teklifler"
+                        : ""
+              }
+            </button>
+          ))}
         </div>
-      )}
 
-      {activeTab === "activities" && (
-        <div>
-         
-          <ActivityPage relatedEntityId={opportunity.id} relatedEntityName="Opportunity" title={undefined} />
-              <button
-            onClick={async () =>{ 
-               const columns: Column<ActivityDto>[] = [
+        {/* Tab Content */}
+        {activeTab === "details" && (
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
+              <p className="text-gray-500 font-semibold">Başlık</p>
+              <p className="text-gray-800">{opportunity.title}</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
+              <p className="text-gray-500 font-semibold">Müşteri</p>
+              <p className="text-gray-800">{opportunity.customerName}</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
+              <p className="text-gray-500 font-semibold">Değer</p>
+              <p className="text-gray-800">
+                {opportunity.value?.toLocaleString("en-US", {
+                  style: "currency",
+                  currency: opportunity.currency || "USD",
+                })}
+              </p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
+              <p className="text-gray-500 font-semibold">Olasılık</p>
+              <span className="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-sm font-medium">
+                %{opportunity.probability}
+              </span>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
+              <p className="text-gray-500 font-semibold">Başlangıç Tarihi</p>
+              <p className="text-gray-800">{opportunity.startDate && new Date(formatDateForInput(opportunity.startDate)).toLocaleDateString()}</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-xl shadow-sm">
+              <p className="text-gray-500 font-semibold">Beklenen Kapanış</p>
+              <p className="text-gray-800">
+                {opportunity.expectedCloseDate && new Date(formatDateForInput(opportunity.expectedCloseDate)).toLocaleDateString()}
+              </p>
+            </div>
+            <div className="col-span-2 p-4 bg-gray-50 rounded-xl shadow-sm">
+              <p className="text-gray-500 font-semibold">Açıklama</p>
+              <p className="text-gray-800">{opportunity.description}</p>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "activities" && (
+          <div>
+
+            <ActivityPage relatedEntityId={opportunity.id} relatedEntityName="Opportunity" title={undefined} />
+            <button
+              onClick={async () => {
+                const columns: Column<ActivityDto>[] = [
                   { header: "#", accessor: "__index" },
-                  { header:"",
-                    accessor:"__select",
-                    filterable:true,
-                   },
+                  {
+                    header: "",
+                    accessor: "__select",
+                    filterable: true,
+                  },
                   {
                     header: "Yapılacak Aktivite",
                     accessor: "subject",
@@ -177,7 +181,7 @@ const {openModal} = useModal();
                       .map((key) => ({
                         label:
                           ActivityTypeDescriptions[
-                            ActivityType[key as keyof typeof ActivityType]
+                          ActivityType[key as keyof typeof ActivityType]
                           ],
                         value: ActivityType[key as keyof typeof ActivityType],
                       })),
@@ -189,7 +193,7 @@ const {openModal} = useModal();
                     sortable: true,
                     filterType: "date",
                     body: (row: ActivityDto) => (
-                      <span>{row.scheduledAt &&new Date(row.scheduledAt).toLocaleDateString()}</span>
+                      <span>{row.scheduledAt && new Date(row.scheduledAt).toLocaleDateString()}</span>
                     ),
                   },
                   {
@@ -203,7 +207,7 @@ const {openModal} = useModal();
                       .map((key) => ({
                         label:
                           ActivityStateDescriptions[
-                            ActivityState[key as keyof typeof ActivityState]
+                          ActivityState[key as keyof typeof ActivityState]
                           ],
                         value: ActivityState[key as keyof typeof ActivityState],
                       })),
@@ -227,84 +231,84 @@ const {openModal} = useModal();
                     },
                   }
                 ];
-              const result = openModal({
-              title: "Tüm Aktiviteler",
-              content: async function (close: (result: any) => void): React.ReactNode {
-              const result =await apiRequest<ApiResponseClient<ActivityDto[]>>(
+                const result = openModal({
+                  title: "Tüm Aktiviteler",
+                  content: async function (close: (result: any) => void): React.ReactNode {
+                    const result = await apiRequest<ApiResponseClient<ActivityDto[]>>(
                       "GET",
-                    URL + "/activity/getall",
+                      URL + "/activity/getall",
                       { Authorization: "Bearer " + loginState.accessToken }
                     );
                     if (result && result.isSuccess && result.result) {
-                      dispatch(clearSelectedRows({tableId: "my-table-id"}));
-                    return   <div> <SmartTable data={result.result} enablePagination={false}  columns={columns} rowIdAccessor={"id"}    /> <button className=""  onClick={()=> { 
-                      dispatch(setAktiviteSelectedRows({result:result.result,opportunity:opportunity.id}));
-                      close(null);
-                     
-                       }} >Seçimi Kaydet</button> </div>
+                      dispatch(clearSelectedRows({ tableId: "my-table-id" }));
+                      return <div> <SmartTable data={result.result} enablePagination={false} columns={columns} rowIdAccessor={"id"} /> <button className="" onClick={() => {
+                        dispatch(setAktiviteSelectedRows({ result: result.result, opportunity: opportunity.id }));
+                        close(null);
+
+                      }} >Seçimi Kaydet</button> </div>
                     }
-              return <div>Aktiviteler yükleniyor...</div>
-              }
-            }) 
-          }}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow"
-          >
-            Aktivitelerden Getir
-          </button>
-        </div>
-      )}
+                    return <div>Aktiviteler yükleniyor...</div>
+                  }
+                })
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow"
+            >
+              Aktivitelerden Getir
+            </button>
+          </div>
+        )}
 
-      {activeTab === "notes" && (
-        <div className="space-y-3">
-          {systemLogState.items.filter(x=>x.relatedEntityId==opportunity.id&&x.relatedEntityName=="Opportunity")?.map((note, idx) => (
-            <div key={idx} className="p-4 bg-yellow-50 rounded-xl shadow-sm">
-              <p className="text-gray-500">{note.note}</p>
-              <p className="text-gray-700 font-bold">{userState.data?.find(u => u.id === note.createdByUserId)?.userName}</p>
-              <p className="text-gray-800">{new Date(note.createdAt)?.toLocaleString()}</p>
-            </div>
-          ))}
-          <button
-            onClick={async () =>{ 
-              const result = openModal({
-              title: "Not Ekleme",
-              content: function (close: (result: any) => void): React.ReactNode {
-                return (
-                  <GenericForm fields={[{
-                    name: "note",
-                    label: "Not Girişi ",
-                    type: "textarea",
-                    colspan:12
-                  
-                  }]} onSubmit={function (data:SystemLogDtoForInsertion): void {
-                    data.relatedEntityId=opportunity.id;
-                    data.relatedEntityName="Opportunity";
-                                        dispatch(addsystemLog(data));
-                                        close(null)
-                  } } />
-                )
-              }
-            }) 
-          }}
-            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow"
-          >
-            Yeni Not Ekle
-          </button>
-        </div>
-      )}
+        {activeTab === "notes" && (
+          <div className="space-y-3">
+            {systemLogState.items.filter(x => x.relatedEntityId == opportunity.id && x.relatedEntityName == "Opportunity")?.map((note, idx) => (
+              <div key={idx} className="p-4 bg-yellow-50 rounded-xl shadow-sm">
+                <p className="text-gray-500">{note.note}</p>
+                <p className="text-gray-700 font-bold">{userState.data?.find(u => u.id === note.createdByUserId)?.userName}</p>
+                <p className="text-gray-800">{new Date(note.createdAt)?.toLocaleString()}</p>
+              </div>
+            ))}
+            <button
+              onClick={async () => {
+                const result = openModal({
+                  title: "Not Ekleme",
+                  content: function (close: (result: any) => void): React.ReactNode {
+                    return (
+                      <GenericForm fields={[{
+                        name: "note",
+                        label: "Not Girişi ",
+                        type: "textarea",
+                        colspan: 12
 
-      {activeTab === "files" && (
-          <FileRecordPage relatedEntityId={id}  relatedEntityName="Opportunity" />
-      )}
-      {activeTab === "priceoffers" && (
-        <PriceOfferPage  opportunityId={opportunity.id}/>
-      )}
-    </div>
-  );
+                      }]} onSubmit={function (data: SystemLogDtoForInsertion): void {
+                        data.relatedEntityId = opportunity.id;
+                        data.relatedEntityName = "Opportunity";
+                        dispatch(addsystemLog(data));
+                        close(null)
+                      }} />
+                    )
+                  }
+                })
+              }}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 shadow"
+            >
+              Yeni Not Ekle
+            </button>
+          </div>
+        )}
+
+        {activeTab === "files" && (
+          <FileRecordPage relatedEntityId={id} relatedEntityName="Opportunity" />
+        )}
+        {activeTab === "priceoffers" && (
+          <PriceOfferPage opportunityId={opportunity.id} priceOfferType={PriceOfferType.Sales} />
+        )}
+      </div>
+    );
   }
-else return ""
-  
+  else return ""
+
 };
-export  default OpportunityPageDetail;
+export default OpportunityPageDetail;
 // Modal Component
 const Modal: React.FC<{
   title: string;

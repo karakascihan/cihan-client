@@ -9,11 +9,13 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd());
   console.log("Current mode:", mode);
   // Farklı ortamlara göre base belirleme
-  const base = ((mode === "development") || (mode === "production")) ? "/" : `/${mode}/`;
+  const base = ((mode === "development") || (mode === "production")) ? "/" : `/${mode}`;
+  console.log("Base:", base);
+
   return {
     plugins: [react(), tailwindcss()],
     assetsInclude: ['**/*.pdf'],
-    base: "/", // base: base,
+    base: base,
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
@@ -27,7 +29,7 @@ export default defineConfig(({ mode }) => {
     // }
     build: {
       outDir: 'dist/' + mode,
-      emptyOutDir: false
+      emptyOutDir: false // her buildde dist klasörünü temizler true yaparsak
     }
   }
 });

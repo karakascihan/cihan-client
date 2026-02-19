@@ -1390,6 +1390,7 @@ export interface PriceOffer {
     durumu: string | undefined;
     projeNo: string | undefined;
     talepNo: string | undefined;
+    teklifTuru: number | undefined;
     firma_Id: number | undefined;
     talep_Id: number | undefined;
     isActive: boolean | undefined;
@@ -1431,6 +1432,13 @@ export interface PriceOfferDto {
     toplamTutar: number | undefined;
     id: number;
     priceOfferLine: PriceOfferLineDto[] | undefined;
+    teklifTuru: number | undefined;
+    hazirlayan: string | undefined;
+    adet: number | undefined;
+    customerContact: string | undefined;
+    onaylayanPersonel: string | undefined;
+    ulkeAdi: string | undefined;
+    firmaAdi: string | undefined;
 }
 
 export interface PriceOfferDtoForInsertion {
@@ -1452,6 +1460,7 @@ export interface PriceOfferDtoForInsertion {
     toplamTutar: number | undefined;
     ekleyen: string | undefined;
     priceOfferLine: PriceOfferLineDtoForInsertion[] | undefined;
+    teklifTuru: number | undefined;
 }
 
 export interface PriceOfferDtoForUpdate {
@@ -1559,6 +1568,18 @@ export enum PriceOfferState {
     Waiting = 6,
 }
 
+export enum PriceOfferType {
+    Sales = 1,
+    Purchase = 2,
+}
+
+export interface PriceOfferTypeApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: PriceOfferType;
+    isSuccess: boolean;
+}
+
 export interface ProblemDetails {
     type: string | undefined;
     title: string | undefined;
@@ -1640,6 +1661,19 @@ export interface ProductsIEnumerableApiResponse {
     message: string | undefined;
     statusCode: number;
     result: Products[] | undefined;
+    isSuccess: boolean;
+}
+
+export enum ProjeTuru {
+    Ihale = 1,
+    Arge = 2,
+    Diskaynak = 3,
+}
+
+export interface ProjeTuruApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: ProjeTuru;
     isSuccess: boolean;
 }
 

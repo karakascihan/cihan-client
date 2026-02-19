@@ -1,6 +1,7 @@
 import {
   ContractsDto,
   ContractsDtoForInsertion,
+  PriceOfferType,
   PurchaseOrders,
   SozlesmeTipi,
   TemplateDto,
@@ -29,7 +30,7 @@ import { fetchCustomers } from "@/store/slices/customerSlice";
 import { fetchPriceOffers } from "@/store/slices/priceOfferSlice";
 import { useApiRequest } from "@/hooks/useApiRequest";
 import { URL } from "@/api";
-import  {
+import {
   fetchEnterprises,
 } from "@/store/slices/enterpriseSlice";
 import { addFileRecord } from "@/store/slices/fileRecordSlice";
@@ -64,7 +65,7 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
     });
   const poList = Array.isArray(purchaseOrders) ? purchaseOrders : [];
   const { openModal } = useModal();
-  const {openTab} =useTabs();
+  const { openTab } = useTabs();
 
   // useEffect(() => {
   //   apiRequest<ContractsDto []>('GET','/contracts/getall',{ Authorization: `Bearer ${loginState.accessToken}` }).then(res=>{
@@ -72,8 +73,8 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
   // }, []);
   const { data: contracts, refetch } = useApiRequest<ContractsDto[]>(
     URL +
-      "/contracts/getall" +
-      (sozlesmeTipi !== undefined ? `?sozlesmeTipi=${sozlesmeTipi}` : ""),
+    "/contracts/getall" +
+    (sozlesmeTipi !== undefined ? `?sozlesmeTipi=${sozlesmeTipi}` : ""),
     {
       method: "GET",
       skip: false,
@@ -92,14 +93,14 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
       dispatch(fetchCustomers() as any);
     }
     if (priceOffersState.data.length === 0) {
-      dispatch(fetchPriceOffers() as any);
+      dispatch(fetchPriceOffers({ priceOfferType: PriceOfferType.Sales }) as any);
     }
     if (employeesState.items.length === 0) {
       dispatch(fetchpersonels({ onlyNames: false, isActive: true }) as any);
     }
   }, []);
   const showTemplate1 = async (contract: ContractsDto) => {
-   const modalResult= await openModal({
+    const modalResult = await openModal({
       title: "Şablon Seçim Ekranı",
       maximizable: true,
       maximized: false,
@@ -107,9 +108,9 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
         return (
           <TemplatePage
             isPage={false}
-            type={ contract.sozlesmeTipi == SozlesmeTipi.NDA ?  TemplateType.Nda.toString() :
-                  contract.sozlesmeTipi == SozlesmeTipi.NDA_EN ?  TemplateType.NdaEn.toString() :TemplateType.Nda.toString()
-             }
+            type={contract.sozlesmeTipi == SozlesmeTipi.NDA ? TemplateType.Nda.toString() :
+              contract.sozlesmeTipi == SozlesmeTipi.NDA_EN ? TemplateType.NdaEn.toString() : TemplateType.OrderContract.toString()
+            }
             onSelect={async function (temp: TemplateDto): Promise<void> {
               if (temp) {
                 const result = refetch(URL + "/template/get/" + temp.id, {
@@ -126,7 +127,7 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
         );
       },
     });
-  if(!modalResult) return;
+    if (!modalResult) return;
     let filledTemplate = modalResult;
     filledTemplate = filledTemplate.replaceAll("~kurum~", contract.kurum || "");
     filledTemplate = filledTemplate.replaceAll(
@@ -166,7 +167,7 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
     filledTemplate = filledTemplate.replaceAll(
       "~sirket_adres~",
       customersState.data.find((en) => en.firma === contract.sirket)?.adres ||
-        "",
+      "",
     );
     filledTemplate = filledTemplate.replaceAll(
       "~sirket_vergi_no~",
@@ -178,36 +179,30 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
     if (contract.priceOfferId) {
       {
         let fiyatSatirlarHtml = ``;
-        const priceoffers = await dispatch(fetchPriceOffers() as any).unwrap();
+        const priceoffers = await dispatch(fetchPriceOffers({ priceOfferType: PriceOfferType.Sales }) as any).unwrap();
         const priceoffer = priceoffers.find(
           (po) => po.id == contract.priceOfferId,
         );
         filledTemplate = filledTemplate.replaceAll(
           "~toplam_fiyat~",
           priceoffer.toplamTutar +
-            " " +
-            priceoffer.priceOfferLine[0].paraBirimi || "",
+          " " +
+          priceoffer.priceOfferLine[0].paraBirimi || "",
         );
         priceoffer.priceOfferLine?.forEach((line, index) => {
           toplamFiyat += Number(line.toplamFiyat ?? 0);
-          let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-            line.malzemeAdi
-          }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.miktar ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.birimi ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.paraBirimi ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.birimFiyat ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.toplamFiyat ?? ""
-                       }</td>`;
+          let fiyatSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
+            }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""
+            }</td>`;
           fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
         });
         let genelToplam = `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
@@ -215,7 +210,7 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
            </tr>`;
         fiyatSatirlarHtml += genelToplam;
         filledTemplate = filledTemplate.replaceAll(
-          "~kapsam_satirlari~",
+          "<tr>\n<td colspan=\"6\">~kapsam_satirlari~</td>\n</tr>",
           fiyatSatirlarHtml,
         );
       }
@@ -235,30 +230,24 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
         satirToplam =
           line.miktar && line.birimFiyat
             ? Number(
-                line.miktar *
-                  line.birimFiyat *
-                  (1 - (line.indirimOraniYuzde || 0) / 100),
-              )
+              line.miktar *
+              line.birimFiyat *
+              (1 - (line.indirimOraniYuzde || 0) / 100),
+            )
             : 0;
 
-        let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-          line.malzemeAdi
-        }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.miktar ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.birimi ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.paraBirimi ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         line.birimFiyat ?? ""
-                       }</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${
-                         satirToplam ?? ""
-                       }</td>`;
+        let siparisSatir = `<td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.malzemeAdi
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""
+          }</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${satirToplam ?? ""
+          }</td>`;
 
         siparisSatirlariHtml += `<tr>${siparisSatir}</tr>`;
       });
@@ -389,9 +378,9 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
           </button>
           <button
             onClick={async () => {
-              
-             await  showTemplate1(row);
-             refetch();
+
+              await showTemplate1(row);
+              refetch();
             }}
             className="
                     inline-flex items-center 
@@ -406,33 +395,33 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
           </button>
           {
             row.sozlesmeTipi === SozlesmeTipi.SiparisSozlesmesi &&
-          <button
-            onClick={() => {
-              openModal({
-                title: "Proje Uygulama Takimi Oluşturma",
-                content: function (
-                  close: (result: any) => void,
-                ): React.ReactNode {
-                  return (
-                    <AddBoardForm
-                      projectType={ProjectType.ERP}
-                      onClose={function (boardId: number): void {
-                        if (boardId != -1) {
-                          close(null);
-                                  openTab({
-                                  id: "/proje",
-                                  title: "Proje",
-                                  component: <BoardView boardId={boardId} />
-                                });
-                          navigate("/proje/" + boardId);
-                        }
-                      }}
-                    />
-                  );
-                },
-              });
-            }}
-            className="
+            <button
+              onClick={() => {
+                openModal({
+                  title: "Proje Uygulama Takimi Oluşturma",
+                  content: function (
+                    close: (result: any) => void,
+                  ): React.ReactNode {
+                    return (
+                      <AddBoardForm
+                        projectType={ProjectType.ERP}
+                        onClose={function (boardId: number): void {
+                          if (boardId != -1) {
+                            close(null);
+                            openTab({
+                              id: "/proje",
+                              title: "Proje",
+                              component: <BoardView boardId={boardId} />
+                            });
+                            navigate("/proje/" + boardId);
+                          }
+                        }}
+                      />
+                    );
+                  },
+                });
+              }}
+              className="
                     inline-flex items-center 
                     px-4 py-2 
                     bg-purple-500 hover:bg-purple-600 
@@ -440,9 +429,9 @@ const ContractPage = ({ sozlesmeTipi }: { sozlesmeTipi?: SozlesmeTipi }) => {
                     rounded 
                     mr-2
                   "
-          >
-            <FaRProject title="Proje Takvimi Oluştur" />
-          </button>
+            >
+              <FaRProject title="Proje Takvimi Oluştur" />
+            </button>
           }
 
           <button

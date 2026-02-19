@@ -87,6 +87,7 @@ import {
   PriceOfferPage,
   Product,
   ProjectPage,
+  ProjectReportList,
   PurchaseOrderPage,
   SupplierPage,
   TemplatePage,
@@ -99,7 +100,7 @@ import AccountingVoucherPage from "@/pages/account/AccountingVoucherPage";
 import { it } from "date-fns/locale";
 import { useModal } from "@/context/ModalContext";
 import AddBoardForm from "./board/AddBoardForm";
-import { CompanyStatus, SozlesmeTipi } from "@/api/apiDtos";
+import { CompanyStatus, PriceOfferType, SozlesmeTipi } from "@/api/apiDtos";
 import { UserMenu } from "./UserMenu";
 import SurveyList from "@/pages/survey/SurveyList";
 import SurveyCreate from "@/pages/survey/SurveyCreate";
@@ -120,9 +121,12 @@ interface MenuItem {
 
 export enum AppModeEnum {
   full = "full",
-  crm = "crm",
+  digitest_crm = "digitest-crm",
+  dijitalerp = "dijitalerp",
+  digitest = "digitest",
   supplier = "supplier"
 }
+export const appMode = import.meta.env.VITE_APP_MODE as AppModeEnum;
 
 export const Sidebar: React.FC = () => {
   const {
@@ -139,12 +143,40 @@ export const Sidebar: React.FC = () => {
   const user = useSelector((state: RootState) => state.login.user);
   const { openTab, tabs } = useTabs();
   const { openModal } = useModal();
-  const appMode = import.meta.env.VITE_APP_MODE as AppModeEnum;
   const handleClickOutside = (e: MouseEvent) => {
     if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
       closeSidebar();
     }
   };
+  const findMenuByPath = (
+    items: MenuItem[],
+    path: string
+  ): MenuItem | null => {
+    for (const item of items) {
+      if (item.path === path) return item;
+      if (item.items) {
+        const found = findMenuByPath(item.items, path);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+  useEffect(() => {
+    const currentPath = location.pathname;
+
+    // Eğer zaten açık tab varsa tekrar açma
+    if (tabs.find(t => t.id === currentPath)) return;
+
+    const menuItem = findMenuByPath(menus, currentPath);
+
+    if (menuItem && menuItem.element) {
+      openTab({
+        id: menuItem.path!,
+        title: menuItem.title,
+        component: menuItem.element,
+      });
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     if (sidebarOpen) {
@@ -167,59 +199,52 @@ export const Sidebar: React.FC = () => {
       element: <CrmDashboard />,
 
     },
-    // {
-    //   title: "Proje Yönetimi",
-    //   icon: <FaProjectDiagram />,
-    //   roles: [-1],
-    //   items: [
-    //     {
-    //       title: "Proje Takip Raporları",
-    //       path: "/projetakipraporlari",
-    //       icon: <HiOutlineDocumentReport />,
-    //     },
-    //   ],
-    // },
     {
       title: "Finans Yönetimi",
       icon: <FaMoneyBill />,
+      modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
       items: [
         {
           title: "Kasa Hesapları",
           path: "/kasa-hesaplari",
           icon: <FaCashRegister />,
           element: <CashAccountPage />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
         },
         {
           title: "Banka Hesapları",
           path: "/banka-hesaplari",
           icon: <FaPiggyBank />,
           element: <BankAccountPage />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
         },
         {
           title: "Muhasebe Fişleri",
           path: "/muhasebe-fisleri",
           icon: <FaMoneyBillTransfer />,
           element: <AccountingVoucherPage />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
         },
       ],
     },
     {
       title: "Proje Yönetimi",
       icon: <Workflow className="w-4 h-4" />,
-      modes: [AppModeEnum.supplier],
-
+      modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest],
       items: [
         {
           title: "Proje Takvimi",
           path: "/projetakvimi",
           icon: <FaCalendar />,
           element: <BoardPage />,
+          modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
         },
         {
-          title: "Yeni Proje",
+          title: "Yeni Proje Takvimi",
           path: "/proje",
           icon: <FaProjectDiagram />,
           element: <BoardView />,
+          modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
           onClick: () => {
             if (tabs.find((x) => x.id == "/proje")) return;
             openModal({
@@ -253,46 +278,63 @@ export const Sidebar: React.FC = () => {
           path: "/projeler",
           icon: <FaProjectDiagram />,
           element: <ProjectPage isPage={true} />,
-          modes: [AppModeEnum.supplier]
+          modes: [AppModeEnum.supplier, AppModeEnum.digitest],
+        },
+        {
+          title: "Proje Takip Raporları",
+          path: "/projetakipraporlari",
+          icon: <HiOutlineDocumentReport />,
+          element: <ProjectReportList />,
+          modes: [AppModeEnum.digitest],
         },
       ],
     },
     {
       title: "CRM",
       icon: <Orbit className="w-4 h-4" />,
-      modes: [AppModeEnum.supplier],
-
-
+      modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
       items: [
         {
           title: "Fırsatlar",
           icon: <Sparkles className="w-4 h-4 text-yellow-300" />,
           path: "/firsatlar",
           element: <OpportunityPage />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+
         },
         {
           title: "Müşteriler",
           icon: <Building2 className="w-4 h-4 text-blue-100" />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+
           items: [
             {
               title: "Aktif Müşteriler",
               path: "/aktif-musteriler",
               element: <CustomerPage durumu={CompanyStatus.Active} />,
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+
             },
             {
               title: "Teklif Verilenler",
               path: "/teklif-verilen-musteriler",
               element: <CustomerPage durumu={CompanyStatus.Quoted} />,
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+
             },
             {
               title: "Potansiyel Müşteriler",
               path: "/potansiyel-musteriler",
               element: <CustomerPage durumu={CompanyStatus.Potential} />,
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+
             },
             {
               title: "Tüm Müşteriler",
               path: "/musteriler",
               element: <CustomerPage />,
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+
             },
           ],
         },
@@ -301,26 +343,24 @@ export const Sidebar: React.FC = () => {
           icon: <Zap className="w-4 h-4 text-pink-300" />,
           path: "/aktiviteler",
           element: <ActivityPage />,
-          modes: [AppModeEnum.full],
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
 
         },
         {
           title: "Teklif Yönetimi",
           icon: <DollarSign className="w-4 h-4 text-green-300" />,
-          modes: [AppModeEnum.supplier],
           items: [
             {
               title: "Teklif Listesi",
               path: "/teklifler",
-              element: <PriceOfferPage />,
-              modes: [AppModeEnum.supplier],
-
+              element: <PriceOfferPage priceOfferType={PriceOfferType.Sales} />,
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
             },
             {
               title: "Yeni Teklif",
               path: "/yeniteklif",
               element: <PriceOfferAddPage offer={undefined} />,
-              modes: [AppModeEnum.supplier],
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
 
             },
           ],
@@ -330,10 +370,13 @@ export const Sidebar: React.FC = () => {
           icon: <FileSignature className="w-4 h-4 text-purple-100" />,
           path: "/sozlesmeler",
           element: <ContractPage />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+
         },
         {
           title: "Sipariş Yönetimi",
           icon: <Package className="w-4 h-4 text-amber-500" />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
           items: [
             {
               title: "Sipariş Listesi",
@@ -353,6 +396,7 @@ export const Sidebar: React.FC = () => {
       title: "Ürün Yönetimi",
       icon: <PackageSearch className="w-4 h-4" />,
       roles: [-1],
+      modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest],
       items: [
         {
           title: "Ürün Fiyat Listesi",
@@ -360,6 +404,7 @@ export const Sidebar: React.FC = () => {
           roles: [-1],
           path: "/urunler",
           element: <Product />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest],
         },
       ],
     },
@@ -367,6 +412,7 @@ export const Sidebar: React.FC = () => {
       title: "Kys Dokümanları",
       icon: <FaDochub className="w-4 h-4" />,
       roles: [-1],
+      modes: [AppModeEnum.digitest],
       items: [
         { title: "Tüm Dokümanlar", icon: null, path: "/kysdokumanlar/", element: <DocumentList /> },
         { title: "Süreçler", icon: null, path: "/kysdokumanlar/1", element: <DocumentList type="1" /> },
@@ -509,23 +555,52 @@ export const Sidebar: React.FC = () => {
     {
       title: "Satınalma Yönetimi",
       icon: <FaBoxOpen className="w-4 h-4" />,
+      modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm, AppModeEnum.digitest],
       items: [
         {
           title: "Tedarikçiler",
           icon: <FaSupple className="w-4 h-4" />,
           path: "/tedarikciler",
           element: <SupplierPage />,
+          modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm, AppModeEnum.digitest],
+
+        },
+        {
+          title: "Teklif Yönetimi",
+          icon: <DollarSign className="w-4 h-4 text-green-300" />,
+          modes: [AppModeEnum.supplier],
+          items: [
+            {
+              title: "Satınalma Teklif Listesi",
+              path: "/satinalma-teklifler",
+              element: <PriceOfferPage priceOfferType={PriceOfferType.Purchase} />,
+              modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm, AppModeEnum.digitest],
+
+
+            },
+            {
+              title: "Yeni Satınalma Teklifi",
+              path: "/satinalma-teklif-yeni",
+              element: <PriceOfferAddPage offer={undefined} priceOfferType={PriceOfferType.Purchase} />,
+              modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm, AppModeEnum.digitest],
+
+
+            },
+          ],
         },
       ],
     },
     {
       title: "NDA Sözleşmeler",
       icon: <FileSignature className="w-4 h-4 text-purple-100" />,
+      modes: [AppModeEnum.dijitalerp, AppModeEnum.digitest_crm],
+
       items: [
         {
           title: "İngilizce NDA",
           path: "/nda-en",
           element: <ContractPage sozlesmeTipi={SozlesmeTipi.NDA_EN} />,
+
         },
         {
           title: "Türkçe NDA",
@@ -538,26 +613,30 @@ export const Sidebar: React.FC = () => {
       title: "İnsan Kaynakları",
       icon: <UserCog2 className="w-4 h-4" />,
       roles: [-1],
+      modes: [AppModeEnum.digitest, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
       items: [
         {
           title: "Eğitim",
           icon: <FaPencilAlt />,
+          modes: [AppModeEnum.digitest],
+
           roles: [-1],
           items: [
-            { title: "Eğitimler", path: "/egitimler", element: <EducationList /> },
-            { title: "Eğitim Değerlendirme Sonuçları", roles: [1, 2, 15], path: "/form/sonuc/0", element: <SurveyAnswerList type="0" /> },
-            { title: "Personel Değerlendirme Sonuçları", roles: [1, 2, 15], path: "/form/sonuc/4", element: <SurveyAnswerList type="4" /> },
+            { title: "Eğitimler", path: "/egitimler", element: <EducationList />, modes: [AppModeEnum.digitest] },
+            { title: "Eğitim Değerlendirme Sonuçları", roles: [1, 2, 15], path: "/form/sonuc/0", element: <SurveyAnswerList type="0" />, modes: [AppModeEnum.digitest] },
+            { title: "Personel Değerlendirme Sonuçları", roles: [1, 2, 15], path: "/form/sonuc/4", element: <SurveyAnswerList type="4" />, modes: [AppModeEnum.digitest] },
           ],
         },
-        { title: "Yeni Form", roles: [1, 2, 4, 9, 15], icon: <FcSurvey />, path: "/form/olustur", element: <SurveyCreate /> },
+        { title: "Yeni Form", roles: [1, 2, 4, 9, 15], icon: <FcSurvey />, path: "/form/olustur", element: <SurveyCreate />, modes: [AppModeEnum.digitest] },
         {
           title: "Form Sonuçları",
           icon: <FcFile />,
           items: [
-            { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1", element: <SurveyAnswerList type="1" /> },
-            { title: "Yetkinlik Değerlendirme Sonuçları", path: "/form/sonuc/2", element: <SurveyAnswerList type="2" /> },
-            { title: "Diğer Form Sonuçları", path: "/form/sonuc/3", element: <SurveyAnswerList type="3" /> },
+            { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1", element: <SurveyAnswerList type="1" />, modes: [AppModeEnum.digitest] },
+            { title: "Yetkinlik Değerlendirme Sonuçları", path: "/form/sonuc/2", element: <SurveyAnswerList type="2" />, modes: [AppModeEnum.digitest] },
+            { title: "Diğer Form Sonuçları", path: "/form/sonuc/3", element: <SurveyAnswerList type="3" />, modes: [AppModeEnum.digitest] },
           ],
+          modes: [AppModeEnum.digitest],
           roles: [1, 2, 4, 9]
         },
         {
@@ -565,12 +644,13 @@ export const Sidebar: React.FC = () => {
           icon: <FiTable />,
           roles: [1, 2, 15],
           items: [
-            { title: "Eğitim Değerlendirme Formları", path: "/formlar/0", element: <SurveyList type="0" /> },
-            { title: "Tedarikçi Değerlendirme Formları", path: "/formlar/1", element: <SurveyList type="1" /> },
-            { title: "Yetkinlik Değerlendirme Formları", path: "/formlar/2", element: <SurveyList type="2" /> },
-            { title: "Personel Değerlendirme Formları", path: "/formlar/4", element: <SurveyList type="4" /> },
-            { title: "Diğer Formlar", path: "/formlar/3", element: <SurveyList type="3" /> },
+            { title: "Eğitim Değerlendirme Formları", path: "/formlar/0", element: <SurveyList type="0" />, modes: [AppModeEnum.digitest] },
+            { title: "Tedarikçi Değerlendirme Formları", path: "/formlar/1", element: <SurveyList type="1" />, modes: [AppModeEnum.digitest] },
+            { title: "Yetkinlik Değerlendirme Formları", path: "/formlar/2", element: <SurveyList type="2" />, modes: [AppModeEnum.digitest] },
+            { title: "Personel Değerlendirme Formları", path: "/formlar/4", element: <SurveyList type="4" />, modes: [AppModeEnum.digitest] },
+            { title: "Diğer Formlar", path: "/formlar/3", element: <SurveyList type="3" />, modes: [AppModeEnum.digitest] },
           ],
+          modes: [AppModeEnum.digitest],
         },
         {
           title: "Personeller",
@@ -578,22 +658,24 @@ export const Sidebar: React.FC = () => {
           icon: <Users className="w-4 h-4" />,
           path: "/personeller",
           element: <PersonList isModal={false} isActive={true} />,
-        } /*
-      { title: "Pasif Personeller",roles: [1,2,15], icon: <FiUserX />, path: "/pasifpersoneller" },
-      { title: "Personel Eğitim Durumu",roles: [1,2,15], icon: <FiUsers />, path: "/PersonelEgitim" },
-      {
-        title: "İzin Talep Formu",
-        icon: <FiUser />,
-        path: "/izintalepformu",
-        roles: [-1],
-      },
-      deneme.
-      {
-        title: "Fazla Mesai Talep Formu",
-        icon: <FiUserPlus />,
-        path: "/fazlamesai",
-        roles: [-1],
-      },*/,
+          modes: [AppModeEnum.digitest, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+        },
+        { title: "Pasif Personeller", roles: [1, 2, 15], icon: <FiUserX />, path: "/pasifpersoneller", modes: [AppModeEnum.digitest] },
+        { title: "Personel Eğitim Durumu", roles: [1, 2, 15], icon: <FiUsers />, path: "/PersonelEgitim", modes: [AppModeEnum.digitest] },
+        {
+          title: "İzin Talep Formu",
+          icon: <FiUser />,
+          path: "/izintalepformu",
+          roles: [-1],
+          modes: [AppModeEnum.digitest]
+        },
+        {
+          title: "Fazla Mesai Talep Formu",
+          icon: <FiUserPlus />,
+          path: "/fazlamesai",
+          roles: [-1],
+          modes: [AppModeEnum.digitest]
+        }
       ],
     },
     {
@@ -601,21 +683,25 @@ export const Sidebar: React.FC = () => {
       icon: <CalendarClock className="w-4 h-4 text-cyan-100" />,
       path: "/takvim",
       element: <CalendarPage />,
+      modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
     },
     {
       title: "Ayarlar",
       icon: <Settings className="w-4 h-4" />,
+      modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
       items: [
         {
           title: "Şirketlerim",
           icon: <Building2 className="w-4 h-4" />,
           path: "/sirketlerim",
           element: <EnterprisePage />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
         },
         {
           title: "Kullanıcılar",
           icon: <User2 className="w-4 h-4" />,
           path: "/kullanicilar",
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
           element: <UsersPage />,
         },
         {
@@ -623,6 +709,7 @@ export const Sidebar: React.FC = () => {
           icon: <CalendarClock className="w-4 h-4 text-cyan-100" />,
           path: "/sablonlar",
           element: <TemplatePage isPage={true} />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
         },
       ],
     },
@@ -755,7 +842,7 @@ export const Sidebar: React.FC = () => {
         <div className="flex items-center justify-center px-4 py-3  ">
           <NavLink to="/">
             <img
-              src={collapsed ? icon : URL + "/logo-white.png"}
+              src={collapsed ? icon : URL.replace("/api", "") + "/logo-white.png"}
               alt="Logo"
               className={`transition-all duration-300 ${collapsed ? "w-8 h-8" : "w-48 h-10"}`}
             />

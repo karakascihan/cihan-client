@@ -1,6 +1,6 @@
 import { JSX } from "react";
 import * as Pages from "./pages";
-import { CompanyStatus, SozlesmeTipi } from "@/api/apiDtos";
+import { CompanyStatus, PriceOfferType, SozlesmeTipi } from "@/api/apiDtos";
 import { TabsUI } from "@/layouts/TabsUI";
 import Dashboard from "@/pages/dashboard/Dashboard";
 
@@ -27,20 +27,22 @@ export const routes: AppRoute[] = [
     element: <Pages.OpportunityPageDetail />,
     isPrivate: true,
   },
-  { path: "/musteriler",  element: <Pages.CustomerPage durumu={undefined}  />, isPrivate: true },
-  { path: "/potansiyel-musteriler",  element: <Pages.CustomerPage durumu={CompanyStatus.Potential}  />, isPrivate: true },
-  { path: "/teklif-verilen-musteriler",  element: <Pages.CustomerPage durumu={CompanyStatus.Quoted}  />, isPrivate: true },
-  { path: "/aktif-musteriler",  element: <Pages.CustomerPage durumu={CompanyStatus.Active}  />, isPrivate: true },
+  { path: "/musteriler", element: <Pages.CustomerPage durumu={undefined} />, isPrivate: true },
+  { path: "/potansiyel-musteriler", element: <Pages.CustomerPage durumu={CompanyStatus.Potential} />, isPrivate: true },
+  { path: "/teklif-verilen-musteriler", element: <Pages.CustomerPage durumu={CompanyStatus.Quoted} />, isPrivate: true },
+  { path: "/aktif-musteriler", element: <Pages.CustomerPage durumu={CompanyStatus.Active} />, isPrivate: true },
   { path: "/tedarikciler", element: <Pages.SupplierPage />, isPrivate: true },
-  { path: "/teklifler", element: <Pages.PriceOfferPage />, isPrivate: true },
+  { path: "/teklifler", element: <Pages.PriceOfferPage priceOfferType={PriceOfferType.Sales} />, isPrivate: true },
+  { path: "/satinalma-teklifler", element: <Pages.PriceOfferPage priceOfferType={PriceOfferType.Purchase} />, isPrivate: true },
   {
     path: "/yeniteklif/:opportunityId?",
     element: (
-      <Pages.PriceOfferAddPage offer={undefined}
+      <Pages.PriceOfferAddPage offer={undefined} priceOfferType={PriceOfferType.Sales}
       />
     ),
     isPrivate: true,
   },
+  { path: "/satinalma-teklif-yeni", element: <Pages.PriceOfferAddPage offer={undefined} priceOfferType={PriceOfferType.Purchase} />, isPrivate: true },
   { path: "/sozlesmeler", element: <Pages.ContractPage />, isPrivate: true },
   { path: "/nda", element: <Pages.ContractPage sozlesmeTipi={SozlesmeTipi.NDA} />, isPrivate: true },
   { path: "/nda-en", element: <Pages.ContractPage sozlesmeTipi={SozlesmeTipi.NDA_EN} />, isPrivate: true },
@@ -56,7 +58,7 @@ export const routes: AppRoute[] = [
     isPrivate: true,
   },
   { path: "/takvim", element: <Pages.CalendarPage />, isPrivate: true },
-  { path: "/sablonlar", element: <Pages.TemplatePage isPage={true}  />, isPrivate: true },
+  { path: "/sablonlar", element: <Pages.TemplatePage isPage={true} />, isPrivate: true },
   {
     path: "/aktiviteler",
     element: <Pages.ActivityPage title="Aktiviteler" />,
@@ -108,7 +110,7 @@ export const routes: AppRoute[] = [
     element: <Pages.BankAccountPage />,
     isPrivate: true,
   },
-    {
+  {
     path: "/muhasebe-fisleri",
     element: <Pages.AccounterVoucherPage />,
     isPrivate: true,

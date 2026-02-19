@@ -5272,10 +5272,21 @@
         }
       }
     },
-    "/api/PriceOffer/GetAll": {
+    "/api/PriceOffer/GetAll/{type}": {
       "get": {
         "tags": [
           "PriceOffer"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -5319,7 +5330,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceOfferTypeApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceOfferTypeApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceOfferTypeApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -5880,7 +5908,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjeTuruApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjeTuruApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjeTuruApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -13590,6 +13635,11 @@
             "type": "string",
             "nullable": true
           },
+          "teklifTuru": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "firma_Id": {
             "type": "integer",
             "format": "int32",
@@ -13783,6 +13833,36 @@
               "$ref": "#/components/schemas/PriceOfferLineDto"
             },
             "nullable": true
+          },
+          "teklifTuru": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hazirlayan": {
+            "type": "string",
+            "nullable": true
+          },
+          "adet": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "customerContact": {
+            "type": "string",
+            "nullable": true
+          },
+          "onaylayanPersonel": {
+            "type": "string",
+            "nullable": true
+          },
+          "ulkeAdi": {
+            "type": "string",
+            "nullable": true
+          },
+          "firmaAdi": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -13875,6 +13955,11 @@
             "items": {
               "$ref": "#/components/schemas/PriceOfferLineDtoForInsertion"
             },
+            "nullable": true
+          },
+          "teklifTuru": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },
@@ -14305,6 +14390,42 @@
           "Beklemede"
         ]
       },
+      "PriceOfferType": {
+        "enum": [
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32",
+        "x-enumNames": [
+          "sales",
+          "purchase"
+        ],
+        "x-enumDescriptions": [
+          "Satış Fiyat Teklifi",
+          "Satın Alma Fiyat Teklifi"
+        ]
+      },
+      "PriceOfferTypeApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "$ref": "#/components/schemas/PriceOfferType"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -14701,6 +14822,45 @@
               "$ref": "#/components/schemas/Products"
             },
             "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjeTuru": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32",
+        "x-enumNames": [
+          "Ihale",
+          "Arge",
+          "Diskaynak"
+        ],
+        "x-enumDescriptions": [
+          "İhale",
+          "Arge",
+          "Dış Kaynak İşler"
+        ]
+      },
+      "ProjeTuruApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ProjeTuru"
           },
           "isSuccess": {
             "type": "boolean"
