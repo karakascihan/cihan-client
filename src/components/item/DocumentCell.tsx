@@ -25,40 +25,40 @@ const DocumentCell: React.FC<DocumentCellProps> = ({ item, column }) => {
         if (e.target.files && e.target.files.length > 0) {
             const file = e.target.files[0];
             const fileName = file.name;
-           
-               if (!file) return;
-           
-               // Base model
-               const newFile: FileRecordDtoForInsertion = {
-                 relatedEntityId: item.id,
-                 relatedEntityName: "Item",
-                 fileName: file.name,
-                 contentType: file.type,
-                 content: await convertFileToBase64(file), // Base64 string
-               };
-           
-                dispatch(addFileRecord(newFile)).unwrap().then((c) => {
-             dispatch(updateItemValue({
-                itemId: item.id,
-                columnId: column.id,
-                value:  c.filePath, // URL'yi kaydet
-            }));
-            e.target.value = '';
-            })
-           
 
-           
+            if (!file) return;
+
+            // Base model
+            const newFile: FileRecordDtoForInsertion = {
+                relatedEntityId: item.id,
+                relatedEntityName: "Item",
+                fileName: file.name,
+                contentType: file.type,
+                content: await convertFileToBase64(file), // Base64 string
+            };
+
+            dispatch(addFileRecord(newFile)).unwrap().then((c) => {
+                dispatch(updateItemValue({
+                    itemId: item.id,
+                    columnId: column.id,
+                    value: c.filePath, // URL'yi kaydet
+                }));
+                e.target.value = '';
+            })
+
+
+
         }
     };
 
     const handleCellClick = () => {
-        if (!currentValue) { 
+        if (!currentValue) {
             fileInputRef.current?.click();
         }
     };
 
     const isUrl = currentValue.startsWith('http://') || currentValue.startsWith('https://') || currentValue.startsWith('/');
-    
+
     const getFileNameFromUrl = (url: string) => {
         try {
             return url.substring(url.lastIndexOf('/') + 1);
@@ -68,12 +68,12 @@ const DocumentCell: React.FC<DocumentCellProps> = ({ item, column }) => {
     };
 
     const displayFileName = isUrl ? getFileNameFromUrl(currentValue) : currentValue;
-const confirm = useConfirm();
+    const confirm = useConfirm();
     return (
         // Ana div'e tıklama olayını ekle
-        <div 
-            onClick={handleCellClick} 
-            className="w-full h-full flex items-center justify-center cursor-pointer group p-2 overflow-hidden" 
+        <div
+            onClick={handleCellClick}
+            className="w-full h-full flex items-center justify-center cursor-pointer group p-2 overflow-hidden"
         >
             <input
                 type="file"
@@ -84,31 +84,34 @@ const confirm = useConfirm();
             {currentValue ? (
                 // Değer varsa (URL varsayıyoruz), tıklanabilir link oluştur
                 <>
-                <a
-                    href={URL+"/"+ currentValue} // href'e URL'yi ver
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    // KRİTİK DÜZELTME: Linki hücre içinde tutmak için w-full ve block/flex özellikleri
-                    className="flex items-center gap-x-1.5 text-sm text-blue-600 hover:text-blue-800 hover:underline w-full min-w-0" 
-                    title={`Belgeyi aç: ${displayFileName}`}
-                >
-                    <FiPaperclip className="flex-shrink-0"/> 
-                    {/* Metni taşmayı önlemek için flex-grow ve truncate */}
-                    <span className="truncate flex-grow min-w-0">{displayFileName}</span>
-                    {/* <FiExternalLink className="flex-shrink-0 w-3 h-3 opacity-70" /> */}
-                </a>
-                <FiDelete onClick={async ()=>{  const isConfirmed = await confirm({
+                    <a
+                        href={URL.replace("/api", "") + "/" + currentValue} // href'e URL'yi ver
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        // KRİTİK DÜZELTME: Linki hücre içinde tutmak için w-full ve block/flex özellikleri
+                        className="flex items-center gap-x-1.5 text-sm text-blue-600 hover:text-blue-800 hover:underline w-full min-w-0"
+                        title={`Belgeyi aç: ${displayFileName}`}
+                    >
+                        <FiPaperclip className="flex-shrink-0" />
+                        {/* Metni taşmayı önlemek için flex-grow ve truncate */}
+                        <span className="truncate flex-grow min-w-0">{displayFileName}</span>
+                        {/* <FiExternalLink className="flex-shrink-0 w-3 h-3 opacity-70" /> */}
+                    </a>
+                    <FiDelete onClick={async () => {
+                        const isConfirmed = await confirm({
                             title: "Silme işlemi",
                             message: "Dosyayı silmek istediğinize emin misiniz?",
                             confirmText: "Evet",
                             cancelText: "Vazgeç",
-                          });
-                          if (isConfirmed) {
-                          dispatch(updateItemValue({
-                itemId: item.id,
-                columnId: column.id,
-                value:  "", // URL'yi kaydet
-            }));}}}/>
+                        });
+                        if (isConfirmed) {
+                            dispatch(updateItemValue({
+                                itemId: item.id,
+                                columnId: column.id,
+                                value: "", // URL'yi kaydet
+                            }));
+                        }
+                    }} />
                 </>
             ) : (
                 // Değer yoksa, dosya ekleme (+) ikonunu göster

@@ -36,7 +36,7 @@ const PersonPopoverContent: React.FC<{
 }> = ({ initialSelectedIds, onSave }) => {
 
     // Global Redux state'inden TÜM kullanıcıları çek
-    const allUsers =useSelector( (x:RootState)=>x.user.data);
+    const allUsers = useSelector((x: RootState) => x.user.data);
     // Kullanıcıları bileşenin beklediği formata dönüştür
     const viewUsers = useMemo(() => allUsers.map(transformUserForView), [allUsers]);
 
@@ -102,7 +102,7 @@ const PersonCell: React.FC<PersonCellProps> = ({ item, column, align = 'center' 
     const cellRef = useRef<HTMLDivElement>(null);
 
     // Global state'ten tüm kullanıcıları çek
-    const allUsers = useSelector<RootState>(x=>x.user.data)
+    const allUsers = useSelector<RootState>(x => x.user.data)
 
     // Mevcut JSON değerini al (örn: '[1, 3]')
     const currentValue = item.itemValue.find(v => v.columnId === column.id)?.value || '[]';
@@ -152,33 +152,33 @@ const PersonCell: React.FC<PersonCellProps> = ({ item, column, align = 'center' 
                 className={`w-full h-full flex items-center ${align === 'left' ? 'justify-start' : 'justify-center'} cursor-pointer group p-2`}            >
                 {assignedUsers.length > 0 ? (
                     // Eğer kullanıcı(lar) atanmışsa, avatarları göster
-                  <div className="flex justify-center">
-  <div className="flex -space-x-2 items-center">
-    {assignedUsers.slice(0, maxAvatarsToShow).map(user => (
-      <div
-        key={user.id}
-        className="relative inline-flex h-7 w-7 rounded-full ring-2 ring-white bg-blue-100 text-blue-700 items-center justify-center text-xs font-bold"
-        title={user.name}
-      >
-        {user.avatarUrl ? (
-          <img
-            className="h-full w-full rounded-full object-cover"
-            src={user.avatarUrl}
-            alt={user.name}
-          />
-        ) : (
-          user.initials
-        )}
-      </div>
-    ))}
+                    <div className="flex justify-center">
+                        <div className="flex -space-x-2 items-center">
+                            {assignedUsers.slice(0, maxAvatarsToShow).map(user => (
+                                <div
+                                    key={user.id}
+                                    className="relative inline-flex h-7 w-7 rounded-full ring-2 ring-white bg-blue-100 text-blue-700 items-center justify-center text-xs font-bold"
+                                    title={user.name}
+                                >
+                                    {user.avatarUrl ? (
+                                        <img
+                                            className="h-full w-full rounded-full object-cover"
+                                            src={user.avatarUrl}
+                                            alt={user.name}
+                                        />
+                                    ) : (
+                                        user.initials
+                                    )}
+                                </div>
+                            ))}
 
-    {assignedUsers.length > maxAvatarsToShow && (
-      <div className="inline-flex h-7 w-7 items-center justify-center rounded-full ring-2 ring-white bg-gray-200 text-gray-600 text-xs font-bold">
-        +{assignedUsers.length - maxAvatarsToShow}
-      </div>
-    )}
-  </div>
-</div>
+                            {assignedUsers.length > maxAvatarsToShow && (
+                                <div className="inline-flex h-7 w-7 items-center justify-center rounded-full ring-2 ring-white bg-gray-200 text-gray-600 text-xs font-bold">
+                                    +{assignedUsers.length - maxAvatarsToShow}
+                                </div>
+                            )}
+                        </div>
+                    </div>
 
                 ) : (
                     // Eğer kimse atanmamışsa, "+" ikonu göster

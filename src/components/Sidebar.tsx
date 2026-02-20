@@ -162,8 +162,8 @@ export const Sidebar: React.FC = () => {
     return null;
   };
   useEffect(() => {
-    const currentPath = location.pathname;
-
+    let currentPath = location.pathname;
+    if (currentPath) currentPath = currentPath.replace("/" + appMode, "");
     // Eğer zaten açık tab varsa tekrar açma
     if (tabs.find(t => t.id === currentPath)) return;
 
@@ -349,6 +349,7 @@ export const Sidebar: React.FC = () => {
         {
           title: "Teklif Yönetimi",
           icon: <DollarSign className="w-4 h-4 text-green-300" />,
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
           items: [
             {
               title: "Teklif Listesi",
@@ -382,11 +383,13 @@ export const Sidebar: React.FC = () => {
               title: "Sipariş Listesi",
               path: "/siparisler",
               element: <PurchaseOrderPage />,
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp]
             },
             {
               title: "Yeni Sipariş",
               path: "/yenisiparis",
               element: <AddPurchaseOrderPage2 />,
+              modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp]
             },
           ],
         },
@@ -414,98 +417,105 @@ export const Sidebar: React.FC = () => {
       roles: [-1],
       modes: [AppModeEnum.digitest],
       items: [
-        { title: "Tüm Dokümanlar", icon: null, path: "/kysdokumanlar/", element: <DocumentList /> },
-        { title: "Süreçler", icon: null, path: "/kysdokumanlar/1", element: <DocumentList type="1" /> },
-        { title: "Prosedürler", icon: null, path: "/kysdokumanlar/2", element: <DocumentList type="2" /> },
+        { title: "Tüm Dokümanlar", icon: null, path: "/kysdokumanlar/", element: <DocumentList />, modes: [AppModeEnum.digitest] },
+        { title: "Süreçler", icon: null, path: "/kysdokumanlar/1", element: <DocumentList type="1" />, modes: [AppModeEnum.digitest] },
+        { title: "Prosedürler", icon: null, path: "/kysdokumanlar/2", element: <DocumentList type="2" />, modes: [AppModeEnum.digitest] },
         {
           title: "Talimatlar",
           icon: null,
+          modes: [AppModeEnum.digitest],
           items: [
-            { title: "Depo T.", icon: null, path: "/kysdokumanlar/3.1", element: <DocumentList type="3.1" /> },
+            { title: "Depo T.", icon: null, path: "/kysdokumanlar/3.1", element: <DocumentList type="3.1" />, modes: [AppModeEnum.digitest] },
             {
               title: "Doküman Yönetimi T.",
               icon: null,
               path: "/kysdokumanlar/3.2",
-              element: <DocumentList type="3.2" />
+              element: <DocumentList type="3.2" />, modes: [AppModeEnum.digitest]
             },
             {
               title: "Ekipman ve Alt Yapı Süreci T.",
               icon: null,
               path: "/kysdokumanlar/3.3",
-              element: <DocumentList type="3.3" />
+              element: <DocumentList type="3.3" />, modes: [AppModeEnum.digitest]
             },
             {
               title: "İnsan Kaynakları T.",
               icon: null,
               path: "/kysdokumanlar/3.4",
-              element: <DocumentList type="3.4" />
+              element: <DocumentList type="3.4" />, modes: [AppModeEnum.digitest]
             },
             {
               title: "Kalite Güvence T.",
               icon: null,
               path: "/kysdokumanlar/3.5",
-              element: <DocumentList type="3.5" />
+              element: <DocumentList type="3.5" />, modes: [AppModeEnum.digitest]
             },
             {
               title: "Proje Yönetimi T.",
               icon: null,
               path: "/kysdokumanlar/3.6",
-              element: <DocumentList type="3.6" />
+              element: <DocumentList type="3.6" />, modes: [AppModeEnum.digitest]
             },
-            { title: "Satınalma T.", icon: null, path: "/kysdokumanlar/3.7", element: <DocumentList type="3.7" /> },
-            { title: "Tasarım T.", icon: null, path: "/kysdokumanlar/3.8", element: <DocumentList type="3.8" /> },
-            { title: "Üretim T.", icon: null, path: "/kysdokumanlar/3.9", element: <DocumentList type="3.9" /> },
+            { title: "Satınalma T.", icon: null, path: "/kysdokumanlar/3.7", element: <DocumentList type="3.7" />, modes: [AppModeEnum.digitest] },
+            { title: "Tasarım T.", icon: null, path: "/kysdokumanlar/3.8", element: <DocumentList type="3.8" />, modes: [AppModeEnum.digitest] },
+            { title: "Üretim T.", icon: null, path: "/kysdokumanlar/3.9", element: <DocumentList type="3.9" />, modes: [AppModeEnum.digitest] },
             {
               title: "Yönetim Temsilcisi T.",
               icon: null,
               path: "/kysdokumanlar/3.10",
-              element: <DocumentList type="3.10" />
+              element: <DocumentList type="3.10" />, modes: [AppModeEnum.digitest]
             },
           ],
         },
         {
           title: "Formlar",
           icon: null,
-
+          modes: [AppModeEnum.digitest],
           items: [
-            { title: "Depo Sevkiyat F.", icon: null, path: "/kysdokumanlar/4.1", element: <DocumentList type="4.1" /> },
+            { title: "Depo Sevkiyat F.", icon: null, path: "/kysdokumanlar/4.1", element: <DocumentList type="4.1" />, modes: [AppModeEnum.digitest] },
             {
               title: "Düzeltici Faaliyet R.",
               path: "/kysdokumanlar/4.2",
               icon: null,
-              element: <DocumentList type="4.2" />
+              element: <DocumentList type="4.2" />, modes: [AppModeEnum.digitest]
             },
             {
               title: "Ekipman ve Alt Yapı F.",
               icon: null,
+              modes: [AppModeEnum.digitest],
               items: [
                 {
                   title: "Tezgah Bakım Cetveli",
                   icon: null,
+                  modes: [AppModeEnum.digitest],
                   items: [
                     {
                       title: "Günlük Bakım Cetveli",
                       icon: null,
                       path: "/kysdokumanlar/4.3.1",
                       element: <DocumentList type="4.3.1" />
+                      , modes: [AppModeEnum.digitest]
                     },
                     {
                       title: "Haftalık Bakım Cetveli",
                       icon: null,
                       path: "/kysdokumanlar/4.3.2",
                       element: <DocumentList type="4.3.2" />
+                      , modes: [AppModeEnum.digitest]
                     },
                     {
                       title: "Aylık Bakım Cetveli",
                       icon: null,
                       path: "/kysdokumanlar/4.3.3",
                       element: <DocumentList type="4.3.3" />
+                      , modes: [AppModeEnum.digitest]
                     },
                     {
                       title: "Yıllık Bakım Cetveli",
                       icon: null,
                       path: "/kysdokumanlar/4.3.3",
                       element: <DocumentList type="4.3.3" />
+                      , modes: [AppModeEnum.digitest]
                     },
                   ],
                 },
@@ -514,6 +524,7 @@ export const Sidebar: React.FC = () => {
                   icon: null,
                   path: "/kysdokumanlar/4.3",
                   element: <DocumentList type="4.3" />
+                  , modes: [AppModeEnum.digitest]
                 },
               ],
             },
@@ -522,32 +533,36 @@ export const Sidebar: React.FC = () => {
               path: "/kysdokumanlar/4.4",
               icon: null,
               element: <DocumentList type="4.4" />
+              , modes: [AppModeEnum.digitest]
             },
             {
               title: "İş Geliştirme ve Yönetim Süreci F.",
               path: "/kysdokumanlar/4.5",
               icon: null,
               element: <DocumentList type="4.5" />
+              , modes: [AppModeEnum.digitest]
             },
             {
               title: "Kalite Güvence F.",
               path: "/kysdokumanlar/4.6",
               icon: null,
               element: <DocumentList type="4.6" />
+              , modes: [AppModeEnum.digitest]
             },
             {
               title: "Proje Yönetimi ve Planlama F.",
               path: "/kysdokumanlar/4.7",
               icon: null,
               element: <DocumentList type="4.7" />
+              , modes: [AppModeEnum.digitest]
             },
           ],
         },
-        { title: "Listeler", icon: null, path: "/kysdokumanlar/5", element: <DocumentList type="5" /> },
-        { title: "Planlar", icon: null, path: "/kysdokumanlar/6", element: <DocumentList type="6" /> },
-        { title: "Etiketler", icon: null, path: "/kysdokumanlar/7", element: <DocumentList type="7" /> },
-        { title: "Şemalar", icon: null, path: "/kysdokumanlar/8", element: <DocumentList type="8" /> },
-        { title: "Politikalar", icon: null, path: "/kysdokumanlar/9", element: <DocumentList type="9" /> },
+        { title: "Listeler", icon: null, path: "/kysdokumanlar/5", element: <DocumentList type="5" />, modes: [AppModeEnum.digitest] },
+        { title: "Planlar", icon: null, path: "/kysdokumanlar/6", element: <DocumentList type="6" />, modes: [AppModeEnum.digitest] },
+        { title: "Etiketler", icon: null, path: "/kysdokumanlar/7", element: <DocumentList type="7" />, modes: [AppModeEnum.digitest] },
+        { title: "Şemalar", icon: null, path: "/kysdokumanlar/8", element: <DocumentList type="8" />, modes: [AppModeEnum.digitest] },
+        { title: "Politikalar", icon: null, path: "/kysdokumanlar/9", element: <DocumentList type="9" />, modes: [AppModeEnum.digitest] },
 
       ],
     },
@@ -555,20 +570,20 @@ export const Sidebar: React.FC = () => {
     {
       title: "Satınalma Yönetimi",
       icon: <FaBoxOpen className="w-4 h-4" />,
-      modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm, AppModeEnum.digitest],
+      modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm],
       items: [
         {
           title: "Tedarikçiler",
           icon: <FaSupple className="w-4 h-4" />,
           path: "/tedarikciler",
           element: <SupplierPage />,
-          modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm, AppModeEnum.digitest],
+          modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm],
 
         },
         {
           title: "Teklif Yönetimi",
           icon: <DollarSign className="w-4 h-4 text-green-300" />,
-          modes: [AppModeEnum.supplier],
+          modes: [AppModeEnum.supplier, AppModeEnum.dijitalerp, AppModeEnum.digitest_crm],
           items: [
             {
               title: "Satınalma Teklif Listesi",

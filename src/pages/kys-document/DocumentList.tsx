@@ -25,10 +25,11 @@ import {
 import { useParams } from "react-router-dom";
 import { BsThreeDots } from "react-icons/bs";
 import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import MenuButton, { MenuItem } from "@/components/MenuButton";
+import { setNotification } from "@/store/slices/notificationSlice";
 const DocumentList = ({ type }: { type?: string }) => {
-  const { data, setData } = useApiRequest<KysDocument[]>(
+  const { data, setData } = useApiRequest<KysDocument>(
     KYSDOCUMENT_GETALL + (type ? "?type=" + type : "")
   );
   const { refetch } = useApiRequest<KysDocument>(KYSDOCUMENT_UPLOAD, {
@@ -37,6 +38,7 @@ const DocumentList = ({ type }: { type?: string }) => {
 
   });
   const inputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch();
   const { openModal } = useModal();
   const confirm = useConfirm();
   const user = useSelector((state: RootState) => state.login.user);
@@ -168,7 +170,14 @@ const DocumentList = ({ type }: { type?: string }) => {
       refetch(undefined, { body: formData }).then(() =>
         refetch(KYSDOCUMENT_GETALL + (type ? "?type=" + type : ""), {
           method: "GET",
-        }).then((c) => setData(c?.result))
+        }).then((c) => {
+          setData(c?.result); dispatch(setNotification({
+            title: "Doküman Yükleme",
+            message: "Doküman başarıyla yüklendi",
+            type: "success",
+            duration: 3000
+          }))
+        })
       );
     } else if (e.target.getAttribute("contentType") !== "") {
       openModal({
@@ -216,7 +225,7 @@ const DocumentList = ({ type }: { type?: string }) => {
   let roller = [1, 2, 4, 14];
   const actionBodyTemplate = (rowData: KysDocument) => {
     let buttons: MenuItem[] = [];
-    if (roller.includes(user.rolId) && !rowData.isArchive) {
+    if (roller.includes(user.rolId) && !rowData.isArchive && !rowData.isUserUploaded) {
       buttons.push({
         label: "Düzenle",
         onClick: function (): void {
@@ -472,6 +481,7 @@ const DocumentList = ({ type }: { type?: string }) => {
       <SmartTable
         data={data ?? []}
         frozenColumns={[{ name: "id", right: true }]}
+        isExport={true}
         scrollHeight="calc(100vh - 200px)"
         groupBy="documentNo"
         groupTitle={["documentNo", "documentName"]}
@@ -518,6 +528,7 @@ const DocumentList = ({ type }: { type?: string }) => {
             ),
             filterable: true,
             sortable: true,
+            filterType: "date",
           },
           {
             accessor: "revisionNumber",
@@ -565,14 +576,25 @@ const DocumentList = ({ type }: { type?: string }) => {
               </span>
             ),
             filterable: true,
+            filterType: "date",
             sortable: true,
           },
           {
             accessor: "isArchive",
-            header: "Arşiv",
+            header: "Arşiv Durumu",
             sortable: true,
             filterable: true,
-            filterType: "checkbox",
+            filterOptions: [
+              {
+                label: "Evet",
+                value: "true",
+              },
+              {
+                label: "Hayır",
+                value: "false",
+              },
+            ],
+            filterType: "select",
             body: (rowData) => (
               <input
                 type="checkbox"
@@ -586,7 +608,17 @@ const DocumentList = ({ type }: { type?: string }) => {
             header: "Kullanıcı Tarafından Yüklenmiş",
             sortable: true,
             filterable: true,
-            filterType: "checkbox",
+            filterOptions: [
+              {
+                label: "Evet",
+                value: "true",
+              },
+              {
+                label: "Hayır",
+                value: "false",
+              },
+            ],
+            filterType: "select",
             body: (rowData) => (
               <input
                 type="checkbox"

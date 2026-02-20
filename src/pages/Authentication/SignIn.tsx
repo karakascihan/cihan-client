@@ -1,105 +1,134 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import Logo from '../../images/logo/logo.svg';
-// import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
-// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { loginData } from '../../store/slices/loginSlice'
+import { loginData } from '../../store/slices/loginSlice';
 import { init } from '@/services';
 import { URL } from '@/api';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+
 const SignIn: React.FC = () => {
   const [userName, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!userName || !password) {
+      setError("Kullanıcı adı ve şifre zorunludur.");
+      return;
+    }
+
     try {
-      if (userName && password) {
-        dispatch(await loginData({ data: { userName, password } })).unwrap().then(() => {
-          init();
-          navigate('/');
-        });
-      } else {
-        console.error('Invalid login response:');
-      }
-    } catch (error) {
-      console.error('Login failed', error);
+      setLoading(true);
+
+      await dispatch(
+        loginData({ data: { userName, password } })
+      ).unwrap();
+
+      init();
+      navigate('/');
+    } catch (err) {
+      setError("Giriş başarısız. Bilgilerinizi kontrol edin.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="h-screen rounded-sm border border-stroke bg-white shadow-default">
-      <div className="flex flex-wrap items-center h-screen">
-        <div className="hidden w-full xl:block xl:w-1/2">
-          <div className="py-17.5 px-26 text-center">
-            <Link className="mb-5.5 inline-block" to="/">
-              <img className="" src={URL.replace("/api", "") + "/logo.png"} alt="Logo" />
-            </Link>
-            <p className="2xl:px-20">
-              Dijital ERP 2025 © Tüm hakları saklıdır.
-            </p>
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4">
+
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10">
+
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <img
+            src={URL.replace("/api", "") + "/logo.png"}
+            alt="Logo"
+            className="h-12"
+          />
         </div>
-        <div className="w-full border-stroke xl:w-1/2 xl:border-l-2">
-          <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-            <h2 className="mb-9 text-2xl font-bold text-black  sm:text-title-xl2">
-              Giriş
-            </h2>
-            <form onSubmit={handleLogin}>
-              <div className="mb-4">
-                <label className="mb-2.5 block font-medium text-black">
-                  Kullanıcı Adı
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="kullanıcı adı"
-                    value={userName}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none "
-                  />
-                  <span className="absolute right-4 top-4">
-                    {/* <PersonOutlineOutlinedIcon sx={{ color: 'grey' }} /> */}
-                  </span>
-                </div>
-              </div>
-              <div className="mb-6">
-                <label className="mb-2.5 block font-medium text-black">
-                  Şifre
-                </label>
-                <div className="relative">
-                  <input
-                    type="password"
-                    placeholder="şifre"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none"
-                  />
-                  <span className="absolute right-4 top-4">
-                    {/* <LockOutlinedIcon sx={{ color: 'grey' }} /> */}
-                  </span>
-                </div>
-              </div>
-              <div className="mb-5">
-                <input
-                  type="submit"
-                  value="Giriş"
-                  className="w-full cursor-pointer rounded-lg border border-primary bg-blue-500 p-4 text-white transition hover:bg-opacity-90"
-                />
-              </div>
-              {/* <div className="mt-6 text-center">
-                <p>
-                  Üye değilseniz{' '}
-                  <Link to="/auth/signup" className="text-blue-500">
-                    Kayıt Olun...
-                  </Link>
-                </p>
-              </div> */}
-            </form>
+
+        <h2 className="text-2xl font-semibold text-center text-slate-800 mb-2">
+          Giriş
+        </h2>
+        <p className="text-sm text-slate-500 text-center mb-8">
+          Hesabınıza erişmek için bilgilerinizi giriniz
+        </p>
+
+        <form onSubmit={handleLogin} className="space-y-6">
+
+          {/* Username */}
+          <div>
+            <label className="block text-sm font-medium text-slate-600 mb-2">
+              Kullanıcı Adı
+            </label>
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="kullanıcı adı"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+            />
           </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-slate-600 mb-2">
+              Şifre
+            </label>
+
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="şifre"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-12 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(prev => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-5 w-5" />
+                ) : (
+                  <EyeIcon className="h-5 w-5" />
+                )}
+              </button>
+            </div>
+          </div>
+
+
+          {/* Error */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg p-3">
+              {error}
+            </div>
+          )}
+
+          {/* Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? "Giriş Yapılıyor..." : "Giriş Yap"}
+          </button>
+        </form>
+
+        <div className="mt-8 text-center text-xs text-slate-400">
+          Dijital ERP 2026 © Tüm hakları saklıdır.
         </div>
+
       </div>
     </div>
   );
