@@ -348,7 +348,7 @@ const PriceOfferPage = ({ opportunityId, priceOfferType
       sortable: true,
       hidden: appMode === AppModeEnum.supplier,
 
-      summaryType: "count",
+    
     },
     {
       header: "Teklif Geçerlilik Tarihi",
@@ -700,11 +700,10 @@ const PriceOfferPage = ({ opportunityId, priceOfferType
     openModal({
       title: "E-Mail",
       maximizable: true,
-      maximized: true,
       content: (close) => (
         <EmailSender priceOffer={priceoffer} mailDto={{
-          toEmail: customerState.data.find((x) => x.id == priceoffer.firma_Id)?.email, subject: opportunities.data.find((x) => x.id == priceoffer.opportunityId)?.title,
-          body: "Teklif metnimiz ektedir.İyi Çalışmalar." + personels.items?.find((x) => x.id == priceoffer.teklifOnay).mailImzasi
+          toEmail: customerState.data.find((x) => x.id == priceoffer.firma_Id)?.email, smtpUser:enterpriseState.items[0].email, subject: opportunities.data.find((x) => x.id == priceoffer.opportunityId)?.title,
+          body: "Teklif metnimiz ektedir.İyi Çalışmalar." + personels.items?.find((x) => x.id == priceoffer.teklifOnay).mailImzasi 
           /*
           body:ReactDOMServer.renderToString(
          <Provider store={store} >
@@ -782,8 +781,8 @@ const PriceOfferPage = ({ opportunityId, priceOfferType
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""}</td>`;
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat?.toLocaleString("tr-TR") ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat?.toLocaleString("tr-TR") ?? ""}</td>`;
                     fiyatSatirlarHtml += `<tr>${fiyatSatir}</tr>`;
                   });
                   if (priceoffer.belgeIndirimOraniYuzde > 0) {
@@ -795,7 +794,7 @@ const PriceOfferPage = ({ opportunityId, priceOfferType
            ></tr>`;
                   }
                   fiyatSatirlarHtml += `<tr><td style="padding: 10px 12px;font-size: 15px;font-weight: bold; border: 1px solid #bdc3c7; background: #f8f9fa;">Genel Toplam</td>
-                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar + " " + priceoffer.priceOfferLine[0]?.paraBirimi}</td>
+                       <td colspan=5 style="text-align:center;font-size: 15px;font-weight: bold;padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${priceoffer.toplamTutar.toLocaleString("tr-TR") + " " + priceoffer.priceOfferLine[0]?.paraBirimi}</td>
            ></tr>`;
                 }
                 else {
@@ -854,8 +853,8 @@ const PriceOfferPage = ({ opportunityId, priceOfferType
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.miktar ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimi ?? ""}</td>
                        <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.paraBirimi ?? ""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat ?? ""}</td>
-                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat ?? ""}</td>`;
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.birimFiyat?.toLocaleString("tr-TR") ?? ""}</td>
+                       <td style="padding: 10px 12px; border: 1px solid #bdc3c7; background: #f8f9fa;">${line.toplamFiyat?.toLocaleString("tr-TR") ?? ""}</td>`;
 
                   opsiyonSatirlarHtml += `<tr>${opsiyonSatir}</tr>`;
 

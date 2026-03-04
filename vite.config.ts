@@ -21,7 +21,6 @@ export default defineConfig(({ mode }) => {
         '@': path.resolve(__dirname, './src'),
 
       },
-
     },
     //   server: {
     //   port: 81,       // 🔹 Portu 80 olarak ayarla
@@ -29,7 +28,7 @@ export default defineConfig(({ mode }) => {
     // }
     build: {
       outDir: 'dist/' + mode,
-      emptyOutDir: false // her buildde dist klasörünü temizler true yaparsak
+      emptyOutDir: true // her buildde dist klasörünü temizler true yaparsak
     }
   }
 });

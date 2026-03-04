@@ -6934,7 +6934,24 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyTypeApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyTypeApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyTypeApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -6956,7 +6973,24 @@
         ],
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyIEnumerableApiResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyIEnumerableApiResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SurveyIEnumerableApiResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -7000,6 +7034,76 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Survey/survey-response/{id}": {
+      "delete": {
+        "tags": [
+          "Surveys"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Survey/survey-response/response-date/{id}": {
+      "put": {
+        "tags": [
+          "Surveys"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json-patch+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DateValue"
+              }
+            },
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DateValue"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DateValue"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DateValue"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success"
@@ -9977,6 +10081,14 @@
             "type": "string",
             "nullable": true
           },
+          "formNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "revizyonNo": {
+            "type": "string",
+            "nullable": true
+          },
           "surveyType": {
             "$ref": "#/components/schemas/SurveyType"
           },
@@ -10594,6 +10706,16 @@
             "type": "integer",
             "format": "int32",
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DateValue": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -16511,6 +16633,11 @@
             "format": "int32",
             "nullable": true
           },
+          "supplierId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "answers": {
             "type": "array",
             "items": {
@@ -16533,6 +16660,14 @@
             "nullable": true
           },
           "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "formNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "revizyonNo": {
             "type": "string",
             "nullable": true
           },
@@ -16637,6 +16772,30 @@
           },
           "surveyResponse": {
             "$ref": "#/components/schemas/SurveyResponse"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SurveyIEnumerableApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Survey"
+            },
+            "nullable": true
+          },
+          "isSuccess": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -16782,6 +16941,11 @@
             "format": "int32",
             "nullable": true
           },
+          "supplierId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -16830,6 +16994,26 @@
           "diger",
           "personel"
         ]
+      },
+      "SurveyTypeApiResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "result": {
+            "$ref": "#/components/schemas/SurveyType"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
       },
       "SystemLog": {
         "type": "object",

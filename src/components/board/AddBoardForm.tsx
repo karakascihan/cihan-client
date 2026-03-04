@@ -18,7 +18,7 @@ interface BoardFormData {
 }
 
 interface AddBoardFormProps {
-  onClose: (boardId:number) => void;
+  onClose: (boardId:number, boardName?:string) => void;
   projectType?:ProjectType
 }
 export enum ProjectType {
@@ -169,7 +169,7 @@ const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose,projectType }) => {
       }
       }
 
-      onClose(boardId);
+      onClose(boardId,board.name);
     } catch (error) {
       dispatch(setNotification({
         title: 'Hata',
@@ -177,7 +177,7 @@ const AddBoardForm: React.FC<AddBoardFormProps> = ({ onClose,projectType }) => {
         type:"error"
       }));
       console.error('Board oluşturulurken hata:', error);
-      onClose(-1);
+      onClose(-1, '');
     }
   };
 

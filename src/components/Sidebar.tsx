@@ -107,6 +107,8 @@ import SurveyCreate from "@/pages/survey/SurveyCreate";
 import { SurveyAnswerList } from "@/pages/survey/SurveyAnswerList";
 import EducationList from "@/pages/education/EducationList";
 import DocumentList from "@/pages/kys-document/DocumentList";
+import SurveyResultPage from "@/pages/survey/SurveyResultPage";
+import { truncateText } from "@/utils/commonUtils";
 
 interface MenuItem {
   title: string;
@@ -124,7 +126,8 @@ export enum AppModeEnum {
   digitest_crm = "digitest-crm",
   dijitalerp = "dijitalerp",
   digitest = "digitest",
-  supplier = "supplier"
+  supplier = "supplier",
+  digitest_put = "digitest-put"
 }
 export const appMode = import.meta.env.VITE_APP_MODE as AppModeEnum;
 
@@ -230,23 +233,23 @@ export const Sidebar: React.FC = () => {
     {
       title: "Proje Yönetimi",
       icon: <Workflow className="w-4 h-4" />,
-      modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest],
+      modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest, AppModeEnum.digitest_put],
       items: [
         {
           title: "Proje Takvimi",
           path: "/projetakvimi",
           icon: <FaCalendar />,
           element: <BoardPage />,
-          modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+          modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest_put],
         },
         {
           title: "Yeni Proje Takvimi",
           path: "/proje",
           icon: <FaProjectDiagram />,
           element: <BoardView />,
-          modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+          modes: [AppModeEnum.supplier, AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest_put],
           onClick: () => {
-            if (tabs.find((x) => x.id == "/proje")) return;
+            // if (tabs.find((x) => x.id == "/proje")) return;
             openModal({
               title: "Proje Uygulama Takvimi Oluşturma",
               content: function (
@@ -255,12 +258,12 @@ export const Sidebar: React.FC = () => {
                 return (
                   <AddBoardForm
                     projectType={undefined}
-                    onClose={function (boardId: number): void {
+                    onClose={function (boardId: number, boardName?: string): void {
                       if (boardId != -1) {
                         close(null);
                         openTab({
-                          id: "/proje",
-                          title: "Proje",
+                          id: "/proje/" + boardId,
+                          title: truncateText(boardName, 15),
                           component: <BoardView boardId={boardId} />,
                         });
                         // navigate("/proje/" + boardId)
@@ -647,9 +650,10 @@ export const Sidebar: React.FC = () => {
           title: "Form Sonuçları",
           icon: <FcFile />,
           items: [
-            { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1", element: <SurveyAnswerList type="1" />, modes: [AppModeEnum.digitest] },
+            { title: "Tedarikçi Değerlendirme Sonuçları", path: "/form/sonuc/1", element: <SurveyResultPage type={1} />, modes: [AppModeEnum.digitest] },
             { title: "Yetkinlik Değerlendirme Sonuçları", path: "/form/sonuc/2", element: <SurveyAnswerList type="2" />, modes: [AppModeEnum.digitest] },
             { title: "Diğer Form Sonuçları", path: "/form/sonuc/3", element: <SurveyAnswerList type="3" />, modes: [AppModeEnum.digitest] },
+            // { title: "Form Sonuçları 2", path: "/form/sonuc/3", element: <SurveyResultPage type={1} />, modes: [AppModeEnum.digitest] },
           ],
           modes: [AppModeEnum.digitest],
           roles: [1, 2, 4, 9]
@@ -703,7 +707,7 @@ export const Sidebar: React.FC = () => {
     {
       title: "Ayarlar",
       icon: <Settings className="w-4 h-4" />,
-      modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+      modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest_put],
       items: [
         {
           title: "Şirketlerim",
@@ -716,7 +720,7 @@ export const Sidebar: React.FC = () => {
           title: "Kullanıcılar",
           icon: <User2 className="w-4 h-4" />,
           path: "/kullanicilar",
-          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp],
+          modes: [AppModeEnum.digitest_crm, AppModeEnum.dijitalerp, AppModeEnum.digitest_put],
           element: <UsersPage />,
         },
         {

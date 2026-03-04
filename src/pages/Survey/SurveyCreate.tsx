@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import type { Question, QuestionGroup, Survey, Option } from "../../types/survey";
+import type { Question, QuestionGroup, Option } from "../../types/survey";
 import { ApiResponseClient } from "@/types/apiResponse";
 import { SURVEY_CREATE, SURVEY_GET } from "@/api";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,7 @@ import { apiRequest } from "@/services/apiRequestService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { setNotification } from "@/store/slices/notificationSlice";
-import { SurveyType } from "@/api/apiDtos";
+import { Survey, SurveyType } from "@/api/apiDtos";
 import {
   DndContext,
   closestCenter,
@@ -52,12 +52,6 @@ const FolderIcon = () => (
   </svg>
 );
 
-const FolderOpenIcon = () => (
-  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
-  </svg>
-);
-
 const DocumentIcon = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -79,17 +73,6 @@ const DragIcon = () => (
 const DuplicateIcon = () => (
   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-  </svg>
-);
-
-const ChevronIcon = ({ isOpen }: { isOpen: boolean }) => (
-  <svg
-    className={`w-5 h-5 transition-transform ${isOpen ? "rotate-90" : ""}`}
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
   </svg>
 );
 
@@ -122,14 +105,6 @@ const QUESTION_TYPE_OPTIONS = [
   { value: "1", label: "Çoktan Seçmeli" },
   { value: "0", label: "Metin" },
 ];
-
-// Utility function to reorder array
-const reorder = <T,>(list: T[], startIndex: number, endIndex: number): T[] => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
-};
 
 // Custom Hooks
 const useSurveyData = (id?: string) => {
@@ -166,99 +141,6 @@ const useSurveyData = (id?: string) => {
   return { survey, setSurvey, loading };
 };
 
-// Recursive function to update nested groups
-const updateNestedGroup = (
-  groups: QuestionGroup[],
-  path: number[],
-  updatedGroup: QuestionGroup
-): QuestionGroup[] => {
-  if (path.length === 1) {
-    const newGroups = [...groups];
-    newGroups[path[0]] = updatedGroup;
-    return newGroups;
-  }
-
-  const [currentIndex, ...restPath] = path;
-  const newGroups = [...groups];
-  newGroups[currentIndex] = {
-    ...newGroups[currentIndex],
-    inverseParentGroup: updateNestedGroup(
-      newGroups[currentIndex].inverseParentGroup || [],
-      restPath,
-      updatedGroup
-    ),
-  };
-  return newGroups;
-};
-
-// Recursive function to remove nested group
-const removeNestedGroup = (groups: QuestionGroup[], path: number[]): QuestionGroup[] => {
-  if (path.length === 1) {
-    const newGroups = [...groups];
-    newGroups.splice(path[0], 1);
-    return newGroups;
-  }
-
-  const [currentIndex, ...restPath] = path;
-  const newGroups = [...groups];
-  newGroups[currentIndex] = {
-    ...newGroups[currentIndex],
-    inverseParentGroup: removeNestedGroup(
-      newGroups[currentIndex].inverseParentGroup || [],
-      restPath
-    ),
-  };
-  return newGroups;
-};
-
-// Recursive function to duplicate nested group
-const duplicateNestedGroup = (groups: QuestionGroup[], path: number[]): QuestionGroup[] => {
-  if (path.length === 1) {
-    const newGroups = [...groups];
-    const groupToDuplicate = newGroups[path[0]];
-    const duplicated = JSON.parse(JSON.stringify(groupToDuplicate)); // Deep copy
-    duplicated.name = `${groupToDuplicate.name} (Kopya)`;
-    newGroups.splice(path[0] + 1, 0, duplicated);
-    return newGroups;
-  }
-
-  const [currentIndex, ...restPath] = path;
-  const newGroups = [...groups];
-  newGroups[currentIndex] = {
-    ...newGroups[currentIndex],
-    inverseParentGroup: duplicateNestedGroup(
-      newGroups[currentIndex].inverseParentGroup || [],
-      restPath
-    ),
-  };
-  return newGroups;
-};
-
-// Recursive function to add subgroup
-const addSubgroupToNested = (groups: QuestionGroup[], path: number[]): QuestionGroup[] => {
-  const [currentIndex, ...restPath] = path;
-  const newGroups = [...groups];
-
-  if (restPath.length === 0) {
-    newGroups[currentIndex] = {
-      ...newGroups[currentIndex],
-      inverseParentGroup: [
-        ...(newGroups[currentIndex].inverseParentGroup || []),
-        { ...EMPTY_GROUP },
-      ],
-    };
-  } else {
-    newGroups[currentIndex] = {
-      ...newGroups[currentIndex],
-      inverseParentGroup: addSubgroupToNested(
-        newGroups[currentIndex].inverseParentGroup || [],
-        restPath
-      ),
-    };
-  }
-  return newGroups;
-};
-
 // Main Component
 interface SurveyCreateProps {
   id?: string;
@@ -292,48 +174,65 @@ export default function SurveyCreate({ id }: SurveyCreateProps) {
     }));
   }, []);
 
-  const updateGroup = useCallback((path: number[], updatedGroup: QuestionGroup) => {
-    setSurvey((prev) => ({
-      ...prev,
-      surveyQuestionGroup: updateNestedGroup(
-        prev.surveyQuestionGroup || [],
-        path,
-        updatedGroup
-      ),
-    }));
+  const updateGroup = useCallback((index: number, updatedGroup: QuestionGroup) => {
+    setSurvey((prev) => {
+      const groups = [...(prev.surveyQuestionGroup || [])];
+      groups[index] = updatedGroup;
+      return { ...prev, surveyQuestionGroup: groups };
+    });
   }, []);
 
   const removeGroup = useCallback(
-    async (path: number[]) => {
+    async (index: number) => {
       const isConfirmed = await confirm_({
         title: "Silme işlemi",
-        message: "Grubu ve tüm alt gruplarını silmek istediğinize emin misiniz?",
+        message: "Grubu silmek istediğinize emin misiniz?",
         confirmText: "Evet",
         cancelText: "Vazgeç",
       });
 
       if (isConfirmed) {
-        setSurvey((prev) => ({
-          ...prev,
-          surveyQuestionGroup: removeNestedGroup(prev.surveyQuestionGroup || [], path),
-        }));
+        setSurvey((prev) => {
+          const groups = [...(prev.surveyQuestionGroup || [])];
+          groups.splice(index, 1);
+          return { ...prev, surveyQuestionGroup: groups };
+        });
       }
     },
     [confirm_]
   );
 
-  const duplicateGroup = useCallback((path: number[]) => {
-    setSurvey((prev) => ({
-      ...prev,
-      surveyQuestionGroup: duplicateNestedGroup(prev.surveyQuestionGroup || [], path),
-    }));
+  const duplicateGroup = useCallback((index: number) => {
+    setSurvey((prev) => {
+      const groups = [...(prev.surveyQuestionGroup || [])];
+      const groupToDuplicate = groups[index];
+      // Deep copy of the group
+      const duplicatedGroup = {
+        ...groupToDuplicate,
+        name: `${groupToDuplicate.name} (Kopya)`,
+        surveyQuestion: groupToDuplicate.surveyQuestion.map(q => ({ ...q })),
+        surveyOption: groupToDuplicate.surveyOption.map(o => ({ ...o })),
+        inverseParentGroup: [],
+      };
+      groups.splice(index + 1, 0, duplicatedGroup);
+      return { ...prev, surveyQuestionGroup: groups };
+    });
   }, []);
 
-  const addSubgroup = useCallback((path: number[]) => {
-    setSurvey((prev) => ({
-      ...prev,
-      surveyQuestionGroup: addSubgroupToNested(prev.surveyQuestionGroup || [], path),
-    }));
+  const handleDragEndGroups = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setSurvey((prev) => {
+        const groups = prev.surveyQuestionGroup || [];
+        const oldIndex = groups.findIndex((_, i) => `group-${i}` === active.id);
+        const newIndex = groups.findIndex((_, i) => `group-${i}` === over.id);
+        return {
+          ...prev,
+          surveyQuestionGroup: arrayMove(groups, oldIndex, newIndex),
+        };
+      });
+    }
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -380,6 +279,8 @@ export default function SurveyCreate({ id }: SurveyCreateProps) {
     );
   }
 
+  const groupIds = (survey.surveyQuestionGroup || []).map((_, i) => `group-${i}`);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -391,7 +292,7 @@ export default function SurveyCreate({ id }: SurveyCreateProps) {
                 {id ? "Form Düzenle" : "Yeni Form Oluştur"}
               </h1>
               <p className="text-sm text-gray-500 mt-1">
-                İç içe gruplarla dinamik anket ve değerlendirme formları oluşturun
+                Dinamik anket ve değerlendirme formları oluşturun
               </p>
             </div>
             <button
@@ -410,14 +311,14 @@ export default function SurveyCreate({ id }: SurveyCreateProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Form Info */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-y-auto  top-24">
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-4 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                   <DocumentIcon />
                   Form Bilgileri
                 </h2>
               </div>
-              <div className="p-5 space-y-5">
+              <div className="p-5 space-y-5 ">
                 <SurveyInfoForm survey={survey} onChange={handleSurveyChange} />
               </div>
             </div>
@@ -430,19 +331,19 @@ export default function SurveyCreate({ id }: SurveyCreateProps) {
                 <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                     <FolderIcon />
-                    Soru Grupları (İç İçe)
+                    Soru Grupları
                   </h2>
                   <button
                     onClick={addGroup}
                     className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all text-sm font-medium shadow-sm hover:shadow-md"
                   >
                     <PlusIcon />
-                    Ana Grup Ekle
+                    Yeni Grup
                   </button>
                 </div>
               </div>
 
-              <div className="p-5">
+              <div className="p-5 space-y-4">
                 {survey.surveyQuestionGroup?.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
@@ -458,20 +359,27 @@ export default function SurveyCreate({ id }: SurveyCreateProps) {
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {survey.surveyQuestionGroup?.map((group, index) => (
-                      <NestedGroupForm
-                        key={`group-${index}`}
-                        group={group}
-                        path={[index]}
-                        level={0}
-                        onUpdate={(updated) => updateGroup([index], updated)}
-                        onRemove={() => removeGroup([index])}
-                        onDuplicate={() => duplicateGroup([index])}
-                        onAddSubgroup={() => addSubgroup([index])}
-                      />
-                    ))}
-                  </div>
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEndGroups}
+                  >
+                    <SortableContext items={groupIds} strategy={verticalListSortingStrategy}>
+                      <div className="space-y-4">
+                        {survey.surveyQuestionGroup?.map((group, index) => (
+                          <SortableGroup
+                            key={`group-${index}`}
+                            id={`group-${index}`}
+                            group={group}
+                            groupIndex={index}
+                            onUpdate={(updated) => updateGroup(index, updated)}
+                            onRemove={() => removeGroup(index)}
+                            onDuplicate={() => duplicateGroup(index)}
+                          />
+                        ))}
+                      </div>
+                    </SortableContext>
+                  </DndContext>
                 )}
               </div>
             </div>
@@ -482,6 +390,48 @@ export default function SurveyCreate({ id }: SurveyCreateProps) {
   );
 }
 
+// Sortable Group Component
+interface SortableGroupProps {
+  id: string;
+  group: QuestionGroup;
+  groupIndex: number;
+  onUpdate: (group: QuestionGroup) => void;
+  onRemove: () => void;
+  onDuplicate: () => void;
+}
+
+const SortableGroup: React.FC<SortableGroupProps> = ({
+  id,
+  group,
+  groupIndex,
+  onUpdate,
+  onRemove,
+  onDuplicate,
+}) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <QuestionGroupForm
+        group={group}
+        groupIndex={groupIndex}
+        onUpdate={onUpdate}
+        onRemove={onRemove}
+        onDuplicate={onDuplicate}
+        dragHandleProps={{ ...attributes, ...listeners }}
+      />
+    </div>
+  );
+};
+
 // Sub-components
 interface SurveyInfoFormProps {
   survey: Survey;
@@ -491,7 +441,7 @@ interface SurveyInfoFormProps {
 const SurveyInfoForm: React.FC<SurveyInfoFormProps> = ({ survey, onChange }) => {
   return (
     <>
-      <div>
+      <div >
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Form Başlığı <span className="text-red-500">*</span>
         </label>
@@ -533,7 +483,30 @@ const SurveyInfoForm: React.FC<SurveyInfoFormProps> = ({ survey, onChange }) => 
           ))}
         </select>
       </div>
-
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Form No <span className="text-red-500"></span>
+        </label>
+        <input
+          type="text"
+          value={survey.formNo}
+          onChange={(e) => onChange("formNo", e.target.value)}
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+          placeholder=""
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Revizyon No <span className="text-red-500"></span>
+        </label>
+        <input
+          type="text"
+          value={survey.revizyonNo}
+          onChange={(e) => onChange("revizyonNo", e.target.value)}
+          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
+          placeholder=""
+        />
+      </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Puan Görünürlüğü
@@ -551,39 +524,24 @@ const SurveyInfoForm: React.FC<SurveyInfoFormProps> = ({ survey, onChange }) => 
   );
 };
 
-interface NestedGroupFormProps {
+interface QuestionGroupFormProps {
   group: QuestionGroup;
-  path: number[];
-  level: number;
+  groupIndex: number;
   onUpdate: (group: QuestionGroup) => void;
   onRemove: () => void;
   onDuplicate: () => void;
-  onAddSubgroup: () => void;
+  dragHandleProps?: any;
 }
 
-const NestedGroupForm: React.FC<NestedGroupFormProps> = ({
+const QuestionGroupForm: React.FC<QuestionGroupFormProps> = ({
   group,
-  path,
-  level,
+  groupIndex,
   onUpdate,
   onRemove,
   onDuplicate,
-  onAddSubgroup,
+  dragHandleProps,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const hasSubgroups = (group.inverseParentGroup?.length || 0) > 0;
-  const hasQuestions = (group.surveyQuestion?.length || 0) > 0;
-
-  // Calculate indentation
-  const indentClass = level > 0 ? `ml-${Math.min(level * 6, 12)}` : "";
-  const bgColor = level % 2 === 0 ? "bg-gray-50" : "bg-white";
-  const borderColor = level === 0
-    ? "border-green-300"
-    : level === 1
-      ? "border-blue-300"
-      : level === 2
-        ? "border-purple-300"
-        : "border-orange-300";
 
   const updateField = useCallback(
     (field: keyof QuestionGroup, value: any) => {
@@ -624,6 +582,18 @@ const NestedGroupForm: React.FC<NestedGroupFormProps> = ({
     [group.surveyQuestion, updateField]
   );
 
+  const handleDragEndQuestions = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (over && active.id !== over.id) {
+        const oldIndex = group.surveyQuestion.findIndex((_, i) => `question-${groupIndex}-${i}` === active.id);
+        const newIndex = group.surveyQuestion.findIndex((_, i) => `question-${groupIndex}-${i}` === over.id);
+        updateField("surveyQuestion", arrayMove(group.surveyQuestion, oldIndex, newIndex));
+      }
+    },
+    [group.surveyQuestion, updateField, groupIndex]
+  );
+
   const addOption = useCallback(() => {
     updateField("surveyOption", [...group.surveyOption, { ...EMPTY_OPTION }]);
   }, [group.surveyOption, updateField]);
@@ -656,51 +626,17 @@ const NestedGroupForm: React.FC<NestedGroupFormProps> = ({
     [group.surveyOption, updateField]
   );
 
-  const updateSubgroup = useCallback(
-    (index: number, updated: QuestionGroup) => {
-      const newSubgroups = [...(group.inverseParentGroup || [])];
-      newSubgroups[index] = updated;
-      updateField("inverseParentGroup", newSubgroups);
-    },
-    [group.inverseParentGroup, updateField]
-  );
-
-  const removeSubgroup = useCallback(
-    async (index: number) => {
-      const confirm_ = useConfirm();
-      const isConfirmed = await confirm_({
-        title: "Silme işlemi",
-        message: "Alt grubu ve tüm içeriğini silmek istediğinize emin misiniz?",
-        confirmText: "Evet",
-        cancelText: "Vazgeç",
-      });
-
-      if (isConfirmed) {
-        const newSubgroups = [...(group.inverseParentGroup || [])];
-        newSubgroups.splice(index, 1);
-        updateField("inverseParentGroup", newSubgroups);
+  const handleDragEndOptions = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event;
+      if (over && active.id !== over.id) {
+        const oldIndex = group.surveyOption.findIndex((_, i) => `option-${groupIndex}-${i}` === active.id);
+        const newIndex = group.surveyOption.findIndex((_, i) => `option-${groupIndex}-${i}` === over.id);
+        updateField("surveyOption", arrayMove(group.surveyOption, oldIndex, newIndex));
       }
     },
-    [group.inverseParentGroup, updateField]
+    [group.surveyOption, updateField, groupIndex]
   );
-
-  const duplicateSubgroup = useCallback(
-    (index: number) => {
-      const subgroupToDuplicate = group.inverseParentGroup?.[index];
-      if (!subgroupToDuplicate) return;
-      const duplicated = JSON.parse(JSON.stringify(subgroupToDuplicate));
-      duplicated.name = `${subgroupToDuplicate.name} (Kopya)`;
-      const newSubgroups = [...(group.inverseParentGroup || [])];
-      newSubgroups.splice(index + 1, 0, duplicated);
-      updateField("inverseParentGroup", newSubgroups);
-    },
-    [group.inverseParentGroup, updateField]
-  );
-
-  const addSubgroupHere = useCallback(() => {
-    const newSubgroups = [...(group.inverseParentGroup || []), { ...EMPTY_GROUP }];
-    updateField("inverseParentGroup", newSubgroups);
-  }, [group.inverseParentGroup, updateField]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -710,64 +646,56 @@ const NestedGroupForm: React.FC<NestedGroupFormProps> = ({
   );
 
   return (
-    <div className={`border-2 ${borderColor} rounded-lg overflow-hidden ${bgColor} ${indentClass}`}>
+    <div className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
       {/* Group Header */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 flex-1">
+            <div
+              {...dragHandleProps}
+              className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 transition-colors p-1"
+              title="Sürükle"
+            >
+              <DragIcon />
+            </div>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="text-gray-400 hover:text-gray-600 transition-colors"
-              title={isExpanded ? "Daralt" : "Genişlet"}
             >
-              <ChevronIcon isOpen={isExpanded} />
+              <svg
+                className={`w-5 h-5 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
-            <div className="p-1.5 bg-gradient-to-br from-green-100 to-emerald-100 rounded-lg">
-              {isExpanded ? <FolderOpenIcon /> : <FolderIcon />}
-            </div>
             <div className="flex-1">
               <input
                 type="text"
                 value={group.name}
                 onChange={(e) => updateField("name", e.target.value)}
                 className="w-full px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none font-medium"
-                placeholder={`Grup Adı (Seviye ${level + 1})`}
+                placeholder={`Grup ${groupIndex + 1} - İsim giriniz`}
               />
-            </div>
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              {hasSubgroups && (
-                <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full font-medium">
-                  {group.inverseParentGroup?.length} alt grup
-                </span>
-              )}
-              {hasQuestions && (
-                <span className="px-2 py-1 bg-green-100 text-green-700 rounded-full font-medium">
-                  {group.surveyQuestion.length} soru
-                </span>
-              )}
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={onAddSubgroup}
-              className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-all text-sm font-medium"
-              title="Alt Grup Ekle"
-            >
-              <PlusIcon />
-              Alt Grup
-            </button>
-            <button
               onClick={onDuplicate}
-              className="inline-flex items-center gap-1.5 text-green-600 hover:text-green-700 hover:bg-green-50 px-3 py-1.5 rounded-lg transition-all text-sm font-medium"
+              className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-all text-sm font-medium"
               title="Grubu Çoğalt"
             >
               <DuplicateIcon />
+              Çoğalt
             </button>
             <button
               onClick={onRemove}
-              className="inline-flex items-center gap-1.5 text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all text-sm font-medium"
+              className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg transition-all text-sm font-medium"
             >
               <TrashIcon />
+              Sil
             </button>
           </div>
         </div>
@@ -775,99 +703,64 @@ const NestedGroupForm: React.FC<NestedGroupFormProps> = ({
 
       {/* Group Content */}
       {isExpanded && (
-        <div className="p-4 space-y-4">
-          {/* Subgroups */}
-          {hasSubgroups && (
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                <FolderIcon />
-                Alt Gruplar
-              </h4>
-              {group.inverseParentGroup?.map((subgroup, index) => (
-                <NestedGroupForm
-                  key={`subgroup-${index}`}
-                  group={subgroup}
-                  path={[...path, index]}
-                  level={level + 1}
-                  onUpdate={(updated) => updateSubgroup(index, updated)}
-                  onRemove={() => removeSubgroup(index)}
-                  onDuplicate={() => duplicateSubgroup(index)}
-                  onAddSubgroup={() => {
-                    const newSubgroups = [
-                      ...(subgroup.inverseParentGroup || []),
-                      { ...EMPTY_GROUP },
-                    ];
-                    updateSubgroup(index, { ...subgroup, inverseParentGroup: newSubgroups });
-                  }}
-                />
-              ))}
+        <div className="p-4 space-y-5">
+          {/* Questions */}
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="bg-blue-50 px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
+              <h4 className="text-sm font-semibold text-gray-900">Sorular</h4>
+              <button
+                onClick={addQuestion}
+                className="inline-flex items-center gap-1.5 bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-all text-xs font-medium"
+              >
+                <PlusIcon />
+                Soru Ekle
+              </button>
             </div>
-          )}
+            <div className="p-3">
+              {group.surveyQuestion.length === 0 ? (
+                <p className="text-center text-gray-400 py-4 text-sm">Henüz soru eklenmedi</p>
+              ) : (
+                <QuestionList
+                  questions={group.surveyQuestion}
+                  groupIndex={groupIndex}
+                  onUpdate={updateQuestion}
+                  onRemove={removeQuestion}
+                  onDuplicate={duplicateQuestion}
+                  onDragEnd={handleDragEndQuestions}
+                  sensors={sensors}
+                />
+              )}
+            </div>
+          </div>
 
-          {/* Only show questions/options if no subgroups */}
-          {!hasSubgroups && (
-            <>
-              {/* Questions */}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="bg-blue-50 px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-gray-900">Sorular</h4>
-                  <button
-                    onClick={addQuestion}
-                    className="inline-flex items-center gap-1.5 bg-blue-600 text-white px-3 py-1.5 rounded-md hover:bg-blue-700 transition-all text-xs font-medium"
-                  >
-                    <PlusIcon />
-                    Soru Ekle
-                  </button>
-                </div>
-                <div className="p-3">
-                  {group.surveyQuestion.length === 0 ? (
-                    <p className="text-center text-gray-400 py-4 text-sm">
-                      Henüz soru eklenmedi
-                    </p>
-                  ) : (
-                    <QuestionList
-                      questions={group.surveyQuestion}
-                      groupPath={path.join("-")}
-                      onUpdate={updateQuestion}
-                      onRemove={removeQuestion}
-                      onDuplicate={duplicateQuestion}
-                      sensors={sensors}
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* Options */}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <div className="bg-green-50 px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
-                  <h4 className="text-sm font-semibold text-gray-900">Cevap Seçenekleri</h4>
-                  <button
-                    onClick={addOption}
-                    className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-md hover:bg-green-700 transition-all text-xs font-medium"
-                  >
-                    <PlusIcon />
-                    Seçenek Ekle
-                  </button>
-                </div>
-                <div className="p-3">
-                  {group.surveyOption.length === 0 ? (
-                    <p className="text-center text-gray-400 py-4 text-sm">
-                      Henüz seçenek eklenmedi
-                    </p>
-                  ) : (
-                    <OptionList
-                      options={group.surveyOption}
-                      groupPath={path.join("-")}
-                      onUpdate={updateOption}
-                      onRemove={removeOption}
-                      onDuplicate={duplicateOption}
-                      sensors={sensors}
-                    />
-                  )}
-                </div>
-              </div>
-            </>
-          )}
+          {/* Options */}
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="bg-green-50 px-4 py-2.5 border-b border-gray-200 flex items-center justify-between">
+              <h4 className="text-sm font-semibold text-gray-900">Cevap Seçenekleri</h4>
+              <button
+                onClick={addOption}
+                className="inline-flex items-center gap-1.5 bg-green-600 text-white px-3 py-1.5 rounded-md hover:bg-green-700 transition-all text-xs font-medium"
+              >
+                <PlusIcon />
+                Seçenek Ekle
+              </button>
+            </div>
+            <div className="p-3">
+              {group.surveyOption.length === 0 ? (
+                <p className="text-center text-gray-400 py-4 text-sm">Henüz seçenek eklenmedi</p>
+              ) : (
+                <OptionList
+                  options={group.surveyOption}
+                  groupIndex={groupIndex}
+                  onUpdate={updateOption}
+                  onRemove={removeOption}
+                  onDuplicate={duplicateOption}
+                  onDragEnd={handleDragEndOptions}
+                  sensors={sensors}
+                />
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>
@@ -959,47 +852,33 @@ const SortableQuestion: React.FC<SortableQuestionProps> = ({
 
 interface QuestionListProps {
   questions: Question[];
-  groupPath: string;
+  groupIndex: number;
   onUpdate: (index: number, field: keyof Question, value: any) => void;
   onRemove: (index: number) => void;
   onDuplicate: (index: number) => void;
+  onDragEnd: (event: DragEndEvent) => void;
   sensors: any;
 }
 
 const QuestionList: React.FC<QuestionListProps> = ({
   questions,
-  groupPath,
+  groupIndex,
   onUpdate,
   onRemove,
   onDuplicate,
+  onDragEnd,
   sensors,
 }) => {
-  const questionIds = questions.map((_, i) => `question-${groupPath}-${i}`);
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = questionIds.indexOf(active.id as string);
-      const newIndex = questionIds.indexOf(over.id as string);
-
-      const reordered = arrayMove(questions, oldIndex, newIndex);
-      reordered.forEach((q, idx) => {
-        if (JSON.stringify(q) !== JSON.stringify(questions[idx])) {
-          onUpdate(idx, "text", q.text);
-          onUpdate(idx, "type", q.type);
-        }
-      });
-    }
-  };
+  const questionIds = questions.map((_, i) => `question-${groupIndex}-${i}`);
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
       <SortableContext items={questionIds} strategy={verticalListSortingStrategy}>
         <div className="space-y-3">
           {questions.map((q, i) => (
             <SortableQuestion
-              key={questionIds[i]}
-              id={questionIds[i]}
+              key={`question-${groupIndex}-${i}`}
+              id={`question-${groupIndex}-${i}`}
               question={q}
               index={i}
               onUpdate={onUpdate}
@@ -1094,47 +973,33 @@ const SortableOption: React.FC<SortableOptionProps> = ({
 
 interface OptionListProps {
   options: Option[];
-  groupPath: string;
+  groupIndex: number;
   onUpdate: (index: number, field: keyof Option, value: any) => void;
   onRemove: (index: number) => void;
   onDuplicate: (index: number) => void;
+  onDragEnd: (event: DragEndEvent) => void;
   sensors: any;
 }
 
 const OptionList: React.FC<OptionListProps> = ({
   options,
-  groupPath,
+  groupIndex,
   onUpdate,
   onRemove,
   onDuplicate,
+  onDragEnd,
   sensors,
 }) => {
-  const optionIds = options.map((_, i) => `option-${groupPath}-${i}`);
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (over && active.id !== over.id) {
-      const oldIndex = optionIds.indexOf(active.id as string);
-      const newIndex = optionIds.indexOf(over.id as string);
-
-      const reordered = arrayMove(options, oldIndex, newIndex);
-      reordered.forEach((opt, idx) => {
-        if (JSON.stringify(opt) !== JSON.stringify(options[idx])) {
-          onUpdate(idx, "text", opt.text);
-          onUpdate(idx, "puan", opt.puan);
-        }
-      });
-    }
-  };
+  const optionIds = options.map((_, i) => `option-${groupIndex}-${i}`);
 
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
       <SortableContext items={optionIds} strategy={verticalListSortingStrategy}>
         <div className="space-y-3">
           {options.map((opt, i) => (
             <SortableOption
-              key={optionIds[i]}
-              id={optionIds[i]}
+              key={`option-${groupIndex}-${i}`}
+              id={`option-${groupIndex}-${i}`}
               option={opt}
               index={i}
               onUpdate={onUpdate}

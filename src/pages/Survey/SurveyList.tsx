@@ -20,6 +20,8 @@ import SurveyCreate from "./SurveyCreate";
 interface Survey {
   id: number;
   title: string;
+  formNo: string;
+  revizyonNo: string;
 }
 
 const SurveyList: React.FC = ({ type }: { type?: string }) => {
@@ -131,8 +133,10 @@ const SurveyList: React.FC = ({ type }: { type?: string }) => {
         columns={[
           { header: "#", accessor: "__index" },
           { header: "Form Adı", accessor: "title", sortable: true, filterable: true },
+          { header: "Form No", accessor: "formNo", sortable: true, filterable: true },
+          { header: "Revizyon No", accessor: "revizyonNo", sortable: true, filterable: true },
           { header: "İşlemler", accessor: "id", body: (T) => GetCommits(T) },
-        ]} rowIdAccessor={"title"} />
+        ]} rowIdAccessor={"id"} />
     </div>
 
   );

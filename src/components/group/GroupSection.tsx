@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { createItem, fetchItemTree, deleteItem, ItemTree } from '../../store/features/itemSlice';
 import { deleteGroup, Group } from '../../store/features/groupSlice';
-import { deleteColumn } from '../../store/features/columnSlice';
+import { deleteColumn, selectColumnsForBoard } from '../../store/features/columnSlice';
 import { INDENT_STEP } from '../board/BoardView'; 
 import {
     useSortable, SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy
@@ -59,7 +59,7 @@ interface GroupSectionProps {
     isOverlay?: boolean;
     dragOverItemId: number | null;
     projectedDepth: number;
-    selectedBoardId:number;
+    selectedBoardId?: number;
 }
 
 const GroupSection: React.FC<GroupSectionProps> = ({
@@ -67,8 +67,7 @@ const GroupSection: React.FC<GroupSectionProps> = ({
     dragOverItemId, projectedDepth,selectedBoardId
 }) => {
     const dispatch = useAppDispatch();
-    // const { selectedBoardId } = useAppSelector(s => s.boards);
-    const columns = useAppSelector(s => s.columns.items);
+    const columns = useAppSelector(selectColumnsForBoard(selectedBoardId ?? 0));
     const showOnlyCompleted = useAppSelector(selectShowOnlyCompleted);
     
     // Selectors

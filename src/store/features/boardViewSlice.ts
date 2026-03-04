@@ -1,75 +1,64 @@
 // src/store/features/boardViewSlice.ts
 
 import { createSlice, createAsyncThunk, type PayloadAction, createSelector } from '@reduxjs/toolkit';
-import type { RootState } from '../store'; // Ana store tipini import et
+import type { RootState } from '../store';
 import { URL } from '@/api';
 
-// Backend DTO'larına karşılık gelen frontend tipleri
 export interface BoardViewData {
-    id: number; // Backend int döndürecek
+    id: number;
     name: string;
-    type: string; // Backend 'Table', 'Gantt' gibi string dönecek
+    type: string;
     order: number;
-    settingsJson?: string | null; // <-- JSON ayarları için alan (opsiyonel)
+    settingsJson?: string | null;
 }
 
-// Yeni görünüm oluşturma isteği için tip
 export interface CreateBoardViewPayload {
     name: string;
-    type: string; // 'Table' veya 'Gantt'
+    type: string;
 }
 
-// --- Güncelleme (Yeniden Adlandırma) için Payload Tipi ---
 export interface UpdateBoardViewPayload {
     name: string;
 }
 
-// Ayarları güncellemek için payload tipi
 export interface UpdateBoardViewSettingsPayload {
-    settingsJson: string; // Ayarların tamamını string olarak göndereceğiz
+    settingsJson: string;
 }
 
-// State arayüzü
 interface BoardViewState {
-    views: BoardViewData[];
-    activeViewId: number | null; // ID'ler artık number
+    viewsByBoard: Record<number, BoardViewData[]>;
+    activeViewIdByBoard: Record<number, number | null>;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
-    // YENİ: Tamamlananları filtreleme durumu
     showOnlyCompleted: boolean;
 }
 
 const initialState: BoardViewState = {
-    views: [],
-    activeViewId: null,
+    viewsByBoard: {},
+    activeViewIdByBoard: {},
     status: 'idle',
     error: null,
-    // YENİ: Varsayılan olarak kapalı (Tüm görevler görünür)
     showOnlyCompleted: false,
 };
 
 // --- Async Thunks ---
 
-// Belirli bir panonun görünümlerini getirme
 export const fetchViewsForBoard = createAsyncThunk<
-    BoardViewData[], // Başarılı olursa dönecek tip
-    number,          // Argüman tipi (boardId)
-    { rejectValue: string} // Hata durumunda dönecek tip
+    BoardViewData[],
+    number,
+    { rejectValue: string }
 >('boardViews/fetchViewsForBoard', async (boardId, { rejectWithValue, getState }) => {
     try {
         const state = getState() as RootState;
         const aut = `Bearer ${state.login.accessToken}`;
-        const response = await fetch(`${URL}/boards/${boardId}/views`,{headers:{ authorization: aut }});
-        if (!response.ok) {
-            throw new Error(`Server Error: ${response.status}`);
-        }
+        const response = await fetch(`${URL}/boards/${boardId}/views`, { headers: { authorization: aut } });
+        if (!response.ok) throw new Error(`Server Error: ${response.status}`);
         return (await response.json()) as BoardViewData[];
     } catch (error: any) {
         return rejectWithValue(error.message || 'Görünümler getirilemedi');
     }
 });
 
-// Yeni görünüm oluşturma
 export const createBoardView = createAsyncThunk<
     BoardViewData,
     { boardId: number; payload: CreateBoardViewPayload },
@@ -93,16 +82,15 @@ export const createBoardView = createAsyncThunk<
     }
 });
 
-// --- GÜNCELLENDİ: deleteBoardView ---
 export const deleteBoardView = createAsyncThunk<
-    number, // Silinen viewId'yi döndür
+    number,
     { boardId: number; viewId: number },
     { rejectValue: string }
 >('boardViews/deleteBoardView', async ({ boardId, viewId }, { rejectWithValue, getState }) => {
     try {
         const state = getState() as RootState;
         const aut = `Bearer ${state.login.accessToken}`;
-        const response = await fetch(`${URL}/boards/${boardId}/views/${viewId}`, { // URL doğru varsayılıyor
+        const response = await fetch(`${URL}/boards/${boardId}/views/${viewId}`, {
             method: 'DELETE',
             headers: { authorization: aut }
         });
@@ -110,63 +98,44 @@ export const deleteBoardView = createAsyncThunk<
             const errorText = await response.text();
             throw new Error(errorText || `Server Error: ${response.status}`);
         }
-        // Backend 204 No Content döndüreceği için bir şey parse etmeye gerek yok.
-        return viewId; // Başarılı silmede ID'yi döndür
+        return viewId;
     } catch (error: any) {
         return rejectWithValue(error.message || 'Görünüm silinemedi');
     }
 });
 
-// --- GÜNCELLENMİŞ: updateBoardView (Yeniden Adlandırma için) ---
 export const updateBoardView = createAsyncThunk<
     BoardViewData,
     { boardId: number; viewId: number; payload: UpdateBoardViewPayload },
-    { rejectValue: string; state: RootState } // getState için RootState eklendi
+    { rejectValue: string; state: RootState }
 >(
     'boardViews/updateBoardView',
-    async ({ boardId, viewId, payload }, { dispatch, rejectWithValue, getState }) => {
+    async ({ boardId, viewId, payload }, { rejectWithValue, getState }) => {
         try {
-            // 1. Mevcut state'i al
             const state = getState();
-            // 2. Güncellenen görünümün mevcut verisini state'den bul
-            const currentView = state.boardViews.views.find(v => v.id === viewId);
+            const currentView = (state.boardViews.viewsByBoard[boardId] ?? []).find(v => v.id === viewId);
+            if (!currentView) throw new Error("Güncellenecek görünüm mevcut state'de bulunamadı.");
 
-            if (!currentView) {
-                throw new Error("Güncellenecek görünüm mevcut state'de bulunamadı.");
-            }
-
-            // 3. Payload'ı birleştir:
-            // YENİ Adı ve ESKİ ayarları birleştir (ezilmemesi için)
-            const combinedPayload = {
-                ...payload, // { name: "Yeni Ad" }
-                settingsJson: currentView.settingsJson // { settingsJson: "{\"activeTimelineId\":5}" }
-            };
+            const combinedPayload = { ...payload, settingsJson: currentView.settingsJson };
 
             const response = await fetch(`${URL}/boards/${boardId}/views/${viewId}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' ,authorization: `Bearer ${state.login.accessToken}`},
-                body: JSON.stringify(combinedPayload), // Birleştirilmiş payload'ı gönder
-
+                headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
+                body: JSON.stringify(combinedPayload),
             });
-
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(errorText || `Server Error: ${response.status}`);
             }
-
-            // Backend 'Ok(updatedView)' döndüğü için JSON'u parse et
             return (await response.json()) as BoardViewData;
-
         } catch (error: any) {
             return rejectWithValue(error.message || 'Görünüm yeniden adlandırılamadı');
         }
     }
 );
 
-
-// Görünümleri yeniden sıralama
 export const reorderBoardViews = createAsyncThunk<
-    void, // Bir şey döndürmeyecek
+    void,
     { boardId: number; orderedViewIds: number[] },
     { rejectValue: string }
 >('boardViews/reorderBoardViews', async ({ boardId, orderedViewIds }, { rejectWithValue, getState }) => {
@@ -178,197 +147,162 @@ export const reorderBoardViews = createAsyncThunk<
             headers: { 'Content-Type': 'application/json', authorization: aut },
             body: JSON.stringify(orderedViewIds),
         });
-        if (!response.ok) {
-            throw new Error(`Server Error: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Server Error: ${response.status}`);
     } catch (error: any) {
         return rejectWithValue(error.message || 'Görünüm sırası güncellenemedi');
     }
 });
 
-// --- GÜNCELLENMİŞ: updateBoardViewSettings Thunk ---
-// Bu, bir görünümün SADECE ayarlarını (SettingsJson) günceller
 export const updateBoardViewSettings = createAsyncThunk<
-    BoardViewData, // Başarıda güncellenmiş görünümü döndür
+    BoardViewData,
     { boardId: number; viewId: number; payload: UpdateBoardViewSettingsPayload },
-    { rejectValue: string; state: RootState } // getState'i kullanabilmek için RootState tipini ekleyin
+    { rejectValue: string; state: RootState }
 >(
     'boardViews/updateBoardViewSettings',
-    // 'getState'i parametrelere ekleyin
     async ({ boardId, viewId, payload }, { rejectWithValue, getState }) => {
         try {
-            // 1. Mevcut state'i al
             const state = getState();
+            const currentView = (state.boardViews.viewsByBoard[boardId] ?? []).find(v => v.id === viewId);
+            if (!currentView) throw new Error("Güncellenecek görünüm mevcut state'de bulunamadı.");
 
-            // 2. Güncellenen görünümün mevcut verisini state'den bul
-            const currentView = state.boardViews.views.find(v => v.id === viewId);
-
-            if (!currentView) {
-                throw new Error("Güncellenecek görünüm mevcut state'de bulunamadı.");
-            }
-
-            // 4. Backend'e gönderilecek payload'ı birleştir:
-            // ESKİ Adı ve YENİ ayarları birleştir (ezilmemesi için)
-            const combinedPayload = {
-                name: currentView.name, // Backend'in [Required] Name alanını karşıla
-                ...payload,             // { settingsJson: "..." } alanını ekle
-            };
+            const combinedPayload = { name: currentView.name, ...payload };
 
             const response = await fetch(`${URL}/boards/${boardId}/views/${viewId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
-
-                body: JSON.stringify(combinedPayload), // Birleştirilmiş payload'ı gönder
+                body: JSON.stringify(combinedPayload),
             });
-
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(errorText || `Server Error: ${response.status}`);
             }
-
-            // Backend'den güncellenmiş tam view nesnesini bekliyoruz
             return (await response.json()) as BoardViewData;
-
         } catch (error: any) {
             return rejectWithValue(error.message || 'Görünüm ayarları güncellenemedi');
         }
     }
 );
-// ---------------------------------------------
 
 // --- Slice ---
+
 const boardViewSlice = createSlice({
     name: 'boardViews',
     initialState,
     reducers: {
-        // Aktif görünüm ID'sini senkron olarak ayarlama
-        setActiveViewId: (state, action: PayloadAction<number | null>) => {
-            state.activeViewId = action.payload;
+        setActiveViewId: (state, action: PayloadAction<{ boardId: number; viewId: number | null }>) => {
+            state.activeViewIdByBoard[action.payload.boardId] = action.payload.viewId;
         },
-        // Pano değiştiğinde state'i temizleme
-        clearBoardViews: (state) => {
-            state.views = [];
-            state.activeViewId = null;
-            state.status = 'idle';
-            state.error = null;
+        clearBoardViews: (state, action: PayloadAction<number>) => {
+            delete state.viewsByBoard[action.payload];
+            delete state.activeViewIdByBoard[action.payload];
         },
-        // YENİ: Filtreyi aç/kapa
         toggleShowOnlyCompleted: (state) => {
             state.showOnlyCompleted = !state.showOnlyCompleted;
         }
     },
     extraReducers: (builder) => {
         builder
-            // Görünümleri Getirme
             .addCase(fetchViewsForBoard.pending, (state) => {
                 state.status = 'loading';
                 state.error = null;
             })
             .addCase(fetchViewsForBoard.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.views = action.payload;
-                // Eğer aktif ID yoksa veya listede olmayan bir ID ise, ilk görünümü aktif yap
-                if (!state.activeViewId || !action.payload.some(v => v.id === state.activeViewId)) {
-                    state.activeViewId = action.payload.length > 0 ? action.payload[0].id : null;
+                const boardId = action.meta.arg;
+                state.viewsByBoard[boardId] = action.payload;
+                const currentActive = state.activeViewIdByBoard[boardId];
+                if (!currentActive || !action.payload.some(v => v.id === currentActive)) {
+                    state.activeViewIdByBoard[boardId] = action.payload.length > 0 ? action.payload[0].id : null;
                 }
             })
             .addCase(fetchViewsForBoard.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.payload ?? 'Bilinmeyen bir hata oluştu.';
             })
-            // Görünüm Oluşturma
-            .addCase(createBoardView.pending, (state) => {
-                // Opsiyonel: Yükleniyor durumu gösterilebilir
-            })
             .addCase(createBoardView.fulfilled, (state, action) => {
-                state.views.push(action.payload); // Yeni görünümü listeye ekle
-                state.activeViewId = action.payload.id; // Yeni ekleneni aktif yap
+                const boardId = action.meta.arg.boardId;
+                if (!state.viewsByBoard[boardId]) state.viewsByBoard[boardId] = [];
+                state.viewsByBoard[boardId].push(action.payload);
+                state.activeViewIdByBoard[boardId] = action.payload.id;
                 state.error = null;
             })
             .addCase(createBoardView.rejected, (state, action) => {
                 state.error = action.payload ?? 'Görünüm oluşturulamadı.';
             })
-            // --- GÜNCELLENDİ: deleteBoardView.fulfilled ---
             .addCase(deleteBoardView.fulfilled, (state, action) => {
+                const boardId = action.meta.arg.boardId;
                 const deletedId = action.payload;
-                const deletedIndex = state.views.findIndex(v => v.id === deletedId);
-                if (deletedIndex === -1) return; // Bulunamadıysa çık
+                const views = state.viewsByBoard[boardId] ?? [];
+                const deletedIndex = views.findIndex(v => v.id === deletedId);
+                if (deletedIndex === -1) return;
 
-                state.views.splice(deletedIndex, 1); // Görünümü listeden çıkar
-                state.error = null; // Hata varsa temizle
+                views.splice(deletedIndex, 1);
+                state.error = null;
 
-                // Eğer silinen görünüm aktif idiyse
-                if (state.activeViewId === deletedId) {
-                    // Silinenin bir sonrakini veya bir öncekini (veya ilkini) aktif yap
-                    const nextIndex = deletedIndex < state.views.length ? deletedIndex : deletedIndex - 1;
-                    state.activeViewId = state.views.length > 0 ? state.views[Math.max(0, nextIndex)].id : null;
+                if (state.activeViewIdByBoard[boardId] === deletedId) {
+                    const nextIndex = deletedIndex < views.length ? deletedIndex : deletedIndex - 1;
+                    state.activeViewIdByBoard[boardId] = views.length > 0 ? views[Math.max(0, nextIndex)].id : null;
                 }
             })
             .addCase(deleteBoardView.rejected, (state, action) => {
                 state.error = action.payload ?? 'Görünüm silinemedi.';
             })
-            // ----------------------------------------------
-
-            // --- YENİ: updateBoardView case'leri ---
-            .addCase(updateBoardView.pending, (state) => {
-                // Opsiyonel: Yükleniyor durumu
-            })
             .addCase(updateBoardView.fulfilled, (state, action) => {
-                const updatedViewData = action.payload; // Backend'den dönen veri
-                const index = state.views.findIndex(v => v.id === updatedViewData.id);
-                if (index !== -1) {
-                    // Backend'den tam nesne döndüğü için direkt değiştiriyoruz
-                    state.views[index] = updatedViewData;
-                }
+                const boardId = action.meta.arg.boardId;
+                const updatedViewData = action.payload;
+                const views = state.viewsByBoard[boardId] ?? [];
+                const index = views.findIndex(v => v.id === updatedViewData.id);
+                if (index !== -1) views[index] = updatedViewData;
                 state.error = null;
             })
             .addCase(updateBoardView.rejected, (state, action) => {
                 state.error = action.payload ?? 'Görünüm yeniden adlandırılamadı.';
             })
-            // Görünüm Sıralama (Anlık güncelleme örneği)
             .addCase(reorderBoardViews.pending, (state, action) => {
-                // Anlık (Optimistic) Güncelleme: Backend'den yanıt beklemeden sıralamayı değiştir
+                const boardId = action.meta.arg.boardId;
                 const orderedIds = action.meta.arg.orderedViewIds;
-                const viewMap = new Map(state.views.map(v => [v.id, v]));
-                state.views = orderedIds.map(id => viewMap.get(id)!)
-                    .filter(Boolean) // Olası hatalara karşı
-                    .map((view, index) => ({ ...view, order: index })); // Order'ı da güncelle
+                const views = state.viewsByBoard[boardId] ?? [];
+                const viewMap = new Map(views.map(v => [v.id, v]));
+                state.viewsByBoard[boardId] = orderedIds
+                    .map(id => viewMap.get(id)!)
+                    .filter(Boolean)
+                    .map((view, index) => ({ ...view, order: index }));
             })
             .addCase(reorderBoardViews.rejected, (state, action) => {
                 state.error = action.payload ?? 'Sıralama güncellenemedi.';
-                // TODO: Hata durumunda anlık güncellemeyi geri al (fetchViewsForBoard tekrar çağrılabilir)
             })
-            // --- Ayarları güncelleme case'i ---
             .addCase(updateBoardViewSettings.fulfilled, (state, action) => {
+                const boardId = action.meta.arg.boardId;
                 const updatedView = action.payload;
-                const index = state.views.findIndex(v => v.id === updatedView.id);
-                if (index !== -1) {
-                    // State'deki görünümü backend'den gelen güncel veriyle değiştir
-                    state.views[index] = updatedView;
-                }
+                const views = state.viewsByBoard[boardId] ?? [];
+                const index = views.findIndex(v => v.id === updatedView.id);
+                if (index !== -1) views[index] = updatedView;
             })
             .addCase(updateBoardViewSettings.rejected, (state, action) => {
                 state.error = action.payload ?? 'Ayar güncellenemedi';
             });
-        // ---------------------------------------
     },
 });
 
 // --- Actions ---
 export const { setActiveViewId, clearBoardViews, toggleShowOnlyCompleted } = boardViewSlice.actions;
 
-// --- Selectors ---
-export const selectBoardViews = (state: RootState) => state.boardViews.views;
-export const selectActiveViewId = (state: RootState) => state.boardViews.activeViewId;
+// --- Selectors (per-board) ---
+export const selectViewsForBoard = (boardId: number) => (state: RootState): BoardViewData[] =>
+    state.boardViews.viewsByBoard[boardId] ?? [];
+
+export const selectActiveViewIdForBoard = (boardId: number) => (state: RootState): number | null =>
+    state.boardViews.activeViewIdByBoard[boardId] ?? null;
+
 export const selectBoardViewStatus = (state: RootState) => state.boardViews.status;
-export const selectBoardViewError = (state: RootState) => state.boardViews.error;
 export const selectShowOnlyCompleted = (state: RootState) => state.boardViews.showOnlyCompleted;
 
-// Aktif görünüm nesnesini döndüren selector (useMemo gibi çalışır)
-export const selectActiveView = createSelector(
-    [selectBoardViews, selectActiveViewId],
-    (views, activeId) => views.find(view => view.id === activeId) || null
-);
+export const makeSelectActiveView = (boardId: number) =>
+    createSelector(
+        [(state: RootState) => state.boardViews.viewsByBoard[boardId] ?? [],
+         (state: RootState) => state.boardViews.activeViewIdByBoard[boardId] ?? null],
+        (views, activeId) => views.find(v => v.id === activeId) ?? null
+    );
 
 // --- Reducer ---
 export default boardViewSlice.reducer;

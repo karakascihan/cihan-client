@@ -9,6 +9,7 @@
     "dev:digitest-crm": "vite --mode digitest-crm",
     "dev:dijitalerp": "vite --mode dijitalerp",
     "dev:supplier": "vite --mode supplier",
+    "dev:digitest-put": "vite --mode digitest-put",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -16,6 +17,7 @@
     "build:dijitalerp": "vite build --mode dijitalerp",
     "build:supplier": "vite build --mode supplier",
     "build:digitest-crm": "vite build --mode digitest-crm",
+    "build:digitest-put": "vite build --mode digitest-put",
     "build:all": "vite build --mode digitest && vite build --mode dijitalerp && vite build --mode supplier && vite build --mode digitest-crm"
   },
   "dependencies": {

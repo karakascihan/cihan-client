@@ -41,7 +41,7 @@ import { useAppSelector } from "@/store/hooks";
 import { fetchGroupsForBoard, Group, selectAllGroups } from "@/store/features/groupSlice";
 import { fetchItemsForBoard, Item,  selectAllItemsFlat } from "@/store/features/itemSlice";
 import { selectAllColumns } from "@/store/features/columnSlice";
-import { selectSelectedBoard } from "@/store/features/boardSlice";
+
 import { se } from "date-fns/locale";
 import { all } from "axios";
 import { apiRequest } from "@/services";

@@ -2,14 +2,13 @@
 
 import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { selectAllGroups } from '../../store/features/groupSlice';
-import { Item, selectAllItemsFlat } from '../../store/features/itemSlice';
-import { selectAllColumns } from '../../store/features/columnSlice';
-import { selectSelectedBoard } from '../../store/features/boardSlice';
+import { selectGroupsForBoard } from '../../store/features/groupSlice';
+import { Item, selectItemsForBoard, updateMultipleItemValues } from '../../store/features/itemSlice';
+import { selectColumnsForBoard } from '../../store/features/columnSlice';
 import GanttToolbar, { type ViewModeOption } from '../gantt/GanttToolbar';
 import GanttLeftPanel from '../gantt/GanttLeftPanel';
 import GanttRightPanel from '../gantt/GanttRightPanel';
-import { addDays, isValid, parseISO } from 'date-fns';
+import { addDays, format, isValid, parseISO } from 'date-fns';
 import { MAX_ZOOM_INDEX, GANTT_ROW_HEIGHT_PX } from '../common/constants';
 import GanttBaselineModal from '../gantt/GanttBaselineModal';
 import ItemDetailModal from '../item/ItemDetailModal';
@@ -48,11 +47,11 @@ const GanttView: React.FC<GanttViewProps> = ({
     onZoomIndexChange
 }) => {
     const dispatch = useAppDispatch();
-    const allGroups = useAppSelector(selectAllGroups);
-    const allItems = useAppSelector(selectAllItemsFlat);
-    const allColumns = useAppSelector(selectAllColumns);
+    const allGroups = useAppSelector(selectGroupsForBoard(boardId));
+    const allItems = useAppSelector(selectItemsForBoard(boardId));
+    const allColumns = useAppSelector(selectColumnsForBoard(boardId));
     const columnStatus = useAppSelector(state => state.columns.status);
-    const selectedBoard = useAppSelector(selectSelectedBoard);
+    const boardName = useAppSelector(state => state.boards.items.find(b => b.id === boardId)?.name ?? 'Pano');
 
     // --- 2. AYAR YÖNETİMİ ---
     // 'allItems' parametresi eklendi (Baseline verilerini kopyalamak için gerekli)
@@ -225,6 +224,52 @@ const GanttView: React.FC<GanttViewProps> = ({
         setSelectedItemId(null);
     };
     const handleToggleLeftPanel = useCallback(() => setIsLeftPanelOpen(prev => !prev), []);
+
+    /**
+     * Baz tarih değiştiğinde tüm aktif timeline sütunlarındaki
+     * başlangıç/bitiş tarihlerini aynı delta kadar kaydırır.
+     * Delta = yeni baz tarih − projenin mevcut en erken başlangıcı (minDate)
+     */
+    const handleBaseDateChange = useCallback((newBaseDate: Date) => {
+        const currentMinDate = projectDateRange.minDate;
+        if (!currentMinDate) return;
+
+        const deltaDays = Math.round(
+            (newBaseDate.getTime() - currentMinDate.getTime()) / 86_400_000
+        );
+        if (deltaDays === 0) return;
+
+        const updates: { itemId: number; columnId: number; value: string }[] = [];
+
+        for (const item of allItems) {
+            for (const timelineId of activeTimelineIds) {
+                const iv = item.itemValue.find(v => v.columnId === timelineId);
+                if (!iv?.value) continue;
+
+                const [startStr, endStr] = iv.value.split('/');
+                if (!startStr || !endStr) continue;
+
+                try {
+                    const start = parseISO(startStr);
+                    const end   = parseISO(endStr);
+                    if (!isValid(start) || !isValid(end)) continue;
+
+                    updates.push({
+                        itemId:   item.id,
+                        columnId: timelineId,
+                        value: `${format(addDays(start, deltaDays), 'yyyy-MM-dd')}/${format(addDays(end, deltaDays), 'yyyy-MM-dd')}`,
+                    });
+                } catch {
+                    continue;
+                }
+            }
+        }
+
+        if (updates.length > 0) {
+            dispatch(updateMultipleItemValues({ updates }));
+        }
+    }, [projectDateRange.minDate, allItems, activeTimelineIds, dispatch]);
+
     const isLoading = columnStatus !== 'succeeded' || allGroups.length === 0;
     if (isLoading) {
         return <div className="p-4 text-center">Gantt Şeması Yükleniyor...</div>;
@@ -246,12 +291,14 @@ const GanttView: React.FC<GanttViewProps> = ({
                 onSettingsClick={handleOpenWidgetModal}
                 onAutoFit={handleAutoFit}
                 isSettingsOpen={isWidgetModalOpen}
+                projectStartDate={projectDateRange.minDate}
+                onBaseDateChange={handleBaseDateChange}
             />
 
             <div className="flex-1 flex w-full relative overflow-hidden">
-                <div className={`flex-shrink-0 transition-all duration-300 ease-in-out overflow-hidden ${isLeftPanelOpen ? 'w-[420px]' : 'w-0'} relative`}>
+                <div className={`flex-shrink-0 transition-all duration-300 ease-in-out overflow-hidden ${isLeftPanelOpen ? 'w-[470px]' : 'w-0'} relative`}>
                     <div
-                        className="w-[426px] h-full overflow-y-hidden overflow-x-hidden border-r"
+                        className="w-[476px] h-full overflow-y-hidden overflow-x-hidden border-r"
                         onWheel={(e) => handleLeftPanelWheel(e.deltaY)}
                     >
                         <GanttLeftPanel
@@ -368,7 +415,7 @@ const GanttView: React.FC<GanttViewProps> = ({
                     item={selectedItem}
                     group={selectedGroup}
                     columns={allColumns}
-                    boardName={selectedBoard?.name || 'Pano'}
+                    boardName={boardName}
                     allItems={allItems}
                 />
             )}

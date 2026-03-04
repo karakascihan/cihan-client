@@ -31,6 +31,9 @@ export interface SurveyAnswerList {
   puan: number | null;
   pesonelEducationPlanId: number | null;
   pesonelEducationPlanAdi: string | null;
+  supplierId: number | undefined
+  supplierName: string | undefined;
+
 }
 
 export const SurveyAnswerList = ({ type }: { type?: string }) => {
@@ -42,18 +45,24 @@ export const SurveyAnswerList = ({ type }: { type?: string }) => {
     return (
       <React.Fragment>
         <span
-          className="cursor-pointer text-red-500 mr-3"
+          className="cursor-pointer text-gray-500 mr-3"
           onClick={options.toggle}
         >
 
           {/* {options.expanded ? "▼" : "▶"} */}
-          {"Hesap Kullanıcısı: " + data.firstName + " " + data.lastName}
+          {"Dolduran: " + data.firstName + " " + data.lastName}
         </span>
         <span
           className="cursor-pointer text-green-500"
           onClick={options.toggle}
         >
           {data.personelAdiSoyadi ? "Dolduran Personel: " + data.personelAdiSoyadi : null}
+        </span>
+        <span
+          className="cursor-pointer text-blue-500"
+          onClick={options.toggle}
+        >
+          {data.supplierId ? "Tedarikçi : " + data.supplierName : null}
         </span>
         <Badge severity="info" value={toplam(groupData.filter(x => x.responseId === data.responseId)) + " Puan"} className="ml-4" />
       </React.Fragment>

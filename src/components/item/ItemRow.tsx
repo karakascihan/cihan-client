@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import { useSortable } from '@dnd-kit/sortable';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useAppDispatch } from '../../store/hooks';
 import { createItem, deleteItem, Item, updateItem } from '../../store/features/itemSlice';
 import { FiGrid, FiTrash2, FiPlus, FiChevronRight, FiChevronDown } from 'react-icons/fi'; // FiX eklenebilir kapatmak için ama şimdilik gerek yok
 
@@ -44,7 +44,6 @@ const ItemRow: React.FC<ItemRowProps> = ({
     onToggleCollapse
 }) => {
     const dispatch = useAppDispatch();
-    const { selectedBoardId } = useAppSelector(state => state.boards);
 
     const {
         attributes,
@@ -80,10 +79,10 @@ const ItemRow: React.FC<ItemRowProps> = ({
             setName(item.name);
             return;
         }
-        if (selectedBoardId) {
+        if (boardId) {
             try {
                 await dispatch(updateItem({
-                    boardId: selectedBoardId,
+                    boardId,
                     itemId: item.id,
                     groupId: item.groupId,
                     itemData: { name: name.trim() }
@@ -118,11 +117,11 @@ const ItemRow: React.FC<ItemRowProps> = ({
 
     const handleCreateSubtask = async () => {
         const trimmed = subtaskName.trim();
-        if (!trimmed || !selectedBoardId) return;
+        if (!trimmed || !boardId) return;
 
         try {
             await dispatch(createItem({
-                boardId: selectedBoardId,
+                boardId,
                 groupId: item.groupId,
                 itemData: { name: trimmed, parentItemId: item.id }
             })).unwrap();

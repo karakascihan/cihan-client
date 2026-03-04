@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, createSelector, type PayloadAction } fro
 import type { RootState } from '../store';
 import {URL as API_BASE_URL } from '@/api';
 import { calculateStatusChangeEffects } from '../../utils/automationLogic';
-import { he } from 'date-fns/locale';
 
 // --- STATE ---
 export interface ItemValue {
@@ -56,6 +55,12 @@ export const selectAllItemsFlat = createSelector(
     [selectItemsByGroup],
     (itemsByGroup) => Object.values(itemsByGroup).flat()
 );
+
+/** Returns all items belonging to a specific board, derived through its groups */
+export const selectItemsForBoard = (boardId: number) => (state: RootState): Item[] => {
+    const groups = state.groups.itemsByBoard[boardId] ?? [];
+    return groups.flatMap(g => state.items.itemsByGroup[g.id] ?? []);
+};
 
 // --- KÜÇÜK YARDIMCI: TREE İÇİNDE HÜCRE GÜNCELLEME ---
 
@@ -120,8 +125,10 @@ export const updateMultipleItemValues = createAsyncThunk<
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', authorization: `Bearer ${state.login.accessToken}` },
                 body: JSON.stringify({ columnId: u.columnId, value: u.value }),
-            }).then(res => {
-                if (!res.ok) throw new Error('Update failed');
+            }).then(async res => {
+                if (!res.ok) throw new Error(`Update failed (HTTP ${res.status})`);
+                const data = await res.json();
+                if (data && data.isSuccess === false) throw new Error(data.message || 'Update failed');
                 return u;
             })
         );
@@ -368,16 +375,16 @@ export const changeItemStatus = createAsyncThunk<
 
     // Verileri Topla
     const allItems = Object.values(state.items.itemsByGroup).flat();
-    const allColumns = state.columns.items;
-    const allGroups = state.groups.items;
+    const allGroupsFlat = Object.values(state.groups.itemsByBoard).flat();
+    const allColumnsFlat = Object.values(state.columns.itemsByBoard).flat();
 
     // Otomasyonu Çalıştır
     const result = calculateStatusChangeEffects(
         itemId,
         newStatus,
         allItems,
-        allColumns,
-        allGroups
+        allColumnsFlat,
+        allGroupsFlat
     );
 
     // A. Hücre Güncellemelerini Uygula
@@ -389,8 +396,9 @@ export const changeItemStatus = createAsyncThunk<
     if (result.moveAction) {
         const currentItem = allItems.find(i => i.id === itemId);
         if (currentItem) {
+            const boardId = allGroupsFlat.find(g => g.id === currentItem.groupId)?.boardId ?? 0;
             const moveArgs: MoveItemArgs = {
-                boardId: state.boards.selectedBoardId || 0,
+                boardId,
                 itemId: itemId,
                 sourceGroupId: currentItem.groupId,
                 sourceIndex: currentItem.order,

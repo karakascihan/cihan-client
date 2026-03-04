@@ -1,4 +1,8 @@
+import { appMode } from '@/components/Sidebar';
 import CrmDashboard from '@/pages/dashboard/CrmDashboardPage';
+import BoardPage from '@/pages/project/BoardPage';
+import ProjectPage from '@/pages/project/ProjectPage';
+import { CalendarPage } from '@/routes/pages';
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface Tab {
@@ -20,8 +24,8 @@ const TabsContext = createContext<TabsContextType | undefined>(undefined);
 export const TabsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [tabs, setTabs] = useState<Tab[]>([{
     id: "/",
-    title: "Anasayfa",
-    component: <CrmDashboard />
+    title: appMode === "digitest-put" ? "Proje Takvimi" : "Anasayfa",
+    component: appMode === "digitest-put" ?<BoardPage /> : <CrmDashboard />
   }]);
   const [activeTabId, setActiveTabId] = useState<string | null>("/");
 

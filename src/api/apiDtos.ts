@@ -539,6 +539,8 @@ export interface CreateQuestionGroupDto {
 export interface CreateSurveyDto {
     title: string | undefined;
     description: string | undefined;
+    formNo: string | undefined;
+    revizyonNo: string | undefined;
     surveyType: SurveyType;
     surveyQuestionGroup: CreateQuestionGroupDto[] | undefined;
     puanIsShow: boolean | undefined;
@@ -682,6 +684,10 @@ export interface DateOnly {
     dayOfWeek: DayOfWeek;
     readonly dayOfYear: number;
     readonly dayNumber: number;
+}
+
+export interface DateValue {
+    date: Date;
 }
 
 export enum DayOfWeek {
@@ -2070,6 +2076,7 @@ export interface SubmitSurveyDto {
     surveyId: number;
     personelId: number | undefined;
     personelEducationPlanId: number | undefined;
+    supplierId: number | undefined;
     answers: AnswerDto[] | undefined;
 }
 
@@ -2077,6 +2084,8 @@ export interface Survey {
     id: number;
     title: string | undefined;
     description: string | undefined;
+    formNo: string | undefined;
+    revizyonNo: string | undefined;
     surveyType: number;
     updatedByUserId: number | undefined;
     createdByUserId: number | undefined;
@@ -2101,6 +2110,13 @@ export interface SurveyAnswer {
     option: SurveyOption;
     question: SurveyQuestion;
     surveyResponse: SurveyResponse;
+}
+
+export interface SurveyIEnumerableApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: Survey[] | undefined;
+    isSuccess: boolean;
 }
 
 export interface SurveyOption {
@@ -2139,6 +2155,7 @@ export interface SurveyResponse {
     createdByPersonelId: number | undefined;
     personelEducationPlanId: number | undefined;
     createdByUserId: number | undefined;
+    supplierId: number | undefined;
     createdAt: Date | undefined;
     createdByPersonel: Personel;
     createdByUser: Users;
@@ -2152,6 +2169,13 @@ export enum SurveyType {
     Yetkinlik = 2,
     Diger = 3,
     Personel = 4,
+}
+
+export interface SurveyTypeApiResponse {
+    message: string | undefined;
+    statusCode: number;
+    result: SurveyType;
+    isSuccess: boolean;
 }
 
 export interface SystemLog {

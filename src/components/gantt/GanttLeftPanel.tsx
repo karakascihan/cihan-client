@@ -24,7 +24,7 @@ interface GanttLeftPanelProps {
 
 // Sütun genişlikleri
 const TASK_NAME_WIDTH = 300;
-const TIMELINE_WIDTH = 125;
+const TIMELINE_WIDTH = 175;
 const INDENT_STEP_PX = 24; // Her derinlik için girinti miktarı
 
 const GanttLeftPanel: React.FC<GanttLeftPanelProps> = ({

@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { FiArrowUpRight } from "react-icons/fi";
 import { useTabs } from "@/context/TabsContext";
 import { BoardView } from "@/routes/pages";
+import { truncateText } from "@/utils/commonUtils";
 
 export default function BoardPage(
 ) {
@@ -50,11 +51,11 @@ const confirm=useConfirm();
               <div className="flex flex-row">
                  <button
                             onClick={() => {
-                               if (tabs.find((x) => x.id == "/proje")) return;
+                              //  if (tabs.find((x) => x.id == "/proje")) return;
                              navigate("/proje/"+row.id);
                              openTab({
-         id: "/proje",
-          title: "Proje",
+          id: "/proje/"+row.id,
+          title:  truncateText(row.name, 15),
           component: <BoardView boardId={row.id} />
         });
                             }}
@@ -98,11 +99,11 @@ const confirm=useConfirm();
     <div className="card">
       <h2 className="text-xl text-center font-bold mb-2">Proje Takvimi</h2>
       <SmartTable
-        data={boards ?? []}
+        data={boards? boards : []}
         enablePagination={false}
         onDoubleClick={(row)=> { if (tabs.find((x) => x.id == "/proje")) return; navigate("/proje/"+row.id);openTab({
-         id: "/proje",
-          title: "Proje",
+         id: "/proje/"+row.id,
+          title:  truncateText(row.name, 15),
           component: <BoardView boardId={row.id} />
         }); }}
         scrollHeight={ "calc(100vh - 200px)"

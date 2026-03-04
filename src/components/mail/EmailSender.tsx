@@ -31,7 +31,6 @@ export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOff
           label: "Kime",
           type: "text",
           defaultValue: mailDto?.toEmail,
-          group: "Gönderim Bilgileri",
           required:true
         },
         {
@@ -39,7 +38,6 @@ export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOff
           label: "Konu",
           type: "text",
           defaultValue: mailDto?.subject,
-          group: "Gönderim Bilgileri",
             required:true
         },
         {
@@ -47,7 +45,6 @@ export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOff
           label: "Port",
           type: "number",
           defaultValue: "587",
-          group: "Gönderim Bilgileri",
            hidden:true
 
         },
@@ -56,7 +53,6 @@ export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOff
           label: "Host",
           type: "text",
           defaultValue: "mail.digitest.com.tr",
-          group: "Gönderim Bilgileri",
           hidden:true
         },
         {
@@ -64,7 +60,6 @@ export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOff
           label: "Kimden",
           type: "text",
           defaultValue: mailDto?.smtpUser,
-          group: "Gönderim Bilgileri",
             required:true
         },
         {
@@ -72,7 +67,6 @@ export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOff
           label: "Şifre",
           type: "password",
           defaultValue: mailDto?.smtpPassword,
-          group: "Gönderim Bilgileri",
             required:true
         },
         {
@@ -81,15 +75,13 @@ export const EmailSender = ({ mailDto,priceOffer}:{mailDto?:MailSendDto,priceOff
           type: "editor",
           colspan: 12,
           defaultValue: mailDto?.body,
-          group: "Mail İçeriği",
         },
         {
           name: "attachmentPaths.0",
           label: "Ekler",
           type: "text",
           readOnly:true,
-          colspan: 6,
-          group: "Ekler",
+          colspan: 12,
            clickIcon: [
                               // <FaUpload color="green" title="Dosya Yükle" />,
                               <FaSearch title="Dosya Seç" />,

@@ -50,14 +50,14 @@ const Product = () => {
             group: "Teknik Özellikler"
 
         },
-        {
-            name: 'parcaTipi',
-            label: 'Parça Tipi',
-            type: 'text',
-            required: false,
-            group: "Genel Bilgiler"
+        // {
+        //     name: 'parcaTipi',
+        //     label: 'Parça Tipi',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Genel Bilgiler"
 
-        },
+        // },
         {
             name: 'olcuBirimi',
             label: 'Birimi',
@@ -72,36 +72,36 @@ const Product = () => {
             required: false,
             group: "Genel Bilgiler"
         },
-        {
-            name: 'malzemeTuru',
-            label: 'Malzeme Türü',
-            type: 'text',
-            required: false,
-            group: "Genel Bilgiler"
+        // {
+        //     name: 'malzemeTuru',
+        //     label: 'Malzeme Türü',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Genel Bilgiler"
 
-        },
-        {
-            name: 'muadilMalzeme',
-            label: 'Muadil Malzeme',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'tedarikTipi',
-            label: 'Tedarik Tipi',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'firmaAdi',
-            label: 'Firma Adı',
-            type: 'text',
-            required: false,
-            group: "Genel Bilgiler"
+        // },
+        // {
+        //     name: 'muadilMalzeme',
+        //     label: 'Muadil Malzeme',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'tedarikTipi',
+        //     label: 'Tedarik Tipi',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'firmaAdi',
+        //     label: 'Firma Adı',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Genel Bilgiler"
 
-        },
+        // },
         {
             name: 'barkod',
             label: 'Barkod',
@@ -109,14 +109,14 @@ const Product = () => {
             required: false,
             group: "Detay Bilgiler"
         },
-        {
-            name: 'projeNo',
-            label: 'Proje No',
-            type: 'text',
-            required: false,
-            group: "Genel Bilgiler"
+        // {
+        //     name: 'projeNo',
+        //     label: 'Proje No',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Genel Bilgiler"
 
-        },
+        // },
         {
             name: 'isActive',
             label: 'Is Active',
@@ -129,99 +129,101 @@ const Product = () => {
             label: 'Ekleme Zamanı',
             type: 'text',
             required: false,
-            group: "Detay Bilgiler"
+            group: "Detay Bilgiler",
+            readOnly: true
         },
         {
             name: 'degistirmeZaman',
             label: 'Değiştirme Zamanı',
             type: 'text',
             required: false,
-            group: "Detay Bilgiler"
+            group: "Detay Bilgiler",
+            readOnly: true
         },
-        {
-            name: 'depo',
-            label: 'Depo',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'seriLotNo',
-            label: 'Seri/Lot No',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'saklamaKosulu',
-            label: 'Saklama Koşulu',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'sonKullanmaTarihi',
-            label: 'Son Kullanma Tarihi',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'revizyonNo',
-            label: 'Revizyon No',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'revizyonTarih',
-            label: 'Revizyon Tarih',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'varyantSecenegi',
-            label: 'Varyant Seçeneği',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'urunKonfiguratoru',
-            label: 'Ürün Konfigüratörü',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'nsnKodu',
-            label: 'NSN Kodu',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'seriNumarasi',
-            label: 'Seri Numarası',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'stokYeri',
-            label: 'Stok Yeri',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
-        {
-            name: 'stokMiktar',
-            label: 'Stok Miktarı',
-            type: 'text',
-            required: false,
-            group: "Detay Bilgiler"
-        },
+        // {
+        //     name: 'depo',
+        //     label: 'Depo',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'seriLotNo',
+        //     label: 'Seri/Lot No',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'saklamaKosulu',
+        //     label: 'Saklama Koşulu',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'sonKullanmaTarihi',
+        //     label: 'Son Kullanma Tarihi',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'revizyonNo',
+        //     label: 'Revizyon No',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'revizyonTarih',
+        //     label: 'Revizyon Tarih',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'varyantSecenegi',
+        //     label: 'Varyant Seçeneği',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'urunKonfiguratoru',
+        //     label: 'Ürün Konfigüratörü',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'nsnKodu',
+        //     label: 'NSN Kodu',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'seriNumarasi',
+        //     label: 'Seri Numarası',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'stokYeri',
+        //     label: 'Stok Yeri',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
+        // {
+        //     name: 'stokMiktar',
+        //     label: 'Stok Miktarı',
+        //     type: 'text',
+        //     required: false,
+        //     group: "Detay Bilgiler"
+        // },
         {
             name: 'paraBirimi',
             label: 'Para Birimi',

@@ -5,7 +5,7 @@ import GanttToolbar, { type ViewModeOption } from '../gantt/GanttToolbar';
 import GanttLeftPanel from './GanttLeftPanel';
 import GanttRightPanel from './GanttRightPanel';
 import GanttSettingsPanel from './GanttSettingsPanel';
-import { selectAllColumns } from '../../store/features/columnSlice';
+import { selectColumnsForBoard } from '../../store/features/columnSlice';
 import { isValid, parseISO } from 'date-fns';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { MAX_ZOOM_INDEX } from '../common/constants';
@@ -81,7 +81,7 @@ const GanttBaselineModal: React.FC<GanttBaselineModalProps> = ({
     const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
     const [isLeftPanelOpen, setIsLeftPanelOpen] = useState(true);
 
-    const allColumns = useAppSelector(selectAllColumns);
+    const allColumns = useAppSelector(selectColumnsForBoard(boardId));
     const columnStatus = useAppSelector(state => state.columns.status);
 
     const modalRightPanelScrollRef = useRef<HTMLDivElement>(null);

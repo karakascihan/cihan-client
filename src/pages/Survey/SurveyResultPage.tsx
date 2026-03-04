@@ -23,6 +23,7 @@ import ReactDOMServer from 'react-dom/server';
 import { useConfirm } from '@/context/ConfirmContext';
 import { CustomerDto } from '@/api/apiDtos';
 import { toDateInputValue } from '@/components/crm/UserForm';
+import { FaEdit } from 'react-icons/fa';
 
 export interface SurveyAnswerList {
     surveyTitle: string;
@@ -43,11 +44,14 @@ export interface SurveyAnswerList {
     pesonelEducationPlanAdi: string | null;
     supplierId: number | undefined
     supplierName: string | undefined;
+    formNo: string | undefined;
+    revizyonNo: string | undefined;
 
 }
 
 export default function SurveyResultPage({ type }: { type?: string }) {
     const [surveys, setSurveys] = useState<SurveyAnswerList[]>([]);
+    const [degisiklikOldu, setDegisiklikOldu] = useState(false);
     const token = useSelector<RootState>(x => x.login.accessToken);
     useEffect(() => {
         apiRequest<ApiResponseClient<SurveyAnswerList[]>>("GET", SURVEY_GETALLSURVEYANSWERS + "/" + type, { Authorization: "Bearer " + token })
@@ -60,7 +64,7 @@ export default function SurveyResultPage({ type }: { type?: string }) {
                 setSurveys(x.result)
             })
             .catch(console.error);
-    }, [type]);
+    }, [type, degisiklikOldu]);
     const confirm = useConfirm();
     let grouped: Record<string, SurveyAnswerList[]> = {};
     if (type === "0") {
@@ -76,10 +80,13 @@ export default function SurveyResultPage({ type }: { type?: string }) {
     }
     else {
         grouped = surveys.reduce((acc, curr) => {
-            if (!acc[curr.surveyTitle]) {
-                acc[curr.surveyTitle] = [];
-            }
-            acc[curr.surveyTitle].push(curr);
+            const revisionPart = curr.revizyonNo ? ` R-${curr.revizyonNo}` : "";
+            const formPart = curr.formNo ? `(${curr.formNo}${revisionPart})` : "";
+            const key = `${curr.surveyTitle}${formPart}`;
+
+            acc[key] ??= [];
+            acc[key].push(curr);
+
             return acc;
         }, {} as Record<string, SurveyAnswerList[]>);
     }
@@ -116,7 +123,9 @@ export default function SurveyResultPage({ type }: { type?: string }) {
                                         tedarikci: answers2[0].supplierName,
                                         surveyTitle: answers2[0].surveyTitle,
                                         groups_option: answers2,
-                                        supplierId: answers2[0].supplierId
+                                        supplierId: answers2[0].supplierId,
+                                        formNo: answers2[0].formNo,
+                                        revizyonNo: answers2[0].revizyonNo
                                     })) ?? [] : []}
 
                                     columns={[
@@ -124,10 +133,7 @@ export default function SurveyResultPage({ type }: { type?: string }) {
                                             header: "#",
                                             accessor: "__index"
                                         },
-                                        {
-                                            header: "Dolduran",
-                                            accessor: "dolduran"
-                                        },
+
                                         {
                                             header: "Tedarikci",
                                             accessor: "tedarikci",
@@ -138,18 +144,24 @@ export default function SurveyResultPage({ type }: { type?: string }) {
                                             header: "Tarih",
                                             accessor: "date",
                                             filterable: true,
-                                            filterType: "text",
+                                            filterType: "date_range",
                                             body: (row: any) => <input type="date" onChange={(e) => apiRequest<Boolean>("PUT", URL + "/survey/survey-response/response-date/" + row.id, { Authorization: "Bearer " + token }, { date: e.target.value }).then(() => {
-                                                setSurveys(surveys.map(x => x.responseId == row.id ? { ...x, responseDate: new Date(e.target.value) } : x));
+                                                setDegisiklikOldu(!degisiklikOldu);
                                             })
                                             }
 
-                                                value={toInputDate(row.date)} />
+                                                value={toInputDate(row.date)}
+                                            />
+
                                         },
                                         {
                                             header: "Puan",
                                             accessor: "puan",
                                             summaryType: "avg"
+                                        },
+                                        {
+                                            header: "Dolduran",
+                                            accessor: "dolduran"
                                         },
                                         {
                                             header: "İşlemler",
@@ -164,8 +176,8 @@ export default function SurveyResultPage({ type }: { type?: string }) {
                                                     return acc;
                                                 }, {} as Record<string, SurveyAnswerList[]>);
                                                 let supplier: CustomerDto; apiRequest<CustomerDto>("GET", URL + "/customer/" + row.supplierId, { Authorization: "Bearer " + token }).then((res) => { supplier = res });
-                                                let surveyTemplate = ReactDOMServer.renderToStaticMarkup(<SurveyTemplate
-                                                    formTitle={row.surveyTitle} adSoyad={row.tedarikci} tarih={row.date.toLocaleDateString()} adres={supplier?.adres} logoUrl={URL + "/logo.png"} telefon={supplier?.telefon} ePosta={supplier?.email} webSitesi={""}
+                                                let surveyTemplate = ReactDOMServer.renderToStaticMarkup(<SurveyTemplate formNo={row.formNo} revisionNo={row.revizyonNo}
+                                                    formTitle={row.surveyTitle} adSoyad={row.tedarikci} tarih={row.date.toLocaleDateString()} adres={supplier?.adres} logoUrl={URL.replace("/api", "") + "/logo.png"} telefon={supplier?.telefon} ePosta={supplier?.email} webSitesi={""}
                                                     groups={Object.entries(grouped3).map(([title, answers], key) => ({
                                                         title: title,
                                                         questions: answers.map((answer) => ({

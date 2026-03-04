@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
-    fetchViewsForBoard, createBoardView, setActiveViewId, selectBoardViews,
-    selectActiveViewId, selectActiveView, clearBoardViews, selectBoardViewStatus,
-    deleteBoardView, updateBoardView
+    fetchViewsForBoard, createBoardView, setActiveViewId,
+    clearBoardViews, selectBoardViewStatus,
+    deleteBoardView, updateBoardView,
+    selectViewsForBoard, selectActiveViewIdForBoard, makeSelectActiveView,
 } from '../../store/features/boardViewSlice';
 import {
-    fetchGroupsForBoard, reorderGroupsLocally, updateGroupOrder, selectAllGroups, createGroup
+    fetchGroupsForBoard, reorderGroupsLocally, updateGroupOrder, selectGroupsForBoard, createGroup
 } from '../../store/features/groupSlice';
 import {
-    fetchColumnsForBoard, reorderColumnsLocally, updateColumnOrder, selectAllColumns
+    fetchColumnsForBoard, reorderColumnsLocally, updateColumnOrder, selectColumnsForBoard
 } from '../../store/features/columnSlice';
 import {
-    fetchItemsForBoard, fetchItemTree, Item, moveItem, reorderItemsLocally as reorderItems, selectAllItemsFlat, type MoveItemArgs
+    fetchItemsForBoard, fetchItemTree, Item, moveItem, reorderItemsLocally as reorderItems, selectItemsForBoard, type MoveItemArgs
 } from '../../store/features/itemSlice';
 
 // --- DND-KIT Imports ---
@@ -49,8 +50,6 @@ import ItemRow from '../item/ItemRow';
 import { getRandomColor } from '../../utils/colors';
 import { FiPlus } from 'react-icons/fi';
 import { DEFAULT_ZOOM_INDEX } from '../common/constants';
-import { useNavigate, useParams } from 'react-router-dom';
-import { setSelectedBoard } from '@/store/features/boardSlice';
 import { fetchUsers } from '@/store/slices/userSlice';
 import { useModal } from '@/context/ModalContext';
 import AddBoardForm from './AddBoardForm';
@@ -62,56 +61,46 @@ const dropAnimation: DropAnimation = {
     }),
 };
 
-// AYAR: Her 40px sağa çekiş 1 seviye derinlik demektir.
 export const INDENT_STEP = 40;
 
 const BoardView = ({ boardId }: { boardId?: number }) => {
     const { openTab } = useTabs();
     const dispatch = useAppDispatch();
-    // const { boardId } = useParams();
     const { openModal } = useModal();
-    const navigate = useNavigate();
     const [pageCheck, setPageCheck] = useState(false);
-    const { selectedBoardId } = useAppSelector(s => s.boards);
+
+    // Open board selector modal when no boardId prop is given
     useEffect(() => {
-        if (boardId)
-            dispatch(setSelectedBoard(Number(boardId)))
-        else {
-            if (pageCheck) return;
-            openModal({
-                title: "Proje Uygulama Takimi Oluşturma",
-                content: function (
-                    close: (result: any) => void
-                ): React.ReactNode {
-                    return (
-                        <AddBoardForm projectType={undefined} onClose={function (boardId: number): void {
-                            if (boardId != -1) {
-                                close(null);
-                                // openTab({
-                                //           id: "/proje",
-                                //           title: "Proje",
-                                //           component: <BoardView boardId={boardId} />
-                                //         });
-                                dispatch(setSelectedBoard(Number(boardId)));
-                                setPageCheck(true);
-                                // navigate("/proje/" + boardId)
-                            }
-                        }} />
-                    );
-                },
-            });
+        if (boardId) return;
+        if (pageCheck) return;
+        openModal({
+            title: "Proje Uygulama Takimi Oluşturma",
+            content: (close: (result: any) => void): React.ReactNode => (
+                <AddBoardForm projectType={undefined} onClose={(newBoardId: number) => {
+                    if (newBoardId !== -1) {
+                        close(null);
+                        setPageCheck(true);
+                    }
+                }} />
+            ),
+        });
+    }, [boardId]);
 
-        }
-    }, [boardId, selectedBoardId])
+    // Per-board selectors (memoized to avoid recreating on every render)
+    const selectViews = useMemo(() => selectViewsForBoard(boardId ?? 0), [boardId]);
+    const selectActiveId = useMemo(() => selectActiveViewIdForBoard(boardId ?? 0), [boardId]);
+    const selectActiveViewMemo = useMemo(() => makeSelectActiveView(boardId ?? 0), [boardId]);
+    const selectGroups = useMemo(() => selectGroupsForBoard(boardId ?? 0), [boardId]);
+    const selectColumns = useMemo(() => selectColumnsForBoard(boardId ?? 0), [boardId]);
+    const selectItems = useMemo(() => selectItemsForBoard(boardId ?? 0), [boardId]);
 
-    // Selectors
-    const boardViews = useAppSelector(selectBoardViews);
-    const activeViewId = useAppSelector(selectActiveViewId);
-    const activeView = useAppSelector(selectActiveView);
+    const boardViews = useAppSelector(selectViews);
+    const activeViewId = useAppSelector(selectActiveId);
+    const activeView = useAppSelector(selectActiveViewMemo);
     const viewsStatus = useAppSelector(selectBoardViewStatus);
-    const groups = useAppSelector(selectAllGroups);
-    const columns = useAppSelector(selectAllColumns);
-    const allItems = useAppSelector(selectAllItemsFlat);
+    const groups = useAppSelector(selectGroups);
+    const columns = useAppSelector(selectColumns);
+    const allItems = useAppSelector(selectItems);
 
     // State
     const [collapsedGroupIds, setCollapsedGroupIds] = useState<Set<number>>(new Set());
@@ -121,8 +110,6 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
     const [activeId, setActiveId] = useState<string | null>(null);
     const [activeDragType, setActiveDragType] = useState<'GROUP' | 'ITEM' | 'COLUMN' | null>(null);
     const [activeDragData, setActiveDragData] = useState<any>(null);
-
-    // Drag Projection State
     const [dragOverItemId, setDragOverItemId] = useState<number | null>(null);
     const [projectedDepth, setProjectedDepth] = useState(0);
 
@@ -136,29 +123,26 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
     useEffect(() => {
         dispatch(fetchUsers());
 
-        if (selectedBoardId) {
-            dispatch(fetchViewsForBoard(selectedBoardId));
-            dispatch(fetchGroupsForBoard(selectedBoardId));
-            dispatch(fetchColumnsForBoard(selectedBoardId));
-            dispatch(fetchItemsForBoard(selectedBoardId));
+        if (boardId) {
+            dispatch(fetchViewsForBoard(boardId));
+            dispatch(fetchGroupsForBoard(boardId));
+            dispatch(fetchColumnsForBoard(boardId));
+            dispatch(fetchItemsForBoard(boardId));
         } else {
-            dispatch(clearBoardViews());
+            if (boardId !== undefined) dispatch(clearBoardViews(boardId));
         }
-    }, [selectedBoardId, dispatch]);
+    }, [boardId, dispatch]);
 
     // --- HANDLERS ---
     const handleCreateView = (type: 'table' | 'gantt') => {
-        if (!selectedBoardId) return;
-        let defaultName = type === 'table' ? 'Tablo Görünümü' : type === 'gantt' ? 'Gantt Görünümü' : 'table';
-        dispatch(createBoardView({
-            boardId: selectedBoardId,
-            payload: { name: defaultName, type: type }
-        }));
+        if (!boardId) return;
+        const defaultName = type === 'table' ? 'Tablo Görünümü' : 'Gantt Görünümü';
+        dispatch(createBoardView({ boardId, payload: { name: defaultName, type } }));
     };
 
     const handleCreateGroupAtBottom = () => {
-        if (selectedBoardId) {
-            dispatch(createGroup({ boardId: selectedBoardId, groupData: { title: 'Yeni Grup', color: getRandomColor() }, position: 'bottom' }));
+        if (boardId) {
+            dispatch(createGroup({ boardId, groupData: { title: 'Yeni Grup', color: getRandomColor() }, position: 'bottom' }));
         }
     };
 
@@ -171,16 +155,11 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
         });
     };
 
-    // Custom Collision Detection
     const customCollisionDetection: CollisionDetection = (args) => {
         const pointerCollisions = pointerWithin(args);
-        if (pointerCollisions.length === 0) {
-            return closestCenter(args);
-        }
+        if (pointerCollisions.length === 0) return closestCenter(args);
         return pointerCollisions;
     };
-
-    // --- DRAG HANDLERS ---
 
     const handleDragStart = (event: DragStartEvent) => {
         const { active } = event;
@@ -193,32 +172,20 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
 
     const handleDragOver = (event: DragOverEvent) => {
         const { active, over } = event;
-
         if (!over || active.data.current?.type !== 'ITEM') {
             setDragOverItemId(null);
             setProjectedDepth(0);
             return;
         }
-
-        // Eğer bir ITEM'ın üzerine gelindiyse
         if (over.data.current?.type === 'ITEM') {
             const overId = Number(over.id.toString().replace('item-', ''));
             const activeIdNum = Number(active.id.toString().replace('item-', ''));
-
             if (overId === activeIdNum) return;
-
             setDragOverItemId(overId);
-
-            // PROJEKSİYON HESABI (Derinlik)
             const initialLeft = active.rect.current.initial?.left ?? 0;
             const currentLeft = active.rect.current.translated?.left ?? 0;
             const deltaX = currentLeft - initialLeft;
-
-            // Eşik değeri aşan her INDENT_STEP için derinlik artar
-            const steps = Math.floor(deltaX / INDENT_STEP);
-            const clampedSteps = Math.max(0, steps);
-
-            setProjectedDepth(clampedSteps);
+            setProjectedDepth(Math.max(0, Math.floor(deltaX / INDENT_STEP)));
         } else {
             setDragOverItemId(null);
             setProjectedDepth(0);
@@ -227,14 +194,13 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-
         setActiveId(null);
         setActiveDragType(null);
         setActiveDragData(null);
         setDragOverItemId(null);
         setProjectedDepth(0);
 
-        if (!over || !selectedBoardId) return;
+        if (!over || !boardId) return;
 
         // 1. GROUP REORDER
         if (active.data.current?.type === 'GROUP') {
@@ -243,9 +209,8 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
                 const newIndex = groups.findIndex(g => `group-${g.id}` === over.id);
                 if (oldIndex !== -1 && newIndex !== -1) {
                     const newGroups = arrayMove(groups, oldIndex, newIndex);
-                    dispatch(reorderGroupsLocally({ orderedGroups: newGroups }));
-                    const orderedGroupIds = newGroups.map(g => g.id);
-                    dispatch(updateGroupOrder({ boardId: selectedBoardId, orderedGroupIds }));
+                    dispatch(reorderGroupsLocally({ boardId, orderedGroups: newGroups }));
+                    dispatch(updateGroupOrder({ boardId, orderedGroupIds: newGroups.map(g => g.id) }));
                 }
             }
             return;
@@ -260,9 +225,8 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
                 const newIndex = columns.findIndex(c => c.id === overColumnId);
                 if (oldIndex !== -1 && newIndex !== -1) {
                     const newColumns = arrayMove(columns, oldIndex, newIndex);
-                    dispatch(reorderColumnsLocally({ orderedColumns: newColumns }));
-                    const orderedColumnIds = newColumns.map(c => c.id);
-                    dispatch(updateColumnOrder({ boardId: selectedBoardId, orderedColumnIds }));
+                    dispatch(reorderColumnsLocally({ boardId, orderedColumns: newColumns }));
+                    dispatch(updateColumnOrder({ boardId, orderedColumnIds: newColumns.map(c => c.id) }));
                 }
             }
             return;
@@ -273,7 +237,6 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
             const draggedItem = active.data.current.item as Item;
             const sourceGroupId = active.data.current.groupId as number;
 
-            // Container'a bırakıldı (Grup sonu)
             if (over.data.current?.type === 'CONTAINER') {
                 const destGroupId = over.data.current.groupId as number;
                 const destItems = allItems.filter(i => i.groupId === destGroupId);
@@ -281,43 +244,29 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
                 return;
             }
 
-            // Item üzerine bırakıldı
             if (over.data.current?.type === 'ITEM') {
                 const targetItem = over.data.current.item as Item;
                 const destGroupId = over.data.current.groupId as number;
-
-                const destItems = allItems
-                    .filter(i => i.groupId === destGroupId)
-                    .sort((a, b) => a.order - b.order);
-
+                const destItems = allItems.filter(i => i.groupId === destGroupId).sort((a, b) => a.order - b.order);
                 const overIndex = destItems.findIndex(i => i.id === targetItem.id);
                 if (overIndex === -1) return;
 
-                // Index Kararı (Üstüne mi altına mı?)
-                // Dnd-kit'in SortableContext'i, bırakılan öğenin nerede olduğu bilgisini over.rect ile verir.
                 const isBelowOverItem = over.rect.top + over.rect.height / 2 < active.rect.current.translated!.top;
                 let newIndex = isBelowOverItem ? overIndex + 1 : overIndex;
 
-                // Hiyerarşi Kararı (Girinti)
                 const initialLeft = active.rect.current.initial?.left ?? 0;
                 const currentLeft = active.rect.current.translated?.left ?? 0;
                 const deltaX = currentLeft - initialLeft;
-                const isIndent = deltaX > INDENT_STEP; // Eşik değeri geçti mi?
+                const isIndent = deltaX > INDENT_STEP;
 
                 let finalParentId: number | null | undefined;
-
                 if (isIndent) {
-                    // Sağa çekildi -> Target'ın çocuğu
                     finalParentId = targetItem.id;
-                    // Çocuk olarak eklenecekse, hedef index, target'ın hemen altı (bu, çocuk olarak ekleneceği için listenin sonu gibi davranır)
-                    // newIndex değeri sıralamayı temsil ettiği için, dnd-kit'in hesapladığı newIndex'i kullanmak en doğrusudur.
                 } else {
-                    // Düz taşındı -> Target'ın kardeşi (aynı parent)
                     finalParentId = targetItem.parentItemId ?? null;
                 }
 
-                if (finalParentId === draggedItem.id) return; // Kendi çocuğu olamaz
-
+                if (finalParentId === draggedItem.id) return;
                 handleMoveItemLogic(draggedItem, sourceGroupId, destGroupId, newIndex, finalParentId);
             }
         }
@@ -331,57 +280,49 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
         parentItemId: number | null | undefined
     ) => {
         const moveArgs: MoveItemArgs = {
-            boardId: selectedBoardId!,
+            boardId: boardId!,
             itemId: draggedItem.id,
             sourceGroupId,
             destinationGroupId: destGroupId,
-            sourceIndex: 0, // Dışarıdan gelen bu index artık kullanılmıyor
+            sourceIndex: 0,
             destinationIndex,
             parentItemId
         };
 
-        // 1. Optimistic Update (Hemen arayüzde göster)
         dispatch(reorderItems(moveArgs));
-
-        // 2. API Call
         dispatch(moveItem(moveArgs))
             .unwrap()
             .then(() => {
-                // Başarılı olursa ağacı yenile
-                dispatch(fetchItemTree({ boardId: selectedBoardId!, groupId: sourceGroupId }));
+                dispatch(fetchItemTree({ boardId: boardId!, groupId: sourceGroupId }));
                 if (sourceGroupId !== destGroupId) {
-                    dispatch(fetchItemTree({ boardId: selectedBoardId!, groupId: destGroupId }));
+                    dispatch(fetchItemTree({ boardId: boardId!, groupId: destGroupId }));
                 }
             })
-            .catch((err) => {
-                console.error("Move Failed:", err);
-                // Hata olursa her şeyi geri yükle
-                dispatch(fetchItemsForBoard(selectedBoardId!));
+            .catch(() => {
+                dispatch(fetchItemsForBoard(boardId!));
             });
     };
 
-    // 🔴 DÜZELTME: Güvenli Tip Kontrolü
     const isGanttView = activeView?.type?.toUpperCase() === '1';
 
     return (
         <div className={`flex flex-col ${isGanttView ? 'h-full' : ''}`}>
             <div className="sticky top-0 z-30 bg-white">
-                <div className="px-6  pb-2"><BoardHeader /></div>
+                <div className="px-6 pb-2"><BoardHeader boardId={boardId} /></div>
                 <div className="px-6">
                     <BoardViewTabs
                         views={boardViews.map(v => ({ id: v.id, name: v.name, type: v.type.toLowerCase() as any }))}
                         activeViewId={activeViewId}
-                        onViewChange={(id) => dispatch(setActiveViewId(id as number))}
+                        onViewChange={(id) => dispatch(setActiveViewId({ boardId: boardId!, viewId: id as number }))}
                         onAddViewTypeSelected={handleCreateView}
-                        onDeleteView={(id) => dispatch(deleteBoardView({ boardId: selectedBoardId!, viewId: id }))}
-                        onRenameView={(id, name) => dispatch(updateBoardView({ boardId: selectedBoardId!, viewId: id, payload: { name } }))}
+                        onDeleteView={(id) => dispatch(deleteBoardView({ boardId: boardId!, viewId: id }))}
+                        onRenameView={(id, name) => dispatch(updateBoardView({ boardId: boardId!, viewId: id, payload: { name } }))}
                     />
                 </div>
-                {/* Sadece TABLE görünümünde Actionbar göster (GANTT değilse) */}
                 {!isGanttView && (
                     <>
                         <div className="h-px bg-gray-200 mx-6"></div>
-                        <div className="px-6 py-3"><BoardActionbar /></div>
+                        <div className="px-6 py-3"><BoardActionbar selectedBoardId={boardId} /></div>
                     </>
                 )}
             </div>
@@ -390,7 +331,7 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
                 <div className={isGanttView ? 'flex-1 overflow-hidden' : 'bg-white p-4 min-h-[calc(100vh-200px)]'}>
                     {isGanttView ? (
                         <GanttView
-                            boardId={selectedBoardId || 0}
+                            boardId={boardId || 0}
                             viewId={activeView!.id}
                             settingsJson={activeView!.settingsJson}
                             zoomIndex={ganttZoomIndex}
@@ -412,8 +353,7 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
                                             group={group}
                                             isCollapsed={activeDragType === 'GROUP' ? true : collapsedGroupIds.has(group.id)}
                                             onToggleCollapse={() => handleToggleGroup(group.id)}
-                                            selectedBoardId={selectedBoardId}
-                                            // DND Props
+                                            selectedBoardId={boardId}
                                             dragOverItemId={dragOverItemId}
                                             projectedDepth={dragOverItemId && activeDragType === 'ITEM' ? projectedDepth : 0}
                                         />
@@ -429,7 +369,7 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
                                 {activeId ? (
                                     activeDragType === 'GROUP' ? (
                                         <div className="opacity-90 rotate-2 cursor-grabbing">
-                                            <GroupSection selectedBoardId={selectedBoardId} group={activeDragData.group} isCollapsed={true} onToggleCollapse={() => { }} isOverlay={true} dragOverItemId={null} projectedDepth={0} />
+                                            <GroupSection selectedBoardId={boardId} group={activeDragData.group} isCollapsed={true} onToggleCollapse={() => { }} isOverlay={true} dragOverItemId={null} projectedDepth={0} />
                                         </div>
                                     ) : activeDragType === 'ITEM' ? (
                                         <div className="opacity-95 cursor-grabbing bg-white shadow-2xl rounded-md border border-blue-500 overflow-hidden">
@@ -438,7 +378,7 @@ const BoardView = ({ boardId }: { boardId?: number }) => {
                                                 color="#ccc"
                                                 columns={columns}
                                                 gridTemplateColumns={`60px minmax(200px, 1fr) ${columns.map(() => '150px').join(' ')} 60px`}
-                                                boardId={selectedBoardId || 0}
+                                                boardId={boardId || 0}
                                                 isOverlay={true}
                                             />
                                         </div>
